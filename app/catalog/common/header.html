@@ -1,0 +1,121 @@
+<nav class="navbar navbar-default">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="#/login" ui-sref="catalog.login">Register or Login</a></li>
+        <li><a href="#">Help and Contact</a></li>
+        <li><a href="#">123-456-7890</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"><i class="fa fa-bell-o"></i></a></li>
+        <li><a href="#"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
+        <li><a href="#"><i class="fa fa-mail-forward"></i> Checkout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <div id="logo">
+          <a href="home"><img src="../images/bluerocktxtlogo185.png" class="img-responsive"></a>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="input-group">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">All Categories <span class="caret"></span></button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li ng-repeat="sub in catalogCtrl.subPulldowns"><a href="#">{{sub.category_name}}</a></li>
+            </ul>
+          </div>
+          <input type="text" class="form-control" aria-label="Search ...">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div id="cart" class="btn-group btn-block">
+          <button type="button" data-toggle="dropdown" class="btn btn-inverse btn-block btn-lg dropdown-toggle"><i class="fa fa-shopping-cart"></i> 0 Item(s) - $0.00</button>
+          <ul class="dropdown-menu pull-right">
+            <li>
+              <table class="table table-striped">
+                <tr>
+                  <td class="text-center">thumbnail pic
+                    <a href="<?php echo $product['href']; ?>"><img src="<?php echo $product['thumb']; ?>" alt="<?php echo $product['name']; ?>" title="<?php echo $product['name']; ?>" class="img-thumbnail" /></a>
+                  </td>
+                  <td class="text-left"><a href="<?php echo $product['href']; ?>">product name</a>
+                    <br />
+                    - <small>option name</small>
+                    <br />
+                    - <small>recurring</small>
+                  </td>
+                  <td class="text-right">quantity</td>
+                  <td class="text-right">total</td>
+                  <td class="text-center"><button type="button" onclick="cart.remove('<?php echo $product['cart_id']; ?>');" title="<?php echo $button_remove; ?>" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button></td>
+                </tr>
+                <tr>
+                  <td class="text-center">Voucher</td>
+                  <td class="text-left">voucher description</td>
+                  <td class="text-right">1</td>
+                  <td class="text-right">voucher amount</td>
+                  <td class="text-center text-danger"><button type="button" onclick="voucher.remove('<?php echo $voucher['key']; ?>');" title="<?php echo $button_remove; ?>" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button></td>
+                </tr>
+              </table>
+            </li>
+            <li>
+              <div>
+                <table class="table table-bordered">
+                  <tr>
+                    <td class="text-right"><strong>total</strong></td>
+                    <td class="text-right">total text</td>
+                  </tr>
+                </table>
+                <p class="text-right"><a href="<?php echo $cart; ?>"><strong><i class="fa fa-shopping-cart"></i> View Cart</strong></a>&nbsp;&nbsp;&nbsp;<a href="<?php echo $checkout; ?>"><strong><i class="fa fa-share"></i> checkout</strong></a></p>
+              </div>
+            </li>
+            <li>
+              <p class="text-center">empty cart</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<br>
+
+<div class="container">
+  <nav id="menu" class="navbar">
+    <div class="navbar-header"><span id="category" class="visible-xs">Categories</span>
+      <button type="button" class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"><i class="fa fa-bars"></i></button>
+    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+      <ul ng-repeat="c in catalogCtrl.categories" class="nav navbar-nav">
+        <li ng-if="c.sub_count === 0"><a href="" class="dropdown-toggle" data-toggle="dropdown">{{c.category_name}}</a>
+        <li ng-if="c.sub_count > 0" class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown">{{c.category_name}}</a>
+          <div class="dropdown-menu">
+            <div class="dropdown-inner">
+              <ul ng-repeat="s in catalogCtrl.subCategories | orderBy:'$priority'" class="list-unstyled">
+                <li ng-if="c.$id === s.category_id"><a href="" ng-click="catalogCtrl.goSubCategory(s.$id)">{{s.category_name}}</a></li>
+              </ul>
+            </div>
+            <a href="" ng-click="catalogCtrl.goCategory(c.$id)" class="see-all">see all</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>

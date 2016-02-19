@@ -1,0 +1,6 @@
+<div class="ui-grid-cell-contents">
+  <select>
+    <option ng-click="grid.appScope.productsCtrl.selectCategory(row)"
+      ng-repeat="c in grid.appScope.productsCtrl.categories" value="{{c.category_name}}">{{c.category_name}}</option>
+  </select>
+</div>

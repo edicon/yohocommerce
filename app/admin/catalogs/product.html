@@ -1,0 +1,487 @@
+<div class="row">
+  <div class="col-xs-12">
+    <ul class="nav nav-tabs" role="tablist">
+      <li role="presentation" class="active"><a href="#" role="tab" data-toggle="tab"><i class="menu-icon fa fa-th-large"></i> Products</a></li>
+      <li ng-click="productCtrl.featuredProducts()" role="presentation">
+        <a href="#/products" ui-sref="admin.catalogs.products" role="tab"><i class="menu-icon fa fa-certificate"></i> Featured Products</a>
+      </li>
+    </ul>
+    <br>
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Product Detail - {{productCtrl.productName}}</h3>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="col-xs-12">
+                <a type="button" class="btn btn-sm btn-default detail-margin-btn pull-right"
+                  uib-tooltip-placement="top" uib-tooltip="Cancel"
+                  href="#/products" ui-sref="admin.catalogs.products"><i class="fa fa-reply"></i></a>
+                <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+                  uib-tooltip-placement="top" uib-tooltip="Last" ng-click="productCtrl.lastProduct()">
+                  <i class="fa fa-fast-forward"></i>
+                </button>
+                <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+                  uib-tooltip-placement="top" uib-tooltip="Next" ng-click="productCtrl.nextProduct()">
+                  <i class="fa fa-step-forward"></i>
+                </button>
+                <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+                  uib-tooltip-placement="top" uib-tooltip="Back" ng-click="productCtrl.backProduct()">
+                  <i class="fa fa-step-backward"></i>
+                </button>
+                <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+                  uib-tooltip-placement="top" uib-tooltip="First" ng-click="productCtrl.firstProduct()">
+                  <i class="fa fa-fast-backward"></i>
+                </button>
+                <button ng-if="productCtrl.product.pid === null" type="button" class="btn btn-sm btn-primary detail-btn pull-right"
+                  uib-tooltip-placement="top" uib-tooltip="Save" ng-click="productCtrl.addProduct()">
+                  <i class="fa fa-floppy-o"></i>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#prodInfo" role="tab" data-toggle="tab"><span class="menu-icon fa fa-info-circle"></span> General</a></li>
+                <li role="presentation"><a href="#prodInventory" role="tab" data-toggle="tab"><span class="menu-icon fa fa-barcode"></span> Inventory</a></li>
+                <li role="presentation"><a href="#prodDiscount" role="tab" data-toggle="tab"><span class="menu-icon fa fa-dollar"></span> Discount</a></li>
+                <li role="presentation"><a href="#prodSpecial" role="tab" data-toggle="tab"><span class="menu-icon fa fa-dollar"></span> Special</a></li>
+                <li role="presentation"><a href="#prodReward" role="tab" data-toggle="tab"><span class="menu-icon fa fa-gift"></span> Reward Points</a></li>
+                <li role="presentation"><a href="#prodBannerImage" role="tab" data-toggle="tab"><span class="menu-icon fa fa-image"></span> Banner Image</a></li>
+                <li role="presentation"><a href="#prodThumbnails" role="tab" data-toggle="tab"><span class="menu-icon fa fa-image"></span> Thumbnail Images</a></li>
+              </ul>
+              <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active" id="prodInfo">
+                  <div class="row">
+                    <div class="col-xs-12"><br>
+                      <div class="container">
+                        <form class="form-horizontal" role="form">
+                          <div class="form-group">
+                            <label class="control-label col-xs-2">&ast; Name</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                              <input type="text" ng-model="productCtrl.product.product_name" placeholder="Product Name" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
+                              <input type="text" ng-model="productCtrl.product.product_name"
+                                ng-change="productCtrl.product.$save()" placeholder="Product Name" class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-xs-2">&ast; Status</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                              <select ng-model="productCtrl.product.product_status" class="form-control">
+                                <option value="1">Enabled</option>
+                                <option value="2">Disabled</option>
+                              </select>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
+                              <select class="form-control" ng-model="productCtrl.product.product_status"
+                                ng-change="productCtrl.saveProductStatus()" class="form-control">
+                                  <option value= "1">Enabled</option>
+                                  <option value= "2">Disabled</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-xs-2">&ast; Category</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                              <select ng-change="productCtrl.loadSubCategories()" ng-model="productCtrl.product.product_category_id" class="form-control">
+                                <option ng-repeat="c in productCtrl.categories" value="{{c.$id}}">{{c.category_name}}</option>
+                              </select>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
+                              <select ng-model="productCtrl.product.product_category_id"
+                                ng-change="productCtrl.saveCategory()" class="form-control">
+                                  <option ng-repeat="c in productCtrl.categories" value="{{c.$id}}">{{c.category_name}}</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-xs-2">Sub-Category</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                              <select ng-model="productCtrl.product.product_sub_category_id" class="form-control">
+                                <option ng-repeat="s in productCtrl.subCategories" value="{{s.$id}}">{{s.category_name}}</option>
+                              </select>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
+                              <select ng-model="productCtrl.product.product_sub_category_id"
+                                ng-change="productCtrl.product.$save()" class="form-control">
+                                  <option ng-repeat="s in productCtrl.subCategories" value="{{s.$id}}">{{s.category_name}}</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-xs-2">&ast; Price</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                              <input type="text" ng-model="productCtrl.product.product_price" placeholder="Price" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
+                              <input type="text" ng-model="productCtrl.product.product_price"
+                                ng-change="productCtrl.product.$save()" placeholder="Price" class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-xs-2">&ast; Description</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                              <textarea class="tinyMCE" ui-tinymce="productCtrl.tinymceOptions"
+                                ng-model="productCtrl.product.product_description"></textarea>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
+                              <textarea class="tinyMCE" ui-tinymce="productCtrl.tinymceOptions"
+                                ng-change="productCtrl.product.$save()" ng-model="productCtrl.product.product_description"></textarea>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-xs-2">Specification</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                              <textarea class="tinyMCE" ui-tinymce="productCtrl.tinymceOptions"
+                                ng-model="productCtrl.product.product_specification"></textarea>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
+                              <textarea class="tinyMCE" ui-tinymce="productCtrl.tinymceOptions"
+                                ng-change="productCtrl.product.$save()" ng-model="productCtrl.product.product_specification" ></textarea>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="prodInventory">
+                  <div class="row">
+                    <div class="col-xs-12"><br>
+                      <div class="container">
+                        <form class="form-horizontal" role="form">
+                          <div class="form-group">
+                            <label class="control-label col-xs-3">Stock Keeping Unit (SKU)</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                              <input type="text" ng-model="productCtrl.product.product_sku"
+                                placeholder="Stock Keeping Unit (SKU)" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
+                              <input type="text" ng-model="productCtrl.product.product_sku"
+                                ng-change="productCtrl.product.$save()" placeholder="Stock Keeping Unit (SKU)" class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-xs-3">Universal Product Code (UPC)</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                              <input type="text" ng-model="productCtrl.product.product_upc"
+                                placeholder="Universal Product Code (UPC)" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
+                              <input type="text" ng-model="productCtrl.product.product_upc"
+                                ng-change="productCtrl.product.$save()" placeholder="Universal Product Code (UPC)" class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-xs-3">Manufacturer Part Number (MPN)</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                              <input type="text" ng-model="productCtrl.product.product_mpn"
+                                placeholder="Manufacturer Part Number (MPN)" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
+                              <input type="text" ng-model="productCtrl.product.product_mpn"
+                                ng-change="productCtrl.product.$save()" placeholder="Manufacturer Part Number (MPN)" class="form-control">
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-xs-3">Taxable Goods</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                              <select ng-model="productCtrl.product.product_tax_code" class="form-control">
+                                <option value="Taxable">Taxable</option>
+                                <option value="Non-taxable">Non-Taxable</option>
+                              </select>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
+                              <select ng-model="productCtrl.product.product_tax_code"
+                                ng-change="productCtrl.product.$save()" class="form-control">
+                                <option value="Taxable">Taxable</option>
+                                <option value="Non-taxable">Non-Taxable</option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-xs-3">Dimensions</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-2">
+                              <input type="text" ng-model="productCtrl.product.product_length" placeholder="Length" class="form-control">
+                              <span class="help-block" align="left">Length</span>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <input type="text" ng-model="productCtrl.product.product_length"
+                                ng-change="productCtrl.product.$save()" placeholder="Length" class="form-control">
+                              <span class="help-block" align="left">Length</span>
+                            </div>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-2">
+                              <input type="text" ng-model="productCtrl.product.product_width" placeholder="Width" class="form-control">
+                              <span class="help-block" align="left">Width</span>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <input type="text" ng-model="productCtrl.product.product_width"
+                                ng-change="productCtrl.product.$save()" placeholder="Width" class="form-control">
+                              <span class="help-block" align="left">Width</span>
+                            </div>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-2">
+                              <input type="text" ng-model="productCtrl.product.product_height" placeholder="Height" class="form-control">
+                              <span class="help-block" align="left">Height</span>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <input type="text" ng-model="productCtrl.product.product_height"
+                                ng-change="productCtrl.product.$save()" placeholder="Height" class="form-control">
+                              <span class="help-block" align="left">Height</span>
+                            </div>
+
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-2">
+                              <select ng-model="productCtrl.product.product_unit_of_measure" class="form-control">
+                                <option value="Centimeter">Centimeter</option>
+                                <option value="Millimeter">Millimeter</option>
+                                <option value="inch">Inch</option>
+                              </select>
+                              <span class="help-block" align="left">Unit of Measure</span>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <select ng-model="productCtrl.product.product_unit_of_measure"
+                                ng-change="productCtrl.product.$save()" class="form-control">
+                                <option value="Centimeter">Centimeter</option>
+                                <option value="Millimeter">Millimeter</option>
+                                <option value="Inch">Inch</option>
+                              </select>
+                              <span class="help-block" align="left">Unit of Measure</span>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <label class="control-label col-xs-3">Weight</label>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-2">
+                              <input type="text" ng-model="productCtrl.product.product_weight" placeholder="Weight" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <input type="text" ng-model="productCtrl.product.product_weight"
+                                ng-change="productCtrl.product.$save()" placeholder="Weight" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid === null" class="col-xs-6">
+                              <select ng-model="productCtrl.product.product_unit_of_weight" class="form-control">
+                                <option value="Kilogram">Kilogram</option>
+                                <option value="Gram">Gram</option>
+                                <option value="Pound">Pound</option>
+                                <option value="Ounce">Ounce</option>
+                              </select>
+                              <span class="help-block" align="left">Unit of Weight</span>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-6">
+                              <select ng-model="productCtrl.product.product_unit_of_weight"
+                                ng-change="productCtrl.product.$save()" class="form-control">
+                                <option value="Kilogram">Kilogram</option>
+                                <option value="Gram">Gram</option>
+                                <option value="Pound">Pound</option>
+                                <option value="Ounce">Ounce</option>
+                              </select>
+                              <span class="help-block" align="left">Unit of Weight</span>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="prodDiscount">
+                  <div class="row">
+                    <div class="col-xs-12"><br>
+                      <div class="container">
+                        <form class="form-horizontal" role="form">
+                          <div class="form-group">
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <label class="control-label">Customer Group</label>
+                              <select ng-model="productCtrl.discount.customer_group_id" class="form-control">
+                                <option ng-repeat="g in productCtrl.customerGroups" value="{{g.$id}}">{{g.group_name}}</option>
+                              </select>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-1">
+                              <label class="control-label">Quantity</label>
+                              <input type="text" style="text-align:right;" ng-model="productCtrl.discount.product_quantity" placeholder="Qty" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <label class="control-label">Regular Price</label>
+                              <input readonly style="text-align:right;" type="text" ng-model="productCtrl.regular_price" placeholder="Regular Price" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <label class="control-label">Discount Price</label>
+                              <input type="text" style="text-align:right;" ng-model="productCtrl.discount.discount_price" placeholder="Discount Price" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <label class="control-label">Start Date</label>
+                              <input type="date" class="form-control" uib-datepicker-popup ng-model="productCtrl.discount.start_date" is-open="status.opened"
+                                min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <label class="control-label">End Date</label>
+                              <input type="date" class="form-control" uib-datepicker-popup ng-model="productCtrl.discount.end_date" is-open="status.opened"
+                                min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-1 inline-btn">
+                              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Discount"
+                                ng-click="productCtrl.addDiscount()">
+                                <i class="fa fa-plus"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </form>
+                        <div ui-grid="productCtrl.gridDiscount" class="grid" ui-grid-edit ui-grid-cellNav></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="prodSpecial">
+                  <div class="row">
+                    <div class="col-xs-12"><br>
+                      <div class="container">
+                        <form class="form-horizontal" role="form">
+                          <div class="form-group">
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <label class="control-label">Customer Group</label>
+                              <select ng-model="productCtrl.special.customer_group_id" class="form-control">
+                                <option ng-repeat="g in productCtrl.customerGroups" value="{{g.$id}}">{{g.group_name}}</option>
+                              </select>
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-1">
+                              <label class="control-label">Quantity</label>
+                              <input type="text" ng-model="productCtrl.special.product_quantity" placeholder="Qty" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <label class="control-label">Regular Price</label>
+                              <input readonly style="text-align:right;" type="text" ng-model="productCtrl.regular_price" placeholder="Regular Price" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <label class="control-label">Special Price</label>
+                              <input type="text" style="text-align:right;" ng-model="productCtrl.special.special_price" placeholder="Special Price" class="form-control">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <label class="control-label">Start Date</label>
+                              <input style="text-align:right;" type="date" class="form-control" uib-datepicker-popup ng-model="productCtrl.special.start_date" is-open="status.opened"
+                                min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                              <label class="control-label">End Date</label>
+                              <input style="text-align:right;" type="date" class="form-control" uib-datepicker-popup ng-model="productCtrl.special.end_date" is-open="status.opened"
+                                min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
+                            </div>
+                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-1 inline-btn">
+                              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Special Price"
+                                ng-click="productCtrl.addSpecial()">
+                                <i class="fa fa-plus"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <div ng-if="productCtrl.product.special_price != null" class="form-group">
+                            <div class="container">
+                              <div class="row">
+                                <div class="panel panel-default">
+                                  <div class="panel-heading"><h4 class="panel-title">Current Special Pricing</h4></div>
+                                  <div class="panel-body">
+                                    <table class="table">
+                                      <th>Customer Group</th>
+                                      <th style="text-align:right;">Quantity</th>
+                                      <th style="text-align:right;">Regular Price</th>
+                                      <th style="text-align:right;">Special Price</th>
+                                      <th style="text-align:right;">Start Date</th>
+                                      <th style="text-align:right;">End Date</th>
+                                      <th></th>
+                                      <tr>
+                                        <td>{{productCtrl.product.special_customer_group_name}}</td>
+                                        <td style="text-align:right;">{{productCtrl.product.special_product_quantity}}</td>
+                                        <td style="text-align:right;">{{productCtrl.product.product_price | currency}}</td>
+                                        <td style="text-align:right;">{{productCtrl.product.special_price | currency}}</td>
+                                        <td style="text-align:right;">{{productCtrl.product.special_start_date}}</td>
+                                        <td style="text-align:right;">{{productCtrl.product.special_end_date}}</td>
+                                        <td style="text-align:right;">
+                                          <button type="button" class="btn btn-xs btn-danger" uib-tooltip-placement="top" uib-tooltip="Delete Special Pricing"
+                                            ng-click="productCtrl.removeSpecial()">
+                                            <i class="fa fa-minus"></i>
+                                          </button>
+                                        </td>
+                                      </tr>
+                                    </table>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="form-group">
+                            <div class="container">
+                              <div class="row">
+                                <div class="panel panel-default">
+                                  <div class="panel-heading"><h4 class="panel-title">Special Pricing History</h4></div>
+                                  <div class="panel-body">
+                                    <div ui-grid="productCtrl.gridSpecial" class="grid"></div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="prodRewards">
+                  <div class="row">
+                    <div class="col-xs-12"><br>
+                      <div class="container">
+                        rewards
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="prodBannerImage">
+                  <div class="row"><br>
+                    <div class="col-xs-6 col-xs-offset-3">
+                      <span class="file-input btn btn-primary btn-block btn-file">
+                        <h5><i class="fa fa-floppy-o"></i> Click or Drag (New or Update)</h5>
+                        <input type="file" ng-banner-select="productCtrl.onFileSelect($files)">
+                      </span>
+                      <span ng-if="productCtrl.product.product_image !== 'Placeholder'"><br>
+                        <div class="row" align="center">
+                          <img ng-src="{{productCtrl.product.product_image}}">
+                        </div><br>
+                        <button type="button" class="btn btn-xs btn-block btn-danger" ng-click="productCtrl.removeProductImage(productCtrl.product.$id)">
+                          <h5><i class="fa fa-trash"></i> Delete Product Banner Image</h5>
+                        </button>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div role="tabpanel" class="tab-pane" id="prodThumbnails">
+                  <div class="container">
+                    <div class="row"><br>
+                      <div class="col-xs-12">
+                        <span class="file-input btn btn-primary btn-block btn-file">
+                          <h5><i class="fa fa-floppy-o"></i> Click or Drag to Add New Thumbnail</h5>
+                          <input type="file" ng-thumbnail-select="productCtrl.onFileSelect($files)">
+                        </span>
+                      </div>
+                    </div><br>
+                  </div>
+                  <div class="container">
+                    <div class="row">
+                      <div ng-repeat="t in productCtrl.thumbnails" class="col-xs-2">
+                        <div class="panel panel-default">
+                          <div class="panel-body">
+                            <p><div align="center"><img ng-src="{{t.thumbnail_image}}" class="img-responsive"></p>
+                              <button type="button" class="btn btn-xs btn-block btn-danger" ng-click="productCtrl.removeThumbnailImage(t.$id)">
+                                <h6><i class="fa fa-trash"></i> Delete</h6>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

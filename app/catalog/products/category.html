@@ -1,0 +1,52 @@
+<div class="container">
+  <ul class="breadcrumb">
+    <li><a href="#" ui-sref="catalog.home"><i class="menu-icon fa fa-home"></i></a></li>
+    <li><a href="category" ui-sref="catalog.category">{{catalogCategoryCtrl.category.category_name}}</a></li>
+  </ul>
+  <div>
+    <h2>{{catalogCategoryCtrl.category.category_name}}</h2>
+    <div class="row">
+      <div class="col-sm-2"><img ng-src="{{catalogCategoryCtrl.category.category_banner_image}}" class="img-thumbnail" /></div>
+      <div class="col-sm-10" ng-bind-html="catalogCategoryCtrl.category.category_description"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">
+      <h3>Refine Search</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-7">
+      <a href="" id="compare-total">Product Compare</a>
+    </div>
+    <div class="col-md-1">
+      <label class="control-label text-right" for="input-sort">Sort By:</label>
+    </div>
+    <div class="col-md-4">
+      <select id="input-sort" class="form-control" onchange="">
+        <option value="" selected="selected">Selected Sort</option>
+        <option value="">Name</option>
+        <option value="">Price</option>
+        <option value="">Rating</option>
+      </select>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div ng-repeat="p in catalogCategoryCtrl.products" class="product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12">
+      <div class="product-thumb transition">
+        <div class="panel-body">
+          <p><div class="image"><a href="" ng-click="catalogCategoryCtrl.goProduct(p.$id)"><img ng-src="{{p.product_image}}" class="img-responsive"></a></div></p>
+        </div>
+        <div class="caption">
+          <p><h4><a href="" ng-click="catalogCategoryCtrl.goProduct(p.$id)">{{p.product_name}}</h4></a></p>
+          <p ng-bind-html="p.product_description | limitTo: 150"></p>
+          <p class="price-new">{{p.product_price | currency}}</p>
+        </div>
+        <div class="button-group">
+          <button type="button" ng-click=""><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Add to Cart</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

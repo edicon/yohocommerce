@@ -1,0 +1,409 @@
+<div class="row">
+  <div class="col-xs-12">
+    <uib-tabset>
+      <uib-tab>
+        <uib-tab-heading>
+          <i class="menu-icon fa fa-user"></i> Customers
+        </uib-tab-heading><br>
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Customer Detail - {{customerCtrl.customer.customer_full_name}}</h3>
+                </div>
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <a type="button" class="btn btn-sm btn-default detail-margin-btn pull-right"
+                        tooltip-placement="top" uib-tooltip="Cancel" href="#/customers" ui-sref="admin.sales.customers"><i class="fa fa-reply"></i></a>
+                      <button ng-if="customerCtrl.custId !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+                        tooltip-placement="top" uib-tooltip="Last" ng-click="customerCtrl.last()">
+                        <i class="fa fa-fast-forward"></i>
+                      </button>
+                      <button ng-if="customerCtrl.custId !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+                        tooltip-placement="top" uib-tooltip="Next" ng-click="customerCtrl.next()">
+                        <i class="fa fa-step-forward"></i>
+                      </button>
+                      <button ng-if="customerCtrl.custId !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+                        tooltip-placement="top" uib-tooltip="Back" ng-click="customerCtrl.back()">
+                        <i class="fa fa-step-backward"></i>
+                      </button>
+                      <button ng-if="customerCtrl.custId !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+                        tooltip-placement="top" uib-tooltip="First" ng-click="customerCtrl.first()">
+                        <i class="fa fa-fast-backward"></i>
+                      </button>
+                      <button ng-if="customerCtrl.custId === null" type="button" class="btn btn-sm btn-primary detail-btn pull-right"
+                        tooltip-placement="top" uib-tooltip="Save" ng-click="customerCtrl.addCustomer()">
+                        <i class="fa fa-floppy-o"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <uib-tabset>
+                      <uib-tab>
+                        <uib-tab-heading>
+                          <i class="menu-icon fa fa-user-secret"></i> Profile
+                        </uib-tab-heading>
+                          <div class="row">
+                            <div class="col-xs-12"><br>
+                              <div class="container">
+                                <form class="form-horizontal" role="form">
+                                  <div class="form-group">
+                                    <label class="control-label col-xs-2">&ast; First Name</label>
+                                    <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                      <input type="text" ng-model="customerCtrl.customer.customer_first_name" placeholder="First Name" class="form-control">
+                                    </div>
+                                    <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                      <input type="text" ng-model="customerCtrl.customer.customer_first_name" ng-change="customerCtrl.customer.$save()"
+                                        placeholder="First Name" class="form-control">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="control-label col-xs-2">&ast; Last Name</label>
+                                    <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                      <input type="text" ng-model="customerCtrl.customer.customer_last_name" placeholder="Last Name" class="form-control">
+                                    </div>
+                                    <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                      <input type="text" ng-model="customerCtrl.customer.customer_last_name"
+                                        ng-change="customerCtrl.customer.$save()" placeholder="Last Name" class="form-control">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="control-label col-xs-2">&ast; Customer Group</label>
+                                    <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                      <select ng-model="customerCtrl.customer.customer_group_id" class="form-control">
+                                        <option ng-repeat="g in customerCtrl.groups" value="{{g.$id}}">{{g.group_name}}</option>
+                                      </select>
+                                    </div>
+                                    <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                      <select ng-model="customerCtrl.customer.customer_group_id" ng-change="customerCtrl.saveGroup()" class="form-control">
+                                        <option ng-repeat="g in customerCtrl.groups" value="{{g.$id}}">{{g.group_name}}</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="control-label col-xs-2">&ast; Status</label>
+                                    <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                      <select ng-model="customerCtrl.customer.customer_status" class="form-control">
+                                        <option value="1">Enabled</option>
+                                        <option value="2">Disabled</option>
+                                      </select>
+                                    </div>
+                                    <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                      <select class="form-control" ng-model="customerCtrl.customer.customer_status"
+                                        ng-change="customerCtrl.savecustomerStatus()" class="form-control">
+                                          <option value= "1">Enabled</option>
+                                          <option value= "2">Disabled</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="control-label col-xs-2">&ast; E-Mail</label>
+                                    <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                      <input type="text" ng-model="customerCtrl.customer.customer_email" placeholder="Customer E-Mail" class="form-control">
+                                    </div>
+                                    <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                      <input type="text" ng-model="customerCtrl.customer.customer_email" ng-change="customerCtrl.customer.$save()"
+                                        placeholder="Customer E-Mail" class="form-control">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="control-label col-xs-2">&ast; Phone Number</label>
+                                    <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                      <input type="text" ng-model="customerCtrl.customer.customer_phone" placeholder="Phone Number" class="form-control">
+                                    </div>
+                                    <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                      <input type="text" ng-model="customerCtrl.customer.customer_phone" ng-change="customerCtrl.customer.$save()"
+                                        placeholder="Phone Number" class="form-control">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <label class="control-label col-xs-2">Fax</label>
+                                    <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                      <input type="text" ng-model="customerCtrl.customer.customer_fax" placeholder="Fax Number" class="form-control">
+                                    </div>
+                                    <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                      <input type="text" ng-model="customerCtrl.customer.customer_fax" ng-change="customerCtrl.customer.$save()"
+                                        placeholder="Fax Number" class="form-control">
+                                    </div>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                      </uib-tab>
+                      <uib-tab>
+                        <uib-tab-heading>
+                          <i class="menu-icon fa fa-map-marker"></i> Addresses
+                        </uib-tab-heading>
+                        <div class="row">
+                          <div class="col-xs-12"><br>
+                            <div class="container">
+                              <div class="col-xs-2">
+                                <ul class="nav nav-pills nav-stacked">
+                                  <li class="active"><a href="#addressDefault" data-toggle="tab">Default Address</a></li>
+                                  <li ng-repeat="a in customerCtrl.addresses">
+                                    <a href="#address{{a.priority}}" ng-click="customerCtrl.getAddress(a.$id)" data-toggle="tab">
+                                      <i class="fa fa-minus-circle" ng-click="customerCtrl.removeAddress(a.$id)"></i>
+                                      Address {{a.priority}}</a>
+                                  </li>
+                                  <li><a href="" ng-click="customerCtrl.addAddress();"><i class="fa fa-plus-circle"></i> Add Address</a></li>
+                                </ul>
+                              </div>
+                              <div class="col-xs-10">
+                                <div class="tab-content">
+                                  <div role="tabpanel" class="tab-pane {{customerCtrl.defaultAddressTab}}" id="addressDefault">
+                                    <div class="panel panel-default">
+                                      <div class="panel-heading">
+                                        <h3 class="panel-title">Default Address</h3>
+                                      </div>
+                                      <div class="panel-body">
+                                        <form class="form-horizontal" role="form">
+                                          <div class="form-group">
+                                            <label class="control-label col-xs-2">&ast; First Name</label>
+                                            <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_first_name" placeholder="First Name" class="form-control">
+                                            </div>
+                                            <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_first_name"
+                                                ng-change="customerCtrl.customer.$save()" placeholder="First Name" class="form-control">
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="control-label col-xs-2">&ast; Last Name</label>
+                                            <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_last_name" placeholder="Last Name" class="form-control">
+                                            </div>
+                                            <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_last_name"
+                                                ng-change="customerCtrl.customer.$save()" placeholder="Last Name" class="form-control">
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="control-label col-xs-2">Company</label>
+                                            <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.company_name" placeholder="Company Name" class="form-control">
+                                            </div>
+                                            <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.company_name"
+                                                ng-change="customerCtrl.customer.$save()" placeholder="Company Name" class="form-control">
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="control-label col-xs-2">&ast; Address 1</label>
+                                            <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_address1" placeholder="Address 1" class="form-control">
+                                            </div>
+                                            <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_address1"
+                                                ng-change="customerCtrl.customer.$save()" placeholder="Address 1" class="form-control">
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="control-label col-xs-2">Address 2</label>
+                                            <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_address2" placeholder="Address 2" class="form-control">
+                                            </div>
+                                            <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_address2"
+                                                ng-change="customerCtrl.customer.$save()" placeholder="Address 2" class="form-control">
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="control-label col-xs-2">City</label>
+                                            <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_city" placeholder="City" class="form-control">
+                                            </div>
+                                            <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_city"
+                                                ng-change="customerCtrl.customer.$save()" placeholder="City" class="form-control">
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="control-label col-xs-2">Postal Code / ZIP</label>
+                                            <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_postal" placeholder="Postal Code / ZIP" class="form-control">
+                                            </div>
+                                            <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_postal"
+                                                ng-change="customerCtrl.customer.$save()" placeholder="Postal Code / ZIP" class="form-control">
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="control-label col-xs-2">Country</label>
+                                            <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_country" placeholder="Country" class="form-control">
+                                            </div>
+                                            <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_country"
+                                                ng-change="customerCtrl.customer.$save()" placeholder="Country" class="form-control">
+                                            </div>
+                                          </div>
+                                          <div class="form-group">
+                                            <label class="control-label col-xs-2">Province / State</label>
+                                            <div ng-if="customerCtrl.custId === null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_province" placeholder="Province / State" class="form-control">
+                                            </div>
+                                            <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                              <input type="text" ng-model="customerCtrl.customer.customer_province"
+                                                ng-change="customerCtrl.customer.$save()" placeholder="Province / State" class="form-control">
+                                            </div>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </div>
+
+                                  <div ng-repeat="ad in customerCtrl.addresses" role="tabpanel" class="tab-pane" id="address{{ad.priority}}">
+                                    <div class="panel panel-default">
+                                      <div class="panel-heading">
+                                        <h3 class="panel-title">Address {{ad.priority}}</h3>
+                                      </div>
+                                      <div class="panel-body">
+                                        <div class="panel-body">
+                                          <form class="form-horizontal" role="form">
+                                            <div class="form-group">
+                                              <label class="control-label col-xs-2">&ast; First Name</label>
+                                              <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                                <input type="text" ng-model="customerCtrl.address.customer_first_name"
+                                                  ng-change="customerCtrl.address.$save()" placeholder="First Name" class="form-control">
+                                              </div>
+                                            </div>
+                                            <div class="form-group">
+                                              <label class="control-label col-xs-2">&ast; Last Name</label>
+                                              <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                                <input type="text" ng-model="customerCtrl.address.customer_last_name"
+                                                  ng-change="customerCtrl.address.$save()" placeholder="Last Name" class="form-control">
+                                              </div>
+                                            </div>
+                                            <div class="form-group">
+                                              <label class="control-label col-xs-2">Company</label>
+                                              <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                                <input type="text" ng-model="customerCtrl.address.company_name"
+                                                  ng-change="customerCtrl.address.$save()" placeholder="Company Name" class="form-control">
+                                              </div>
+                                            </div>
+                                            <div class="form-group">
+                                              <label class="control-label col-xs-2">&ast; Address 1</label>
+                                              <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                                <input type="text" ng-model="customerCtrl.address.customer_address1"
+                                                  ng-change="customerCtrl.address.$save()" placeholder="Address 1" class="form-control">
+                                              </div>
+                                            </div>
+                                            <div class="form-group">
+                                              <label class="control-label col-xs-2">Address 2</label>
+                                              <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                                <input type="text" ng-model="customerCtrl.address.customer_address2"
+                                                  ng-change="customerCtrl.address.$save()" placeholder="Address 2" class="form-control">
+                                              </div>
+                                            </div>
+                                            <div class="form-group">
+                                              <label class="control-label col-xs-2">City</label>
+                                              <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                                <input type="text" ng-model="customerCtrl.address.customer_city"
+                                                  ng-change="customerCtrl.address.$save()" placeholder="City" class="form-control">
+                                              </div>
+                                            </div>
+                                            <div class="form-group">
+                                              <label class="control-label col-xs-2">Postal Code / ZIP</label>
+                                              <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                                <input type="text" ng-model="customerCtrl.address.customer_postal"
+                                                  ng-change="customerCtrl.address.$save()" placeholder="Postal Code / ZIP" class="form-control">
+                                              </div>
+                                            </div>
+                                            <div class="form-group">
+                                              <label class="control-label col-xs-2">Country</label>
+                                              <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                                <input type="text" ng-model="customerCtrl.address.customer_country"
+                                                  ng-change="customerCtrl.address.$save()" placeholder="Country" class="form-control">
+                                              </div>
+                                            </div>
+                                            <div class="form-group">
+                                              <label class="control-label col-xs-2">Province / State</label>
+                                              <div ng-if="customerCtrl.custId !== null" class="col-xs-8">
+                                                <input type="text" ng-model="customerCtrl.address.customer_province"
+                                                  ng-change="customerCtrl.address.$save()" placeholder="Province / State" class="form-control">
+                                              </div>
+                                            </div>
+                                          </form>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </uib-tab>
+                      <uib-tab>
+                        <uib-tab-heading>
+                          <i class="menu-icon fa fa-history"></i> History
+                        </uib-tab-heading>
+                        <div class="row">
+                          <div class="col-xs-12"><br>
+                            <div class="container">
+                              <form class="form-horizontal" role="form">
+                                history
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </uib-tab>
+                      <uib-tab>
+                        <uib-tab-heading>
+                          <i class="menu-icon fa fa-indent"></i> Transactions
+                        </uib-tab-heading>
+                        <div class="row">
+                          <div class="col-xs-12"><br>
+                            <div class="container">
+                              <form class="form-horizontal" role="form">
+                                transactions
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </uib-tab>
+                      <uib-tab>
+                        <uib-tab-heading>
+                          <i class="menu-icon fa fa-trophy"></i> Reward Points
+                        </uib-tab-heading>
+                        <div class="row">
+                          <div class="col-xs-12"><br>
+                            <div class="container">
+                              <form class="form-horizontal" role="form">
+                                reward points
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </uib-tab>
+                      <uib-tab>
+                        <uib-tab-heading>
+                          <i class="menu-icon fa fa-key"></i> Security
+                        </uib-tab-heading>
+                        <div class="row">
+                          <div class="col-xs-12"><br>
+                            <div class="container">
+                              <form class="form-horizontal" role="form">
+                                security
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </uib-tab>
+                    </uib-tabset>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </uib-tab>
+        <uib-tab select=customerCtrl.routeGroups()>
+          <uib-tab-heading>
+            <i class="menu-icon fa fa-users"></i> Customer Groups
+          </uib-tab-heading>
+      </uib-tab>
+    </div>
+  </div>
+</div>

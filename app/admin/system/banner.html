@@ -1,0 +1,48 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> {{bannerCtrl.bannerName}}</h3>
+      </div>
+      <div class="panel-body">
+        <div class="col-xs-2">
+          <div class="row">
+            <span class="file-input btn btn-primary btn-block btn-file">
+              Select or Drag File Here
+              <input type="file" ng-file-select="bannerCtrl.onFileSelect($files)">
+            </span>
+          </div><br>
+          <div ng-if="bannerCtrl.bannerArray === 'yes'" class="panel panel-default">
+            <div class="panel-body">
+              <div ng-repeat="s in bannerCtrl.bannerImages">
+                <div class="row">
+                  <div>
+                    <img ng-src="{{s.image}}" class="img-responsive">
+                  </div>
+                </div>
+                <div class="row">
+                  <button type="button" class="btn btn-xs btn-block btn-danger" ng-click="bannerCtrl.removeImage(s.$id)">
+                   Click to Delete Image
+                  </button>
+                </div><br>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-10">
+          <div class="row">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <uib-carousel interval="bannerCtrl.myInterval" no-wrap="bannerCtrl.noWrapSlides">
+                  <uib-slide ng-repeat="s in bannerCtrl.bannerImages" active="slide.active">
+                    <img ng-src="{{s.image}}" style="margin:auto; height: 305px; width: 800px">
+                  </uib-slide>
+                </uib-carousel>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

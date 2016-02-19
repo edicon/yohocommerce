@@ -1,0 +1,65 @@
+<div class="row">
+  <div class="col-xs-12">
+    <span ng-if="productsCtrl.listButtons === true">
+      <div class="form-group-sm">
+        <a type="button" class="btn btn-sm btn-primary list-btn pull-right" tooltip-placement="top" uib-tooltip="New"
+          href="#/product" ui-sref="admin.catalogs.product"><i class="fa fa-plus"></i>
+        </a>
+      </div>
+    </span>
+    <span ng-if="productsCtrl.listButtons === false"></span>
+    <ul class="nav nav-tabs" role="tablist">
+      <li ng-click="productsCtrl.showListBtns()" role="presentation" class="{{productsCtrl.productTabActive}}">
+        <a href="#productList" role="tab" data-toggle="tab"><i class="menu-icon fa fa-th-large"></i> Products</a>
+      </li>
+      <li ng-click="productsCtrl.showFeatureBtns()" role="presentation" class="{{productsCtrl.featureTabActive}}">
+        <a href="#productFeatured" role="tab" data-toggle="tab"><i class="menu-icon fa fa-certificate"></i> Featured Products</a>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane {{productsCtrl.productTabActive}}" id="productList">
+        <div class="row">
+          <div class="col-xs-12"><br>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title"><span class="menu-icon fa fa-th-large"></span> Products</h4>
+              </div>
+              <div class="panel-body">
+                <div class="container">
+                  <div ui-grid="productsCtrl.gridProducts" class="grid-500" ui-grid-edit ui-grid-cellNav></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div role="tabpanel" class="tab-pane {{productsCtrl.featureTabActive}}" id="productFeatured">
+        <div class="row">
+          <div class="col-xs-12"><br>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title"><span class="menu-icon fa fa-certificate"></span> Featured Products</h4>
+              </div>
+              <div class="panel-body">
+                <div class="row">
+                  <div class="container">
+                    <div class="col-xs-6">
+                      <h5>Products</h5>
+                      <div ui-grid="productsCtrl.selectProducts" ui-grid-selection></div>
+                    </div>
+                    <div class="col-xs-6">
+                      <h5>Featured Products</h5>
+                      <div class="grid" ui-grid="productsCtrl.featuredProducts" ui-grid-selection></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

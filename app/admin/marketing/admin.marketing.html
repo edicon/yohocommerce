@@ -1,0 +1,26 @@
+<div id="content-wrapper">
+	<div class="page-content">
+		<div class="row header">
+			<div class="col-xs-12">
+				<span ng-include="'admin/common/topbar.html'"></span>
+        <div class="meta">
+          <div class="page"><span class="menu-icon fa fa-share-alt"></span> Marketing</div>
+          <div class="breadcrumb-links">
+						<a href="" ui-sref="admin.dashboard">Dashboard</a> / Marketing</div>
+        </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+				<a href="#/affiliates" ui-sref="admin.marketing.affiliates"><span class="menu-icon fa fa-user-plus"></span> Affiliates</a>&nbsp;&nbsp;
+				<a href="#/coupons" ui-sref="admin.marketing.coupons"><span class="menu-icon fa fa-tag"></span> Coupons</a>
+		  </div><br>
+			<div ui-view="list"></div>
+		</div>
+	</div>
+</div>

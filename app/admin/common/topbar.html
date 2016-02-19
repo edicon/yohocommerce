@@ -1,0 +1,48 @@
+<div class="user pull-right">
+  <span class="item dropdown" uib-dropdown on-toggle="toggled(open)">
+    <a href class="dropdown-toggle" id="simple-dropdown" uib-dropdown-toggle>
+      <img ng-src="http://www.gravatar.com/avatar/{{profile.emailHash}}" class="nav-pic" />
+    </a>
+    <ul class="dropdown-menu dropdown-menu-right">
+      <li class="dropdown-header">{{profile.name}}</li>
+      <li class="divider"></li>
+      <li class="link">
+        <a ng-href="#/profile/{{profile.uid}}">Profile</a>
+      </li>
+      <li class="link">
+        <a href="#" tooltip="Update Password">Password</a>
+      </li>
+      <li class="divider"></li>
+      <li class="link">
+        <a ng-click="logout()" style="cursor:pointer">Logout</a>
+      </li>
+    </ul>
+  </span>
+  <span class="item dropdown" uib-dropdown on-toggle="toggled(open)">
+    <a href id="simple-dropdown" uib-dropdown-toggle><i class="fa fa-shopping-bag"></i></a>
+    <ul class="dropdown-menu dropdown-menu-right">
+      <li class="dropdown-header">Stores</li>
+      <li class="link">
+        <a href="#">Your Store</a>
+      </li>
+      <li class="divider"></li>
+      <li class="dropdown-header">Help</li>
+      <li class="link">
+        <a href="#">Documentation</a>
+      </li>
+      <li class="link">
+        <a href="#">Support Forum</a>
+      </li>
+    </ul>
+  </span>
+  <span class="item dropdown" uib-dropdown on-toggle="toggled(open)">
+    <a href id="simple-dropdown" uib-dropdown-toggle><i class="fa fa-bell-o"></i></a>
+    <ul class="dropdown-menu dropdown-menu-right">
+      <li class="dropdown-header">Notifications</li>
+      <li class="divider"></li>
+      <li class="link">
+        <a href="#">Server Down!</a>
+      </li>
+    </ul>
+  </span>
+</div>

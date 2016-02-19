@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>e-commerce site</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="bower_components/angular-ui-grid/ui-grid.min.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/ui-select/dist/select.min.css">
+    <link rel="stylesheet" href="bower_components/rdash-ui/dist/css/rdash.css" />
+    <link rel="stylesheet" href="styles/main.css">
+  </head>
+  <body ng-app="app">
+
+    <div ui-view></div>
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID -->
+     <!--<script>
+       !function(A,n,g,u,l,a,r){A.GoogleAnalyticsObject=l,A[l]=A[l]||function(){
+       (A[l].q=A[l].q||[]).push(arguments)},A[l].l=+new Date,a=n.createElement(g),
+       r=n.getElementsByTagName(g)[0],a.src=u,r.parentNode.insertBefore(a,r)
+       }(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+       ga('create', 'UA-XXXXX-X');
+       ga('send', 'pageview');
+    </script>-->
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/firebase/firebase.js"></script>
+    <script src="bower_components/angularfire/dist/angularfire.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/angular-md5/angular-md5.js"></script>
+    <script src="bower_components/rdash-ui/dist/ui-rdash.js"></script>
+    <script src="bower_components/angular-ui-grid/ui-grid.js"></script>
+    <script src="bower_components/angular-fileupload/angular-filereader.min.js"></script>
+    <script src="bower_components/tinymce-dist/tinymce.js"></script>
+    <script src="bower_components/angular-ui-tinymce/src/tinymce.js"></script>
+    <script src="bower_components/ui-select/dist/select.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+        <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="app.js"></script>
+    <script src="auth/auth.controller.js"></script>
+    <script src="auth/auth.service.js"></script>
+    <script src="catalog/catalog.routes.js"></script>
+    <script src="catalog/catalog.controller.js"></script>
+    <script src="catalog/catalog.service.js"></script>
+    <script src="catalog/cart/cart.service.js"></script>
+    <script src="catalog/products/category.controller.js"></script>
+    <script src="catalog/products/subcategory.controller.js"></script>
+    <script src="catalog/products/featured.controller.js"></script>
+    <script src="catalog/products/product.controller.js"></script>
+    <script src="register/register.service.js"></script>
+
+
+    <script src="admin/profile/profile.controller.js"></script>
+    <script src="admin/profile/profile.service.js"></script>
+    <script src="admin/admin.controller.js"></script>
+    <script src="admin/admin.routes.js"></script>
+    <script src="admin/dashboard/dashboard.controller.js"></script>
+    <script src="admin/catalogs/categories.controller.js"></script>
+    <script src="admin/catalogs/categories.service.js"></script>
+    <script src="admin/catalogs/subcategories.controller.js"></script>
+    <script src="admin/catalogs/subcategories.service.js"></script>
+    <script src="admin/catalogs/products.controller.js"></script>
+    <script src="admin/catalogs/products.service.js"></script>
+    <script src="admin/catalogs/product.controller.js"></script>
+    <script src="admin/catalogs/product.service.js"></script>
+    <script src="admin/sales/orders.controller.js"></script>
+    <script src="admin/sales/orders.service.js"></script>
+    <script src="admin/sales/recurrings.controller.js"></script>
+    <script src="admin/sales/recurrings.service.js"></script>
+    <script src="admin/sales/returns.controller.js"></script>
+    <script src="admin/sales/returns.service.js"></script>
+    <script src="admin/sales/customers.controller.js"></script>
+    <script src="admin/sales/customers.service.js"></script>
+    <script src="admin/sales/customergroups.service.js"></script>
+    <script src="admin/sales/customer.controller.js"></script>
+    <script src="admin/sales/customer.service.js"></script>
+    <script src="admin/sales/vouchers.controller.js"></script>
+    <script src="admin/sales/vouchers.service.js"></script>
+    <script src="admin/marketing/marketing.controller.js"></script>
+    <script src="admin/marketing/marketing.service.js"></script>
+    <script src="admin/extensions/extensions.controller.js"></script>
+    <script src="admin/system/banners.controller.js"></script>
+    <script src="admin/system/banners.service.js"></script>
+    <script src="admin/system/banner.controller.js"></script>
+    <script src="admin/system/banner.service.js"></script>
+    <script src="admin/system/library.controller.js"></script>
+    <script src="admin/system/library.service.js"></script>
+    <script src="admin/tools/tools.controller.js"></script>
+    <script src="admin/reports/reports.controller.js"></script>
+
+</body>
+</html>

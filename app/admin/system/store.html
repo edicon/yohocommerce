@@ -1,0 +1,44 @@
+<div id="content-wrapper">
+	<div class="page-content">
+		<div class="row header">
+			<div class="col-xs-12">
+				<span ng-include="'admin/common/topbar.html'"></span>
+        <div class="meta">
+          <div class="page"><span class="menu-icon fa fa-shopping-bag"></span> Store</div>
+          <div class="breadcrumb-links">Home / Setup / Store</div>
+        </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> Store List</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-4">
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control" placeholder="Search stores">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button"> <span class="menu-icon fa fa-search"></span></button>
+              </span>
+            </div>
+          </div>
+          <div class="col-xs-8">
+            <a ng-if="systemCtrl.currentState === 'admin.system.stores'" href="#/store" ui-sref="admin.system.store" class="btn btn-primary btn-sm pull-right">
+              <span class="menu-icon fa fa-sitemap"></span> New Store</a>
+            <a ng-if="catalogsCtrl.currentState === 'admin.system'" href="#/store" ui-sref=".store" class="btn btn-primary btn-sm pull-right">
+              <span class="menu-icon fa fa-sitemap"></span> Add New Store</a>
+          </div>
+        </div><br>
+        <div>
+          <div id="grid1" ui-grid="{ data: systemCtrl.myData }"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

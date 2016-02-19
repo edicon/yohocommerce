@@ -1,0 +1,64 @@
+<div class="container">
+  <ul class="breadcrumb">
+    <li><a href="#" ui-sref="catalog.home"><i class="menu-icon fa fa-home"></i></a></li>
+    <li><a href="" ng-click="catalogProductCtrl.goCategory(catalogProductCtrl.product.product_category_id)">{{catalogProductCtrl.product.product_category}}</a></li>
+    <li><a href="product" ui-sref="catalog.product">{{catalogProductCtrl.product.product_name}}</a></li>
+  </ul>
+  <div class="row">
+    <div class="col-sm-8">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div align="center"><img ng-src="{{catalogProductCtrl.product.product_image}}"></div>
+        </div>
+      </div>
+      <ul class="thumbnails">
+        <li ng-repeat="t in catalogProductCtrl.thumbnails" class="image-additional"><a class="thumbnail" href=""><img ng-src="{{t.thumbnail_image}}" class="img-responsive"></a></li>
+      </ul>
+      <uib-tabset>
+        <uib-tab heading="Description">
+          <p ng-bind-html="catalogProductCtrl.product.product_description"></p>
+        </uib-tab>
+        <uib-tab heading="Specification">
+          <p ng-bind-html="catalogProductCtrl.product.product_description"></p>
+        </uib-tab>
+        <uib-tab heading="Reviews (0)">
+          <p ng-bind-html="catalogProductCtrl.product.product_description"></p>
+        </uib-tab>
+      </uib-tabset>
+
+    </div>
+    <div class="col-sm-4">
+      <div class="btn-group">
+        <button type="button" data-toggle="tooltip" class="btn btn-default" ng-click="catalogProductCtrl.addWishList(catalogProductCtrl.product.$id)"><i class="fa fa-heart"></i></button>
+        <button type="button" data-toggle="tooltip" class="btn btn-default" ng-click="catalogProductCtrl.addCompare(catalogProductCtrl.product.$id)"><i class="fa fa-exchange"></i></button>
+      </div>
+      <h1>{{catalogProductCtrl.product.product_name}}</h1>
+      <ul class="list-unstyled">
+        <li>Reward Points: 100</li>
+      </ul>
+
+      <span ng-if="catalogProductCtrl.product.special_price != null">
+        <ul class="list-unstyled">
+          <li><s>{{catalogProductCtrl.product.product_price | currency}}</s></li>
+        </ul>
+        <h2>{{catalogProductCtrl.product.special_price | currency}}</h2>
+      </span>
+      <span ng-if="catalogProductCtrl.product.special_price == null"><p>
+        <h2>{{catalogProductCtrl.product.product_price | currency}}</h2>
+      </span>
+
+      <ul class="list-unstyled">
+        <li>Price in Reward Points: 1000</li>
+      </ul>
+
+      <div class="form-group">
+        <button type="button" class="btn btn-primary btn-lg btn-block">Add to Cart</button>
+      </div>
+      <p>
+        <span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
+        <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>
+        <a href="" ng-click="">Reviews</a> / <a href="" ng-click="">Write a Review</a></p>
+
+    </div>
+  </div>
+</div>

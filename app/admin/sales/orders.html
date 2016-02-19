@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> Order List</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-4">
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control" placeholder="Search orders">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button"> <span class="menu-icon fa fa-search"></span></button>
+              </span>
+            </div>
+          </div>
+          <div class="col-xs-8">
+						<a ng-if="salesCtrl.currentState === 'admin.sales' || salesCtrl.currentState === 'admin.sales.orders'"
+							href="#/order" ui-sref="admin.orders.order" class="btn btn-primary btn-sm pull-right">
+							<span class="menu-icon fa fa-clipboard"></span> New Order</a>
+						<a ng-if="salesCtrl.currentState === 'admin.orders'" href="#/order" ui-sref=".order" class="btn btn-primary btn-sm pull-right">
+							<span class="menu-icon fa fa-clipboard"></span> New Order</a>
+          </div>
+        </div><br>
+        <div>
+          <div id="grid1" ui-grid="{ data: salesCtrl.myData }"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

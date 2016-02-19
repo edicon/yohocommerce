@@ -1,0 +1,31 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> Affiliate List</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-4">
+            <div class="input-group input-group-sm">
+              <input type="text" class="form-control" placeholder="Search affiliates">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button"> <span class="menu-icon fa fa-search"></span></button>
+              </span>
+            </div>
+          </div>
+          <div class="col-xs-8">
+            <a ng-if="marketingCtrl.currentState === 'admin.marketing' || marketingCtrl.currentState === 'admin.marketing.affiliates'"
+							href="#/marketing" ui-sref="admin.marketing.affiliate" class="btn btn-primary btn-sm pull-right">
+							<span class="menu-icon fa fa-user-plus"></span> New Affiliate</a>
+						<a ng-if="marketingCtrl.currentState === 'admin.affiliates'" href="#/affiliate" ui-sref=".affiliate" class="btn btn-primary btn-sm pull-right">
+							<span class="menu-icon fa fa-user-plus"></span> New Affiliate</a>
+          </div>
+        </div><br>
+        <div>
+          <div id="grid1" ui-grid="{ data: marketingCtrl.myData }"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

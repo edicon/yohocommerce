@@ -1,0 +1,28 @@
+<div class="container">
+  <h3>Featured Products</h3>
+  <div class="row">
+    <div ng-repeat="p in catalogFeaturedCtrl.featuredProducts" class="product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12">
+      <div class="product-thumb transition">
+        <div class="panel-body">
+          <p><div class="image"><a href="" ng-click="catalogFeaturedCtrl.goProduct(p.$id)">
+            <img ng-src="{{p.product_image}}" class="img-responsive"></a></div>
+          </p>
+        </div>
+        <div class="caption">
+          <p><h4><a href="" ng-click="catalogFeaturedCtrl.goProduct(p.$id)">{{p.product_name}}</h4></a></p>
+          <p ng-bind-html="p.product_description | limitTo: 150"></p>
+          <span ng-if="p.special_price"><p>
+            <strong>{{p.special_price | currency}}</strong> &nbsp;&nbsp;<s>{{p.product_price | currency}}</s></p>
+          </span>
+          <span ng-if="p.special_price == null"><p>
+            <strong>{{p.product_price | currency}}</strong></p>
+          </span>
+        </div>
+        <div class="button-group">
+          <button type="button" ng-click="catalogFeaturedCtrl.addToCart(p.$id)"><i class="fa fa-shopping-cart"></i>
+            <span class="hidden-xs hidden-sm hidden-md">Add to Cart</span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

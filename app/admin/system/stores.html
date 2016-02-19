@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> Store List</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <a ng-if="systemCtrl.currentState === 'admin.system.stores'" href="#/system" ui-sref="admin.system.store" class="btn btn-primary btn-sm pull-right">
+              <span class="menu-icon fa fa-shopping-bag"></span> New Store</a>
+            <a ng-if="systemCtrl.currentState === 'admin.system'" href="#/system" ui-sref=".store" class="btn btn-primary btn-sm pull-right">
+              <span class="menu-icon fa fa-shopping-bag"></span> Add New Store</a>
+          </div>
+        </div><br>
+        <div>
+          <div id="grid1" ui-grid="{ data: systemCtrl.myData }"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
