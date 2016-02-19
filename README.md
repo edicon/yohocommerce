@@ -1,4 +1,4 @@
-# bluerockapps-marketplace — Angular - Firebase port of the popular Opencart marketplace
+# Angular - Firebase port of the popular Opencart marketplace
 
 This project was inspired by [opencart](http://www.opencart.com/), the popular php-based open source shopping cart solution.
 
@@ -8,7 +8,7 @@ The project is an implementation of the Angular model-view-controller (MVC) desi
 ## Getting Started
 
 We assume you have knowledge of programming and at least knowledge of JavaScript and AngularJS. We recommend going through
-[A Better Way to Learn AngularJS](https://thinkster.io/a-better-way-to-learn-angularjs) if you're not familiar with AngularJS.
+[A Better Way to Learn AngularJS](https://thinkster.io/a-better-way-to-learn-angularjs), by thinkster.io, if you're not familiar with AngularJS.
 
 The backend database is provided by [Firebase](https://www.firebase.com/). In order to connect the app to your own Firebase instance, you will need to
 get a free Firebase account and create a Firebase app. The visit our wiki page to see how to setup your Firebase connection.
