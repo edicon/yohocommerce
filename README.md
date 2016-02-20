@@ -43,7 +43,7 @@ npm install
 Run the command below to install `grunt`
 
 ```
-npm install -g grunt-cli
+sudo npm install -g grunt-cli
 ```
 
 ### Run the Application
