@@ -25,7 +25,7 @@ angular.module('app')
             },
             "carousel@catalog": {
               controller: 'CatalogCtrl as catalogCtrl',
-              templateUrl: 'catalog/home/carousel.html'
+              templateUrl: 'catalog/common/carousel.html'
             },
             "featured@catalog": {
               controller: 'CatalogFeaturedCtrl as catalogFeaturedCtrl',

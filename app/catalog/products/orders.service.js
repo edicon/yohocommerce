@@ -1,27 +1,27 @@
-app.factory('Cart', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+app.factory('Orders', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
   function (          $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
-    var ref = new Firebase(FirebaseUrl+'carts');
-    var carts = $firebaseArray(ref.child(tid));
+    var ref = new Firebase(FirebaseUrl+'orders');
+    var orders = $firebaseArray(ref.child(tid));
 
-    var cart = {
+    var order = {
 
-      addCart: function(theObj) {
-        return carts.$add().then(function(theRef) {
+      addOrder: function(theObj) {
+        return orders.$add().then(function(theRef) {
           return theRef.key();
         });
       },
 
-      /* product ID is used as node ID (theObj.$id) on cart array */
+      /* product ID is used as node ID (theObj.$id) on order array */
       addProduct: function(theObj) {
         console.log(theObj)
-        var theRef = new Firebase(FirebaseUrl+'carts/'+tid+'/'+theObj.cartId+'/'+theObj.$id);
+        var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.orderId+'/'+theObj.$id);
         theRef.update( {product_id: theObj.$id, product_name: theObj.product_name, product_regular_price: theObj.product_price,
           product_quantity: theObj.product_quantity, product_special_price: theObj.special_price, product_image: theObj.product_image,
-          cart_update_date: Firebase.ServerValue.TIMESTAMP} );
+          order_update_date: Firebase.ServerValue.TIMESTAMP} );
       },
 
       nextProduct: function(theObj) {
-        var data = $firebaseArray(ref.child(tid).child(theObj.cartId));
+        var data = $firebaseArray(ref.child(tid).child(theObj.orderId));
         data.$loaded().then(function() {
           cnt = 1;
           for(i = 0; i < data.length; i++) {
@@ -29,16 +29,16 @@ app.factory('Cart', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
               theObj.product_quantity = data[i].product_quantity + 1;
             else
               theObj.product_quantity = 1;
-            cart.addProduct(theObj);
+            order.addProduct(theObj);
             cnt = cnt + 1;
           }
         });
       },
 
-      all: carts
+      all: orders
 
     };
 
-  return cart;
+  return order;
 
 }]);
