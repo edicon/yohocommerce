@@ -13,7 +13,6 @@ app.factory('Catalog', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
     var category = {
 
       addCart: function() {
-        console.log('got here')
         return carts.$add({items: 0, total: 0}).then(function(theRef) {
           return theRef.key();
         });
