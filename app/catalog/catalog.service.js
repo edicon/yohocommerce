@@ -7,10 +7,20 @@ app.factory('Catalog', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
     var subCategories = $firebaseArray(subRef.child(tid).orderByChild('category_id'));
     var pulldownCategories = $firebaseArray(subRef.child(tid).orderByChild('category_id'));
 
+    var cartRef = new Firebase(FirebaseUrl+'carts');
+    var carts = $firebaseArray(cartRef.child(tid));
+
     var category = {
 
-      addOrder: function(theObj) {
-      console.log('got here')
+      addCart: function() {
+        console.log('got here')
+        return carts.$add({items: 0, total: 0}).then(function(theRef) {
+          return theRef.key();
+        });
+      },
+
+      getCart: function(cid) {
+        return $firebaseObject(cartRef.child(tid).child(cid));
       },
 
       all: categories,

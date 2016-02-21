@@ -1,27 +1,21 @@
-app.controller('CatalogCtrl', ['Auth', 'Catalog', 'Banner', 'Categories', '$scope', '$state',
-  function (                    Auth,   Catalog,   Banner,   Categories,   $scope,   $state) {
+app.controller('CatalogCtrl', ['Auth', 'Catalog', 'Banner', 'Categories', '$scope', '$state', '$cookies',
+  function (                    Auth,   Catalog,   Banner,   Categories,   $scope,   $state,   $cookies) {
     var catalogCtrl = this;
     catalogCtrl.categories = Catalog.all;
     catalogCtrl.subPulldowns = Catalog.pulldown;
     catalogCtrl.subCategories = Catalog.allMenus;
 
-    catalogCtrl.myInterval = 7000;
-    catalogCtrl.noWrapSlides = false;
-
-    catalogCtrl.defaultSlides = [
-      { image: "/images/carousel-default-image.png" },
-      { image: "/images/carousel-default-image.png" },
-      { image: "/images/carousel-default-image.png" }
-    ]
-
-    catalogCtrl.bannerImages = Banner.getImages("1");
-      catalogCtrl.bannerImages.$loaded().then(function() {
-        if (catalogCtrl.bannerImages.length === 0) {
-          catalogCtrl.bannerArray = 'no';
-          catalogCtrl.bannerImages = catalogCtrl.defaultSlides;
-        }
+    var theCartId = $cookies.get('cartId');
+    if (theCartId === undefined) {
+      Catalog.addCart().then(function(theRef) {
+        $cookies.put("cartId", theRef);
+      });
+    }
+    var cartId = $cookies.get('cartId');
+    var cartTotals = Catalog.getCart(cartId)
+      cartTotals.$loaded().then(function() {
+        catalogCtrl.cartTotals = cartTotals;
     });
-
 
     catalogCtrl.goCategory = function(cid) {
       $state.go('catalog.category', {'cid': cid});

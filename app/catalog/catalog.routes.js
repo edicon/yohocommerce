@@ -24,7 +24,7 @@ angular.module('app')
               templateUrl: 'catalog/common/header.html'
             },
             "carousel@catalog": {
-              controller: 'CatalogCtrl as catalogCtrl',
+              controller: 'CarouselCtrl as carouselCtrl',
               templateUrl: 'catalog/common/carousel.html'
             },
             "featured@catalog": {
@@ -48,7 +48,6 @@ angular.module('app')
               templateUrl: 'auth/login.html'
             },
             "footer@catalog": {
-              controller: 'CatalogCtrl as catalogCtrl',
               templateUrl: 'catalog/common/footer.html'
             }
           },
