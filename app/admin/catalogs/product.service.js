@@ -5,10 +5,6 @@ app.factory('Product', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
 
     var product = {
 
-      addOrder: function(theObj) {
-        console.log('got here')
-      },
-
       addProduct: function(newProduct) {
         return product.all.$add(newProduct).then(function(theRef) {
           return theRef.key();
