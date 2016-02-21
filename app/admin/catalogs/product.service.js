@@ -7,7 +7,6 @@ app.factory('Product', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
 
       addOrder: function(theObj) {
         console.log('got here')
-        });
       },
 
       addProduct: function(newProduct) {
