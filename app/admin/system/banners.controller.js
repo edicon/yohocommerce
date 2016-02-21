@@ -2,9 +2,6 @@ app.controller('BannersCtrl', ['Banners', '$state', '$scope',
   function (                    Banners,   $state,   $scope) {
     var bannersCtrl = this;
 
-    bannersCtrl.currentState = $state.current.name;
-    console.log(bannersCtrl.currentState)
-
     bannersCtrl.gridOpts = {
       enableSorting: true,
       enableCellEditOnFocus: true,
@@ -85,11 +82,8 @@ app.controller('DefaultBannersCtrl', ['Banners', '$state', '$scope',
     };
 
     $scope.editBanner = function(row) {
-      console.log(row.entity)
       if ($state.current.name === 'admin.system.banners')
         $state.go('admin.system.banner', {'rowEntity': row.entity});
     };
-      console.log($scope)
 
-  }
-]);
+}]);

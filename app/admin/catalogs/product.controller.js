@@ -261,7 +261,7 @@ app.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'Custom
     }, function(error) {
       productCtrl.error = error;
     };
-console.log($scope)
+
 }]);
 
 app.directive("ngBannerSelect",function() {

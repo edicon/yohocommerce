@@ -4,9 +4,6 @@ app.controller('CatalogCtrl', ['Auth', 'Catalog', 'Banner', 'Categories', '$scop
     catalogCtrl.categories = Catalog.all;
     catalogCtrl.subPulldowns = Catalog.pulldown;
     catalogCtrl.subCategories = Catalog.allMenus;
-//    catalogCtrl.cart = $cookieStore.get('cart');
-
-    console.log($scope)
 
     catalogCtrl.myInterval = 7000;
     catalogCtrl.noWrapSlides = false;

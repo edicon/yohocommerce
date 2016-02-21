@@ -1,5 +1,5 @@
-app.controller('CatalogProductCtrl', ['$state', 'Product', '$scope', '$stateParams',
-  function (                           $state,   Product,   $scope,   $stateParams) {
+app.controller('CatalogProductCtrl', ['$state', 'Product', 'Products', 'Orders', '$scope', '$stateParams', '$cookies',
+  function (                           $state,   Product,   Products,   Orders,   $scope,   $stateParams,   $cookies) {
     var catalogProductCtrl = this;
 
     var pid = $stateParams.pid
@@ -19,6 +19,28 @@ app.controller('CatalogProductCtrl', ['$state', 'Product', '$scope', '$statePara
 
     catalogProductCtrl.goCategory = function(cid) {
       $state.go('catalog.category', {'cid': cid});
+    };
+
+    catalogProductCtrl.addOrder = function(pid) {
+      console.log(pid)
+      var theProduct = Products.getProduct(pid);
+      theProduct.$loaded().then(function() {
+        if (theProduct.product_special_price === undefined)
+          theProduct.special_price = null;
+        var theOrderId = $cookies.get('orderId');
+        if (theOrderId === undefined) {
+          Orders.addOrder().then(function(theRef) {
+            theProduct.orderId = theRef;
+            theProduct.product_quantity = 1;
+            $cookies.put("orderId", theRef);
+            Orders.addProduct(theProduct);
+          });
+        } else {
+          theProduct.orderId = theOrderId;
+          Orders.nextProduct(theProduct);
+        }
+    //    Cart.totalCart(theProduct.cartId);
+      });
     };
 
 }]);

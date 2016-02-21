@@ -145,6 +145,4 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
       customerCtrl.error = error;
     };
 
-console.log($scope)
-
 }]);

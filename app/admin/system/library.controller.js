@@ -6,14 +6,10 @@ app.controller('LibraryCtrl', ['Library', '$scope', 'FileReader',
       libraryCtrl.myImages = images;
     });
 
-    console.log($scope)
-
     $scope.getFile = function () {
-      console.log('got here')
       $scope.progress = 0;
       FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
         $scope.imageSrc = result;
-        console.log($scope.imageSrc)
         Library.all.$add({image: $scope.imageSrc})
       });
     };

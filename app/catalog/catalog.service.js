@@ -9,6 +9,10 @@ app.factory('Catalog', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
 
     var category = {
 
+      addOrder: function(theObj) {
+      console.log('got here')
+      },
+
       all: categories,
 
       pulldown: pulldownCategories,
