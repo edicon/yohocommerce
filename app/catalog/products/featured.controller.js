@@ -28,5 +28,5 @@ app.controller('CatalogFeaturedCtrl', ['$state', 'Orders', 'Products', '$scope',
     //    Cart.totalCart(theProduct.cartId);
       });
     };
-console.log($scope)
+    
 }]);

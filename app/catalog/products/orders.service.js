@@ -13,7 +13,6 @@ app.factory('Orders', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid'
 
       /* product ID is used as node ID (theObj.$id) on order array */
       addProduct: function(theObj) {
-        console.log(theObj)
         var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.orderId+'/'+theObj.$id);
         theRef.update( {product_id: theObj.$id, product_name: theObj.product_name, product_regular_price: theObj.product_price,
           product_quantity: theObj.product_quantity, product_special_price: theObj.special_price, product_image: theObj.product_image,
