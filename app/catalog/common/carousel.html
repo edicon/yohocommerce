@@ -1,8 +1,8 @@
 <div class="container">
   <div class="panel panel-default">
     <div class="panel-body">
-      <uib-carousel interval="catalogCtrl.myInterval" no-wrap="catalogCtrl.noWrapSlides">
-        <uib-slide ng-repeat="s in catalogCtrl.bannerImages" active="slide.active">
+      <uib-carousel interval="carouselCtrl.myInterval" no-wrap="carouselCtrl.noWrapSlides">
+        <uib-slide ng-repeat="s in carouselCtrl.bannerImages" active="slide.active">
           <img ng-src="{{s.image}}" style="margin:auto;">
         </uib-slide>
       </uib-carousel>

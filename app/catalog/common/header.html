@@ -48,7 +48,9 @@
       </div>
       <div class="col-sm-3">
         <div id="cart" class="btn-group btn-block">
-          <button type="button" data-toggle="dropdown" class="btn btn-inverse btn-block btn-lg dropdown-toggle"><i class="fa fa-shopping-cart"></i> 0 Item(s) - $0.00</button>
+          <button type="button" data-toggle="dropdown" class="btn btn-inverse btn-block btn-lg dropdown-toggle">
+            <i class="fa fa-shopping-cart"></i> {{catalogCtrl.cartTotals.items}} Item(s) - {{catalogCtrl.cartTotals.total | currency}}
+          </button>
           <ul class="dropdown-menu pull-right">
             <li>
               <table class="table table-striped">
