@@ -15,7 +15,7 @@ app.controller('CatalogFeaturedCtrl', ['$state', 'Orders', 'Products', '$scope',
           theProduct.special_price = null;
         var theOrderId = $cookies.get('orderId');
         if (theOrderId === undefined) {
-          Orders.addOrder().then(function(theRef) {
+          Products.addOrder().then(function(theRef) {
             theProduct.orderId = theRef;
             theProduct.product_quantity = 1;
             $cookies.put("orderId", theRef);
@@ -28,5 +28,5 @@ app.controller('CatalogFeaturedCtrl', ['$state', 'Orders', 'Products', '$scope',
     //    Cart.totalCart(theProduct.cartId);
       });
     };
-    
+
 }]);
