@@ -6,7 +6,7 @@ app.factory('CartOrders', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', '
     var cartorder = {
 
       getOrder: function(oid) {
-        return $firebaseObject(ref.child(tid).child(oid));
+        return $firebaseArray(ref.child(tid).child(oid));
       },
 
       addOrder: function(theObj) {

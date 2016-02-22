@@ -19,7 +19,6 @@ app.factory('Catalog', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
       },
 
       getCart: function(cid) {
-        console.log(cid)
         return $firebaseObject(cartRef.child(tid).child(cid));
       },
 
