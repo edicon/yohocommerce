@@ -10,7 +10,7 @@ app.controller('CatalogFeaturedCtrl', ['$state', 'Catalog', 'CartOrders', 'Produ
     catalogFeaturedCtrl.addOrder = function(pid) {
       var theProduct = Products.getProduct(pid);
       theProduct.$loaded().then(function() {
-        if (theProduct.product_special_price === undefined)
+        if (theProduct.special_price === undefined)
           theProduct.special_price = null;
         var cid = $cookies.get('cartId');
         var oid = $cookies.get('orderId');
