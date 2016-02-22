@@ -1,5 +1,5 @@
-app.controller('CatalogCtrl', ['Auth', 'Catalog', 'Banner', 'Categories', '$scope', '$state', '$cookies',
-  function (                    Auth,   Catalog,   Banner,   Categories,   $scope,   $state,   $cookies) {
+app.controller('CatalogCtrl', ['Catalog', 'CartOrders', '$scope', '$state', '$cookies',
+  function (                    Catalog,   CartOrders,   $scope,   $state,   $cookies) {
     var catalogCtrl = this;
     catalogCtrl.categories = Catalog.all;
     catalogCtrl.subPulldowns = Catalog.pulldown;
@@ -15,6 +15,12 @@ app.controller('CatalogCtrl', ['Auth', 'Catalog', 'Banner', 'Categories', '$scop
     var cartTotals = Catalog.getCart(cartId)
       cartTotals.$loaded().then(function() {
         catalogCtrl.cartTotals = cartTotals;
+        var oid = $cookies.get('orderId');
+        var theOrder = CartOrders.getOrder(oid)
+          theOrder.$loaded().then(function() {
+            catalogCtrl.order = theOrder;
+            console.log($scope)
+        });
     });
 
     catalogCtrl.goCategory = function(cid) {
@@ -23,6 +29,11 @@ app.controller('CatalogCtrl', ['Auth', 'Catalog', 'Banner', 'Categories', '$scop
 
     catalogCtrl.goSubCategory = function(subCid) {
       $state.go('catalog.subcategory', {'subCid': subCid});
+    };
+
+    catalogCtrl.goProduct = function(pid) {
+      console.log(pid)
+      $state.go('catalog.product', {'pid': pid});
     };
 
 }]);
