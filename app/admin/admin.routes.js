@@ -286,39 +286,48 @@ angular.module('app')
         })
         // end sales main menu
         // start marketing main menu
+
+
+
         .state('admin.marketing', {
           url: '/marketing',
           views: {
+            "header@admin": {
+              templateUrl: 'admin/marketing/marketing.header.html'
+            },
             "menu@admin": {
-              templateUrl: 'admin/marketing/admin.marketing.html'
+              templateUrl: 'admin/marketing/marketing.html'
             },
             "list@admin.marketing": {
               controller: 'MarketingCtrl as marketingCtrl',
-              templateUrl: 'admin/marketing/admin.affiliates.html'
+              templateUrl: 'admin/marketing/affiliates.html'
             }
           }
         })
-        .state('admin.marketing.affiliates', {
+        .state('admin.affiliates', {
           url: '/affiliates',
           views: {
             "menu@admin": {
-              templateUrl: 'admin/marketing/admin.marketing.html'
+              templateUrl: 'admin/marketing/marketing.html'
             },
-            "list@admin.marketing.affiliates": {
+            "list@marketing.affiliates": {
               controller: 'MarketingCtrl as marketingCtrl',
-              templateUrl: 'admin/marketing/admin.affiliates.html'
+              templateUrl: 'admin/marketing/affiliates.html'
             }
           }
         })
-        .state('admin.marketing.coupons', {
+        .state('admin.coupons', {
           url: '/coupons',
           views: {
-            "menu@admin": {
-              templateUrl: 'admin/marketing/admin.marketing.html'
+            "header@admin": {
+              templateUrl: 'admin/marketing/coupons.header.html'
             },
-            "list@admin.marketing.coupons": {
-              controller: 'MarketingCtrl as marketingCtrl',
-              templateUrl: 'admin/marketing/admin.coupons.html'
+            "menu@admin": {
+              templateUrl: 'admin/marketing/marketing.html'
+            },
+            "list@marketing.coupons": {
+              controller: 'CouponsCtrl as couponsCtrl',
+              templateUrl: 'admin/marketing/coupons.html'
             }
           }
         })
