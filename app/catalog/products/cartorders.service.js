@@ -5,6 +5,10 @@ app.factory('CartOrders', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', '
 
     var cartorder = {
 
+      getOrder: function(oid) {
+        return $firebaseObject(ref.child(tid).child(oid));
+      },
+
       addOrder: function(theObj) {
         return cartorders.$add().then(function(theRef) {
           return theRef.key();

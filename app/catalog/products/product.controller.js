@@ -1,5 +1,5 @@
-app.controller('CatalogProductCtrl', ['$state', 'Product', 'Products', 'Carts', '$scope', '$stateParams', '$cookies',
-  function (                           $state,   Product,   Products,   Carts,   $scope,   $stateParams,   $cookies) {
+app.controller('CatalogProductCtrl', ['$state', 'Product', 'Products', 'CartOrders', '$scope', '$stateParams', '$cookies',
+  function (                           $state,   Product,   Products,   CartOrders,   $scope,   $stateParams,   $cookies) {
     var catalogProductCtrl = this;
 
     var pid = $stateParams.pid
