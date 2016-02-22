@@ -1,8 +1,10 @@
-app.controller('MarketingCtrl', ['Marketing', '$state',
-  function (                      Marketing,   $state) {
+app.controller('MarketingCtrl', ['Marketing', '$state', '$scope',
+  function (                      Marketing,   $state,   $scope) {
   var marketingCtrl = this;
   marketingCtrl.currentState = $state.current.name;
-console.log(marketingCtrl.currentState)
+  console.log(marketingCtrl.currentState)
+
+  console.log($scope)
 
     marketingCtrl.myData = [
     {
