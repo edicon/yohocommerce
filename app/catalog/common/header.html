@@ -34,21 +34,20 @@
       </div>
       <div class="col-sm-6">
         <div class="input-group">
+          <ui-select ng-model="product.selected" theme="bootstrap" ng-disabled="disabled">
+            <ui-select-match placeholder="Search products...">{{$select.selected.product_name}}</ui-select-match>
+            <ui-select-choices repeat="product in products | filter: $select.search">
+              <span ng-bind-html="product.product_name | highlight: $select.search"></span>
+            </ui-select-choices>
+          </ui-select>
           <div class="input-group-btn">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">All Categories <span class="caret"></span></button>
-            <ul class="dropdown-menu dropdown-menu-right">
-              <li ng-repeat="sub in catalogCtrl.subPulldowns"><a href="#">{{sub.category_name}}</a></li>
-            </ul>
-          </div>
-          <input type="text" class="form-control" aria-label="Search ...">
-          <div class="input-group-btn">
-            <button type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            <button ng-click="catalogCtrl.findProduct()" type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
           </div>
         </div>
       </div>
       <div class="col-sm-3">
         <div ng-if="catalogCtrl.cartTotals.items == 0" id="cart" class="btn-group btn-block">
-          <button type="button" data-toggle="dropdown" class="btn btn-inverse btn-block btn-lg dropdown-toggle">
+          <button type="button" data-toggle="dropdown" class="btn btn-inverse btn-block btn dropdown-toggle">
             <i class="fa fa-shopping-cart"></i> {{catalogCtrl.cartTotals.items}} Item(s) - {{catalogCtrl.cartTotals.total | currency}}
           </button>
           <ul class="dropdown-menu pull-right">
