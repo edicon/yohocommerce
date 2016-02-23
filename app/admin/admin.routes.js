@@ -32,7 +32,7 @@ angular.module('app')
         .state('admin.dashboard', {
           url: '',
           views: {
-            "menu@admin": {
+            "main@admin": {
               controller: 'DashboardCtrl as dashboardCtrl',
               templateUrl: 'admin/dashboard/admin.dashboard.html'
             }
@@ -45,7 +45,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/catalogs/products.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/catalogs/catalogs.html'
             },
             "list@admin.catalogs": {
@@ -63,7 +63,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/catalogs/products.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/catalogs/catalogs.html'
             },
             "list@admin.catalogs.products": {
@@ -81,7 +81,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/catalogs/product.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/catalogs/catalogs.html'
             },
             "list@admin.catalogs.product": {
@@ -99,7 +99,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/catalogs/categories.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/catalogs/catalogs.html'
             },
             "list@admin.catalogs.categories": {
@@ -117,7 +117,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/catalogs/subcategories.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/catalogs/catalogs.html'
             },
             "list@admin.catalogs.subcategories": {
@@ -134,7 +134,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/sales/sales.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/sales/sales.html'
             },
             "list@admin.sales.orders": {
@@ -149,7 +149,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/sales/orders.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/sales/sales.html'
             },
             "list@admin.sales.orders": {
@@ -164,7 +164,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/sales/recurring.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/sales/sales.html'
             },
             "list@admin.sales.recurring": {
@@ -179,7 +179,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/sales/returns.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/sales/sales.html'
             },
             "list@admin.sales.returns": {
@@ -197,7 +197,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/sales/customers.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/sales/sales.html'
             },
             "list@admin.sales.customers": {
@@ -212,7 +212,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/sales/vouchers.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/sales/sales.html'
             },
             "list@admin.sales.vouchers": {
@@ -227,7 +227,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/sales/order.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/sales/sales.html'
             },
             "list@admin.sales.order": {
@@ -242,7 +242,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/sales/returns.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/sales/sales.html'
             },
             "list@admin.sales.return": {
@@ -260,7 +260,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/sales/customers.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/sales/sales.html'
             },
             "list@admin.sales.customer": {
@@ -275,7 +275,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/sales/vouchers.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/sales/sales.html'
             },
             "list@admin.sales.voucher": {
@@ -295,7 +295,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/marketing/marketing.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/marketing/marketing.html'
             },
             "list@admin.marketing": {
@@ -307,7 +307,7 @@ angular.module('app')
         .state('admin.affiliates', {
           url: '/affiliates',
           views: {
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/marketing/marketing.html'
             },
             "list@marketing.affiliates": {
@@ -316,16 +316,16 @@ angular.module('app')
             }
           }
         })
-        .state('admin.coupons', {
+        .state('admin.marketing.coupons', {
           url: '/coupons',
           views: {
             "header@admin": {
               templateUrl: 'admin/marketing/coupons.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/marketing/marketing.html'
             },
-            "list@marketing.coupons": {
+            "list@admin.marketing.coupons": {
               controller: 'CouponsCtrl as couponsCtrl',
               templateUrl: 'admin/marketing/coupons.html'
             }
@@ -334,7 +334,7 @@ angular.module('app')
         .state('admin.marketing.affiliate', {
           url: '/affiliate',
           views: {
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/marketing/admin.marketing.html'
             },
             "list@admin.marketing.affiliate": {
@@ -346,7 +346,7 @@ angular.module('app')
         .state('admin.marketing.coupon', {
           url: '/coupon',
           views: {
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/marketing/admin.marketing.html'
             },
             "list@admin.marketing.coupon": {
@@ -360,7 +360,7 @@ angular.module('app')
         .state('admin.extensions', {
           url: '',
           views: {
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/extensions/admin.extensions.html'
             }
           }
@@ -373,7 +373,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/system/system.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/system/system.html'
             },
             "list@admin.system": {
@@ -387,7 +387,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/system/users.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/system/system.html'
             },
             "list@admin.system.users": {
@@ -402,7 +402,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/system/user.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/system/user.html'
             },
             "list@admin.system.user": {
@@ -417,7 +417,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/system/stores.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/system/stores.html'
             },
             "list@admin.system.stores": {
@@ -432,7 +432,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/system/store.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/system/store.html'
             },
             "list@admin.system.store": {
@@ -447,7 +447,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/system/banners.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/system/system.html'
             },
             "list@admin.system.banners": {
@@ -465,7 +465,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/system/banner.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/system/system.html'
             },
             "list@admin.system.banner": {
@@ -480,7 +480,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/system/library.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/system/system.html'
             },
             "list@admin.system.library": {
@@ -495,7 +495,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/system/localizations.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/system/localizations.html'
             },
             "list@admin.system.localizations": {
@@ -510,7 +510,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/system/localization.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/system/localization.html'
             },
             "list@admin.system": {
@@ -527,7 +527,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/tools/tools.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/tools/tools.html'
             },
             "list@admin.tools": {
@@ -542,7 +542,7 @@ angular.module('app')
             "header@admin": {
               templateUrl: 'admin/tools/import-products.header.html'
             },
-            "menu@admin": {
+            "main@admin": {
               templateUrl: 'admin/tools/tools.html'
             },
             "list@admin.tools.import-products": {
@@ -556,7 +556,7 @@ angular.module('app')
         .state('admin.reports', {
           url: '',
           views: {
-            "menu@admin": {
+            "main@admin": {
               controller: 'ReportsCtrl as reportsCtrl',
               templateUrl: 'admin/reports/reports.html'
             }

@@ -18,20 +18,18 @@
                 <h4 class="panel-title"><span class="menu-icon fa fa-th"></span> Categories</h4>
               </div>
               <div class="panel-body">
-                <div class="container">
-                  <div class="row">
-                    <div class="col-xs-6">
-                      <div class="input-group input-group-sm list-search">
-                        <input type="text" ng-model="categoriesCtrl.categoryName" class="form-control" placeholder="Enter New Category">
-                        <span class="input-group-btn">
-                          <button class="btn btn-primary" ng-click="categoriesCtrl.addCategory()" type="button"><span class="menu-icon fa fa-plus"></span></button>
-                        </span>
-                      </div>
+                <div class="row">
+                  <div class="col-xs-4 pull-left">
+                    <div class="input-group input-group-sm list-search">
+                      <input type="text" ng-model="categoriesCtrl.categoryName" class="form-control" placeholder="Enter New Category">
+                      <span class="input-group-btn">
+                        <button class="btn btn-primary" ng-click="categoriesCtrl.addCategory()" type="button"><span class="menu-icon fa fa-plus"></span></button>
+                      </span>
                     </div>
-                  </div><br>
-                  <div class="row">
-                    <div ui-grid="categoriesCtrl.categoriesGridOpts" class="grid" ui-grid-edit ui-grid-cellNav></div>
                   </div>
+                </div><br>
+                <div class="row">
+                  <div ui-grid="categoriesCtrl.categoriesGridOpts" class="grid" ui-grid-edit ui-grid-cellNav></div>
                 </div>
               </div>
             </div>

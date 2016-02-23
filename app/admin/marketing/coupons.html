@@ -6,24 +6,14 @@
       </div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-xs-4">
-            <div class="input-group input-group-sm">
-              <input type="text" class="form-control" placeholder="Search coupons">
-              <span class="input-group-btn">
-                <button class="btn btn-primary" type="button"> <span class="menu-icon fa fa-search"></span></button>
-              </span>
-            </div>
+          <div class="form-group-sm">
+            <a type="button" class="btn btn-sm btn-primary list-btn pull-right" tooltip-placement="top" uib-tooltip="New"
+              href="#/product" ui-sref="admin.catalogs.product"><i class="fa fa-plus"></i>
+            </a>
           </div>
-          <div class="col-xs-8">
-						<a ng-if="marketingCtrl.currentState === 'admin.marketing' || marketingCtrl.currentState === 'admin.marketing.coupons'"
-							href="#/coupon" ui-sref="admin.marketing.coupon" class="btn btn-primary btn-sm pull-right">
-							<span class="menu-icon fa fa-tag"></span> New Coupon</a>
-						<a ng-if="marketingCtrl.currentState === 'admin.coupons'" href="#/coupon" ui-sref=".coupon" class="btn btn-primary btn-sm pull-right">
-							<span class="menu-icon fa fa-tag"></span> New Coupon</a>
-          </div>
-        </div><br>
-        <div>
-          <div id="grid1" ui-grid="{ data: marketingCtrl.myData }"></div>
+        </div>
+        <div class="row">
+          <div ui-grid="couponsCtrl.gridCoupons" class="grid-500"></div>
         </div>
       </div>
     </div>
