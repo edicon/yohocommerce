@@ -149,7 +149,7 @@ app.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'Custom
           theSpecial.special_customer_group_name = group.group_name;
           theSpecial.special_product_quantity = productCtrl.special.product_quantity;
           theSpecial.special_regular_price = productCtrl.regular_price;
-          theSpecial.special_price = productCtrl.special.special_price;
+          theSpecial.special_price = parseFloat(productCtrl.special.special_price);
           theSpecial.special_start_date = productCtrl.special.start_date.toDateString();
           theSpecial.special_end_date = productCtrl.special.end_date.toDateString();
           Product.addSpecial(theSpecial);
