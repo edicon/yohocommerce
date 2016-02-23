@@ -28,6 +28,11 @@ app.factory('CartOrders', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', '
           order_status: 'cart', order_update_date: Firebase.ServerValue.TIMESTAMP} );
       },
 
+      removeProduct: function(theObj) {
+        var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.pid);
+        return theRef.remove();
+      },
+
       nextProduct: function(theObj) {
         var data = $firebaseArray(ref.child(tid).child(theObj.oid));
         data.$loaded().then(function() {
