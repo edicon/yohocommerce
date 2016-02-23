@@ -1,9 +1,11 @@
-app.controller('CatalogCtrl', ['Catalog', 'CartOrders', '$scope', '$state', '$cookies',
-  function (                    Catalog,   CartOrders,   $scope,   $state,   $cookies) {
+app.controller('CatalogCtrl', ['Catalog', 'CartOrders', 'Products', '$scope', '$state', '$cookies',
+  function (                    Catalog,   CartOrders,   Products,   $scope,   $state,   $cookies) {
     var catalogCtrl = this;
+    $scope.product = {};
     catalogCtrl.categories = Catalog.all;
     catalogCtrl.subPulldowns = Catalog.pulldown;
     catalogCtrl.subCategories = Catalog.allMenus;
+    $scope.products = Products.all;
 
     catalogCtrl.getTotals = function() {
       var cartTotals = Catalog.getCart($cookies.get('cartId'));
@@ -42,4 +44,9 @@ app.controller('CatalogCtrl', ['Catalog', 'CartOrders', '$scope', '$state', '$co
       $state.go('catalog.product', {'pid': pid});
     };
 
+    catalogCtrl.findProduct = function() {
+      $state.go('catalog.product', {'pid': $scope.product.selected.$id});
+    };
+
+console.log($scope)
 }]);
