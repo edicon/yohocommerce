@@ -14,6 +14,15 @@ angular.module('app')
             "": {
               templateUrl: 'catalog/catalog.html'
             }
+          },
+          resolve: {
+            requireNoAuth: function($state, Auth) {
+              return Auth.$requireAuth().then(function(auth) {
+                $state.go('admin.dashboard');
+              }, function(error) {
+                return;
+              });
+            }
           }
         })
         .state('catalog.home', {
@@ -45,19 +54,10 @@ angular.module('app')
             },
             "main@catalog": {
               controller: 'AuthCtrl as authCtrl',
-              templateUrl: 'auth/login.html'
+              templateUrl: 'catalog/account/login.html'
             },
             "footer@catalog": {
               templateUrl: 'catalog/common/footer.html'
-            }
-          },
-          resolve: {
-            requireNoAuth: function($state, Auth) {
-              return Auth.$requireAuth().then(function(auth) {
-                $state.go('admin.dashboard');
-              }, function(error) {
-                return;
-              });
             }
           }
         })
@@ -79,15 +79,6 @@ angular.module('app')
               controller: 'CatalogCtrl as catalogCtrl',
               templateUrl: 'catalog/common/footer.html'
             }
-          },
-          resolve: {
-            requireNoAuth: function($state, Auth) {
-              return Auth.$requireAuth().then(function(auth) {
-                $state.go('admin.dashboard');
-              }, function(error) {
-                return;
-              });
-            }
           }
         })
         .state('catalog.subcategory', {
@@ -107,15 +98,6 @@ angular.module('app')
             "footer@catalog": {
               controller: 'CatalogCtrl as catalogCtrl',
               templateUrl: 'catalog/common/footer.html'
-            }
-          },
-          resolve: {
-            requireNoAuth: function($state, Auth) {
-              return Auth.$requireAuth().then(function(auth) {
-                $state.go('admin.dashboard');
-              }, function(error) {
-                return;
-              });
             }
           }
         })
@@ -137,44 +119,17 @@ angular.module('app')
               controller: 'CatalogCtrl as catalogCtrl',
               templateUrl: 'catalog/common/footer.html'
             }
-          },
-          resolve: {
-            requireNoAuth: function($state, Auth) {
-              return Auth.$requireAuth().then(function(auth) {
-                $state.go('admin.dashboard');
-              }, function(error) {
-                return;
-              });
-            }
           }
         })
-        .state('register', {
-          url: '/register',
+        .state('adminlogin', {
+          url: '/adminlogin',
           controller: 'AuthCtrl as authCtrl',
-          templateUrl: 'auth/register.html',
-          resolve: {
-            requireNoAuth: function($state, Auth) {
-              return Auth.$requireAuth().then(function(auth) {
-                $state.go('admin.dashboard');
-              }, function(error) {
-                return;
-              });
-            }
-          }
+          templateUrl: 'admin/auth/login.html'
         })
         .state('registertenant', {
           url: '/registertenant',
           controller: 'AuthCtrl as authCtrl',
-          templateUrl: 'register/registertenant.html',
-          resolve: {
-            requireNoAuth: function($state, Auth) {
-              return Auth.$requireAuth().then(function(auth) {
-                $state.go('admin.dashboard');
-              }, function(error) {
-                return;
-              });
-            }
-          }
+          templateUrl: 'admin/register/registertenant.html'
         });
       }
   ])
