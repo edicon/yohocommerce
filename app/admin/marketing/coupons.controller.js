@@ -7,10 +7,11 @@ app.controller('CouponsCtrl', ['Coupons', '$state', '$scope', '$stateParams',
     couponsCtrl.addCoupon = function() {
 //console test to check if it's working
     console.log('gothere')
+//calling the object theCoupon with corresponding fields    
     var theCoupon = {};
     theCoupon.couponName = couponsCtrl.coupon_name;
     theCoupon.couponDiscount = couponsCtrl.coupon_discount;
-//calling coupons service addCoupon
+//calling coupons.service.js addCoupon function
     Coupons.addCoupon(theCoupon);
   }, function(error) {
     couponsCtrl.error = error;
@@ -22,7 +23,7 @@ app.controller('CouponsCtrl', ['Coupons', '$state', '$scope', '$stateParams',
       enableCellEditOnFocus: true,
       data: Coupons.all,
       columnDefs: [
-        { name:'coupon', field: 'coupon_name', width: '60%', enableHiding: false },
+        { name:'couponName', field: 'coupon_name', width: '60%', enableHiding: false },
         { name:'discount', field: 'coupon_discount', width: '35%', enableHiding: false },
         { name: ' ', field: '$id', cellTemplate:'admin/marketing/gridTemplates/removeCoupon.html',
           width: 50, enableCellEdit: false, enableColumnMenu: false }
@@ -30,11 +31,9 @@ app.controller('CouponsCtrl', ['Coupons', '$state', '$scope', '$stateParams',
     };
 //called from removeCoupon.html
     couponsCtrl.removeCoupon = function(row) {
-//console test to check if it's working
-    console.log('gothere')
       var theCoupon = {};
-      theCoupon.couponName = couponsCtrl.coupon_name;
-      theCoupon.couponDiscount = couponsCtrl.coupon_discount;
+      theCoupon.couponId = row.entity.$id;
+//calling coupons.service.js removeCoupon function to delete from firebase
       Coupons.removeCoupon(theCoupon);
     }, function(error) {
       productCtrl.error = error;

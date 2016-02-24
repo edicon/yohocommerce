@@ -16,7 +16,7 @@ app.factory('Coupons', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
 // method that calls the reference in firebase, removes object from coupon array
       removeCoupon: function(theObj) {
 // setting up the node in firebase
-      var theRef = new Firebase(FirebaseUrl+'coupons/'+tid+'/'+theObj.pid);
+      var theRef = new Firebase(FirebaseUrl+'coupons/'+tid+'/'+theObj.couponId);
 //pushes the reference to firebase and returns it back to the controller
       return theRef.remove();
       },
