@@ -3,16 +3,22 @@ app.controller('CouponsCtrl', ['Coupons', '$state', '$scope', '$stateParams',
     var couponsCtrl = this;
     couponsCtrl.allCoupons = Coupons.all;
 
-//called from coupons.html
+//function called from coupons.html
     couponsCtrl.addCoupon = function() {
 //console test to check if it's working
     console.log('gothere')
-//calling the object theCoupon with corresponding fields    
+//calling the object theCoupon with corresponding fields
     var theCoupon = {};
+//corresoponding fields in theCoupon object, data will be saved in the node
     theCoupon.couponName = couponsCtrl.coupon_name;
     theCoupon.couponDiscount = couponsCtrl.coupon_discount;
+    theCoupon.couponType = couponsCtrl.coupon_type_id;
 //calling coupons.service.js addCoupon function
     Coupons.addCoupon(theCoupon);
+//clears the input boxes after new coupons are added
+    couponsCtrl.coupon_name = null;
+    couponsCtrl.coupon_discount = null;
+    couponsCtrl.coupon_type_id = null;
   }, function(error) {
     couponsCtrl.error = error;
   };
@@ -23,8 +29,10 @@ app.controller('CouponsCtrl', ['Coupons', '$state', '$scope', '$stateParams',
       enableCellEditOnFocus: true,
       data: Coupons.all,
       columnDefs: [
-        { name:'couponName', field: 'coupon_name', width: '60%', enableHiding: false },
-        { name:'discount', field: 'coupon_discount', width: '35%', enableHiding: false },
+        { name:'couponName', field: 'coupon_name', width: '30%', enableHiding: false },
+        { name:'couponCode', field: '$id', width: '45%', enableHiding: false },
+        { name:'discount', field: 'coupon_discount', width: '10%', enableHiding: false, cellClass: 'grid-align-right' },
+        { name:'type', field: 'coupon_type', width: '10%', enableHiding: false, cellClass: 'grid-align-right' },
         { name: ' ', field: '$id', cellTemplate:'admin/marketing/gridTemplates/removeCoupon.html',
           width: 50, enableCellEdit: false, enableColumnMenu: false }
       ]
@@ -36,7 +44,7 @@ app.controller('CouponsCtrl', ['Coupons', '$state', '$scope', '$stateParams',
 //calling coupons.service.js removeCoupon function to delete from firebase
       Coupons.removeCoupon(theCoupon);
     }, function(error) {
-      productCtrl.error = error;
+      couponsCtrl.error = error;
     };
 
 }]);
