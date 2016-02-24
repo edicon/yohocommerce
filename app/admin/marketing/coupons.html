@@ -1,17 +1,33 @@
+<!-- Start Coupons List Panel -->
 <div class="row">
   <div class="col-xs-12">
     <div class="panel panel-default">
+<!-- Start Panel Heading -->
       <div class="panel-heading">
         <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> Coupon List</h3>
       </div>
+<!-- Start Panel Body -->
       <div class="panel-body">
+<!-- Start Add Coupons Line -->
         <div class="row">
-          <div class="form-group-sm">
-            <a type="button" class="btn btn-sm btn-primary list-btn pull-right" tooltip-placement="top" uib-tooltip="New"
-              href="#/product" ui-sref="admin.catalogs.product"><i class="fa fa-plus"></i>
-            </a>
+          <div class="form-group">
+            <div class="col-xs-3">
+              <label class="control-label">Coupon</label>
+              <input type="text" ng-model="couponsCtrl.coupon_name" placeholder="Coupon Name" class="form-control">
+            </div>
+            <div class="col-xs-3">
+              <label class="control-label">Discount</label>
+              <input type="text" ng-model="couponsCtrl.coupon_discount" placeholder="Coupon Value" class="form-control">
+            </div>
+            <div class="col-xs-1 inline-btn">
+              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon"
+                ng-click="couponsCtrl.addCoupon()">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
           </div>
-        </div>
+        </div><br>
+<!-- Start Coupons Grid -->
         <div class="row">
           <div ui-grid="couponsCtrl.gridCoupons" class="grid-500"></div>
         </div>
