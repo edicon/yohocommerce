@@ -38,12 +38,12 @@ app.controller('CategoriesCtrl', ['Categories', '$state', '$scope', '$stateParam
       enableCellEditOnFocus: true,
       data: Categories.all,
       columnDefs: [
-        { name: '', field: '$id', shown: false, cellTemplate: 'admin/catalogs/gridTemplates/editSubCategoriesBtn.html',
+        { name: '', field: '$id', shown: false, cellTemplate: 'admin/catalogs/gridTemplates/editSubCategories.html',
           width: 34, enableColumnMenu: false, enableCellEdit: false, headerTooltip: 'Add Sub-categories' },
         { name:'categoryName', field: 'category_name', width: '70%', enableHiding: false },
         { name:'menuOrder', field: '$priority', enableHiding: false },
         { name:'subCount', field: 'sub_count', visible: false },
-        { name: ' ', field: '$id', cellTemplate:'admin/catalogs/gridTemplates/removeCategoryBtn.html',
+        { name: ' ', field: '$id', cellTemplate:'admin/catalogs/gridTemplates/removeCategory.html',
           width: 32, enableCellEdit: false, enableColumnMenu: false }
       ]
     };

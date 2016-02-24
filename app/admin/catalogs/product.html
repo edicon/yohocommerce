@@ -14,9 +14,10 @@
             <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Product Detail - {{productCtrl.productName}}</h3>
           </div>
           <div class="panel-body">
+
             <div class="row">
               <div class="col-xs-12">
-                <a type="button" class="btn btn-sm btn-default detail-margin-btn pull-right"
+                <a type="button" class="btn btn-sm btn-default detail-btn pull-right"
                   uib-tooltip-placement="top" uib-tooltip="Cancel"
                   href="#/products" ui-sref="admin.catalogs.products"><i class="fa fa-reply"></i></a>
                 <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
@@ -41,6 +42,7 @@
                 </button>
               </div>
             </div>
+
             <div class="row">
               <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#prodInfo" role="tab" data-toggle="tab"><span class="menu-icon fa fa-info-circle"></span> General</a></li>
@@ -287,143 +289,139 @@
                 <div role="tabpanel" class="tab-pane" id="prodDiscount">
                   <div class="row">
                     <div class="col-xs-12"><br>
-                      <div class="container">
-                        <form class="form-horizontal" role="form">
-                          <div class="form-group">
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                              <label class="control-label">Customer Group</label>
-                              <select ng-model="productCtrl.discount.customer_group_id" class="form-control">
-                                <option ng-repeat="g in productCtrl.customerGroups" value="{{g.$id}}">{{g.group_name}}</option>
-                              </select>
-                            </div>
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-1">
-                              <label class="control-label">Quantity</label>
-                              <input type="text" style="text-align:right;" ng-model="productCtrl.discount.product_quantity" placeholder="Qty" class="form-control">
-                            </div>
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                              <label class="control-label">Regular Price</label>
-                              <input readonly style="text-align:right;" type="text" ng-model="productCtrl.regular_price" placeholder="Regular Price" class="form-control">
-                            </div>
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                              <label class="control-label">Discount Price</label>
-                              <input type="text" style="text-align:right;" ng-model="productCtrl.discount.discount_price" placeholder="Discount Price" class="form-control">
-                            </div>
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                              <label class="control-label">Start Date</label>
-                              <input type="date" class="form-control" uib-datepicker-popup ng-model="productCtrl.discount.start_date" is-open="status.opened"
-                                min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
-                            </div>
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                              <label class="control-label">End Date</label>
-                              <input type="date" class="form-control" uib-datepicker-popup ng-model="productCtrl.discount.end_date" is-open="status.opened"
-                                min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
-                            </div>
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-1 inline-btn">
-                              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Discount"
-                                ng-click="productCtrl.addDiscount()">
-                                <i class="fa fa-plus"></i>
-                              </button>
-                            </div>
+                      <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                            <label class="control-label">Customer Group</label>
+                            <select ng-model="productCtrl.discount.customer_group_id" class="form-control">
+                              <option ng-repeat="g in productCtrl.customerGroups" value="{{g.$id}}">{{g.group_name}}</option>
+                            </select>
                           </div>
-                        </form>
-                        <div ui-grid="productCtrl.gridDiscount" class="grid" ui-grid-edit ui-grid-cellNav></div>
-                      </div>
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-1">
+                            <label class="control-label">Quantity</label>
+                            <input type="text" style="text-align:right;" ng-model="productCtrl.discount.product_quantity" placeholder="Qty" class="form-control">
+                          </div>
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                            <label class="control-label">Regular Price</label>
+                            <input readonly style="text-align:right;" type="text" ng-model="productCtrl.regular_price" placeholder="Regular Price" class="form-control">
+                          </div>
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                            <label class="control-label">Discount Price</label>
+                            <input type="text" style="text-align:right;" ng-model="productCtrl.discount.discount_price" placeholder="Discount Price" class="form-control">
+                          </div>
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                            <label class="control-label">Start Date</label>
+                            <input type="date" class="form-control" uib-datepicker-popup ng-model="productCtrl.discount.start_date" is-open="status.opened"
+                              min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
+                          </div>
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                            <label class="control-label">End Date</label>
+                            <input type="date" class="form-control" uib-datepicker-popup ng-model="productCtrl.discount.end_date" is-open="status.opened"
+                              min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
+                          </div>
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-1 inline-btn">
+                            <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Discount"
+                              ng-click="productCtrl.addDiscount()">
+                              <i class="fa fa-plus"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="row">
+                            <div ui-grid="productCtrl.gridDiscount" class="grid" ui-grid-edit ui-grid-cellNav></div>
+                          </div>
+                        </div>
+                      </form>
                     </div>
                   </div>
                 </div>
                 <div role="tabpanel" class="tab-pane" id="prodSpecial">
                   <div class="row">
                     <div class="col-xs-12"><br>
-                      <div class="container">
-                        <form class="form-horizontal" role="form">
-                          <div class="form-group">
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                              <label class="control-label">Customer Group</label>
-                              <select ng-model="productCtrl.special.customer_group_id" class="form-control">
-                                <option ng-repeat="g in productCtrl.customerGroups" value="{{g.$id}}">{{g.group_name}}</option>
-                              </select>
-                            </div>
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-1">
-                              <label class="control-label">Quantity</label>
-                              <input type="text" ng-model="productCtrl.special.product_quantity" placeholder="Qty" class="form-control">
-                            </div>
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                              <label class="control-label">Regular Price</label>
-                              <input readonly style="text-align:right;" type="text" ng-model="productCtrl.regular_price" placeholder="Regular Price" class="form-control">
-                            </div>
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                              <label class="control-label">Special Price</label>
-                              <input type="text" style="text-align:right;" ng-model="productCtrl.special.special_price" placeholder="Special Price" class="form-control">
-                            </div>
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                              <label class="control-label">Start Date</label>
-                              <input style="text-align:right;" type="date" class="form-control" uib-datepicker-popup ng-model="productCtrl.special.start_date" is-open="status.opened"
-                                min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
-                            </div>
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                              <label class="control-label">End Date</label>
-                              <input style="text-align:right;" type="date" class="form-control" uib-datepicker-popup ng-model="productCtrl.special.end_date" is-open="status.opened"
-                                min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
-                            </div>
-                            <div ng-if="productCtrl.product.pid !== null" class="col-xs-1 inline-btn">
-                              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Special Price"
-                                ng-click="productCtrl.addSpecial()">
-                                <i class="fa fa-plus"></i>
-                              </button>
-                            </div>
+                      <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                            <label class="control-label">Customer Group</label>
+                            <select ng-model="productCtrl.special.customer_group_id" class="form-control">
+                              <option ng-repeat="g in productCtrl.customerGroups" value="{{g.$id}}">{{g.group_name}}</option>
+                            </select>
                           </div>
-                          <div ng-if="productCtrl.product.special_price != null" class="form-group">
-                            <div class="container">
-                              <div class="row">
-                                <div class="panel panel-default">
-                                  <div class="panel-heading"><h4 class="panel-title">Current Special Pricing</h4></div>
-                                  <div class="panel-body">
-                                    <table class="table">
-                                      <th>Customer Group</th>
-                                      <th style="text-align:right;">Quantity</th>
-                                      <th style="text-align:right;">Regular Price</th>
-                                      <th style="text-align:right;">Special Price</th>
-                                      <th style="text-align:right;">Start Date</th>
-                                      <th style="text-align:right;">End Date</th>
-                                      <th></th>
-                                      <tr>
-                                        <td>{{productCtrl.product.special_customer_group_name}}</td>
-                                        <td style="text-align:right;">{{productCtrl.product.special_product_quantity}}</td>
-                                        <td style="text-align:right;">{{productCtrl.product.product_price | currency}}</td>
-                                        <td style="text-align:right;">{{productCtrl.product.special_price | currency}}</td>
-                                        <td style="text-align:right;">{{productCtrl.product.special_start_date}}</td>
-                                        <td style="text-align:right;">{{productCtrl.product.special_end_date}}</td>
-                                        <td style="text-align:right;">
-                                          <button type="button" class="btn btn-xs btn-danger" uib-tooltip-placement="top" uib-tooltip="Delete Special Pricing"
-                                            ng-click="productCtrl.removeSpecial()">
-                                            <i class="fa fa-minus"></i>
-                                          </button>
-                                        </td>
-                                      </tr>
-                                    </table>
-                                  </div>
-                                </div>
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-1">
+                            <label class="control-label">Quantity</label>
+                            <input type="text" ng-model="productCtrl.special.product_quantity" placeholder="Qty" class="form-control">
+                          </div>
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                            <label class="control-label">Regular Price</label>
+                            <input readonly style="text-align:right;" type="text" ng-model="productCtrl.regular_price" placeholder="Regular Price" class="form-control">
+                          </div>
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                            <label class="control-label">Special Price</label>
+                            <input type="text" style="text-align:right;" ng-model="productCtrl.special.special_price" placeholder="Special Price" class="form-control">
+                          </div>
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                            <label class="control-label">Start Date</label>
+                            <input style="text-align:right;" type="date" class="form-control" uib-datepicker-popup ng-model="productCtrl.special.start_date" is-open="status.opened"
+                              min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
+                          </div>
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
+                            <label class="control-label">End Date</label>
+                            <input style="text-align:right;" type="date" class="form-control" uib-datepicker-popup ng-model="productCtrl.special.end_date" is-open="status.opened"
+                              min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
+                          </div>
+                          <div ng-if="productCtrl.product.pid !== null" class="col-xs-1 inline-btn">
+                            <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Special Price"
+                              ng-click="productCtrl.addSpecial()">
+                              <i class="fa fa-plus"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <div ng-if="productCtrl.product.special_price != null" class="form-group">
+                          <div class="row">
+                            <div class="panel panel-default">
+                              <div class="panel-heading"><h4 class="panel-title">Current Special Pricing</h4></div>
+                              <div class="panel-body">
+                                <table class="table">
+                                  <th>Customer Group</th>
+                                  <th style="text-align:right;">Quantity</th>
+                                  <th style="text-align:right;">Regular Price</th>
+                                  <th style="text-align:right;">Special Price</th>
+                                  <th style="text-align:right;">Start Date</th>
+                                  <th style="text-align:right;">End Date</th>
+                                  <th></th>
+                                  <tr>
+                                    <td>{{productCtrl.product.special_customer_group_name}}</td>
+                                    <td style="text-align:right;">{{productCtrl.product.special_product_quantity}}</td>
+                                    <td style="text-align:right;">{{productCtrl.product.product_price | currency}}</td>
+                                    <td style="text-align:right;">{{productCtrl.product.special_price | currency}}</td>
+                                    <td style="text-align:right;">{{productCtrl.product.special_start_date}}</td>
+                                    <td style="text-align:right;">{{productCtrl.product.special_end_date}}</td>
+                                    <td style="text-align:right;">
+                                      <button type="button" class="btn btn-xs btn-danger" uib-tooltip-placement="top" uib-tooltip="Delete Special Pricing"
+                                        ng-click="productCtrl.removeSpecial()">
+                                        <i class="fa fa-minus"></i>
+                                      </button>
+                                    </td>
+                                  </tr>
+                                </table>
                               </div>
                             </div>
                           </div>
-                          <div class="form-group">
-                            <div class="container">
-                              <div class="row">
-                                <div class="panel panel-default">
-                                  <div class="panel-heading"><h4 class="panel-title">Special Pricing History</h4></div>
-                                  <div class="panel-body">
-                                    <div ui-grid="productCtrl.gridSpecial" class="grid"></div>
-                                  </div>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                          <div class="row">
+                            <div class="panel panel-default">
+                              <div class="panel-heading"><h4 class="panel-title">Special Pricing History</h4></div>
+                              <div class="panel-body">
+                                <div ui-grid="productCtrl.gridSpecial" class="grid"></div>
                               </div>
                             </div>
                           </div>
-                        </form>
-                      </div>
+                        </div>
+                      </form>
                     </div>
                   </div>
                 </div>
-                <div role="tabpanel" class="tab-pane" id="prodRewards">
+                <div role="tabpanel" class="tab-pane" id="prodReward">
                   <div class="row">
                     <div class="col-xs-12"><br>
                       <div class="container">
