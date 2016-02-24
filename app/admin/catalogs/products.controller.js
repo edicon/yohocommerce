@@ -32,7 +32,7 @@ app.controller('ProductsCtrl', ['Products', 'Categories', '$state', '$scope', '$
       enableFiltering: true,
       data: Products.all,
       columnDefs: [
-        { name: '', field: '$id', shown: false, cellTemplate: 'admin/catalogs/gridTemplates/editProductBtn.html',
+        { name: '', field: '$id', shown: false, cellTemplate: 'admin/catalogs/gridTemplates/editProduct.html',
           width: 34, enableColumnMenu: false, headerTooltip: 'Edit Product', enableCellEdit: false, enableFiltering: false },
         { name:'name', field: 'product_name', enableHiding: false, width: '40%' },
         { name:'category', field: 'product_category', enableHiding: false, width: '20%', enableCellEdit: false },
@@ -42,7 +42,7 @@ app.controller('ProductsCtrl', ['Products', 'Categories', '$state', '$scope', '$
             { id: 2, status: 'Disabled' }
           ]},
         { name:'price', field: 'product_price', type: 'number', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'currency' },
-        { name: ' ', field: '$id', cellTemplate:'admin/catalogs/gridTemplates/removeProductBtn.html',
+        { name: ' ', field: '$id', cellTemplate:'admin/catalogs/gridTemplates/removeProduct.html',
           width: 32, enableColumnMenu: false, enableCellEdit: false, enableFiltering: false }
       ]
     };
