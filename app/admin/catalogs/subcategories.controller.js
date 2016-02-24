@@ -58,7 +58,7 @@ app.controller('SubCategoriesCtrl', ['SubCategories', 'Categories', '$state', '$
             priority: 0,
           }
         },
-        { name: ' ', field: '$id', cellTemplate:'admin/catalogs/gridTemplates/removeSubCategoryBtn.html',
+        { name: ' ', field: '$id', cellTemplate:'admin/catalogs/gridTemplates/removeSubCategory.html',
           width: 32, enableColumnMenu: false }
       ]
     };
@@ -85,7 +85,7 @@ app.controller('SubCategoriesCtrl', ['SubCategories', 'Categories', '$state', '$
       enableSorting: false,
       enableColumnMenus: false,
       columnDefs: [
-        { name: '', field: '$id', shown: false, cellTemplate: 'admin/catalogs/gridTemplates/editSubCategoryBannerBtn.html',
+        { name: '', field: '$id', shown: false, cellTemplate: 'admin/catalogs/gridTemplates/editSubCategoryBanner.html',
           width: 34, enableColumnMenu: false, enableCellEdit: false },
         { name:'categoryName', field: 'category_name', enableHiding: false },
         { name:'navigationOrder', field: '$priority', visible: false,

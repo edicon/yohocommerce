@@ -70,7 +70,7 @@ app.controller('CategoriesCtrl', ['Categories', '$state', '$scope', '$stateParam
       enableColumnMenus: false,
       data: Categories.all,
       columnDefs: [
-        { name: '', field: '$id', shown: false, cellTemplate: 'admin/catalogs/gridTemplates/editCategoryBannerBtn.html',
+        { name: '', field: '$id', shown: false, cellTemplate: 'admin/catalogs/gridTemplates/editCategoryBanner.html',
           width: 34, enableColumnMenu: false, enableCellEdit: false, headerTooltip: 'Add Sub-categories' },
         { name:'categoryName', field: 'category_name', enableHiding: false }
       ]
