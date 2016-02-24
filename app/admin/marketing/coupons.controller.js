@@ -29,9 +29,9 @@ app.controller('CouponsCtrl', ['Coupons', '$state', '$scope', '$stateParams',
       enableCellEditOnFocus: true,
       data: Coupons.all,
       columnDefs: [
-        { name:'couponName', field: 'coupon_name', width: '30%', enableHiding: false },
-        { name:'couponCode', field: '$id', width: '45%', enableHiding: false },
-        { name:'discount', field: 'coupon_discount', width: '10%', enableHiding: false, cellClass: 'grid-align-right' },
+        { name:'couponName', field: 'coupon_name', width: '35%', enableHiding: false },
+        { name:'couponCode', field: '$id', width: '35%', enableHiding: false },
+        { name:'discount', field: 'coupon_discount', width: '15%', enableHiding: false, cellClass: 'grid-align-right' },
         { name:'type', field: 'coupon_type', width: '10%', enableHiding: false, cellClass: 'grid-align-right' },
         { name: ' ', field: '$id', cellTemplate:'admin/marketing/gridTemplates/removeCoupon.html',
           width: 50, enableCellEdit: false, enableColumnMenu: false }

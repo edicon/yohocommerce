@@ -304,7 +304,7 @@ angular.module('app')
             }
           }
         })
-        .state('admin.affiliates', {
+        .state('admin.marketing.affiliates', {
           url: '/affiliates',
           views: {
             "main@admin": {
