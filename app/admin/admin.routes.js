@@ -299,7 +299,7 @@ angular.module('app')
               templateUrl: 'admin/marketing/marketing.html'
             },
             "list@admin.marketing": {
-              controller: 'MarketingCtrl as marketingCtrl',
+              controller: 'AffiliatesCtrl as affiliatesCtrl',
               templateUrl: 'admin/marketing/affiliates.html'
             }
           }
@@ -314,7 +314,7 @@ angular.module('app')
               templateUrl: 'admin/marketing/marketing.html'
             },
             "list@admin.marketing.affiliates": {
-              controller: 'MarketingCtrl as marketingCtrl',
+              controller: 'AffiliatesCtrl as affiliatesCtrl',
               templateUrl: 'admin/marketing/affiliates.html'
             }
           }
@@ -344,7 +344,7 @@ angular.module('app')
               templateUrl: 'admin/marketing/marketing.html'
             },
             "list@admin.marketing.affiliate": {
-              controller: 'MarketingCtrl as marketingCtrl',
+              controller: 'AffiliateCtrl as affiliateCtrl',
               templateUrl: 'admin/marketing/affiliate.html'
             }
           }

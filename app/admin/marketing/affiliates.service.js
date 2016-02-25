@@ -3,7 +3,7 @@ app.factory('Affiliates', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', '
     var ref = new Firebase(FirebaseUrl+'affiliates'+'tid');
     var affiliates = $firebaseArray(ref);
 
-    var affiliates = {
+    var affiliate = {
 
       getAffiliate: function(cid) {
         return $firebaseObject(ref.child(cid));
@@ -13,6 +13,6 @@ app.factory('Affiliates', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', '
 
     };
 
-    return affiliates;
+    return affiliate;
   }
 ]);

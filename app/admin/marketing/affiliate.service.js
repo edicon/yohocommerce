@@ -1,9 +1,9 @@
-app.factory('Marketing', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+app.factory('Affiliate', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
   function (               $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
     var ref = new Firebase(FirebaseUrl+'affiliates'+'tid');
     var affiliates = $firebaseArray(ref);
 
-    var marketing = {
+    var affiliate = {
 
       getAffiliate: function(cid) {
         return $firebaseObject(ref.child(cid));
@@ -13,6 +13,6 @@ app.factory('Marketing', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 't
 
     };
 
-    return marketing;
-  }
-]);
+    return affiliate;
+    }
+    ]);
