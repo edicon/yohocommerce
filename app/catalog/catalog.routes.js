@@ -54,7 +54,23 @@ angular.module('app')
             },
             "main@catalog": {
               controller: 'AuthCtrl as authCtrl',
-              templateUrl: 'catalog/account/login.html'
+              templateUrl: 'catalog/customer/login.html'
+            },
+            "footer@catalog": {
+              templateUrl: 'catalog/common/footer.html'
+            }
+          }
+        })
+        .state('catalog.register', {
+          url: 'register',
+          views: {
+            "header@catalog": {
+              controller: 'CatalogCtrl as catalogCtrl',
+              templateUrl: 'catalog/common/header.html'
+            },
+            "main@catalog": {
+              controller: 'RegisterCtrl as registerCtrl',
+              templateUrl: 'catalog/customer/register.html'
             },
             "footer@catalog": {
               templateUrl: 'catalog/common/footer.html'
