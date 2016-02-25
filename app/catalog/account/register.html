@@ -12,19 +12,19 @@
         <div class="form-group required">
           <label class="col-sm-2 control-label" align="right">First Name</label>
           <div class="col-sm-8">
-            <input type="text" ng-model="registerCtrl.customer.customer_first_name" placeholder="First Name" class="form-control">
+            <input type="text" ng-model="accountCtrl.customer.customer_first_name" placeholder="First Name" class="form-control">
           </div>
         </div>
         <div class="form-group required">
           <label class="col-sm-2 control-label" align="right">Last Name</label>
           <div class="col-sm-8">
-            <input type="text" ng-model="customerCtrl.customer.customer_last_name" placeholder="Last Name" class="form-control">
+            <input type="text" ng-model="accountCtrl.customer.customer_last_name" placeholder="Last Name" class="form-control">
           </div>
         </div>
         <div class="form-group required">
           <label class="col-sm-2 control-label" align="right">Phone Number</label>
           <div class="col-sm-8">
-            <input type="text" ng-model="customerCtrl.customer.customer_phone" placeholder="Phone Number" class="form-control">
+            <input type="text" ng-model="accountCtrl.customer.customer_phone" placeholder="Phone Number" class="form-control">
           </div>
         </div>
         <div class="form-group">
@@ -45,22 +45,28 @@
         <div class="form-group required">
           <label class="col-sm-2 control-label" align="right">E-Mail</label>
           <div class="col-sm-8">
-            <input type="text" ng-model="customerCtrl.customer.customer_email" placeholder="Customer E-Mail" class="form-control">
+            <input type="text" ng-model="accountCtrl.customer.customer_email" placeholder="Customer E-Mail" class="form-control">
           </div>
         </div>
         <div class="form-group required">
           <label class="col-sm-2 control-label" align="right">Password</label>
           <div class="col-sm-8">
-            <input type="password" ng-model="customerCtrl.customer.password" placeholder="Password" class="form-control">
+            <input type="password" ng-model="accountCtrl.customer_password" placeholder="Password" class="form-control">
           </div>
         </div>
         <div class="form-group required">
           <label class="col-sm-2 control-label" align="right">Confirm Password</label>
           <div class="col-sm-8">
-            <input type="password" ng-model="customerCtrl.customer.confirm_password" placeholder="Password" class="form-control">
+            <input type="password" ng-model="accountCtrl.confirm_password" placeholder="Password" class="form-control">
           </div>
         </div>
       </fieldset>
     </form>
+    <div class="buttons">
+      <div class="pull-right">Please read and agree to our Privacy Policy
+        <input type="checkbox" ng-model="accountCtrl.customer.privacy_policy_confirm" value="1">&nbsp;
+        <input type="submit" ng-click="accountCtrl.registerCustomer()" value="Register Now" class="btn btn-primary">
+      </div>
+    </div>
   </div>
 </div>

@@ -1,12 +1,20 @@
-app.factory('Login', ['$firebaseAuth', 'FirebaseUrl',
-  function (          $firebaseAuth,   FirebaseUrl) {
+app.factory('CustomerLogin', ['$firebaseAuth', 'FirebaseUrl',
+  function (                   $firebaseAuth,   FirebaseUrl) {
     var ref = new Firebase(FirebaseUrl);
     var auth = $firebaseAuth(ref);
 
 var login = {
 
-    register: function(user) {
-      return auth.$createUser(user.email, user.password);
+    createUser: function(user) {
+      return auth.$createUser({ email: user.email, password: user.password });
+    },
+
+    login: function(user) {
+      return auth.$login('password', user);
+    },
+
+    logout: function() {
+      auth.$logout();
     },
 
   };

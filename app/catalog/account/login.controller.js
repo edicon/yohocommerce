@@ -1,10 +1,10 @@
-app.controller('LoginCtrl', ['Login', 'tid', '$state',
-  function (                  Login,   tid,   $state) {
+app.controller('LoginCtrl', ['AccountLogin', 'tid', '$state',
+  function (                  AccountLogin,   tid,   $state) {
     var loginCtrl = this;
 
     loginCtrl.login = function() {
-      Login.$authWithPassword(loginCtrl.user).then(function (auth) {
-        $state.go('catalog.customer');
+      AccountLogin.$authWithPassword(loginCtrl.user).then(function (auth) {
+        $state.go('catalog.account');
       }, function(error) {
         loginCtrl.error = error;
       });
