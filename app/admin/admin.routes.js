@@ -307,10 +307,13 @@ angular.module('app')
         .state('admin.marketing.affiliates', {
           url: '/affiliates',
           views: {
+            "header@admin": {
+              templateUrl: 'admin/marketing/affiliates.header.html'
+            },
             "main@admin": {
               templateUrl: 'admin/marketing/marketing.html'
             },
-            "list@marketing.affiliates": {
+            "list@admin.marketing.affiliates": {
               controller: 'MarketingCtrl as marketingCtrl',
               templateUrl: 'admin/marketing/affiliates.html'
             }
@@ -334,24 +337,15 @@ angular.module('app')
         .state('admin.marketing.affiliate', {
           url: '/affiliate',
           views: {
+            "header@admin": {
+              templateUrl: 'admin/marketing/affiliate.header.html'
+            },
             "main@admin": {
-              templateUrl: 'admin/marketing/admin.marketing.html'
+              templateUrl: 'admin/marketing/marketing.html'
             },
             "list@admin.marketing.affiliate": {
               controller: 'MarketingCtrl as marketingCtrl',
-              templateUrl: 'admin/marketing/admin.affiliate.html'
-            }
-          }
-        })
-        .state('admin.marketing.coupon', {
-          url: '/coupon',
-          views: {
-            "main@admin": {
-              templateUrl: 'admin/marketing/admin.marketing.html'
-            },
-            "list@admin.marketing.coupon": {
-              controller: 'MarketingCtrl as marketingCtrl',
-              templateUrl: 'admin/marketing/admin.coupon.html'
+              templateUrl: 'admin/marketing/affiliate.html'
             }
           }
         })
