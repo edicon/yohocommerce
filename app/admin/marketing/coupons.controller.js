@@ -1,20 +1,50 @@
 app.controller('CouponsCtrl', ['Coupons', '$state', '$scope', '$stateParams',
   function (                    Coupons,   $state,   $scope,   $stateParams) {
     var couponsCtrl = this;
+    couponsCtrl.allCoupons = Coupons.all;
 
+//function called from coupons.html
+    couponsCtrl.addCoupon = function() {
+//console test to check if it's working
+    console.log('gothere')
+//calling the object theCoupon with corresponding fields
+    var theCoupon = {};
+//corresoponding fields in theCoupon object, data will be saved in the node
+    theCoupon.couponName = couponsCtrl.coupon_name;
+    theCoupon.couponDiscount = couponsCtrl.coupon_discount;
+    theCoupon.couponType = couponsCtrl.coupon_type_id;
+//calling coupons.service.js addCoupon function
+    Coupons.addCoupon(theCoupon);
+//clears the input boxes after new coupons are added
+    couponsCtrl.coupon_name = null;
+    couponsCtrl.coupon_discount = null;
+    couponsCtrl.coupon_type_id = null;
+  }, function(error) {
+    couponsCtrl.error = error;
+  };
+
+//Coupons Grid Options
     couponsCtrl.gridCoupons = {
       enableSorting: true,
       enableCellEditOnFocus: true,
       data: Coupons.all,
       columnDefs: [
-        { name: '', field: '$id', shown: false, cellTemplate: 'admin/catalogs/gridTemplates/editSubCategoriesBtn.html',
-          width: 34, enableColumnMenu: false, enableCellEdit: false, headerTooltip: 'Add Sub-categories' },
-        { name:'categoryName', field: 'category_name', width: '70%', enableHiding: false },
-        { name:'menuOrder', field: '$priority', enableHiding: false },
-        { name:'subCount', field: 'sub_count', visible: false },
-        { name: ' ', field: '$id', cellTemplate:'admin/catalogs/gridTemplates/removeCategoryBtn.html',
-          width: 32, enableCellEdit: false, enableColumnMenu: false }
+        { name:'couponName', field: 'coupon_name', width: '35%', enableHiding: false },
+        { name:'couponCode', field: '$id', width: '35%', enableHiding: false },
+        { name:'discount', field: 'coupon_discount', width: '15%', enableHiding: false, cellClass: 'grid-align-right' },
+        { name:'type', field: 'coupon_type', width: '10%', enableHiding: false, cellClass: 'grid-align-right' },
+        { name: ' ', field: '$id', cellTemplate:'admin/marketing/gridTemplates/removeCoupon.html',
+          width: 50, enableCellEdit: false, enableColumnMenu: false }
       ]
+    };
+//called from removeCoupon.html
+    couponsCtrl.removeCoupon = function(row) {
+      var theCoupon = {};
+      theCoupon.couponId = row.entity.$id;
+//calling coupons.service.js removeCoupon function to delete from firebase
+      Coupons.removeCoupon(theCoupon);
+    }, function(error) {
+      couponsCtrl.error = error;
     };
 
 }]);

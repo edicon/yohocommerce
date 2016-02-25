@@ -4,46 +4,26 @@ app.factory('Coupons', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
     var coupons = $firebaseArray(ref.child(tid).orderByPriority());
 
     var coupon = {
-
-      getCategory: function(id) {
-        return $firebaseObject(ref.child(tid).child(id));
+// method that calls the reference in firebase, adds object to coupon array
+      addCoupon: function(theObj) {
+// setting up the node in firebase
+      var theRef = new Firebase(FirebaseUrl+'coupons/'+tid);
+//pushes the reference to firebase and returns it back to the controller
+        return theRef.push( {coupon_name: theObj.couponName,
+          coupon_discount: theObj.couponDiscount, coupon_type: theObj.couponType} );
       },
 
-      getIndex: function(cid) {
-        return categories.$indexFor(cid);
-      },
-
-      getKey: function(key) {
-        return categories.$keyAt(key);
-      },
-
-      getCount: function() {
-        return categories.length;
-      },
-
-      removeCategory: function(id) {
-        return $firebaseObject(ref.child(tid).child(id)).$remove();
-      },
-
-      addSubCount: function(entity) {
-        var theRef = new Firebase(FirebaseUrl+'categories/'+tid+'/'+entity.category_id);
-        return theRef.update({sub_count: entity.priority});
-      },
-
-      addCategoryImage: function(imageEntity) {
-        var theRef = new Firebase(FirebaseUrl+'categories/'+tid+'/'+imageEntity.cid);
-        return theRef.update({category_banner_image: imageEntity.imageSrc});
-      },
-
-      removeCategoryImage: function(cid) {
-        var theRef = new Firebase(FirebaseUrl+'categories/'+tid+'/'+cid);
-        return theRef.update({category_banner_image: null});
+// method that calls the reference in firebase, removes object from coupon array
+      removeCoupon: function(theObj) {
+// setting up the node in firebase
+      var theRef = new Firebase(FirebaseUrl+'coupons/'+tid+'/'+theObj.couponId);
+//pushes the reference to firebase and returns it back to the controller
+      return theRef.remove();
       },
 
       all: coupons,
 
     };
-
     return coupon;
   }
 ]);
