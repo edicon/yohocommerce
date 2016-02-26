@@ -16,8 +16,8 @@ app.controller('AffiliatesCtrl', ['Affiliates', '$state', '$scope',
     columnDefs: [
       { name: '', field: '$id', shown: false, cellTemplate: 'admin/marketing/gridTemplates/editAffiliate.html',
         width: 50, enableColumnMenu: false, headerTooltip: 'Edit Affiliate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-      { name:'affiliateName', field: 'affiliate_full_name', enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '30%' },
-      { name:'email', field: 'affiliate_email', enableHiding: false, enableFiltering: false, width: '20%', enableCellEdit: false },
+      { name:'affiliateName', field: 'affiliate_full_name', enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '25%' },
+      { name:'email', field: 'affiliate_email', enableHiding: false, enableFiltering: false, width: '25%', enableCellEdit: false },
       { name:'affiliateCode', field: '$id', enableHiding: false, enableFiltering: false, width: '20%', enableCellEdit: false },
       { name: 'customer_status_id', displayName: 'Status', editableCellTemplate: 'ui-grid/dropdownEditor', width: '20%',
         cellFilter: 'mapStatus', editDropdownValueLabel: 'status', enableFiltering: false, editDropdownOptionsArray: [
@@ -34,6 +34,16 @@ app.controller('AffiliatesCtrl', ['Affiliates', '$state', '$scope',
     console.log(gotaffiliate)
     $state.go('admin.marketing.affiliate', {'rowEntity': row.entity});
   };
+
+//called from removeAffiliate.html
+    affiliatesCtrl.removeAffiliate = function(row) {
+      var theAffiliate = {};
+      theAffiliate.affiliateId = row.entity.$id;
+//calling affiliates.service.js removeAffiliate function to delete from firebase
+      Affiliates.removeAffiliate(theAffiliate);
+    }, function(error) {
+      affiliatesCtrl.error = error;
+    };
 
   }
 ]);

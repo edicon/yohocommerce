@@ -14,10 +14,10 @@
             </a>
 <!-- Save Button -->
             <button type="button" class="btn btn-sm btn-primary detail-btn pull-right"
-              tooltip-placement="top" uib-tooltip="Save" href+"#/affiliates" ui-sref="admin.marketing.affiliates" ng-click="affiliateCtrl.addAffiliate()">
+              tooltip-placement="top" uib-tooltip="Save" href="#/affiliates" ui-sref="admin.marketing.affiliates" ng-click="affiliateCtrl.addAffiliate()">
               <i class="fa fa-floppy-o"></i>
             </button>
-<!-- Start of Tabs -->
+<!-- Start of Tabs-->
 					<uib-tabset>
 <!-- Start of Profile Tab -->
 						<uib-tab>
@@ -25,32 +25,96 @@
                 <i class="menu-icon fa fa-user-secret"></i> Profile
               </uib-tab-heading><br>
 <!-- First Name Input -->
-            <div class="row">
-              <div class="form-group">
-                <label class="control-label col-xs-2">&ast; First Name:</label>
-                <div ng-if="affiliateCtrl.custId === null" class="col-xs-8">
-                  <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_first_name" placeholder="First Name" class="form-control">
-                </div>
-                <div ng-if="affiliateCtrl.custId !== null" class="col-xs-8">
-                  <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_first_name" ng-change="affiliateCtrl.affiliate.$save()"
-                    placeholder="First Name" class="form-control">
-                </div>
-              </div>
-            </div class="row"><br>
+                <div class="row">
+                  <div class="form-group">
+                      <label class="control-label col-xs-3">&ast; First Name :</label>
+                      <div class="col-xs-8">
+                        <input type="text" ng-model="affiliateCtrl.affiliate_first_name" placeholder="First Name" class="form-control">
+                      </div>
+                    </div>
+                  </div><br>
 <!-- Last Name Input -->
-              <div class="form-group">
-                <label class="control-label col-xs-2">&ast; Last Name:</label>
-                <div ng-if="affiliateCtrl.custId === null" class="col-xs-8">
-                  <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_last_name" placeholder="First Name" class="form-control">
-                </div>
-                <div ng-if="affiliateCtrl.custId !== null" class="col-xs-8">
-                  <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_last_name" ng-change="affiliateCtrl.affiliate.$save()"
-                    placeholder="Last Name" class="form-control">
+                <div class="row">
+                  <div class="form-group">
+                    <label class="control-label col-xs-3">&ast; Last Name :</label>
+                      <div class="col-xs-8">
+                        <input type="text" ng-model="affiliateCtrl.affiliate_last_name" placeholder="First Name" class="form-control">
+                      </div>
+                    </div>
+                  </div><br>
+<!-- Email Input -->
+                <div class="row">
+                  <div class="form-group">
+                    <label class="control-label col-xs-3">&ast; E-mail :</label>
+                      <div class="col-xs-8">
+                        <input type="text" ng-model="affiliateCtrl.affiliate_email" placeholder="E-mail Address" class="form-control">
+                      </div>
+                    </div>
+                  </div><br>
+<!-- Email Input -->
+                  <div class="row">
+                    <div class="form-group">
+                      <label class="control-label col-xs-3">&ast; Phone Number :</label>
+                        <div class="col-xs-8">
+                          <input type="text" ng-model="affiliateCtrl.affiliate_phone" placeholder="Phone Number" class="form-control">
+                        </div>
+                      </div>
+                    </div><br>
+<!-- Search Address Bar
+              <div class="row">
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" align="right">Enter Address</label>
+                  <div class="col-sm-8">
+                    <ui-select ng-model="address.selected" theme="bootstrap" ng-disabled="disabled" reset-search-input="false">
+                      <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
+                      <ui-select-choices repeat="address in (addresses) track by $index" refresh="refreshAddresses($select.search)" refresh-delay="0">
+                        <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                    <br>{{address.selected.formatted_address}}
                   </div>
                 </div>
+              </div>
+-->
+<!-- Start Address Input -->
+              <div class="row">
+                  <h3 class="panel-title col-xs-3">Address</h3>
+              </div><br>
+              <div class="row">
+                <div class="form-group">
+                  <label class="control-label col-xs-3">&ast; Street :</label>
+                  <div class="col-xs-8">
+                    <input type="text" ng-model="affiliateCtrl.affiliate_address_street" placeholder="Street" class="form-control">
+                  </div>
+                </div>
+              </div><br>
+              <div class="row">
+                <div class="form-group">
+                  <label class="control-label col-xs-3">&ast; City :</label>
+                  <div class="col-xs-2">
+                    <input type="text" ng-model="affiliateCtrl.affiliate_address_city" placeholder="City" class="form-control">
+                  </div>
+                  <label class="control-label col-xs-2">&ast; State/Province :</label>
+                  <div class="col-xs-4">
+                    <input type="text" ng-model="affiliateCtrl.affiliate_stpr" placeholder="State/Province" class="form-control">
+                  </div>
+                </div>
+              </div><br>
+            <div class-"row">
+              <div class="form-group">
+                <label class="control-label col-xs-3">&ast; Postal Code/Area Code :</label>
+                <div class="col-xs-2">
+                  <input type="text" ng-model="affiliateCtrl.affiliate_pcac" placeholder="Postal Code" class="form-control">
+                </div>
+                <label class="control-label col-xs-2">&ast; Country :</label>
+                <div class="col-xs-4">
+                  <select ng-model="affiliateCtrl.affiliate_country" class="form-control">
+                </div>
+              </div>
+
             </uib-tab>
 <!-- Start of Payment Details Tab -->
-            <uib-tab>
+          <uib-tab>
             <uib-tab-heading>
               <i class="menu-icon fa fa-trophy"></i> Payment Details
             </uib-tab-heading>

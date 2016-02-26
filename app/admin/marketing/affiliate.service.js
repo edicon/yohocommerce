@@ -1,16 +1,18 @@
 app.factory('Affiliate', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
   function (               $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
-    var ref = new Firebase(FirebaseUrl+'affiliates'+'tid');
-    var affiliates = $firebaseArray(ref);
+    var ref = new Firebase(FirebaseUrl+'affiliates');
+    var affiliates = $firebaseArray(ref.child(tid).orderByPriority());
 
     var affiliate = {
-
-      getAffiliate: function(cid) {
-        return $firebaseObject(ref.child(cid));
+// method that calls the reference in firebase, adds object to coupon array
+      addAffiliate: function(theObj) {
+// setting up the node in firebase
+        var theRef = new Firebase(FirebaseUrl+'affiliates/'+tid);
+//pushes the reference to firebase and returns it back to the controller
+        return theRef.push( {affiliate_full_name: theObj.affiliateFullName, affiliate_email: theObj.affiliateEmail} );
       },
 
       all: affiliates
-
     };
 
     return affiliate;
