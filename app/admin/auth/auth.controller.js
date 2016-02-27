@@ -64,5 +64,4 @@ app.controller('AuthCtrl', ['Auth', 'Register', 'Profile', 'md5', 'tid', '$state
         authCtrl.error = error;
       };
 
-  }
-]);
+}]);

@@ -1,5 +1,5 @@
-app.controller('AccountCtrl', ['CatalogCustomer', 'Login', 'CustomerProfile', 'md5', 'tid', '$scope', '$state', '$http',
-  function (                            CatalogCustomer,   Login,   CustomerProfile,   md5,   tid,   $scope,   $state,   $http) {
+app.controller('AccountCtrl', ['Account', 'Auth', 'Profile', 'md5', 'tid', '$scope', '$state', '$http',
+  function (                    Account,   Auth,   Profile,   md5,   tid,   $scope,   $state,   $http) {
     var accountCtrl = this;
     accountCtrl.user = {};
     $scope.address = {};
@@ -15,10 +15,10 @@ app.controller('AccountCtrl', ['CatalogCustomer', 'Login', 'CustomerProfile', 'm
     };
 
     accountCtrl.login = function() {
-      Login.$authWithPassword(accountCtrl.user).then(function (auth) {
+      Auth.$authWithPassword(accountCtrl.user).then(function (auth) {
         $state.go('catalog.account');
       }, function(error) {
-        authCtrl.error = error;
+        accountCtrl.error = error;
       });
     };
 

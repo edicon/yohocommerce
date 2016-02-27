@@ -53,8 +53,8 @@ angular.module('app')
               templateUrl: 'catalog/common/header.html'
             },
             "main@catalog": {
-              controller: 'AuthCtrl as authCtrl',
-              templateUrl: 'catalog/customer/login.html'
+              controller: 'AccountCtrl as accountCtrl',
+              templateUrl: 'catalog/account/login.html'
             },
             "footer@catalog": {
               templateUrl: 'catalog/common/footer.html'
@@ -69,8 +69,8 @@ angular.module('app')
               templateUrl: 'catalog/common/header.html'
             },
             "main@catalog": {
-              controller: 'RegisterCtrl as registerCtrl',
-              templateUrl: 'catalog/customer/register.html'
+              controller: 'AccountCtrl as accountCtrl',
+              templateUrl: 'catalog/account/register.html'
             },
             "footer@catalog": {
               templateUrl: 'catalog/common/footer.html'
@@ -139,8 +139,8 @@ angular.module('app')
         })
         .state('adminlogin', {
           url: '/adminlogin',
-          controller: 'AuthCtrl as authCtrl',
-          templateUrl: 'admin/auth/login.html'
+          controller: 'AdminLoginCtrl as adminLoginCtrl',
+          templateUrl: 'catalog/admin/adminlogin.html'
         })
         .state('registertenant', {
           url: '/registertenant',

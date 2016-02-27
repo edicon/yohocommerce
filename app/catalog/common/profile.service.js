@@ -1,5 +1,5 @@
-app.factory('AccountProfile', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-  function (                    $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+app.factory('Profile', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+  function (             $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
     var ref = new Firebase(FirebaseUrl+'profiles');
     var profiles = $firebaseArray(ref);
 
