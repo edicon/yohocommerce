@@ -1,5 +1,5 @@
-app.controller('AdminLoginCtrl', ['Auth', 'RegisterTenant', 'Profile', 'md5', 'tid', '$state',
-  function (                       Auth,   RegisterTenant,   Profile,   md5,   tid,   $state) {
+app.controller('AdminLoginCtrl', ['Auth', 'RegisterTenant', 'Profile', 'AlertService', 'md5', 'tid', '$state',
+  function (                       Auth,   RegisterTenant,   Profile,   AlertService,   md5,   tid,   $state) {
     var adminLoginCtrl = this;
     adminLoginCtrl.tenant = {};
     adminLoginCtrl.user = {
@@ -12,7 +12,7 @@ app.controller('AdminLoginCtrl', ['Auth', 'RegisterTenant', 'Profile', 'md5', 't
       Auth.$authWithPassword(adminLoginCtrl.user).then(function (auth) {
         $state.go('admin.dashboard');
       }, function(error) {
-        adminLoginCtrl.error = error;
+        AlertService.addError(error.message);
       });
     };
 
@@ -33,7 +33,7 @@ app.controller('AdminLoginCtrl', ['Auth', 'RegisterTenant', 'Profile', 'md5', 't
         adminLoginCtrl.login();
       });
     }, function(error) {
-      adminLoginCtrl.error = error;
+      AlertService.addError(error.message);
     };
 
     adminLoginCtrl.registerTenant = function() {
@@ -53,7 +53,7 @@ app.controller('AdminLoginCtrl', ['Auth', 'RegisterTenant', 'Profile', 'md5', 't
           })
         });
       }, function(error) {
-        adminLoginCtrl.error = error;
+        AlertService.addError(error.message);
       };
 
 }]);

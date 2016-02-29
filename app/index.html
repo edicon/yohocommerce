@@ -12,7 +12,20 @@
     <link rel="stylesheet" href="bower_components/rdash-ui/dist/css/rdash.css" />
     <link rel="stylesheet" href="styles/main.css">
   </head>
-  <body ng-app="app">
+  <div ng-app="app">
+
+    <div id="page-wrapper">
+      <div id="messageContainer" class="flyover flyover-top">
+         <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}} alert-dismissible" role="alert" ng-click="alert.close()">
+           <button type="button" class="close" ng-click="alert.close()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+           <span><h3 class="text-{{alert.type}}">{{ alert.msg }}</h3></span>
+           <ul>
+             <li ng-repeat="msg in alert.msgs">{{ msg }}</li>
+           </ul>
+         </div>
+         <button ng-show='alerts.length > 1' class="btn btn-primary" ng-click='dismissAll()'>Dismiss All</button>
+      </div>
+    </div>
 
     <div ui-view></div>
 
@@ -48,11 +61,13 @@
     <script src="bower_components/tinymce-dist/tinymce.js"></script>
     <script src="bower_components/angular-ui-tinymce/src/tinymce.js"></script>
     <script src="bower_components/ui-select/dist/select.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="app.js"></script>
+    <script src="alert.service.js"></script>
     <script src="catalog/catalog.routes.js"></script>
     <script src="catalog/catalog.controller.js"></script>
     <script src="catalog/catalog.service.js"></script>
@@ -108,5 +123,5 @@
     <script src="admin/tools/tools.controller.js"></script>
     <script src="admin/reports/reports.controller.js"></script>
 
-</body>
+</div>
 </html>

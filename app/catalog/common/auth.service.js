@@ -4,5 +4,5 @@ app.factory('Auth', ['$firebaseAuth', 'FirebaseUrl',
     var auth = $firebaseAuth(ref);
 
     return auth;
-  }
-]);
+
+}]);

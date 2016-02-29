@@ -31,6 +31,5 @@ app.factory('Catalog', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
     };
 
     return category;
-  }
 
-]);
+}]);

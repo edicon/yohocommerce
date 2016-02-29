@@ -1,5 +1,5 @@
-app.controller('AccountCtrl', ['Account', 'Auth', 'Profile', 'md5', 'tid', '$scope', '$state', '$http',
-  function (                    Account,   Auth,   Profile,   md5,   tid,   $scope,   $state,   $http) {
+app.controller('AccountCtrl', ['Account', 'Auth', 'Profile', 'AlertService', 'md5', 'tid', '$scope', '$state', '$http',
+  function (                    Account,   Auth,   Profile,   AlertService,   md5,   tid,   $scope,   $state,   $http) {
     var accountCtrl = this;
     accountCtrl.user = {};
     $scope.address = {};
@@ -18,12 +18,23 @@ app.controller('AccountCtrl', ['Account', 'Auth', 'Profile', 'md5', 'tid', '$sco
       Auth.$authWithPassword(accountCtrl.user).then(function (auth) {
         $state.go('catalog.account');
       }, function(error) {
-        accountCtrl.error = error;
+        AlertService.addError(error.message);
+      });
+    };
+
+    accountCtrl.createUser = function() {
+      accountCtrl.user.email = accountCtrl.customer.customer_email;
+      accountCtrl.user.password = accountCtrl.customer_password;
+      Auth.$createUser(accountCtrl.user).then(function(uid) {
+        accountCtrl.customer.uid = uid;
+        accountCtrl.createProfile();
+      }, function(error) {
+        AlertService.addError(error.message);
       });
     };
 
     accountCtrl.createProfile = function() {
-      var theProfile = CustomerProfile.getProfile(accountCtrl.customer.uid);
+      var theProfile = Profile.getProfile(accountCtrl.customer.uid);
       theProfile.$loaded().then(function() {
         theProfile.emailHash = md5.createHash(authCtrl.user.email);
         theProfile.profile.name = accountCtrl.customer.first_name + ' ' + accountCtrl.customer.last_name;
@@ -33,20 +44,11 @@ app.controller('AccountCtrl', ['Account', 'Auth', 'Profile', 'md5', 'tid', '$sco
         accountCtrl.login();
       });
     }, function(error) {
-      accountCtrl.error = error;
+      AlertService.addError(error.message);
     };
 
     accountCtrl.registerCustomer = function() {
-      accountCtrl.user.email = accountCtrl.customer.customer_email;
-      accountCtrl.user.password = accountCtrl.customer_password;
-      return Login.createUser(accountCtrl.user).then(function(uid) {
-        accountCtrl.customer.uid = uid;
-        RegisterCustomer.all.$add(accountCtrl.customer).then(function(ref) {
-          accountCtrl.createProfile();
-        })
-      });
-    }, function(error) {
-      accountCtrl.error = error;
+      accountCtrl.createUser();
     };
 
 }]);

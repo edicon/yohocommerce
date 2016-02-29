@@ -28,7 +28,6 @@
       <div class="panel-body">
         <h2 class="text-primary">Admin Login</h2>
         <form ng-submit="adminLoginCtrl.login()">
-          <p ng-show="adminLoginCtrl.error" class="text-danger">{{ adminLoginCtrl.error.message }}</p>
           <div class="form-group">
             <input type="email" placeholder="Email" class="form-control" ng-model="adminLoginCtrl.user.email" >
           </div>
