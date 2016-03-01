@@ -100,3 +100,9 @@ input[readonly] {
   font-size: 18px;
   line-height: 20px;
 }
+
+div.required .control-label:before {
+	content: '* ';
+	color: #F00;
+	font-weight: bold;
+}
