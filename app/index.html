@@ -12,7 +12,20 @@
     <link rel="stylesheet" href="bower_components/rdash-ui/dist/css/rdash.css" />
     <link rel="stylesheet" href="styles/main.css">
   </head>
-  <body ng-app="app">
+  <div ng-app="app">
+
+    <div id="page-wrapper">
+      <div id="messageContainer" class="flyover flyover-top">
+         <div ng-repeat="alert in alerts" class="alert alert-{{alert.type}} alert-dismissible" role="alert" ng-click="alert.close()">
+           <button type="button" class="close" ng-click="alert.close()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+           <span><h3 class="text-{{alert.type}}">{{ alert.msg }}</h3></span>
+           <ul>
+             <li ng-repeat="msg in alert.msgs">{{ msg }}</li>
+           </ul>
+         </div>
+         <button ng-show='alerts.length > 1' class="btn btn-primary" ng-click='dismissAll()'>Dismiss All</button>
+      </div>
+    </div>
 
     <div ui-view></div>
 
@@ -48,31 +61,40 @@
     <script src="bower_components/tinymce-dist/tinymce.js"></script>
     <script src="bower_components/angular-ui-tinymce/src/tinymce.js"></script>
     <script src="bower_components/ui-select/dist/select.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
         <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="app.js"></script>
-    <script src="catalog/account/account.controller.js"></script>
-    <script src="catalog/account/account.service.js"></script>
+    <script src="alert.service.js"></script>
     <script src="catalog/catalog.routes.js"></script>
+    <script src="catalog/account.routes.js"></script>
     <script src="catalog/catalog.controller.js"></script>
     <script src="catalog/catalog.service.js"></script>
+    <script src="catalog/admin/auth.controller.js"></script>
+    <script src="catalog/common/auth.service.js"></script>
+    <script src="catalog/common/profile.controller.js"></script>
+    <script src="catalog/common/profile.service.js"></script>
     <script src="catalog/products/cartorders.service.js"></script>
     <script src="catalog/products/carousel.controller.js"></script>
     <script src="catalog/products/category.controller.js"></script>
     <script src="catalog/products/subcategory.controller.js"></script>
     <script src="catalog/products/featured.controller.js"></script>
     <script src="catalog/products/product.controller.js"></script>
-    <script src="register/register.service.js"></script>
+    <script src="catalog/account/account.controller.js"></script>
+    <script src="catalog/account/account.service.js"></script>
+    <script src="catalog/account/login.controller.js"></script>
+    <script src="catalog/account/register.controller.js"></script>
+    <script src="catalog/account/register.service.js"></script>
+    <script src="catalog/admin/registertenant.service.js"></script>
 
-    <script src="admin/auth/auth.controller.js"></script>
-    <script src="admin/auth/auth.service.js"></script>
+<<<<<<< HEAD
     <script src="admin/common/countries.service.js"></script>
-    <script src="admin/profile/profile.controller.js"></script>
-    <script src="admin/profile/profile.service.js"></script>
-    <script src="admin/admin.controller.js"></script>
+=======
+>>>>>>> master
     <script src="admin/admin.routes.js"></script>
+    <script src="admin/admin.controller.js"></script>
     <script src="admin/dashboard/dashboard.controller.js"></script>
     <script src="admin/catalogs/categories.controller.js"></script>
     <script src="admin/catalogs/categories.service.js"></script>
@@ -111,5 +133,5 @@
     <script src="admin/tools/tools.controller.js"></script>
     <script src="admin/reports/reports.controller.js"></script>
 
-</body>
+</div>
 </html>

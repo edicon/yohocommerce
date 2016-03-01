@@ -1,0 +1,134 @@
+<div class="row">
+  <div class="col-xs-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> New Affiliate</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-xs-12">
+<!-- Cancel Button -->
+            <a type="button" class="btn btn-sm btn-default detail-btn pull-right"
+              tooltip-placement="top" uib-tooltip="Cancel" href="#/affiliates" ui-sref="admin.marketing.affiliates">
+              <i class="fa fa-reply"></i>
+            </a>
+<!-- Save Button -->
+            <button type="button" class="btn btn-sm btn-primary detail-btn pull-right"
+              tooltip-placement="top" uib-tooltip="Save" href="#/affiliates" ui-sref="admin.marketing.affiliates" ng-click="affiliateCtrl.addAffiliate()">
+              <i class="fa fa-floppy-o"></i>
+            </button>
+<!-- Start of Tabs-->
+					<uib-tabset>
+<!-- Start of Profile Tab -->
+						<uib-tab>
+              <uib-tab-heading>
+                <i class="menu-icon fa fa-user-secret"></i> Profile
+              </uib-tab-heading><br>
+<!-- First Name Input -->
+              <form class="form-horizontal" ng-submit="register()">
+                <fieldset>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" align="right">First Name</label>
+                    <div class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_first_name" placeholder="First Name" class="form-control">
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" align="right">Last Name</label>
+                    <div class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_last_name" placeholder="Last Name" class="form-control">
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" align="right">E-Mail</label>
+                    <div class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_email" placeholder="E-mail Address" class="form-control">
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" align="right">Phone Number</label>
+                    <div class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_phone" placeholder="Phone Number" class="form-control">
+                    </div>
+                  </div>
+
+                </fieldset>
+
+                <fieldset>
+                  <legend>Address</legend>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" align="right">Enter Address</label>
+                    <div class="col-sm-8">
+                      <ui-select ng-model="address.selected" theme="bootstrap" ng-disabled="disabled" reset-search-input="false">
+                        <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
+                        <ui-select-choices repeat="address in (addresses) track by $index" refresh="refreshAddresses($select.search)" refresh-delay="0">
+                          <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
+                        </ui-select-choices>
+                      </ui-select>
+                      <br>{{address.selected.formatted_address}}
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" align="right">Street</label>
+                    <div class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_street" placeholder="Street" class="form-control">
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" align="right">City</label>
+                    <div class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_city" placeholder="City" class="form-control">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label" align="right">Country</label>
+                    <div class="col-sm-8">
+                      <ui-select ng-model="country.selected" theme="bootstrap" ng-disabled="disabled">
+                        <ui-select-match placeholder="Search country...">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices repeat="country in countrys | filter: $select.search">
+                          <span ng-bind-html="country.name | highlight: $select.search"></span>
+                        </ui-select-choices>
+                      </ui-select>
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" align="right">Postal Code / Zip</label>
+                    <div class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_postal_code" placeholder="Postal Code" class="form-control">
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" align="right">Region</label>
+                    <div class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate__address_region" placeholder="Region" class="form-control">
+                    </div>
+                  </div>
+                </fieldset>
+              </form>
+            </uib-tab>
+<!-- Start of Payment Details Tab -->
+          <uib-tab>
+            <uib-tab-heading>
+              <i class="menu-icon fa fa-trophy"></i> Payment Details
+            </uib-tab-heading>
+          </uib-tab>
+  <!-- Start of Transactions -->
+          <uib-tab>
+          <uib-tab-heading>
+            <i class="menu-icon fa fa-indent"></i> Transactions
+          </uib-tab-heading>
+        </uib-tab>
+<!-- Start of Security Tab -->
+        <uib-tab>
+        <uib-tab-heading>
+          <i class="menu-icon fa fa-key"></i> Security
+        </uib-tab-heading>
+      </uib-tab>
+<!-- End of Tabs -->
+					</uib-tabset>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+</div>
+</div>

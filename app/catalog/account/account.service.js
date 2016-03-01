@@ -1,8 +1,14 @@
-app.factory('Auth', ['$firebaseAuth', 'FirebaseUrl',
-  function (          $firebaseAuth,   FirebaseUrl) {
-    var ref = new Firebase(FirebaseUrl);
-    var auth = $firebaseAuth(ref);
+app.factory('Account', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+  function (             $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+    var ref = new Firebase(FirebaseUrl+'countries');
+    var countries = $firebaseArray(ref);
 
-    return auth;
-  }
-]);
+    var account = {
+
+      allCountries: countries
+
+    };
+
+  return account;
+
+}]);

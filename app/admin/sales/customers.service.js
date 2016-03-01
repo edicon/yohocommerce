@@ -1,5 +1,5 @@
 app.factory('Customers', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-  function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+  function (               $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
     var ref = new Firebase(FirebaseUrl+'customers');
     var customers = $firebaseArray(ref.child(tid).orderByPriority());
 

@@ -3,7 +3,10 @@ app.controller('AdminCtrl', ['Auth', '$scope', '$state', '$cookieStore', 'profil
   function (                  Auth,   $scope,   $state,   $cookieStore,   profile) {
     var adminCtrl = this;
     var mobileView = 992;
-    $scope.profile = profile;
+    adminCtrl.profile = profile;
+
+    if (adminCtrl.profile.type === "customer")
+      $state.go('account.dashboard');
 
     $scope.showChilds = function(item){
       item.active = !item.active;
@@ -34,64 +37,6 @@ app.controller('AdminCtrl', ['Auth', '$scope', '$state', '$cookieStore', 'profil
       link: ".reports", name: "Reports", icon: "menu-icon fa fa-bar-chart",
     }];
 
-
-/* - multi-route menu structure
-    $scope.items = [ {
-      link: ".dashboard", name: "Dashboard", icon: "menu-icon fa fa-tachometer",
-    },
-    {
-      link: ".catalogs", name: "Catalogs", icon: "menu-icon fa fa-tags",
-      subItems: [
-        {link: ".products", name: "Products", icon: "menu-icon fa fa-th-large"},
-        {link: ".categories", name: "Categories", icon: "menu-icon fa fa-sitemap"},
-        {link: ".vendors", name: "Vendors", icon: "menu-icon fa fa-gears"}
-      ]},
-    {
-      link: ".sales", name: "Sales", icon: "menu-icon fa fa-shopping-cart",
-      subItems: [
-        {link: ".orders", name: "Orders", icon: "menu-icon fa fa-clipboard"},
-        {link: ".returns", name: "Returns", icon: "menu-icon fa fa-mail-reply-all"},
-        {link: ".customers", name: "Customers", icon: "menu-icon fa fa-users"},
-        {link: ".vouchers", name: "Gift Vouchers", icon: "menu-icon fa fa-gift"}
-      ]},
-    {
-      link: ".marketing",
-      name: "Marketing",
-      icon: "menu-icon fa fa-share-alt",
-      subItems: [
-        {link: ".affiliates", name: "Affiliates", icon: "menu-icon fa fa-user-plus"},
-        {link: ".coupons", name: "Coupons", icon: "menu-icon fa fa-tag"}
-      ]},
-    {
-      link: "#",
-      name: "Extensions",
-      icon: "menu-icon fa fa-puzzle-piece",
-      subItems: [
-        {link: ".modules", name: "Modules", icon: "menu-icon fa fa-cubes"},
-        {link: ".shipping", name: "Shipping", icon: "menu-icon fa fa-truck"},
-        {link: ".payment", name: "Payment", icon: "menu-icon fa fa-usd"},
-        {link: ".feeds", name: "Feeds", icon: "menu-icon fa fa-rss"}
-      ]},
-    {
-      link: ".system",
-      name: "System",
-      icon: "menu-icon fa fa-gear",
-      subItems: [
-        {link: ".store", name: "Store", icon: "menu-icon fa fa-shopping-bag"},
-        {link: ".users", name: "Users", icon: "menu-icon fa fa-users"},
-        {link: ".localisation", name: "Localization", icon: "menu-icon fa fa-globe"}
-      ]},
-    {
-      link: ".tools",
-      name: "Tools",
-      icon: "menu-icon fa fa-wrench",
-    },
-    {
-      link: ".reports",
-      name: "Reports",
-      icon: "menu-icon fa fa-bar-chart",
-    }];
-*/
     $scope.getWidth = function() {
       return window.innerWidth;
     };
@@ -119,7 +64,7 @@ app.controller('AdminCtrl', ['Auth', '$scope', '$state', '$cookieStore', 'profil
 
     $scope.logout = function() {
       Auth.$unauth();
-      $state.go('home');
+      $state.go('catalog.home');
     };
 
   }

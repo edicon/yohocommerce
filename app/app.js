@@ -6,6 +6,7 @@ var app = angular.module('app', [
     'ngResource',
     'ngSanitize',
     'ngTouch',
+    'ngMessages',
     'firebase',
     'ui.bootstrap',
     'ui.router',
