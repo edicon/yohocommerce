@@ -36,9 +36,9 @@ angular.module('app')
             controller: 'CatalogCtrl as catalogCtrl',
             templateUrl: 'catalog/common/header.html'
           },
-          "accountMenu@account": {
+          "accountNav@account": {
             controller: 'AccountCtrl as accountCtrl',
-            templateUrl: 'catalog/account/dashboard.html'
+            templateUrl: 'catalog/account/accountnav.html'
           },
           "accountDetail@account": {
             controller: 'AccountCtrl as accountCtrl',
@@ -57,9 +57,9 @@ angular.module('app')
             controller: 'CatalogCtrl as catalogCtrl',
             templateUrl: 'catalog/common/header.html'
           },
-          "accountMenu@account": {
+          "accountNav@account": {
             controller: 'AccountCtrl as accountCtrl',
-            templateUrl: 'catalog/account/dashboard.html'
+            templateUrl: 'catalog/account/accountnav.html'
           },
           "accountDetail@account": {
             controller: 'AccountCtrl as accountCtrl',
@@ -78,9 +78,9 @@ angular.module('app')
             controller: 'CatalogCtrl as catalogCtrl',
             templateUrl: 'catalog/common/header.html'
           },
-          "accountMenu@account": {
+          "accountNav@account": {
             controller: 'AccountCtrl as accountCtrl',
-            templateUrl: 'catalog/account/dashboard.html'
+            templateUrl: 'catalog/account/accountnav.html'
           },
           "accountDetail@account": {
             controller: 'AccountCtrl as accountCtrl',
@@ -99,9 +99,9 @@ angular.module('app')
             controller: 'CatalogCtrl as catalogCtrl',
             templateUrl: 'catalog/common/header.html'
           },
-          "accountMenu@account": {
+          "accountNav@account": {
             controller: 'AccountCtrl as accountCtrl',
-            templateUrl: 'catalog/account/dashboard.html'
+            templateUrl: 'catalog/account/accountnav.html'
           },
           "accountDetail@account": {
             controller: 'AccountCtrl as accountCtrl',
@@ -120,9 +120,9 @@ angular.module('app')
             controller: 'CatalogCtrl as catalogCtrl',
             templateUrl: 'catalog/common/header.html'
           },
-          "accountMenu@account": {
+          "accountNav@account": {
             controller: 'AccountCtrl as accountCtrl',
-            templateUrl: 'catalog/account/dashboard.html'
+            templateUrl: 'catalog/account/accountnav.html'
           },
           "accountDetail@account": {
             controller: 'AccountCtrl as accountCtrl',
@@ -141,9 +141,9 @@ angular.module('app')
             controller: 'CatalogCtrl as catalogCtrl',
             templateUrl: 'catalog/common/header.html'
           },
-          "accountMenu@account": {
+          "accountNav@account": {
             controller: 'AccountCtrl as accountCtrl',
-            templateUrl: 'catalog/account/dashboard.html'
+            templateUrl: 'catalog/account/accountnav.html'
           },
           "accountDetail@account": {
             controller: 'AccountCtrl as accountCtrl',
