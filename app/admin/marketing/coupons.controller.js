@@ -5,20 +5,12 @@ app.controller('CouponsCtrl', ['Coupons', '$state', '$scope', '$stateParams',
 
 //function called from coupons.html
     couponsCtrl.addCoupon = function() {
-//console test to check if it's working
-    console.log('gothere')
-//calling the object theCoupon with corresponding fields
-    var theCoupon = {};
-//corresoponding fields in theCoupon object, data will be saved in the node
-    theCoupon.couponName = couponsCtrl.coupon_name;
-    theCoupon.couponDiscount = couponsCtrl.coupon_discount;
-    theCoupon.couponType = couponsCtrl.coupon_type_id;
 //calling coupons.service.js addCoupon function
-    Coupons.addCoupon(theCoupon);
+    Coupons.addCoupon(couponsCtrl.coupon);
 //clears the input boxes after new coupons are added
-    couponsCtrl.coupon_name = null;
-    couponsCtrl.coupon_discount = null;
-    couponsCtrl.coupon_type_id = null;
+    couponsCtrl.coupon.coupon_name = null;
+    couponsCtrl.coupon.coupon_discount = null;
+    couponsCtrl.coupon.coupon_type_id = null;
   }, function(error) {
     couponsCtrl.error = error;
   };

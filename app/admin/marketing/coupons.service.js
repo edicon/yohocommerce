@@ -9,8 +9,7 @@ app.factory('Coupons', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
 // setting up the node in firebase
       var theRef = new Firebase(FirebaseUrl+'coupons/'+tid);
 //pushes the reference to firebase and returns it back to the controller
-        return theRef.push( {coupon_name: theObj.couponName,
-          coupon_discount: theObj.couponDiscount, coupon_type: theObj.couponType} );
+        return theRef.push(theObj);
       },
 
 // method that calls the reference in firebase, removes object from coupon array
