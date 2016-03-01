@@ -1,5 +1,5 @@
-app.controller('AuthCtrl', ['Auth', 'Register', 'Profile', 'md5', 'tid', '$state',
-  function (                 Auth,   Register,   Profile,   md5,   tid,   $state) {
+app.controller('AuthCtrl', ['Auth', 'RegisterTenant', 'Profile', 'AlertService', 'md5', 'tid', '$state',
+  function (                 Auth,   RegisterTenant,   Profile,   AlertService,   md5,   tid,   $state) {
     var authCtrl = this;
     authCtrl.tenant = {};
     authCtrl.user = {
@@ -9,10 +9,10 @@ app.controller('AuthCtrl', ['Auth', 'Register', 'Profile', 'md5', 'tid', '$state
     };
 
     authCtrl.login = function() {
-      Auth.$authWithPassword(authCtrl.user).then(function (auth) {
+      Auth.$authWithPassword(authCtrl.user).then(function(auth) {
         $state.go('admin.dashboard');
       }, function(error) {
-        authCtrl.error = error;
+        AlertService.addError(error.message);
       });
     };
 
@@ -20,28 +20,14 @@ app.controller('AuthCtrl', ['Auth', 'Register', 'Profile', 'md5', 'tid', '$state
       authCtrl.profile = Profile.getProfile(authCtrl.tenant.uid);
       authCtrl.profile.$loaded().then(function() {
         authCtrl.profile.emailHash = md5.createHash(authCtrl.user.email);
-        if (authCtrl.user.name === '') {
-          authCtrl.profile.name = authCtrl.user.email;
-          authCtrl.profile.type = 'user';
-          authCtrl.profile.tid = tid;
-        } else {
-          authCtrl.profile.name = authCtrl.tenant.name;
-          authCtrl.profile.tid = authCtrl.tid;
-          authCtrl.profile.type = 'tenant';
-        }
+        authCtrl.profile.name = authCtrl.tenant.name;
+        authCtrl.profile.tid = authCtrl.tid;
+        authCtrl.profile.type = 'tenant';
         authCtrl.profile.$save();
         authCtrl.login();
       });
     }, function(error) {
-      authCtrl.error = error;
-    };
-
-    authCtrl.register = function() {
-      Auth.$createUser(authCtrl.user).then(function (user) {
-        authCtrl.login();
-      }, function(error) {
-        authCtrl.error = error;
-      });
+      AlertService.addError(error.message);
     };
 
     authCtrl.registerTenant = function() {
@@ -55,13 +41,13 @@ app.controller('AuthCtrl', ['Auth', 'Register', 'Profile', 'md5', 'tid', '$state
           authCtrl.tenant.domain_code = domainCode;
           authCtrl.tenant.invoice_number = 1;
           authCtrl.tenant.alert_count = 0;
-          Register.all.$add(authCtrl.tenant).then(function(ref) {
+          RegisterTenant.all.$add(authCtrl.tenant).then(function(ref) {
             authCtrl.tid = ref.key();
             authCtrl.createProfile();
           })
         });
       }, function(error) {
-        authCtrl.error = error;
+        AlertService.addError(error.message);
       };
 
 }]);

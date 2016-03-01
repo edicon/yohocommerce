@@ -985,5 +985,4 @@ angular.module('app')
         // end of customer bootstrap tab state
 
 
-    }
-])
+}])

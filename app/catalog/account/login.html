@@ -16,15 +16,15 @@
       <div class="well">
         <h2>Returning Customer</h2>
         <p><strong>I am a returning customer</strong></p>
-        <form ng-submit="accountCtrl.login()">
-          <p ng-show="accountCtrl.error" class="text-danger">{{ accountCtrl.error.message }}</p>
+        <form ng-submit="loginCtrl.login()">
+          <p ng-show="loginCtrl.error" class="text-danger">{{ loginCtrl.error.message }}</p>
           <div class="form-group">
             <label class="control-label">E-Mail Address</label>
-            <input type="email" placeholder="Email" class="form-control" ng-model="accountCtrl.user.email" >
+            <input type="email" placeholder="Email" class="form-control" ng-model="loginCtrl.user.email" >
           </div>
           <div class="form-group">
             <label class="control-label">Password</label>
-            <input type="password" placeholder="Password" class="form-control" ng-model="accountCtrl.user.password">
+            <input type="password" placeholder="Password" class="form-control" ng-model="loginCtrl.user.password">
             <a href="#">Forgot Password</a>
           </div>
           <input class="btn btn-primary" type="submit" value="Login">

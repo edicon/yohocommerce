@@ -1,14 +1,14 @@
 app.factory('Account', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
   function (             $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
-    var ref = new Firebase(FirebaseUrl+'customers');
-    var customers = $firebaseArray(ref.child(tid));
+    var ref = new Firebase(FirebaseUrl+'countries');
+    var countries = $firebaseArray(ref);
 
-    var customer = {
+    var account = {
 
-      all: customers
+      allCountries: countries
 
     };
 
-  return customer;
+  return account;
 
 }]);
