@@ -5,31 +5,15 @@ app.factory('Affiliate', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 't
 
     var affiliate = {
 
-      getAffiliate: function(affiliateId) {
-        return $firebaseObject(ref.child(tid).child(affiliateId));
+      getAffiliate: function(aid) {
+        return $firebaseObject(ref.child(tid).child(aid));
       },
 
-      addAffiliate: function(newAffiliate) {
-      return affiliate.all.$add(newAffiliate).then(function(postRef){
+      addAffiliate: function(theObj) {
+      return affiliate.all.$add(theObj).then(function(postRef){
         return postRef.key();
       });
     },
-
-    getTransactions: function(affiliatetId) {
-      var transactionRef = new Firebase(FirebaseUrl+'affiliates/'+tid+'/'+affiliateId+'/addresses');
-      return $firebaseArray(transactionRef);
-    },
-
-    getTransaction: function(affiliateId, transactionId) {
-      var transactionRef = new Firebase(FirebaseUrl+'affiliates/'+tid+'/'+affiliateId+'/addresses/'+transactionId);
-      return $firebaseObject(transactionRef);
-    },
-
-      addTransaction: function(theTransaction) {
-        theTransaction.transaction_date_added = Firebase.ServerValue.TIMESTAMP;
-          var affiliateRef = new Firebase(FirebaseUrl+'affiliates/'+tid+'/'+theTransaction.affiliateId+'/transactions');
-          return affiliateRef.push({ priority: theTransaction.priority });
-        },
 
     all: affiliates
     };

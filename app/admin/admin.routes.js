@@ -306,6 +306,9 @@ angular.module('app')
         })
         .state('admin.marketing.affiliates', {
           url: '/affiliates',
+          params: {
+            rowEntity: null,
+          },           
           views: {
             "header@admin": {
               templateUrl: 'admin/marketing/affiliates.header.html'
@@ -336,6 +339,9 @@ angular.module('app')
         })
         .state('admin.marketing.affiliate', {
           url: '/affiliate',
+          params: {
+            rowEntity: null,
+          },
           views: {
             "header@admin": {
               templateUrl: 'admin/marketing/affiliate.header.html'
