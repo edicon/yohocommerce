@@ -9,11 +9,8 @@ app.factory('Affiliates', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', '
 //        return $firebaseObject(ref.child(tid));
 //      },
 
-      removeAffiliate: function(theObj) {
-// calling up the node in firebase
-      var theRef = new Firebase(FirebaseUrl+'affiliates/'+tid+'/'+theObj.affiliateId);
-//removes the node from firebase
-      return theRef.remove();
+      removeAffiliate: function(affiliateId) {
+        return $firebaseObject(ref.child(tid).child(affiliateId)).$remove();
       },
 
       all: affiliates

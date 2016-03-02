@@ -4,17 +4,34 @@ app.factory('Affiliate', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 't
     var affiliates = $firebaseArray(ref.child(tid).orderByPriority());
 
     var affiliate = {
-// method that calls the reference in firebase, adds object to coupon array
-      addAffiliate: function(theObj) {
-        console.log(theObj)
-// setting up the node in firebase
-        var theRef = new Firebase(FirebaseUrl+'affiliates/'+tid);
-//pushes the reference to firebase and returns it back to the controller
-//        return theRef.push( {affiliate_full_name: theObj.affiliateFullName, affiliate_email: theObj.affiliateEmail} );
-        return theRef.push(theObj);
+
+      getAffiliate: function(affiliateId) {
+        return $firebaseObject(ref.child(tid).child(affiliateId));
       },
 
-      all: affiliates
+      addAffiliate: function(newAffiliate) {
+      return affiliate.all.$add(newAffiliate).then(function(postRef){
+        return postRef.key();
+      });
+    },
+
+    getTransactions: function(affiliatetId) {
+      var transactionRef = new Firebase(FirebaseUrl+'affiliates/'+tid+'/'+affiliateId+'/addresses');
+      return $firebaseArray(transactionRef);
+    },
+
+    getTransaction: function(affiliateId, transactionId) {
+      var transactionRef = new Firebase(FirebaseUrl+'affiliates/'+tid+'/'+affiliateId+'/addresses/'+transactionId);
+      return $firebaseObject(transactionRef);
+    },
+
+      addTransaction: function(theTransaction) {
+        theTransaction.transaction_date_added = Firebase.ServerValue.TIMESTAMP;
+          var affiliateRef = new Firebase(FirebaseUrl+'affiliates/'+tid+'/'+theTransaction.affiliateId+'/transactions');
+          return affiliateRef.push({ priority: theTransaction.priority });
+        },
+
+    all: affiliates
     };
 
     return affiliate;

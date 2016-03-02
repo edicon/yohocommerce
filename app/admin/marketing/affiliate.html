@@ -14,17 +14,20 @@
             </a>
 <!-- Save Button -->
             <button type="button" class="btn btn-sm btn-primary detail-btn pull-right"
-              tooltip-placement="top" uib-tooltip="Save" href="#/affiliates" ui-sref="admin.marketing.affiliates" ng-click="affiliateCtrl.addAffiliate()">
+              tooltip-placement="top" uib-tooltip="Save" href="#/affiliates" ng-click="affiliateCtrl.addAffiliate()">
               <i class="fa fa-floppy-o"></i>
             </button>
 <!-- Start of Tabs-->
 					<uib-tabset>
 <!-- Start of Profile Tab -->
 						<uib-tab>
+
               <uib-tab-heading>
                 <i class="menu-icon fa fa-user-secret"></i> Profile
               </uib-tab-heading><br>
+
               <form class="form-horizontal" ng-submit="register()">
+
                               <fieldset>
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">First Name</label>
@@ -64,7 +67,7 @@
                               <fieldset>
                                 <legend>Address</legend>
                                 <div class="form-group">
-                                  <label class="col-sm-2 control-label" align="right">Enter Address</label>
+                                  <label class="col-sm-2 control-label" align="right">Search Address</label>
                                   <div class="col-sm-8">
                                     <ui-select ng-model="address.selected" theme="bootstrap" ng-disabled="disabled" reset-search-input="false">
                                       <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
@@ -87,7 +90,7 @@
                                     <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_city" placeholder="City" class="form-control">
                                   </div>
                                 </div>
-                                <div class="form-group">
+                                <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">Country</label>
                                   <div class="col-sm-8">
                                     <ui-select ng-model="country.selected" theme="bootstrap" ng-disabled="disabled">
@@ -107,38 +110,122 @@
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">Region</label>
                                   <div class="col-sm-8">
-                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate__address_region" placeholder="Region" class="form-control">
+                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_region" placeholder="Region" class="form-control">
                                   </div>
                                 </div>
                               </fieldset>
+
                             </form>
-
-
-
-
-
-
-
-
 
             </uib-tab>
 <!-- Start of Payment Details Tab -->
           <uib-tab>
+
             <uib-tab-heading>
               <i class="menu-icon fa fa-trophy"></i> Payment Details
-            </uib-tab-heading>
+            </uib-tab-heading><br>
+
+              <form class="form-horizontal" ng-submit="register()">
+
+                <fieldset>
+
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" align="right">Commission (%)</label>
+                    <div class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_commission" placeholder="Commission" class="form-control">
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" align="right">Tax ID</label>
+                    <div class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_taxid" placeholder="Tax ID" class="form-control">
+                    </div>
+                  </div>
+                  <div class="form-group required">
+                    <label class="col-sm-2 control-label" align="right">Cheque Payee Name</label>
+                    <div class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_cheque_name" placeholder="Cheque Payee Name" class="form-control">
+                    </div>
+                  </div>
+
+                </fieldset>
+
+              </form>
+
           </uib-tab>
   <!-- Start of Transactions -->
           <uib-tab>
           <uib-tab-heading>
             <i class="menu-icon fa fa-indent"></i> Transactions
-          </uib-tab-heading>
+          </uib-tab-heading><br>
+
+              <form class="form-horizontal" ng-submit="register()">
+
+                <fieldset>
+                  <div class="form-group required">
+          <!-- Transaction Description Box -->
+                      <div class="col-xs-5">
+                        <label class="control-label">Description</label>
+                        <input type="text" ng-model="affiliateCtrl.transaction.transaction_description" placeholder="Transaction Description" class="form-control">
+                      </div>
+          <!-- Transaction Amount Box -->
+                      <div class="col-xs-3">
+                        <label class="control-label">Amount</label>
+                        <input type="text" ng-model="affiliateCtrl.transaction.transaction_amount" placeholder=" Transaction Amount" class="form-control">
+                      </div>
+                      <div class="col-xs-1 inline-btn">
+                        <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon"
+                          ng-click="affiliateCtrl.addTransaction()">
+                          <i class="fa fa-plus"></i>
+                        </button>
+                      </div>
+                </div>
+                <div class="row">
+                  <div ui-grid="affiliateCtrl.gridTransactions" class="grid-500"></div>
+                </div>
+              </fieldset>
+
+            </form>
+
         </uib-tab>
 <!-- Start of Security Tab -->
         <uib-tab>
         <uib-tab-heading>
           <i class="menu-icon fa fa-key"></i> Security
-        </uib-tab-heading>
+        </uib-tab-heading><br>
+
+          <form class="form-horizontal" ng-submit="register()">
+
+            <fieldset>
+              <div class="form-group required">
+                <label class="col-sm-2 control-label" align="right">E-Mail</label>
+                <div class="col-sm-8">
+                  <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_email" placeholder="E-mail Address" class="form-control">
+                </div>
+              </div>
+              <div class="form-group required">
+                <label class="col-sm-2 control-label">Password</label>
+                <div class="col-sm-8">
+                  <input type="password" name="password" ng-model="affiliateCtrl.affiliate.affiliate_password" placeholder="Password" class="form-control" ng-minlength="6" required>
+                  <div ng-messages="registrationForm.password.$error" ng-if="registrationForm.password.$touched">
+                    <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-group required">
+                <label class="col-sm-2 control-label">Confirm Password</label>
+                <div class="col-sm-8">
+                  <input type="password" name="confirmPassword" ng-model="affiliateCtrl.confirm_password" placeholder="Password" class="form-control" required>
+                  <div ng-messages="registrationForm.confirmPassword.$error" ng-if="registrationForm.confirmPassword.$touched">
+                    <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                  </div>
+                </div>
+              </div>
+
+            </fieldset>
+
+          </form>
+
       </uib-tab>
 <!-- End of Tabs -->
 					</uib-tabset>

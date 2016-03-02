@@ -18,23 +18,32 @@ app.controller('AffiliateCtrl', ['Affiliate', 'Affiliates', 'Countries', '$state
   console.log($scope)
 
 //function called from affiliate.html
-  affiliateCtrl.addAffiliate = function() {
-//console test to check if it's working
-  console.log(affiliateCtrl.affiliate)
-//calling the object theAffiliate with corresponding field
-
-//corresoponding fields in theAffiliate object, data will be saved in the node
+    affiliateCtrl.addAffiliate = function() {
+//corresoponding fields in the object, data will be saved in the node
     affiliateCtrl.affiliate.affiliate_full_name = affiliateCtrl.affiliate.affiliate_first_name + ' ' + affiliateCtrl.affiliate.affiliate_last_name;
-//    theAffiliate.affiliateEmail = affiliateCtrl.affiliate_email;
-    console.log('theAffiliate')
 //calling affiliate.service.js addAffiliate function
-    Affiliate.addAffiliate(affiliateCtrl.affiliate);
+    Affiliate.addAffiliate(affiliateCtrl.affiliate)
     }, function(error) {
       affiliateCtrl.error = error;
     };
 
+    affiliateCtrl.addTransaction = function() {
+    Affiliate.addTransaction(affiliateCtrl.transaction);
+    }, function(error) {
+      affiliateCtrl.error = error;
+    };
 
+    affiliateCtrl.gridTransactions = {
+      enableSorting: true,
+      enableCellEditOnFocus: true,
+//      data: Affiliate.all,
+      columnDefs: [
+        { name:'date', field: 'transaction_date', width: '10%', enableHiding: false },
+        { name:'description', field: 'transaction_description', width: '70%', enableHiding: false },
+        { name:'amount', field: 'transaction_amount', width: '20%', enableHiding: false, cellClass: 'grid-align-right' },
 
+      ]
+    };
 
   }
 ]);
