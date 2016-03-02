@@ -43,7 +43,6 @@ app.controller('AffiliateCtrl', ['Affiliate', 'Transactions', 'Countries', '$sta
 //function called from affiliate.html
     affiliateCtrl.addAffiliate = function() {
 //corresoponding fields in the object, data will be saved in the node
-    affiliateCtrl.affiliate.affiliate_country = country.selected;
     affiliateCtrl.affiliate.affiliate_full_name = affiliateCtrl.affiliate.affiliate_first_name + ' ' + affiliateCtrl.affiliate.affiliate_last_name;
 //calling affiliate.service.js addAffiliate function
     Affiliate.addAffiliate(affiliateCtrl.affiliate).then(function(aid) {
