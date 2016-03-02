@@ -60,7 +60,7 @@ angular.module('app')
             templateUrl: 'catalog/common/header.html'
           },
           "main@catalog": {
-            controller: 'AccountCtrl as accountCtrl',
+            controller: 'RegisterCtrl as registerCtrl',
             templateUrl: 'catalog/account/register.html'
           },
           "footer@catalog": {

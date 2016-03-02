@@ -1,9 +1,12 @@
-app.controller('AccountCtrl', ['Account', 'Auth', 'Profile', 'AlertService', 'Customer', 'md5', 'tid', '$scope', '$state', '$http', 'profile',
-  function (                    Account,   Auth,   Profile,   AlertService,   Customer,   md5,   tid,   $scope,   $state,   $http,   profile) {
+app.controller('AccountCtrl', ['Auth', '$state', 'profile',
+  function (                    Auth,   $state,  profile) {
     var accountCtrl = this;
-    accountCtrl.user = {};
     accountCtrl.profile = profile;
+    accountCtrl.authInfo = Auth.$getAuth();
 
-    
+    accountCtrl.logout = function() {
+      Auth.$unauth();
+      $state.go('catalog.home');
+    };
 
 }]);

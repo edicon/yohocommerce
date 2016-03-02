@@ -29,7 +29,7 @@ angular.module('app')
           }
         }
       })
-      .state('account.dashboard', {
+      .state('account.detail', {
         url: '',
         views: {
           "accountHeader@account": {
@@ -42,7 +42,28 @@ angular.module('app')
           },
           "accountDetail@account": {
             controller: 'AccountCtrl as accountCtrl',
-            templateUrl: 'catalog/account/accountinfo.html'
+            templateUrl: 'catalog/account/accountaddress.html'
+          },
+          "accountFooter@account": {
+            controller: 'CatalogCtrl as catalogCtrl',
+            templateUrl: 'catalog/common/footer.html'
+          }
+        }
+      })
+      .state('account.address', {
+        url: 'address',
+        views: {
+          "accountHeader@account": {
+            controller: 'CatalogCtrl as catalogCtrl',
+            templateUrl: 'catalog/common/header.html'
+          },
+          "accountNav@account": {
+            controller: 'AccountCtrl as accountCtrl',
+            templateUrl: 'catalog/account/accountnav.html'
+          },
+          "accountDetail@account": {
+            controller: 'AccountCtrl as accountCtrl',
+            templateUrl: 'catalog/account/accountaddress.html'
           },
           "accountFooter@account": {
             controller: 'CatalogCtrl as catalogCtrl',
@@ -134,8 +155,8 @@ angular.module('app')
           }
         }
       })
-      .state('account.security', {
-        url: 'security',
+      .state('account.password', {
+        url: 'password',
         views: {
           "accountHeader@account": {
             controller: 'CatalogCtrl as catalogCtrl',
@@ -147,7 +168,7 @@ angular.module('app')
           },
           "accountDetail@account": {
             controller: 'AccountCtrl as accountCtrl',
-            templateUrl: 'catalog/account/security.html'
+            templateUrl: 'catalog/account/password.html'
           },
           "accountFooter@account": {
             controller: 'CatalogCtrl as catalogCtrl',

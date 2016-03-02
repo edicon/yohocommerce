@@ -124,12 +124,20 @@ input[readonly] {
    top: 60px;
 }
 
-.ng-valid {
+/*.ng-valid {
     border-color: green;
     outline-color: green;
-}
+}*/
 
 .messages {
   font-size: smaller;
   color: red;
+}
+
+.nav-pic {
+  margin: -2px 5px 0 0;
+  max-height: 30px;
+  -webkit-border-radius: 100px;
+  -moz-border-radius: 100px;
+  border-radius: 100px;
 }

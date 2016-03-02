@@ -5,57 +5,57 @@ app.factory('Customer', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'ti
 
     var customer = {
 
-      getCustomer: function(custId) {
-        return $firebaseObject(ref.child(tid).child(custId));
+      getCustomer: function(cid) {
+        return $firebaseObject(ref.child(tid).child(cid));
       },
 
-      addCustomer: function(newCustomer) {
-        newCustomer.customer_date_added = Firebase.ServerValue.TIMESTAMP;
-        return customer.all.$add(newCustomer).then(function(postRef) {
+      addCustomer: function(theObj) {
+        theObj.customer_date_added = Firebase.ServerValue.TIMESTAMP;
+        return customer.all.$add(theObj).then(function(postRef) {
           return postRef.key();
         });
       },
 
-      getAddresses: function(custId) {
-        var addressRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+custId+'/addresses');
+      getAddresses: function(cid) {
+        var addressRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+cid+'/addresses');
         return $firebaseArray(addressRef);
       },
 
-      getAddress: function(custId, addressId) {
-        var addressRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+custId+'/addresses/'+addressId);
+      getAddress: function(cid, addressId) {
+        var addressRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+cid+'/addresses/'+addressId);
         return $firebaseObject(addressRef);
       },
 
-      addAddress: function(theAddress) {
-        var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theAddress.custId+'/addresses');
-        return custRef.push({ priority: theAddress.priority });
+      addAddress: function(theObj) {
+        var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.custId+'/addresses');
+        return custRef.push({ priority: theObj.priority });
       },
 
-      updateAddressCount: function(theAddress) {
-        var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theAddress.custId);
-        return custRef.update( {customer_address_count: theAddress.addressCount} );
+      updateAddressCount: function(theObj) {
+        var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.custId);
+        return custRef.update( {customer_address_count: theObj.addressCount} );
       },
 
-      recountAddresses: function(custId) {
-        var data = $firebaseArray(ref.child(tid).child(custId).child("addresses").orderByChild("priority"));
+      recountAddresses: function(cid) {
+        var data = $firebaseArray(ref.child(tid).child(cid).child("addresses").orderByChild("priority"));
         data.$loaded().then(function() {
           cnt = 1;
           for(i = 0; i < data.length; i++) {
-            var addressRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+custId+'/addresses/'+data[i].$id);
+            var addressRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+cid+'/addresses/'+data[i].$id);
             addressRef.update({ priority: cnt });
             cnt = cnt + 1;
           }
         });
       },
 
-      removeAddress: function(theAddress) {
-        var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theAddress.custId+'/addresses/'+theAddress.addressId);
+      removeAddress: function(theObj) {
+        var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.custId+'/addresses/'+theObj.addressId);
         custRef.remove();
         return customer.recountAddresses(theAddress.custId);
       },
 
-      getIndex: function(custId) {
-        return customers.$indexFor(custId);
+      getIndex: function(cid) {
+        return customers.$indexFor(cid);
       },
 
       getKey: function(key) {
