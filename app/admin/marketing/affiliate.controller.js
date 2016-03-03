@@ -1,5 +1,5 @@
-app.controller('AffiliateCtrl', ['Affiliate', 'Transactions', 'Countries', '$state', '$scope', '$stateParams', '$http',
-  function (                      Affiliate,   Transactions,   Countries,   $state,   $scope,   $stateParams,   $http) {
+app.controller('AffiliateCtrl', ['Affiliate', 'Affiliates', 'Transactions', 'Countries', 'AlertService', '$state', '$scope', '$stateParams', '$http',
+  function (                      Affiliate,   Affiliates,   Transactions,   Countries,   AlertService,   $state,   $scope,   $stateParams,   $http) {
   var affiliateCtrl = this;
   $scope.countries = Countries.all;
   $scope.transactions = Transactions.all;
@@ -7,15 +7,13 @@ app.controller('AffiliateCtrl', ['Affiliate', 'Transactions', 'Countries', '$sta
 
   affiliateCtrl.affiliate = {};
 
-  console.log($scope);
-
-  $scope.refreshAddress = function(address) {
+  $scope.refreshAddresses = function(address) {
     var params = {address: address, sensor: false};
     return $http.get(
       'http://maps.googleapis.com/maps/api/geocode/json',
       {params: params}
     ).then(function(response) {
-      $scope.transactions = response.data.results
+      $scope.addresses = response.data.results
     });
   };
 
@@ -23,7 +21,8 @@ app.controller('AffiliateCtrl', ['Affiliate', 'Transactions', 'Countries', '$sta
     var theAffiliate = Affiliate.getAffiliate(aid);
       theAffiliate.$loaded().then(function() {
         affiliateCtrl.affiliate = theAffiliate;
-        console.log($scope);
+        affiliateCtrl.affiliateIndex = Affiliate.getIndex(aid);
+        affiliateCtrl.count = Affiliates.all.length;
     });
     var theTransactions = Transactions.getTransactions(aid);
       theTransactions.$loaded().then(function() {
@@ -49,7 +48,7 @@ app.controller('AffiliateCtrl', ['Affiliate', 'Transactions', 'Countries', '$sta
       affiliateCtrl.loadAffiliate(aid)
     });
     }, function(error) {
-      affiliateCtrl.error = error;
+      AlertService.addError(error.message);
     };
 
     affiliateCtrl.addTransaction = function() {
@@ -64,12 +63,51 @@ app.controller('AffiliateCtrl', ['Affiliate', 'Transactions', 'Countries', '$sta
       enableCellEditOnFocus: true,
       columnDefs: [
         { name:'dateAdded', field: 'transaction_date_added', type: 'date', enableHiding: false, cellClass: 'grid-align-right', enableCellEdit: false, cellFilter: 'date' },
-    //    { name:'date', field: 'transaction_date_added', type: 'date', width: '10%', enableHiding: false },
         { name:'description', field: 'transaction_description', width: '70%', enableHiding: false },
         { name:'amount', field: 'transaction_amount', width: '20%', enableHiding: false, cellClass: 'grid-align-right' },
 
       ]
     };
-console.log($scope);
+
+    affiliateCtrl.next = function() {
+      if (affiliateCtrl.count > 0) {
+        key = affiliateCtrl.affiliateIndex;
+        if (key < affiliateCtrl.count - 1) {
+          key = affiliateCtrl.affiliateIndex + 1;
+          var aid = Affiliate.getKey(key);
+          affiliateCtrl.loadAffiliate(aid);
+        }
+      }
+    }, function(error) {
+      affiliateCtrl.error = error;
+    };
+
+    affiliateCtrl.back = function() {
+      var key = affiliateCtrl.affiliateIndex - 1;
+      if (key < 0) key = 0
+      var aid = Affiliate.getKey(key);
+      affiliateCtrl.loadAffiliate(aid);
+    }, function(error) {
+      affiliateCtrl.error = error;
+    };
+
+    affiliateCtrl.first = function() {
+      var key = 0;
+      var aid = Affiliate.getKey(key);
+      affiliateCtrl.loadAffiliate(aid);
+    }, function(error) {
+      affiliateCtrl.error = error;
+    };
+
+    affiliateCtrl.last = function() {
+      var key = affiliateCtrl.count - 1;
+      var aid = Affiliate.getKey(key);
+      affiliateCtrl.loadAffiliate(aid);
+    }, function(error) {
+      affiliateCtrl.error = error;
+    };
+
+
+
   }
 ]);

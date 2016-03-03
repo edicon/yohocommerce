@@ -5,12 +5,8 @@ app.factory('Affiliates', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', '
 
     var affiliate = {
 
-//      getAffiliate: function(cid) {
-//        return $firebaseObject(ref.child(tid));
-//      },
-
-      removeAffiliate: function(affiliateId) {
-        return $firebaseObject(ref.child(tid).child(affiliateId)).$remove();
+      removeAffiliate: function(aid) {
+        return $firebaseObject(ref.child(tid).child(aid)).$remove();
       },
 
       all: affiliates

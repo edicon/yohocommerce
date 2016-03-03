@@ -12,8 +12,20 @@ app.factory('Affiliate', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 't
       addAffiliate: function(theObj) {
       return affiliate.all.$add(theObj).then(function(postRef){
         return postRef.key();
-      });
-    },
+        });
+      },
+
+      getIndex: function(aid) {
+        return affiliates.$indexFor(aid);
+      },
+
+      getKey: function(key) {
+        return affiliates.$keyAt(key);
+      },
+
+      getCount: function() {
+        return affiliates.length;
+      },
 
     all: affiliates
     };

@@ -7,16 +7,34 @@
       <div class="panel-body">
         <div class="row">
           <div class="col-xs-12">
+
+            <button ng-if="affiliateCtrl.aid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+              tooltip-placement="top" uib-tooltip="Last" ng-click="affiliateCtrl.last()">
+              <i class="fa fa-fast-forward"></i>
+            </button>
+            <button ng-if="affiliateCtrl.aid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+              tooltip-placement="top" uib-tooltip="Next" ng-click="affiliateCtrl.next()">
+              <i class="fa fa-step-forward"></i>
+            </button>
+            <button ng-if="affiliateCtrl.aid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+              tooltip-placement="top" uib-tooltip="Back" ng-click="affiliateCtrl.back()">
+              <i class="fa fa-step-backward"></i>
+            </button>
+            <button ng-if="affiliateCtrl.aid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+              tooltip-placement="top" uib-tooltip="First" ng-click="affiliateCtrl.first()">
+              <i class="fa fa-fast-backward"></i>
+            </button>
+<!-- Save Button -->
+            <button ng-if="affiliateCtrl.aid === null" type="button" class="btn btn-sm btn-primary detail-btn pull-right"
+              tooltip-placement="top" uib-tooltip="Save" href="#/affiliates" ng-click="affiliateCtrl.addAffiliate()">
+              <i class="fa fa-floppy-o"></i>
+            </button>
+
 <!-- Cancel Button -->
             <a type="button" class="btn btn-sm btn-default detail-btn pull-right"
               tooltip-placement="top" uib-tooltip="Cancel" href="#/affiliates" ui-sref="admin.marketing.affiliates">
               <i class="fa fa-reply"></i>
             </a>
-<!-- Save Button -->
-            <button type="button" class="btn btn-sm btn-primary detail-btn pull-right"
-              tooltip-placement="top" uib-tooltip="Save" href="#/affiliates" ng-click="affiliateCtrl.addAffiliate()">
-              <i class="fa fa-floppy-o"></i>
-            </button>
 <!-- Start of Tabs-->
 					<uib-tabset>
 <!-- Start of Profile Tab -->
@@ -26,13 +44,16 @@
                 <i class="menu-icon fa fa-user-secret"></i> Profile
               </uib-tab-heading><br>
 
-              <form class="form-horizontal" ng-submit="register()">
+              <form name:="newaffiliateForm" class="form-horizontal" ng-submit="affiliateCtrl.addAffiliate()">
 
                               <fieldset>
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">First Name</label>
                                   <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
-                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_first_name" placeholder="First Name" class="form-control">
+                                    <input type="text" name:="firstName" ng-model="affiliateCtrl.affiliate.affiliate_first_name" placeholder="First Name" class="form-control" required>
+                                    <div ng-messages="newaffiliateForm.firstName.$error" ng-if="newaffiliateForm.firstName.$touched">
+                                      <div ng-messages-include="common/messages.html"></div>
+                                    </div>
                                   </div>
                                   <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
                                     <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_first_name" ng-change="affiliateCtrl.affiliate.$save()"
@@ -42,7 +63,14 @@
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">Last Name</label>
                                   <div class="col-sm-8">
-                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_last_name" placeholder="Last Name" class="form-control">
+                                    <input type="text" name:="lastName" ng-model="affiliateCtrl.affiliate.affiliate_last_name" placeholder="Last Name" class="form-control" required>
+                                    <div ng-messages="newaffiliateForm.lastName.$error" ng-if="newaffiliateForm.lastName.$touched">
+                                      <div ng-messages-include="common/messages.html"></div>
+                                    </div>
+                                  </div>
+                                  <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
+                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_last_name" ng-change="affiliateCtrl.affiliate.$save()"
+                                      placeholder="Last Name" class="form-control">
                                   </div>
                                 </div>
                                 <div class="form-group required">
@@ -212,7 +240,7 @@
                 <label class="col-sm-2 control-label">Password</label>
                 <div class="col-sm-8">
                   <input type="password" name="password" ng-model="affiliateCtrl.affiliate.affiliate_password" placeholder="Password" class="form-control" ng-minlength="6" required>
-                  <div ng-messages="registrationForm.password.$error" ng-if="registrationForm.password.$touched">
+                  <div ng-messages="newaffiliateForm.password.$error" ng-if="newaffiliateForm.password.$touched">
                     <div ng-messages-include="catalog/common/registration.messages.html"></div>
                   </div>
                 </div>
@@ -221,7 +249,7 @@
                 <label class="col-sm-2 control-label">Confirm Password</label>
                 <div class="col-sm-8">
                   <input type="password" name="confirmPassword" ng-model="affiliateCtrl.confirm_password" placeholder="Password" class="form-control" required>
-                  <div ng-messages="registrationForm.confirmPassword.$error" ng-if="registrationForm.confirmPassword.$touched">
+                  <div ng-messages="newaffiliateForm.confirmPassword.$error" ng-if="newaffiliateForm.confirmPassword.$touched">
                     <div ng-messages-include="catalog/common/registration.messages.html"></div>
                   </div>
                 </div>
