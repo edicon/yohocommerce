@@ -1,4 +1,4 @@
-[ { "Priority":1, "Priority":1, "Name":"Art Panel for Bounce Castle", "Category":"Bounce Houses", "Status":"1", "Price":25 },
+[ { "Priority":1, "Name":"Art Panel for Bounce Castle", "Category":"Bounce Houses", "Status":"1", "Price":25 },
   { "Priority":2, "Name":"Bouncy Castle", "Category":"Bounce Houses", "Status":"1", "Price":185 },
   { "Priority":3, "Name":"Bouncy Castle Module", "Category":"Bounce Houses", "Status":"1", "Price":195 },
   { "Priority":4, "Name":"Disney Princess Castle", "Category":"Bounce Houses", "Status":"1", "Price":240 },

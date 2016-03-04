@@ -19,7 +19,8 @@ app.controller('ToolImportCtrl', ['Products', '$scope',
         $scope.gridApi = gridApi;
         gridApi.rowEdit.on.saveRow($scope, function(rowEntity) {
           Products.all.$add({$priority: rowEntity.Priority, product_name: rowEntity.Name, product_category: rowEntity.Category,
-            product_image: 'Placeholder', product_price: rowEntity.Price, product_status: rowEntity.Status, product_status_id: 1});
+            product_category_id: rowEntity.Categoryid, product_description: rowEntity.Description, product_image: 'Placeholder', product_price: rowEntity.Price,
+            product_status: rowEntity.Status, product_status_id: 1});
         });
       }
     };
