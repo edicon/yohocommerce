@@ -20,22 +20,12 @@ app.controller('AffiliateCtrl', ['Affiliate', 'Affiliates', 'Transactions', 'Cou
   affiliateCtrl.parseAddress = function(address) {
     var addressArray = address.split(", ");
     var regionArray = addressArray[2].split(" ");
-    console.log(addressArray);
-    console.log(regionArray);
     affiliateCtrl.affiliate.affiliate_address_street = addressArray[0];
     affiliateCtrl.affiliate.affiliate_address_city = addressArray[1];
     affiliateCtrl.affiliate.affiliate_address_postal_code = regionArray[1] + " " + regionArray[2];
     affiliateCtrl.affiliate.affiliate_address_region = regionArray[0];
     affiliateCtrl.affiliate.affiliate_address_country = addressArray[3];
 
-//  var theObj = address;
-/*  console.log(theObj);
-  console.log($scope);
-  affiliateCtrl.affiliate.affiliate_address_street = theObj.address_components[0].long_name + " " + theObj.address_components[1].long_name;
-  affiliateCtrl.affiliate.affiliate_address_city = theObj.address_components[3].long_name;
-  affiliateCtrl.affiliate.affiliate_address_postal_code = theObj.address_components[6].long_name;
-  affiliateCtrl.affiliate.affiliate_address_region = theObj.address_components[4].long_name;
-  affiliateCtrl.affiliate.affiliate_address_country = theObj.address_components[5].long_name; */
     if (regionArray[2] == undefined) {
       affiliateCtrl.affiliate.affiliate_address_postal_code = regionArray[1];
     };
