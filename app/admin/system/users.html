@@ -1,21 +1,38 @@
 <div class="row">
-  <div class="col-xs-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> User List</h3>
-      </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-xs-6">
-            <div class="input-group input-group-sm list-search">
-              <input type="text" ng-model="bannersCtrl.bannerName" class="form-control" placeholder="Enter New Banner">
-              <span class="input-group-btn">
-                <button class="btn btn-primary" ng-click="bannersCtrl.newBanner()" type="button"><span class="menu-icon fa fa-plus"></span></button>
-              </span>
+  <div class="col-sm-12">
+    <div class="row">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><span class="menu-icon fa fa-users"></span> Users</h3>
+        </div>
+        <div class="panel-body">
+          <div class="container-fluid">
+            <div class="row">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label class="control-label col-sm-1">Email</label>
+                  <div class="col-sm-4"><input type="email" ng-model="usersCtrl.user_email" class="form-control" placeholder="Enter User Email"></div>
+                  <label class="control-label col-sm-1">Role</label>
+                  <div class="col-sm-3">
+                    <select class="form-control">
+                      <option></option>
+                      <option>Admin</option>
+                      <option>Sales</option>
+                      <option>Customer</option>
+                      <option>Affiliate</option>
+                    </select>
+                  </div>
+                  <div class="col-sm-3">
+                    <a type="button" class="btn btn-sm btn-primary pull-right" tooltip-placement="top" uib-tooltip="New"
+                      href="#/user" ui-sref="admin.system.user"><i class="fa fa-plus"></i>
+                    </a>
+                  </div>
+                </div>
+                <div ui-grid="usersCtrl.gridOpts"></div>
+              </form>
             </div>
           </div>
-        </div><br>
-          <div ui-grid="bannersCtrl.gridOpts" ui-grid-edit ui-grid-cellNav></div>
+        </div>
       </div>
     </div>
   </div>

@@ -41,7 +41,7 @@ angular.module('app')
             templateUrl: 'catalog/account/accountnav.html'
           },
           "accountDetail@account": {
-            controller: 'AccountCtrl as accountCtrl',
+            controller: 'AccountAddressCtrl as accountAddressCtrl',
             templateUrl: 'catalog/account/accountaddress.html'
           },
           "accountFooter@account": {
@@ -51,7 +51,7 @@ angular.module('app')
         }
       })
       .state('account.address', {
-        url: 'address',
+        url: 'accountaddress',
         views: {
           "accountHeader@account": {
             controller: 'CatalogCtrl as catalogCtrl',
@@ -62,7 +62,7 @@ angular.module('app')
             templateUrl: 'catalog/account/accountnav.html'
           },
           "accountDetail@account": {
-            controller: 'AccountCtrl as accountCtrl',
+            controller: 'AccountAddressCtrl as accountAddressCtrl',
             templateUrl: 'catalog/account/accountaddress.html'
           },
           "accountFooter@account": {

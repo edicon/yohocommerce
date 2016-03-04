@@ -1,14 +1,9 @@
-/*
-note: refresh produces this error: TypeError: Cannot read property 'Banner_name' of null
-due to deriving the Banner entity through the "state.go call" from catagories controller (lines 40 & 42 )
-*/
 app.controller('BannerCtrl', ['Banner', '$state', '$scope', 'FileReader', '$stateParams',
   function (                   Banner,   $state,   $scope,   FileReader,   $stateParams) {
     var bannerCtrl = this;
     var imageEntity = [];
-    bannerCtrl.bannerName = $stateParams.rowEntity.banner_name;
-    bannerCtrl.bid = $stateParams.rowEntity.$id;
-    bannerCtrl.currentState = $state.current.name;
+    bannerCtrl.bannerName = "Home Page Banner";
+    bannerCtrl.bid = "1";
     bannerCtrl.myInterval = 5000;
     bannerCtrl.noWrapSlides = false;
     bannerCtrl.bannerArray = 'yes';

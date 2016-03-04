@@ -377,12 +377,16 @@ angular.module('app')
               templateUrl: 'admin/system/system.html'
             },
             "list@admin.system": {
+              controller: 'UsersCtrl as usersCtrl',
               templateUrl: 'admin/system/users.html'
             }
           }
         })
         .state('admin.system.users', {
           url: '/users',
+          params: {
+            rowEntity: null,
+          },
           views: {
             "header@admin": {
               templateUrl: 'admin/system/users.header.html'
@@ -398,12 +402,15 @@ angular.module('app')
         })
         .state('admin.system.user', {
           url: '/user',
+          params: {
+            rowEntity: null,
+          },
           views: {
             "header@admin": {
               templateUrl: 'admin/system/user.header.html'
             },
             "main@admin": {
-              templateUrl: 'admin/system/user.html'
+              templateUrl: 'admin/system/system.html'
             },
             "list@admin.system.user": {
               controller: 'UserCtrl as userCtrl',
@@ -441,21 +448,6 @@ angular.module('app')
             }
           }
         })
-        .state('admin.system.banners', {
-          url: '/banners',
-          views: {
-            "header@admin": {
-              templateUrl: 'admin/system/banners.header.html'
-            },
-            "main@admin": {
-              templateUrl: 'admin/system/system.html'
-            },
-            "list@admin.system.banners": {
-              controller: 'BannersCtrl as bannersCtrl',
-              templateUrl: 'admin/system/banners.html'
-            }
-          }
-        })
         .state('admin.system.banner', {
           url: '/banner',
           params: {
@@ -471,51 +463,6 @@ angular.module('app')
             "list@admin.system.banner": {
               controller: 'BannerCtrl as bannerCtrl',
               templateUrl: 'admin/system/banner.html'
-            }
-          }
-        })
-        .state('admin.system.library', {
-          url: '/library',
-          views: {
-            "header@admin": {
-              templateUrl: 'admin/system/library.header.html'
-            },
-            "main@admin": {
-              templateUrl: 'admin/system/system.html'
-            },
-            "list@admin.system.library": {
-              controller: 'LibraryCtrl as libraryCtrl',
-              templateUrl: 'admin/system/library.html'
-            }
-          }
-        })
-        .state('admin.system.localizations', {
-          url: '/localizations',
-          views: {
-            "header@admin": {
-              templateUrl: 'admin/system/localizations.header.html'
-            },
-            "main@admin": {
-              templateUrl: 'admin/system/localizations.html'
-            },
-            "list@admin.system.localizations": {
-              controller: 'LocalizationsCtrl as localizationsCtrl',
-              templateUrl: 'admin/system/localizations.html'
-            }
-          }
-        })
-        .state('admin.system.localization', {
-          url: '/localization',
-          views: {
-            "header@admin": {
-              templateUrl: 'admin/system/localization.header.html'
-            },
-            "main@admin": {
-              templateUrl: 'admin/system/localization.html'
-            },
-            "list@admin.system": {
-              controller: 'LocalizationCtrl as localizationCtrl',
-              templateUrl: 'admin/system/localization.html'
             }
           }
         })
