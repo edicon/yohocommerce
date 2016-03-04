@@ -299,19 +299,25 @@ angular.module('app')
               templateUrl: 'admin/marketing/marketing.html'
             },
             "list@admin.marketing": {
-              controller: 'MarketingCtrl as marketingCtrl',
+              controller: 'AffiliatesCtrl as affiliatesCtrl',
               templateUrl: 'admin/marketing/affiliates.html'
             }
           }
         })
         .state('admin.marketing.affiliates', {
           url: '/affiliates',
+          params: {
+            rowEntity: null,
+          },           
           views: {
+            "header@admin": {
+              templateUrl: 'admin/marketing/affiliates.header.html'
+            },
             "main@admin": {
               templateUrl: 'admin/marketing/marketing.html'
             },
-            "list@marketing.affiliates": {
-              controller: 'MarketingCtrl as marketingCtrl',
+            "list@admin.marketing.affiliates": {
+              controller: 'AffiliatesCtrl as affiliatesCtrl',
               templateUrl: 'admin/marketing/affiliates.html'
             }
           }
@@ -333,25 +339,19 @@ angular.module('app')
         })
         .state('admin.marketing.affiliate', {
           url: '/affiliate',
+          params: {
+            rowEntity: null,
+          },
           views: {
+            "header@admin": {
+              templateUrl: 'admin/marketing/affiliate.header.html'
+            },
             "main@admin": {
-              templateUrl: 'admin/marketing/admin.marketing.html'
+              templateUrl: 'admin/marketing/marketing.html'
             },
             "list@admin.marketing.affiliate": {
-              controller: 'MarketingCtrl as marketingCtrl',
-              templateUrl: 'admin/marketing/admin.affiliate.html'
-            }
-          }
-        })
-        .state('admin.marketing.coupon', {
-          url: '/coupon',
-          views: {
-            "main@admin": {
-              templateUrl: 'admin/marketing/admin.marketing.html'
-            },
-            "list@admin.marketing.coupon": {
-              controller: 'MarketingCtrl as marketingCtrl',
-              templateUrl: 'admin/marketing/admin.coupon.html'
+              controller: 'AffiliateCtrl as affiliateCtrl',
+              templateUrl: 'admin/marketing/affiliate.html'
             }
           }
         })

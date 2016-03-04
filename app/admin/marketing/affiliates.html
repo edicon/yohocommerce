@@ -6,24 +6,14 @@
       </div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-xs-4">
-            <div class="input-group input-group-sm">
-              <input type="text" class="form-control" placeholder="Search affiliates">
-              <span class="input-group-btn">
-                <button class="btn btn-primary" type="button"> <span class="menu-icon fa fa-search"></span></button>
-              </span>
-            </div>
-          </div>
-          <div class="col-xs-8">
-            <a ng-if="marketingCtrl.currentState === 'admin.marketing' || marketingCtrl.currentState === 'admin.marketing.affiliates'"
-							href="#/marketing" ui-sref="admin.marketing.affiliate" class="btn btn-primary btn-sm pull-right">
-							<span class="menu-icon fa fa-user-plus"></span> New Affiliate</a>
-						<a ng-if="marketingCtrl.currentState === 'admin.affiliates'" href="#/affiliate" ui-sref=".affiliate" class="btn btn-primary btn-sm pull-right">
-							<span class="menu-icon fa fa-user-plus"></span> New Affiliate</a>
+          <div class="form-group-sm">
+            <a type="button" class="btn btn-sm btn-primary list-btn pull-right" tooltip-placement="top" uib-tooltip="New"
+              href="#/customer" ui-sref="admin.marketing.affiliate"><i class="fa fa-plus"></i>
+            </a>
           </div>
         </div><br>
         <div>
-          <div id="grid1" ui-grid="{ data: marketingCtrl.myData }"></div>
+          <div ui-grid="affiliatesCtrl.gridAffiliates" class="grid" ui-grid-edit ui-grid-cellNav></div>
         </div>
       </div>
     </div>
