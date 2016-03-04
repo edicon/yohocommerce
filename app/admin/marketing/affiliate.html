@@ -1,8 +1,11 @@
 <div class="row">
   <div class="col-xs-12">
     <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Affiliate Detail - {{affiliateCtrl.affiliate.affiliate_full_name}}</h3>
+      <div ng-if="affiliateCtrl.aid === null" class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Affiliate Detail - New Affiliate</h3>
+      </div>
+      <div ng-if="affiliateCtrl.aid !== null" class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Affiliate Detail - {{affiliateCtrl.affiliate.affiliate_first_name}} {{affiliateCtrl.affiliate.affiliate_last_name}}</h3>
       </div>
       <div class="panel-body">
         <div class="row">
@@ -44,28 +47,28 @@
                 <i class="menu-icon fa fa-user-secret"></i> Profile
               </uib-tab-heading><br>
 
-              <form name:="affiliateForm" class="form-horizontal" ng-submit="affiliateCtrl.addAffiliate()">
+              <form name:="affiliateProfileForm" class="form-horizontal" ng-submit="affiliateCtrl.addAffiliate()">
 
                               <fieldset>
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">First Name</label>
                                   <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
                                     <input type="text" name:="firstName" ng-model="affiliateCtrl.affiliate.affiliate_first_name" placeholder="First Name" class="form-control" required>
-                                    <div ng-messages="affiliateForm.firstName.$error" ng-if="affiliateForm.firstName.$touched">
-                                      <div ng-messages-include="common/messages.html"></div>
+                                    <div ng-messages="affiliateProfileForm.firstName.$error" ng-if="affiliateProfileForm.firstName.$touched">
+                                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
                                     </div>
                                   </div>
                                   <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
                                     <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_first_name" ng-change="affiliateCtrl.affiliate.$save()"
-                                      placeholder="First Name" class="form-control">
+                                      placeholder="First Name" class="form-control" required>
                                   </div>
                                 </div>
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">Last Name</label>
                                   <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
-                                    <input type="text" name:="lastName" ng-model="affiliateCtrl.affiliate.affiliate_last_name" placeholder="Last Name" class="form-control" required="">
-                                    <div ng-messages="affiliateForm.lastName.$error" ng-if="affiliateForm.lastName.$touched">
-                                      <div ng-messages-include="common/messages.html"></div>
+                                    <input type="text" name:="lastName" ng-model="affiliateCtrl.affiliate.affiliate_last_name" placeholder="Last Name" class="form-control" required>
+                                    <div ng-messages="affiliateProfileForm.lastName.$error" ng-if="affiliateProfileForm.lastName.$touched">
+                                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
                                     </div>
                                   </div>
                                   <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
@@ -76,17 +79,23 @@
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">E-Mail</label>
                                   <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
-                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_email" placeholder="E-mail Address" class="form-control">
+                                    <input type="email" name="email" ng-model="affiliateCtrl.affiliate.affiliate_email" placeholder="E-mail Address" class="form-control" required email>
+                                    <div ng-messages="affiliateProfileForm.email.$error" ng-if="affiliateProfileForm.email.$touched">
+                                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                                    </div>
                                   </div>
                                   <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
-                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_email" ng-change="affiliateCtrl.affiliate.$save()"
+                                    <input type="email" ng-model="affiliateCtrl.affiliate.affiliate_email" ng-change="affiliateCtrl.affiliate.$save()"
                                       placeholder="E-mail Address" class="form-control">
                                   </div>
                                 </div>
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">Phone Number</label>
                                   <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
-                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_phone" placeholder="Phone Number" class="form-control">
+                                    <input type="text" name="phoneNumber" ng-model="affiliateCtrl.affiliate.affiliate_phone" placeholder="Phone Number" class="form-control" required>
+                                    <div ng-messages="affiliateProfileForm.phoneNumber.$error" ng-if="affiliateProfileForm.phoneNumber.$touched">
+                                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                                    </div>
                                   </div>
                                   <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
                                     <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_phone" ng-change="affiliateCtrl.affiliate.$save()"
@@ -96,9 +105,12 @@
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">Status</label>
                                   <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
-                                    <select ng-model="affiliateCtrl.affiliate.affiliate_status" class="form-control">
+                                    <select name="status" ng-model="affiliateCtrl.affiliate.affiliate_status" class="form-control" required>
                                       <option value= "Enabled">Enabled</option>
                                       <option value= "Disabled">Disabled</option>
+                                    <div ng-messages="affiliateProfileForm.status.$error" ng-if="affiliateProfileForm.status.$touched">
+                                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                                    </div>
                                     </select>
                                   </div>
                                   <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
@@ -126,7 +138,10 @@
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">Street</label>
                                   <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
-                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_street" placeholder="Street" class="form-control">
+                                    <input type="text" name="street" ng-model="affiliateCtrl.affiliate.affiliate_address_street" placeholder="Street" class="form-control" required>
+                                    <div ng-messages="affiliateProfileForm.street.$error" ng-if="affiliateProfileForm.steet.$touched">
+                                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                                    </div>
                                   </div>
                                   <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
                                     <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_street" ng-change="affiliateCtrl.affiliate.$save()"
@@ -136,17 +151,23 @@
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">City</label>
                                   <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
-                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_city" placeholder="City" class="form-control">
+                                    <input type="text" name="city" ng-model="affiliateCtrl.affiliate.affiliate_address_city" placeholder="City" class="form-control" required>
+                                    <div ng-messages="affiliateProfileForm.city.$error" ng-if="affiliateProfileForm.city.$touched">
+                                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                                    </div>
                                   </div>
                                   <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
-                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_city" ng-change="affiliateCtrl.affiliate.$save()" 
+                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_city" ng-change="affiliateCtrl.affiliate.$save()"
                                     placeholder="City" class="form-control">
                                   </div>
                                 </div>
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">Country</label>
                                     <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
-                                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_country" placeholder="Country" class="form-control">
+                                      <input type="text" name="country" ng-model="affiliateCtrl.affiliate.affiliate_address_country" placeholder="Country" class="form-control" required>
+                                      <div ng-messages="affiliateProfileForm.country.$error" ng-if="affiliateProfileForm.country.$touched">
+                                        <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                                      </div>
                                     </div>
                                     <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
                                       <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_country" ng-change="affiliateCtrl.affiliate.$save()"
@@ -166,14 +187,28 @@
                                 </div> -->
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">Region</label>
-                                  <div class="col-sm-8">
-                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_region" placeholder="Region" class="form-control">
+                                  <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
+                                    <input type="text" name="region" ng-model="affiliateCtrl.affiliate.affiliate_address_region" placeholder="Region" class="form-control" required>
+                                    <div ng-messages="affiliateProfileForm.region.$error" ng-if="affiliateProfileForm.region.$touched">
+                                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                                    </div>
+                                  </div>
+                                  <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
+                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_region" ng-change="affiliateCtrl.affiliate.$save()"
+                                    placeholder="Region" class="form-control">
                                   </div>
                                 </div>
                                 <div class="form-group required">
                                   <label class="col-sm-2 control-label" align="right">Postal Code / Zip</label>
-                                  <div class="col-sm-8">
-                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_postal_code" placeholder="Postal Code" class="form-control">
+                                  <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
+                                    <input type="text" name="postalZip" ng-model="affiliateCtrl.affiliate.affiliate_address_postal_code" placeholder="Postal Code / Zip" class="form-control" required>
+                                    <div ng-messages="affiliateProfileForm.postalZip.$error" ng-if="affiliateProfileForm.postalZip.$touched">
+                                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                                    </div>
+                                  </div>
+                                  <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
+                                    <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_address_postal_code" ng-change="affiliateCtrl.affiliate.$save()"
+                                    placeholder="Postal Code / Zip" class="form-control">
                                   </div>
                                 </div>
 
@@ -189,26 +224,47 @@
               <i class="menu-icon fa fa-trophy"></i> Payment Details
             </uib-tab-heading><br>
 
-              <form class="form-horizontal" ng-submit="register()">
+              <form name="affiliatePaymentForm" class="form-horizontal" ng-submit="affiliateCtrl.addAffiliate()">
 
                 <fieldset>
 
                   <div class="form-group required">
                     <label class="col-sm-2 control-label" align="right">Commission (%)</label>
-                    <div class="col-sm-8">
-                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_commission" placeholder="Commission" class="form-control">
+                    <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
+                      <input type="text" name="commission" ng-model="affiliateCtrl.affiliate.affiliate_commission" placeholder="Commission" class="form-control" required>
+                      <div ng-messages="affiliatePaymentForm.commission.$error" ng-if="affiliatePaymentForm.commission.$touched">
+                        <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                      </div>
+                    </div>
+                    <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_commission" ng-change="affiliateCtrl.affiliate.$save"
+                      placeholder="Commission" class="form-control">
                     </div>
                   </div>
                   <div class="form-group required">
                     <label class="col-sm-2 control-label" align="right">Tax ID</label>
-                    <div class="col-sm-8">
-                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_taxid" placeholder="Tax ID" class="form-control">
+                    <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
+                      <input type="text" name="taxId" ng-model="affiliateCtrl.affiliate.affiliate_taxid" placeholder="Tax ID" class="form-control" required>
+                      <div ng-messages="affiliatePaymentForm.taxId.$error" ng-if="affiliatePaymentForm.taxId.$touched">
+                        <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                      </div>
+                    </div>
+                    <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_taxid" ng-change="affiliateCtrl.affiliate.$save"
+                      placeholder="Tax Id" class="form-control">
                     </div>
                   </div>
                   <div class="form-group required">
                     <label class="col-sm-2 control-label" align="right">Cheque Payee Name</label>
-                    <div class="col-sm-8">
-                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_cheque_name" placeholder="Cheque Payee Name" class="form-control">
+                    <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
+                      <input type="text" name="chequePayee" ng-model="affiliateCtrl.affiliate.affiliate_cheque_name" placeholder="Cheque Payee Name" class="form-control" required>
+                      <div ng-messages="affiliatePaymentForm.chequePayee.$error" ng-if="affiliatePaymentForm.chequePayee.$touched">
+                        <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                      </div>
+                    </div>
+                    <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
+                      <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_cheque_name" ng-change="affiliateCtrl.affiliate.$save"
+                      placeholder="Cheque Payee Name" class="form-control">
                     </div>
                   </div>
 
@@ -223,7 +279,7 @@
             <i class="menu-icon fa fa-indent"></i> Transactions
           </uib-tab-heading><br>
 
-              <form class="form-horizontal" ng-submit="addTransaction()">
+              <form class="form-horizontal" ng-submit="affiliateCtrladdTransaction()">
 
                 <fieldset>
                   <div class="form-group">
@@ -258,20 +314,27 @@
           <i class="menu-icon fa fa-key"></i> Security
         </uib-tab-heading><br>
 
-          <form class="form-horizontal" ng-submit="register()">
+          <form name="affiliateSecurityForm" class="form-horizontal" ng-submit="affiliateCtrl.addAffiliate()">
 
             <fieldset>
               <div class="form-group required">
                 <label class="col-sm-2 control-label" align="right">E-Mail</label>
-                <div class="col-sm-8">
-                  <input type="text" ng-model="affiliateCtrl.affiliate.affiliate_email" placeholder="E-mail Address" class="form-control">
+                <div ng-if="affiliateCtrl.aid === null" class="col-sm-8">
+                  <input type="email" name="email" ng-model="affiliateCtrl.affiliate.affiliate_email" placeholder="E-mail Address" class="form-control" email required>
+                  <div ng-messages="affiliateSecurityForm.email.$error" ng-if="affiliateSecurityForm.email.$touched">
+                    <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                  </div>
+                </div>
+                <div ng-if="affiliateCtrl.aid !== null" class="col-sm-8">
+                  <input type="email" ng-model="affiliateCtrl.affiliate.affiliate_email" ng-change="affiliateCtrl.affiliate.$save()"
+                    placeholder="E-mail Address" class="form-control">
                 </div>
               </div>
               <div class="form-group required">
                 <label class="col-sm-2 control-label">Password</label>
                 <div class="col-sm-8">
-                  <input type="password" name="password" ng-model="affiliateCtrl.affiliate.affiliate_password" placeholder="Password" class="form-control" ng-minlength="6" required>
-                  <div ng-messages="affiliateForm.password.$error" ng-if="affiliateForm.password.$touched">
+                  <input type="password" name="password" ng-model="affiliateCtrl.affiliate.affiliate_password" placeholder="Password" class="form-control" ng-minlength="6" minlength required>
+                  <div ng-messages="affiliateSecurityForm.password.$error" ng-if="affiliateSecurityForm.password.$touched">
                     <div ng-messages-include="catalog/common/registration.messages.html"></div>
                   </div>
                 </div>
@@ -279,8 +342,8 @@
               <div class="form-group required">
                 <label class="col-sm-2 control-label">Confirm Password</label>
                 <div class="col-sm-8">
-                  <input type="password" name="confirmPassword" ng-model="affiliateCtrl.confirm_password" placeholder="Password" class="form-control" required>
-                  <div ng-messages="affiliateForm.confirmPassword.$error" ng-if="affiliateForm.confirmPassword.$touched">
+                  <input type="password" name="confirmPassword" ng-model="affiliateCtrl.confirm_password" placeholder="Password" class="form-control" compareTo required>
+                  <div ng-messages="affiliateSecurityForm.confirmPassword.$error" ng-if="affiliateSecurityForm.confirmPassword.$touched">
                     <div ng-messages-include="catalog/common/registration.messages.html"></div>
                   </div>
                 </div>

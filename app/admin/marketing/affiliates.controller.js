@@ -4,7 +4,7 @@ app.controller('AffiliatesCtrl', ['Affiliates', '$state', '$scope', '$stateParam
   affiliatesCtrl.currentState = $state.current.name;
   console.log(affiliatesCtrl.currentState)
 
-  console.log($scope)
+  console.log($stateParams)
 
 //grid settings for affiliates.html
   affiliatesCtrl.gridAffiliates = {
@@ -16,7 +16,8 @@ app.controller('AffiliatesCtrl', ['Affiliates', '$state', '$scope', '$stateParam
     columnDefs: [
       { name: '', field: '$id', shown: false, cellTemplate: 'admin/marketing/gridTemplates/editAffiliate.html',
         width: 53, enableColumnMenu: false, headerTooltip: 'Edit Affiliate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-      { name:'affiliateName', field: 'affiliate_full_name', enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '20%' },
+      { name:'affiliateName', cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.affiliate_first_name}} {{row.entity.affiliate_last_name}}</div>',
+       enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '20%' },
       { name:'phoneNumber', field: 'affiliate_phone', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '15%' },
       { name:'email', field: 'affiliate_email', enableHiding: false, enableFiltering: false, width: '20%', enableCellEdit: false },
       { name:'affiliateCode', field: '$id', enableHiding: false, enableFiltering: false, width: '25%', enableCellEdit: false },
@@ -29,7 +30,7 @@ app.controller('AffiliatesCtrl', ['Affiliates', '$state', '$scope', '$stateParam
 //editAffiliate function at the start of the grid
   affiliatesCtrl.editAffiliate = function(row) {
     $state.go('admin.marketing.affiliate', {'rowEntity': row.entity});
-    console.log(row.entity)
+//    console.log(row.entity)
   };
 
 //called from removeAffiliate.html
