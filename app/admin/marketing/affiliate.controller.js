@@ -53,19 +53,14 @@ app.controller('AffiliateCtrl', ['Affiliate', 'Affiliates', 'Transactions', 'Cou
     affiliateCtrl.loadAffiliate($stateParams.rowEntity.$id);
     affiliateCtrl.aid = $stateParams.rowEntity.$id;
   } else {
-//    affiliateCtrl.affiliate.affiliate_full_name = 'New Affiliate';
     affiliateCtrl.aid = null;
   };
 
-
-//function called from affiliate.html
-    affiliateCtrl.addAffiliate = function() {
-//corresoponding fields in the object, data will be saved in the node
+  affiliateCtrl.addAffiliate = function() {
     affiliateCtrl.affiliate.affiliate_full_name = affiliateCtrl.affiliate.affiliate_first_name + ' ' + affiliateCtrl.affiliate.affiliate_last_name;
-//calling affiliate.service.js addAffiliate function
-    Affiliate.addAffiliate(affiliateCtrl.affiliate).then(function(aid) {
-      affiliateCtrl.loadAffiliate(aid)
-    });
+      Affiliate.addAffiliate(affiliateCtrl.affiliate).then(function(aid) {
+        affiliateCtrl.loadAffiliate(aid)
+      });
     }, function(error) {
       AlertService.addError(error.message);
     };
@@ -126,7 +121,4 @@ app.controller('AffiliateCtrl', ['Affiliate', 'Affiliates', 'Transactions', 'Cou
       affiliateCtrl.error = error;
     };
 
-
-
-  }
-]);
+}]);

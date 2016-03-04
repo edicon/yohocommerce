@@ -1,12 +1,7 @@
 app.controller('AffiliatesCtrl', ['Affiliates', '$state', '$scope', '$stateParams',
   function (                       Affiliates,   $state,   $scope,   $stateParams) {
   var affiliatesCtrl = this;
-  affiliatesCtrl.currentState = $state.current.name;
-  console.log(affiliatesCtrl.currentState)
 
-  console.log($stateParams)
-
-//grid settings for affiliates.html
   affiliatesCtrl.gridAffiliates = {
     showGridFooter: true,
     enableSorting: true,
@@ -27,19 +22,14 @@ app.controller('AffiliatesCtrl', ['Affiliates', '$state', '$scope', '$stateParam
     ]
   };
 
-//editAffiliate function at the start of the grid
   affiliatesCtrl.editAffiliate = function(row) {
     $state.go('admin.marketing.affiliate', {'rowEntity': row.entity});
-//    console.log(row.entity)
   };
 
-//called from removeAffiliate.html
-    affiliatesCtrl.removeAffiliate = function(row) {
-//calling affiliates.service.js removeAffiliate function to delete from firebase
-      Affiliates.removeAffiliate(row.entity.$id);
-    }, function(error) {
-      affiliatesCtrl.error = error;
-    };
+  affiliatesCtrl.removeAffiliate = function(row) {
+    Affiliates.removeAffiliate(row.entity.$id);
+  }, function(error) {
+    affiliatesCtrl.error = error;
+  };
 
-  }
-]);
+}]);

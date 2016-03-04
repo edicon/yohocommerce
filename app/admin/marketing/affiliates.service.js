@@ -14,5 +14,5 @@ app.factory('Affiliates', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', '
     };
 
     return affiliate;
-  }
-]);
+
+}]);

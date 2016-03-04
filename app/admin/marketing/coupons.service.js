@@ -4,25 +4,21 @@ app.factory('Coupons', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
     var coupons = $firebaseArray(ref.child(tid).orderByPriority());
 
     var coupon = {
-// method that calls the reference in firebase, adds object to coupon array
+
       addCoupon: function(theObj) {
-// setting up the node in firebase
-      var theRef = new Firebase(FirebaseUrl+'coupons/'+tid);
-//pushes the reference to firebase and returns it back to the controller
+        var theRef = new Firebase(FirebaseUrl+'coupons/'+tid);
         return theRef.push(theObj);
       },
 
-// method that calls the reference in firebase, removes object from coupon array
       removeCoupon: function(theObj) {
-// setting up the node in firebase
-      var theRef = new Firebase(FirebaseUrl+'coupons/'+tid+'/'+theObj.couponId);
-//pushes the reference to firebase and returns it back to the controller
-      return theRef.remove();
+        var theRef = new Firebase(FirebaseUrl+'coupons/'+tid+'/'+theObj.couponId);
+        return theRef.remove();
       },
 
       all: coupons,
 
     };
+    
     return coupon;
-  }
-]);
+
+}]);
