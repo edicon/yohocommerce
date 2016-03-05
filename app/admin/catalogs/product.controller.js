@@ -8,6 +8,8 @@ app.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'Custom
     productCtrl.count = Product.getCount();
     productCtrl.product = {};
 
+    console.log($scope)
+
     productCtrl.tinymceOptions = {
       menubar:false,
       statusbar: false,

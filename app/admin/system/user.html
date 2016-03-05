@@ -1,39 +1,230 @@
 <div class="container-fluid">
   <div class="row">
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="col-sm-12">
+          <a type="button" class="btn btn-sm btn-default detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Cancel" href="#/users" ui-sref="admin.system.users"><i class="fa fa-reply"></i></a>
+          <button ng-if="userCtrl.cid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Last" ng-click="userCtrl.last()">
+            <i class="fa fa-fast-forward"></i>
+          </button>
+          <button ng-if="userCtrl.cid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Next" ng-click="userCtrl.next()">
+            <i class="fa fa-step-forward"></i>
+          </button>
+          <button ng-if="userCtrl.cid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Back" ng-click="userCtrl.back()">
+            <i class="fa fa-step-backward"></i>
+          </button>
+          <button ng-if="userCtrl.cid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="First" ng-click="userCtrl.first()">
+            <i class="fa fa-fast-backward"></i>
+          </button>
+          <button ng-if="userCtrl.cid === null" type="button" class="btn btn-sm btn-primary detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Save" ng-click="userCtrl.addCustomer()">
+            <i class="fa fa-floppy-o"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="row">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> User Detail - {{userCtrl.profile.name}}</h3>
+        <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> User Detail</h3>
       </div>
-      <div class="panel-body">
-        <form class="form-horizontal" role="form">
+      <div ng-if="userCtrl.user.type === 'tenant'" class="panel-body">
+        <form class="form-horizontal">
+          <span class="col-sm-10 col-sm-offset-1">
+            <legend>Marketplace Tenant Information</legend>
+          </span>
           <div class="form-group">
-            <label class="control-label col-xs-2">E-Mail</label>
-            <div ng-if="userCtrl.uid === null" class="col-xs-8">
-              <input type="text" ng-model="userCtrl.profile.email" placeholder="Customer E-Mail" class="form-control">
-            </div>
-            <div ng-if="userCtrl.uid !== null" class="col-xs-8">
-              <input type="text" ng-model="userCtrl.profile.email" ng-change="userCtrl.customer.$save()"
-                placeholder="Customer E-Mail" class="form-control">
+            <label class="control-label col-sm-3">Type</label>
+            <div class="col-sm-6">
+              <select class="form-control">
+                <option selected>Tenant</option>
+              </select>
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label col-xs-2">&ast; Status</label>
-            <div ng-if="userCtrl.ui-rdash === null" class="col-xs-8">
-              <select ng-model="userCtrl.profile.status" class="form-control">
-                <option value="1">Enabled</option>
-                <option value="2">Disabled</option>
+            <label class="control-label col-sm-3">Status</label>
+            <div class="col-sm-6">
+              <select class="form-control">
+                <option selected>Enabled</option>
               </select>
             </div>
-            <div ng-if="userCtrl.uid !== null" class="col-xs-8">
-              <select class="form-control" ng-model="userCtrl.profile.status"
-                ng-change="userCtrl.saveUserStatus()" class="form-control">
-                  <option value= "1">Enabled</option>
-                  <option value= "2">Disabled</option>
-              </select>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">Tenant ID</label>
+            <div class="col-sm-6">
+              <input type="text" ng-model="userCtrl.user.tid" class="form-control" readonly>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">E-Mail</label>
+            <div class="col-sm-6">
+              <input type="text" ng-model="userCtrl.user.email" class="form-control" readonly>
             </div>
           </div>
         </form>
       </div>
+
+      <div ng-if="userCtrl.user.type === 'customer'" class="panel-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <span class="col-sm-10 col-sm-offset-1">
+              <legend>Account Security Information</legend>
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">Type</label>
+            <div class="col-sm-6">
+              <select class="form-control">
+                <option selected>Customer</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">Status</label>
+            <div class="col-sm-6">
+              <select class="form-control">
+                <option value="enabled" selected>Enabled</option>
+                <option value="disabled">Disabled</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">Login Email</label>
+            <div class="col-sm-6">
+              <input type="text" ng-model="userCtrl.user.email" class="form-control" readonly>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-6 col-sm-offset-3">
+              <a class="btn btn-default btn-sm" href="" ng-click="userCtrl.sendPasswordEmail(userCtrl.user.email)">
+                <i class="fa fa-envelope-o"></i> Send Reset Password Email</a>
+            </div>
+          </div>
+          <div class="form-group">
+            <span class="col-sm-10 col-sm-offset-1">
+              <legend>Key Customer Information</legend>
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">First Name</label>
+            <div ng-if="customerCtrl.custId === null" class="col-sm-6">
+              <input type="text" ng-model="customerCtrl.customer.customer_first_name" placeholder="First Name" class="form-control">
+            </div>
+            <div ng-if="customerCtrl.custId !== null" class="col-sm-6">
+              <input type="text" ng-model="customerCtrl.customer.customer_first_name" ng-change="customerCtrl.customer.$save()"
+                placeholder="First Name" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">Last Name</label>
+            <div ng-if="customerCtrl.custId === null" class="col-sm-6">
+              <input type="text" ng-model="customerCtrl.customer.customer_last_name" placeholder="Last Name" class="form-control">
+            </div>
+            <div ng-if="customerCtrl.custId !== null" class="col-sm-6">
+              <input type="text" ng-model="customerCtrl.customer.customer_last_name"
+                ng-change="customerCtrl.customer.$save()" placeholder="Last Name" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">Customer Group</label>
+            <div ng-if="customerCtrl.custId === null" class="col-sm-6">
+              <select ng-model="customerCtrl.customer.customer_group_id" class="form-control">
+                <option ng-repeat="g in customerCtrl.groups" value="{{g.$id}}">{{g.group_name}}</option>
+              </select>
+            </div>
+            <div ng-if="customerCtrl.custId !== null" class="col-sm-6">
+              <select ng-model="customerCtrl.customer.customer_group_id" ng-change="customerCtrl.saveGroup()" class="form-control">
+                <option ng-repeat="g in customerCtrl.groups" value="{{g.$id}}">{{g.group_name}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">Status</label>
+            <div ng-if="customerCtrl.custId === null" class="col-sm-6">
+              <select ng-model="customerCtrl.customer.customer_status" class="form-control">
+                <option value="1">Enabled</option>
+                <option value="2">Disabled</option>
+              </select>
+            </div>
+            <div ng-if="customerCtrl.custId !== null" class="col-sm-6">
+              <select class="form-control" ng-model="customerCtrl.customer.customer_status"
+                ng-change="customerCtrl.savecustomerStatus()" class="form-control">
+                <option value= "1">Enabled</option>
+                <option value= "2">Disabled</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">Customer Email</label>
+            <div ng-if="customerCtrl.custId === null" class="col-sm-6">
+              <input type="text" ng-model="customerCtrl.customer.customer_email" placeholder="Customer E-Mail" class="form-control">
+            </div>
+            <div ng-if="customerCtrl.custId !== null" class="col-sm-6">
+              <input type="text" ng-model="customerCtrl.customer.customer_email" ng-change="customerCtrl.customer.$save()"
+                placeholder="Customer E-Mail" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">Phone Number</label>
+            <div ng-if="customerCtrl.custId === null" class="col-sm-6">
+              <input type="text" ng-model="customerCtrl.customer.customer_phone" placeholder="Phone Number" class="form-control">
+            </div>
+            <div ng-if="customerCtrl.custId !== null" class="col-sm-6">
+              <input type="text" ng-model="customerCtrl.customer.customer_phone" ng-change="customerCtrl.customer.$save()"
+                placeholder="Phone Number" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-3">Fax</label>
+            <div ng-if="customerCtrl.custId === null" class="col-sm-6">
+              <input type="text" ng-model="customerCtrl.customer.customer_fax" placeholder="Fax Number" class="form-control">
+            </div>
+            <div ng-if="customerCtrl.custId !== null" class="col-sm-6">
+              <input type="text" ng-model="customerCtrl.customer.customer_fax" ng-change="customerCtrl.customer.$save()"
+                placeholder="Fax Number" class="form-control">
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-6 col-sm-offset-3">
+              <a class="btn btn-default btn-sm" href="" ng-click="userCtrl.goCustomer(userCtrl.user.cid)">
+                <i class="fa fa-user"></i> Customer Detail</a>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div ng-if="userCtrl.user.type === 'affiliate'" class="panel-body">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-sm-2">Type</label>
+            <div class="col-sm-3">
+              <select class="form-control">
+                <option selected>Affiliate</option>
+              </select>
+            </div>
+            <label class="control-label col-sm-2">Status</label>
+            <div class="col-sm-3">
+              <select class="form-control">
+                <option value="enabled" selected>Enabled</option>
+                <option value="disabled">Disabled</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-sm-2">E-Mail</label>
+            <div class="col-sm-8">
+              <input type="text" ng-model="userCtrl.user.email" class="form-control" readonly>
+            </div>
+          </div>
+        </form>
+      </div>
+
     </div>
   </div>
 </div>

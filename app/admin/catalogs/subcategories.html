@@ -1,5 +1,5 @@
-<div class="row">
-  <div class="col-xs-12">
+<div class="container-fluid">
+  <div class="row">
     <ul class="nav nav-tabs" role="tablist">
       <li ng-click="subCategoriesCtrl.loadSubCategories()" role="presentation" class="active" role="presentation">
         <a href="#/categories" ui-sref="admin.catalogs.categories" role="tab" data-toggle="tab"><i class="menu-icon fa fa-th"></i> Categories</a>
@@ -8,14 +8,10 @@
         <a href="#categoryBanners" ui-sref="admin.catalogs.categories" role="tab"><i class="menu-icon fa fa-flag-checkered"></i> Category Banners</a>
       </li>
     </ul>
-    <br>
-    <div class="col-xs-12">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title"><i class="menu-icon fa fa-sitemap"></i> Sub-Categories ({{subCategoriesCtrl.subCount}}) - {{subCategoriesCtrl.categoryName}}</h3>
-        </div>
-        <div class="panel-body">
-          <div class="row">
+    <div class="container-fluid top-space-15">
+      <div class="row">
+        <form class="form-horizontal">
+          <div class="form-group">
             <div class="col-xs-12">
               <a type="button" class="btn btn-sm btn-default detail-btn pull-right" tooltip-placement="top" uib-tooltip="Cancel"
                 href="#/categories" ui-sref="admin.catalogs.categories"><i class="fa fa-reply"></i>
@@ -34,6 +30,15 @@
               </button>
             </div>
           </div>
+        </form>
+      </div>
+    </div>
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="menu-icon fa fa-sitemap"></i> Sub-Categories ({{subCategoriesCtrl.subCount}}) - {{subCategoriesCtrl.categoryName}}</h3>
+        </div>
+        <div class="panel-body">
           <div class="row">
             <ul class="nav nav-tabs" role="tablist">
               <li role="presentation" class="active"><a href="#subCats" role="tab" data-toggle="tab"><i class="menu-icon fa fa-sitemap"></i> Sub-Categories ({{subCategoriesCtrl.subCount}})</a></li>

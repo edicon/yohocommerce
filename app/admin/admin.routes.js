@@ -255,6 +255,7 @@ angular.module('app')
           url: '/customer',
           params: {
             rowEntity: null,
+            cid: null,
           },
           views: {
             "header@admin": {
@@ -308,7 +309,7 @@ angular.module('app')
           url: '/affiliates',
           params: {
             rowEntity: null,
-          },           
+          },
           views: {
             "header@admin": {
               templateUrl: 'admin/marketing/affiliates.header.html'
@@ -384,9 +385,6 @@ angular.module('app')
         })
         .state('admin.system.users', {
           url: '/users',
-          params: {
-            rowEntity: null,
-          },
           views: {
             "header@admin": {
               templateUrl: 'admin/system/users.header.html'
@@ -503,7 +501,7 @@ angular.module('app')
         .state('admin.reports', {
           url: '',
           views: {
-            "main@admin": {
+            "menu@admin": {
               controller: 'ReportsCtrl as reportsCtrl',
               templateUrl: 'admin/reports/reports.html'
             }
@@ -514,34 +512,31 @@ angular.module('app')
           controller: 'ProfileCtrl as profileCtrl',
           templateUrl: 'admin/users/profile.html',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
 
-        // start of product bootstrap tabs states
+        // start of product bootstrap tabs states Wow variable replaces Users service
+        // for soem reason the onpage link needs a second service name in addition to Auth
 
         .state('productList', {
           url: '/productList',
           controller: 'ProductsCtrl as productsCtrl',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -549,15 +544,13 @@ angular.module('app')
           url: '/productFeatured',
           controller: 'ProductsCtrl as productsCtrl',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -565,15 +558,13 @@ angular.module('app')
           url: '/prodInfo',
           controller: 'ProductCtrl as productCtrl',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -581,15 +572,13 @@ angular.module('app')
           url: '/prodInventory',
           controller: 'ProductCtrl as productCtrl',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -597,15 +586,13 @@ angular.module('app')
           url: '/prodDiscount',
           controller: 'ProductCtrl as productCtrl',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -613,15 +600,13 @@ angular.module('app')
           url: '/prodSpecial',
           controller: 'ProductCtrl as productCtrl',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -629,15 +614,13 @@ angular.module('app')
           url: '/prodReward',
           controller: 'ProductCtrl as productCtrl',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -645,15 +628,13 @@ angular.module('app')
           url: '/prodBannerImage',
           controller: 'ProductCtrl as productCtrl',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -661,15 +642,13 @@ angular.module('app')
           url: '/prodThumbnails',
           controller: 'ProductCtrl as productCtrl',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth) {
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -682,15 +661,13 @@ angular.module('app')
           url: '/categoryList',
           controller: 'CategoriesCtrl as categoriesCtrl',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth) {
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -698,15 +675,13 @@ angular.module('app')
           url: '/categoryBanners',
           controller: 'CategoriesCtrl as categoriesCtrl',
           resolve: {
-            auth: function($state, Users, Auth) {
+            auth: function($state, Wow, Auth) {
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -719,15 +694,13 @@ angular.module('app')
           url: '/subCats',
           controller: 'SubCategoriesCtrl as subCategoriesCtrl',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth) {
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -735,15 +708,13 @@ angular.module('app')
           url: '/subBanners',
           controller: 'SubCategoriesCtrl as subCategoriesCtrl',
           resolve: {
-            auth: function($state, Users, Auth) {
+            auth: function($state, Wow, Auth) {
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -756,15 +727,13 @@ angular.module('app')
           url: '/addressDefault',
           controller: 'CustomersCtrl as customersCtrl',
           resolve: {
-            auth: function($state, Users, Auth){
+            auth: function($state, Wow, Auth){
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth) {
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -772,15 +741,13 @@ angular.module('app')
           url: '/address1',
           controller: 'CustomersCtrl as customersCtrl',
           resolve: {
-            auth: function($state, Users, Auth) {
+            auth: function($state, Wow, Auth) {
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -788,15 +755,13 @@ angular.module('app')
           url: '/address2',
           controller: 'CustomersCtrl as customersCtrl',
           resolve: {
-            auth: function($state, Users, Auth) {
+            auth: function($state, Wow, Auth) {
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -804,14 +769,14 @@ angular.module('app')
           url: '/address3',
           controller: 'CustomersCtrl as customersCtrl',
           resolve: {
-            auth: function($state, Users, Auth) {
+            auth: function($state, Wow, Auth) {
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
+            profile: function(Wow, Auth){
               return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
+                return Wow.getProfile(auth.uid).$loaded();
               });
             }
           }
@@ -820,15 +785,13 @@ angular.module('app')
           url: '/address4',
           controller: 'CustomersCtrl as customersCtrl',
           resolve: {
-            auth: function($state, Users, Auth) {
+            auth: function($state, Wow, Auth) {
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -836,15 +799,13 @@ angular.module('app')
           url: '/address5',
           controller: 'CustomersCtrl as customersCtrl',
           resolve: {
-            auth: function($state, Users, Auth) {
+            auth: function($state, Wow, Auth) {
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -852,15 +813,13 @@ angular.module('app')
           url: '/address6',
           controller: 'CustomersCtrl as customersCtrl',
           resolve: {
-            auth: function($state, Users, Auth) {
+            auth: function($state, Wow, Auth) {
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -868,15 +827,13 @@ angular.module('app')
           url: '/address7',
           controller: 'CustomersCtrl as customersCtrl',
           resolve: {
-            auth: function($state, Users, Auth) {
+            auth: function($state, Wow, Auth) {
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -884,15 +841,13 @@ angular.module('app')
           url: '/address8',
           controller: 'CustomersCtrl as customersCtrl',
           resolve: {
-            auth: function($state, Users, Auth) {
+            auth: function($state, Wow, Auth) {
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -900,15 +855,13 @@ angular.module('app')
           url: '/address9',
           controller: 'CustomersCtrl as customersCtrl',
           resolve: {
-            auth: function($state, Users, Auth) {
+            auth: function($state, Wow, Auth) {
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
@@ -916,20 +869,17 @@ angular.module('app')
           url: '/address10',
           controller: 'CustomersCtrl as customersCtrl',
           resolve: {
-            auth: function($state, Users, Auth) {
+            auth: function($state, Wow, Auth) {
               return Auth.$requireAuth().catch(function(){
                 $state.go('home');
               });
             },
-            profile: function(Users, Auth){
-              return Auth.$requireAuth().then(function(auth){
-                return Users.getProfile(auth.uid).$loaded();
-              });
+            profile: function(Auth){
+              return Auth.$requireAuth();
             }
           }
         })
 
         // end of customer bootstrap tab state
-
 
 }])

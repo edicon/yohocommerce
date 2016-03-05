@@ -27,12 +27,12 @@ app.factory('Customer', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'ti
       },
 
       addAddress: function(theObj) {
-        var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.custId+'/addresses');
+        var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.cid+'/addresses');
         return custRef.push({ priority: theObj.priority });
       },
 
       updateAddressCount: function(theObj) {
-        var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.custId);
+        var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.cid);
         return custRef.update( {customer_address_count: theObj.addressCount} );
       },
 
@@ -49,9 +49,9 @@ app.factory('Customer', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'ti
       },
 
       removeAddress: function(theObj) {
-        var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.custId+'/addresses/'+theObj.addressId);
+        var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.cid+'/addresses/'+theObj.addressId);
         custRef.remove();
-        return customer.recountAddresses(theAddress.custId);
+        return customer.recountAddresses(theObj.cid);
       },
 
       getIndex: function(cid) {

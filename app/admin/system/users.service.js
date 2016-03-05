@@ -5,6 +5,11 @@ app.factory('Users', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
 
     var user = {
 
+      getProfile: function(uid) {
+        console.log(uid)
+        return $firebaseObject(ref.child(uid));
+      },
+
       all: users
 
   };

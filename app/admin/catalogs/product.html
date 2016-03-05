@@ -1,12 +1,43 @@
-<div class="row">
-  <div class="col-xs-12">
+<div class="container-fluid">
+  <div class="row">
     <ul class="nav nav-tabs" role="tablist">
       <li role="presentation" class="active"><a href="#" role="tab" data-toggle="tab"><i class="menu-icon fa fa-th-large"></i> Products</a></li>
       <li ng-click="productCtrl.featuredProducts()" role="presentation">
         <a href="#/products" ui-sref="admin.catalogs.products" role="tab"><i class="menu-icon fa fa-certificate"></i> Featured Products</a>
       </li>
     </ul>
-    <br>
+    <div class="container-fluid top-space-15">
+      <div class="row">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <div class="col-xs-12">
+              <a type="button" class="btn btn-sm btn-default detail-btn pull-right" uib-tooltip-placement="top" uib-tooltip="Cancel"
+                href="#/products" ui-sref="admin.catalogs.products"><i class="fa fa-reply"></i></a>
+              <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+                uib-tooltip-placement="top" uib-tooltip="Last" ng-click="productCtrl.lastProduct()">
+                <i class="fa fa-fast-forward"></i>
+              </button>
+              <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+                uib-tooltip-placement="top" uib-tooltip="Next" ng-click="productCtrl.nextProduct()">
+                <i class="fa fa-step-forward"></i>
+              </button>
+              <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+                uib-tooltip-placement="top" uib-tooltip="Back" ng-click="productCtrl.backProduct()">
+                <i class="fa fa-step-backward"></i>
+              </button>
+              <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+                uib-tooltip-placement="top" uib-tooltip="First" ng-click="productCtrl.firstProduct()">
+                <i class="fa fa-fast-backward"></i>
+              </button>
+              <button ng-if="productCtrl.product.pid === null" type="button" class="btn btn-sm btn-primary detail-btn pull-right"
+                uib-tooltip-placement="top" uib-tooltip="Save" ng-click="productCtrl.addProduct()">
+                <i class="fa fa-floppy-o"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
     <div class="row">
       <div class="col-xs-12">
         <div class="panel panel-default">
@@ -14,35 +45,6 @@
             <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Product Detail - {{productCtrl.productName}}</h3>
           </div>
           <div class="panel-body">
-
-            <div class="row">
-              <div class="col-xs-12">
-                <a type="button" class="btn btn-sm btn-default detail-btn pull-right"
-                  uib-tooltip-placement="top" uib-tooltip="Cancel"
-                  href="#/products" ui-sref="admin.catalogs.products"><i class="fa fa-reply"></i></a>
-                <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
-                  uib-tooltip-placement="top" uib-tooltip="Last" ng-click="productCtrl.lastProduct()">
-                  <i class="fa fa-fast-forward"></i>
-                </button>
-                <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
-                  uib-tooltip-placement="top" uib-tooltip="Next" ng-click="productCtrl.nextProduct()">
-                  <i class="fa fa-step-forward"></i>
-                </button>
-                <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
-                  uib-tooltip-placement="top" uib-tooltip="Back" ng-click="productCtrl.backProduct()">
-                  <i class="fa fa-step-backward"></i>
-                </button>
-                <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
-                  uib-tooltip-placement="top" uib-tooltip="First" ng-click="productCtrl.firstProduct()">
-                  <i class="fa fa-fast-backward"></i>
-                </button>
-                <button ng-if="productCtrl.product.pid === null" type="button" class="btn btn-sm btn-primary detail-btn pull-right"
-                  uib-tooltip-placement="top" uib-tooltip="Save" ng-click="productCtrl.addProduct()">
-                  <i class="fa fa-floppy-o"></i>
-                </button>
-              </div>
-            </div>
-
             <div class="row">
               <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#prodInfo" role="tab" data-toggle="tab"><span class="menu-icon fa fa-info-circle"></span> General</a></li>

@@ -1,12 +1,12 @@
-app.controller('UsersCtrl', ['Users', '$state', '$scope', '$stateParams',
-  function (                  Users,   $state,   $scope,   $stateParams) {
+app.controller('UsersCtrl', ['Users', '$state', '$scope',
+  function (                  Users,   $state,   $scope) {
     var usersCtrl = this;
 
     usersCtrl.editUser = function(row) {
       $state.go('admin.system.user', {'rowEntity': row.entity});
     };
 
-    usersCtrl.gridOpts = {
+    usersCtrl.gridUsers = {
       enableSorting: true,
       enableCellEditOnFocus: true,
       data: Users.all,

@@ -5,26 +5,30 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
     customerCtrl.customer = {};
     customerCtrl.groups = CustomerGroups.all;
 
-    customerCtrl.loadCustomer = function(custId) {
-      var theCustomer = Customer.getCustomer(custId);
+    customerCtrl.loadCustomer = function(cid) {
+      var theCustomer = Customer.getCustomer(cid);
         theCustomer.$loaded().then(function() {
           customerCtrl.customer = theCustomer;
-          customerCtrl.customerIndex = Customer.getIndex(custId);
+          customerCtrl.customerIndex = Customer.getIndex(cid);
           customerCtrl.defaultAddressTab = "active";
-          customerCtrl.custId = custId;
+          customerCtrl.cid = cid;
           customerCtrl.count = Customers.all.length;
       });
-      var theAddresses = Customer.getAddresses(custId);
+      var theAddresses = Customer.getAddresses(cid);
         theAddresses.$loaded().then(function() {
           customerCtrl.addresses = theAddresses;
       });
     };
 
-    if ($stateParams.rowEntity != undefined) {
-      customerCtrl.loadCustomer($stateParams.rowEntity.$id);
+    if ($stateParams.cid === null) {
+      if ($stateParams.rowEntity != undefined) {
+        customerCtrl.loadCustomer($stateParams.rowEntity.$id);
+      } else {
+        customerCtrl.customer.customer_full_name = 'New Customer';
+        customerCtrl.cid = null;
+      }
     } else {
-      customerCtrl.customer.customer_full_name = 'New Customer';
-      customerCtrl.custId = null;
+      customerCtrl.loadCustomer($stateParams.cid);
     }
 
     customerCtrl.routeGroups = function() {
@@ -46,8 +50,8 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
           customerCtrl.customer.customer_address_count = 0;
           customerCtrl.customer.customer_group_name = group.group_name;
           customerCtrl.customer.customer_full_name = customerCtrl.customer.customer_first_name + ' ' + customerCtrl.customer.customer_last_name;
-            Customer.addCustomer(customerCtrl.customer).then(function(custId) {
-            customerCtrl.loadCustomer(custId);
+            Customer.addCustomer(customerCtrl.customer).then(function(cid) {
+            customerCtrl.loadCustomer(cid);
           });
       });
     }, function(error) {
@@ -55,7 +59,7 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
     };
 
     customerCtrl.getAddress = function(addressId) {
-      var theAddress = Customer.getAddress(customerCtrl.custId, addressId);
+      var theAddress = Customer.getAddress(customerCtrl.cid, addressId);
         theAddress.$loaded().then(function() {
           customerCtrl.address = theAddress;
       });
@@ -63,7 +67,7 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
 
     customerCtrl.addAddress = function() {
       var theAddress = {};
-      theAddress.custId = customerCtrl.custId;
+      theAddress.cid = customerCtrl.cid;
       if (customerCtrl.customer.customer_address_count === 0) {
         theAddress.addressCount = 1;
         theAddress.priority = 1;
@@ -81,7 +85,7 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
     customerCtrl.removeAddress = function(addressId) {
       var theAddress = {};
       theAddress.addressId = addressId;
-      theAddress.custId = customerCtrl.custId;
+      theAddress.cid = customerCtrl.cid;
       theAddress.addressCount = customerCtrl.customer.customer_address_count - 1;
       Customer.updateAddressCount(theAddress);
       Customer.removeAddress(theAddress);
@@ -112,8 +116,8 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
         key = customerCtrl.customerIndex;
         if (key < customerCtrl.count - 1) {
           key = customerCtrl.customerIndex + 1;
-          var custId = Customer.getKey(key);
-          customerCtrl.loadCustomer(custId);
+          var cid = Customer.getKey(key);
+          customerCtrl.loadCustomer(cid);
         }
       }
     }, function(error) {
@@ -123,24 +127,24 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
     customerCtrl.back = function() {
       var key = customerCtrl.customerIndex - 1;
       if (key < 0) key = 0
-      var custId = Customer.getKey(key);
-      customerCtrl.loadCustomer(custId);
+      var cid = Customer.getKey(key);
+      customerCtrl.loadCustomer(cid);
     }, function(error) {
       customerCtrl.error = error;
     };
 
     customerCtrl.first = function() {
       var key = 0;
-      var custId = Customer.getKey(key);
-      customerCtrl.loadCustomer(custId);
+      var cid = Customer.getKey(key);
+      customerCtrl.loadCustomer(cid);
     }, function(error) {
       customerCtrl.error = error;
     };
 
     customerCtrl.last = function() {
       var key = customerCtrl.count - 1;
-      var custId = Customer.getKey(key);
-      customerCtrl.loadCustomer(custId);
+      var cid = Customer.getKey(key);
+      customerCtrl.loadCustomer(cid);
     }, function(error) {
       customerCtrl.error = error;
     };

@@ -5,12 +5,12 @@ app.factory('Customers', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 't
 
     var customer = {
 
-      getCustomer: function(custId) {
-        return $firebaseObject(ref.child(tid).child(custId));
+      getCustomer: function(cid) {
+        return $firebaseObject(ref.child(tid).child(cid));
       },
 
-      removeCustomer: function(custId) {
-        return $firebaseObject(ref.child(tid).child(custId)).$remove();
+      removeCustomer: function(cid) {
+        return $firebaseObject(ref.child(tid).child(cid)).$remove();
       },
 
       saveCustomer: function(theObj) {
