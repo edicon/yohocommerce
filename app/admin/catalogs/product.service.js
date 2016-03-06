@@ -5,20 +5,20 @@ app.factory('Product', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
 
     var product = {
 
-      addProduct: function(newProduct) {
-        return product.all.$add(newProduct).then(function(theRef) {
+      addProduct: function(theObj) {
+        return product.all.$add(theObj).then(function(theRef) {
           return theRef.key();
         });
       },
 
-      addProductImage: function(imageEntity) {
-        var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+imageEntity.pid);
-        return theRef.update( {product_image: imageEntity.imageSrc} );
+      addProductImage: function(theObj) {
+        var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid);
+        return theRef.update( {product_image: theObj.imageSrc} );
       },
 
-      addThumbnailImage: function(imageEntity) {
-        var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+imageEntity.pid+'/thumbnails');
-        return theRef.push( {thumbnail_image: imageEntity.imageSrc} );
+      addThumbnailImage: function(theObj) {
+        var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid+'/thumbnails');
+        return theRef.push( {thumbnail_image: theObj.imageSrc} );
       },
 
       getProduct: function(pid) {
@@ -82,8 +82,8 @@ app.factory('Product', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
         return $firebaseArray(theRef);
       },
 
-      removeProduct: function(rowEntity) {
-        return $firebaseObject(ref.child(tid).child(rowEntity.$id)).$remove();
+      removeProduct: function(theObj) {
+        return $firebaseObject(ref.child(tid).child(theObj.$id)).$remove();
       },
 
       removeProductImage: function(pid) {
@@ -91,8 +91,8 @@ app.factory('Product', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid
         return theRef.remove();
       },
 
-      removeThumbnailImage: function(imageEntity) {
-        var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+imageEntity.pid+'/thumbnails/'+imageEntity.$id);
+      removeThumbnailImage: function(theObj) {
+        var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid+'/thumbnails/'+theObj.$id);
         return theRef.remove();
       },
 

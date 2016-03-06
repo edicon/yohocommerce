@@ -1,7 +1,6 @@
 app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$state', '$scope', '$stateParams',
   function (                     Customer,   Customers,   CustomerGroups,   $state,   $scope,   $stateParams) {
     var customerCtrl = this;
-
     customerCtrl.customer = {};
     customerCtrl.groups = CustomerGroups.all;
 

@@ -6,8 +6,8 @@ app.factory('Categories', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', '
 
     var category = {
 
-      getCategory: function(id) {
-        return $firebaseObject(ref.child(tid).child(id));
+      getCategory: function(cid) {
+        return $firebaseObject(ref.child(tid).child(cid));
       },
 
       getIndex: function(cid) {
@@ -22,18 +22,18 @@ app.factory('Categories', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', '
         return categories.length;
       },
 
-      removeCategory: function(id) {
-        return $firebaseObject(ref.child(tid).child(id)).$remove();
+      removeCategory: function(cid) {
+        return $firebaseObject(ref.child(tid).child(cid)).$remove();
       },
 
-      addSubCount: function(entity) {
-        var theRef = new Firebase(FirebaseUrl+'categories/'+tid+'/'+entity.category_id);
-        return theRef.update({sub_count: entity.priority});
+      addSubCount: function(theObj) {
+        var theRef = new Firebase(FirebaseUrl+'categories/'+tid+'/'+theObj.category_id);
+        return theRef.update({sub_count: theObj.priority});
       },
 
-      addCategoryImage: function(imageEntity) {
-        var theRef = new Firebase(FirebaseUrl+'categories/'+tid+'/'+imageEntity.cid);
-        return theRef.update({category_banner_image: imageEntity.imageSrc});
+      addCategoryImage: function(theObj) {
+        var theRef = new Firebase(FirebaseUrl+'categories/'+tid+'/'+theObj.cid);
+        return theRef.update({category_banner_image: theObj.imageSrc});
       },
 
       removeCategoryImage: function(cid) {
@@ -48,5 +48,5 @@ app.factory('Categories', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', '
     };
 
     return category;
-  }
-]);
+
+}]);

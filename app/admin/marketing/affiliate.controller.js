@@ -1,11 +1,10 @@
 app.controller('AffiliateCtrl', ['Affiliate', 'Affiliates', 'Transactions', 'Countries', 'AlertService', '$state', '$scope', '$stateParams', '$http',
   function (                      Affiliate,   Affiliates,   Transactions,   Countries,   AlertService,   $state,   $scope,   $stateParams,   $http) {
   var affiliateCtrl = this;
+  affiliateCtrl.affiliate = {};
   $scope.countries = Countries.all;
   $scope.transactions = Transactions.all;
   $scope.address = {};
-
-  affiliateCtrl.affiliate = {};
 
   affiliateCtrl.refreshAddresses = function(address) {
     var params = {address: address, sensor: false};

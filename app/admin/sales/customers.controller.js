@@ -1,7 +1,6 @@
 app.controller('CustomersCtrl', ['Customers', 'CustomerGroups','$state', '$scope', '$stateParams',
   function (                      Customers,   CustomerGroups,  $state,   $scope,   $stateParams) {
     var customersCtrl = this;
-
     customersCtrl.listButtons = true;
     customersCtrl.customersTabActive = "active";
 

@@ -18,5 +18,5 @@ app.factory('CustomerGroups', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl
     };
 
     return group;
-  }
-]);
+
+}]);

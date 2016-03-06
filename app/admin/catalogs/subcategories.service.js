@@ -5,30 +5,30 @@ app.factory('SubCategories', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl'
 
     var subCategory = {
 
-      addSubCategory: function(entity) {
+      addSubCategory: function(theObj) {
         var theRef = $firebaseArray(ref.child(tid));
-        return theRef.$add({$priority: entity.priority, category_id: entity.category_id, category_name: entity.category_name });
+        return theRef.$add({$priority: theObj.priority, category_id: theObj.category_id, category_name: theObj.category_name });
       },
 
       getSubCategories: function(cid) {
         return $firebaseArray(ref.child(tid).orderByChild("category_id").equalTo(cid));
       },
 
-      getSubCategory: function(subCid) {
-        return $firebaseObject(ref.child(tid).child(subCid));
+      getSubCategory: function(sid) {
+        return $firebaseObject(ref.child(tid).child(sid));
       },
 
-      removeSubCategory: function(rowEntity) {
-        return $firebaseObject(ref.child(tid).child(rowEntity.$id)).$remove();
+      removeSubCategory: function(theObj) {
+        return $firebaseObject(ref.child(tid).child(theObj.$id)).$remove();
       },
 
-      addSubCategoryImage: function(imageEntity) {
-        var theRef = new Firebase(FirebaseUrl+'sub_categories/'+tid+'/'+imageEntity.subCid);
-        return theRef.update({category_banner_image: imageEntity.imageSrc});
+      addSubCategoryImage: function(theObj) {
+        var theRef = new Firebase(FirebaseUrl+'sub_categories/'+tid+'/'+theObj.subCid);
+        return theRef.update({category_banner_image: theObj.imageSrc});
       },
 
-      removeCategoryImage: function(subCid) {
-        var theRef = new Firebase(FirebaseUrl+'aub_categories/'+tid+'/'+subCid);
+      removeCategoryImage: function(sid) {
+        var theRef = new Firebase(FirebaseUrl+'aub_categories/'+tid+'/'+sid);
         return theRef.update({category_banner_image: null});
       },
 
@@ -37,5 +37,5 @@ app.factory('SubCategories', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl'
     };
 
     return subCategory;
-  }
-]);
+
+}]);

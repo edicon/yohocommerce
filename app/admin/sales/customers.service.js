@@ -23,5 +23,5 @@ app.factory('Customers', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 't
     };
 
     return customer;
-  }
-]);
+
+}]);

@@ -15,17 +15,17 @@ app.factory('Products', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'ti
         return $firebaseArray(ref.child(tid).orderByChild('product_category_id').equalTo(cid));
       },
 
-      getProductSubCategory: function(subCid) {
-        return $firebaseArray(ref.child(tid).orderByChild('product_sub_category_id').equalTo(subCid));
+      getProductSubCategory: function(sid) {
+        return $firebaseArray(ref.child(tid).orderByChild('product_sub_category_id').equalTo(sid));
       },
 
       removeProduct: function(pid) {
         return $firebaseObject(ref.child(tid).child(pid)).$remove();
       },
 
-      addFeaturedProduct: function(rowEntity) {
-        var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+rowEntity.$id);
-        return theRef.update({product_featured: true, product_featured_order: rowEntity.order});
+      addFeaturedProduct: function(theObj) {
+        var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.$id);
+        return theRef.update({product_featured: true, product_featured_order: theObj.order});
       },
 
       recountFeaturedProduct: function() {
@@ -40,17 +40,17 @@ app.factory('Products', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'ti
         });
       },
 
-      removeFeaturedProduct: function(rowEntity) {
-        var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+rowEntity.$id);
+      removeFeaturedProduct: function(theObj) {
+        var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.$id);
         theRef.update({ product_featured: null, product_featured_order: null });
         return product.recountFeaturedProduct();
       },
 
-      saveProduct: function(currentProduct) {
-        var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+currentProduct.pid);
-        return theRef.update({ product_name: currentProduct.product_name, product_price: currentProduct.product_price,
-          product_category: currentProduct.product_category, product_status_id: currentProduct.product_status_id,
-          product_status: currentProduct.product_status });
+      saveProduct: function(theObj) {
+        var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid);
+        return theRef.update({ product_name: theObj.product_name, product_price: theObj.product_price,
+          product_category: theObj.product_category, product_status_id: theObj.product_status_id,
+          product_status: theObj.product_status });
       },
 
       all: products,
