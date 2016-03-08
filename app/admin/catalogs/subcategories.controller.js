@@ -2,6 +2,7 @@ app.controller('SubCategoriesCtrl', ['SubCategories', 'Categories', '$state', '$
   function (                          SubCategories,   Categories,   $state,   $scope,   $stateParams,   uiGridConstants,   FileReader) {
     var subCategoriesCtrl = this;
     subCategoriesCtrl.imageEntity = [];
+    subCategoriesCtrl.totalCount = Categories.getCount();
 
     subCategoriesCtrl.tinymceOptions = {
       menubar:false,
@@ -43,7 +44,6 @@ app.controller('SubCategoriesCtrl', ['SubCategories', 'Categories', '$state', '$
       subCategoriesCtrl.categoryName = $stateParams.rowEntity.category_name;
       subCategoriesCtrl.subCount = $stateParams.rowEntity.sub_count;
       subCategoriesCtrl.cid = $stateParams.rowEntity.$id;
-      subCategoriesCtrl.count = Categories.getCount();
       subCategoriesCtrl.loadSubCategories(subCategoriesCtrl.cid);
     }
 
@@ -139,9 +139,9 @@ app.controller('SubCategoriesCtrl', ['SubCategories', 'Categories', '$state', '$
 
     subCategoriesCtrl.next = function() {
       var key = subCategoriesCtrl.subCategoriesIndex + 1;
-      if (key != subCategoriesCtrl.count) {
-        var cid = Categories.getKey(key);
-        subCategoriesCtrl.loadCategory(cid);
+      if (key != subCategoriesCtrl.totalCount) {
+        subCategoriesCtrl.cid = Categories.getKey(key);
+        subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
       }
     }, function(error) {
       subCategoriesCtrl.error = error;
@@ -150,24 +150,24 @@ app.controller('SubCategoriesCtrl', ['SubCategories', 'Categories', '$state', '$
     subCategoriesCtrl.back = function() {
       var key = subCategoriesCtrl.subCategoriesIndex - 1;
       if (key < 0) key = 0
-      var cid = Categories.getKey(key);
-      subCategoriesCtrl.loadCategory(cid);
+      subCategoriesCtrl.cid = Categories.getKey(key);
+      subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
     }, function(error) {
       subCategoriesCtrl.error = error;
     };
 
     subCategoriesCtrl.first = function() {
       var key = 0;
-      var cid = Categories.getKey(key);
-      subCategoriesCtrl.loadCategory(cid);
+      subCategoriesCtrl.cid = Categories.getKey(0);
+      subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
     }, function(error) {
       subCategoriesCtrl.error = error;
     };
 
     subCategoriesCtrl.last = function() {
       var key = subCategoriesCtrl.count - 1;
-      var cid = Categories.getKey(key);
-      subCategoriesCtrl.loadCategory(cid);
+      subCategoriesCtrl.cid = Categories.getKey(key);
+      subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
     }, function(error) {
       subCategoriesCtrl.error = error;
     };
