@@ -1,12 +1,11 @@
 app.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'CustomerGroups', '$filter', '$state', '$scope', '$stateParams', 'FileReader',
   function (                    Product,   SubCategories,   Categories,   CustomerGroups,   $filter,   $state,   $scope,   $stateParams,   FileReader) {
     var productCtrl = this;
-
+    productCtrl.product = {};
+    productCtrl.imageEntity =[];
     productCtrl.categories = Categories.all;
     productCtrl.customerGroups = CustomerGroups.all;
-    productCtrl.imageEntity =[];
     productCtrl.count = Product.getCount();
-    productCtrl.product = {};
 
     productCtrl.tinymceOptions = {
       menubar:false,
@@ -62,13 +61,17 @@ app.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'Custom
       });
     };
 
-    if ($stateParams.rowEntity != undefined) {
-      productCtrl.productName = $stateParams.rowEntity.product_name;
-      productCtrl.pid = $stateParams.rowEntity.$id;
-      productCtrl.loadProduct(productCtrl.pid);
+    if ($stateParams.rowEntity === null) {
+      $state.go('admin.catalogs.products');
     } else {
-      productCtrl.productName = 'New Product';
-      productCtrl.product.pid = null;
+      if ($stateParams.rowEntity != undefined) {
+        productCtrl.productName = $stateParams.rowEntity.product_name;
+        productCtrl.pid = $stateParams.rowEntity.$id;
+        productCtrl.loadProduct(productCtrl.pid);
+      } else {
+        productCtrl.productName = 'New Product';
+        productCtrl.product.pid = null;
+      }
     }
 
     productCtrl.featuredProducts = function() {

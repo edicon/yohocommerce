@@ -1,21 +1,18 @@
-<div class="row">
-  <div class="col-xs-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> Affiliate List</h3>
+<div class="container-fluid">
+  <form class="form-horizontal">
+    <div class="form-group">
+      <div class="col-sm-12">
+        <a type="button" class="btn btn-sm btn-primary pull-right" tooltip-placement="top" uib-tooltip="New" href="#/customer" ui-sref="admin.marketing.affiliate">
+          <i class="fa fa-plus"></i></a>
       </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="form-group-sm">
-            <a type="button" class="btn btn-sm btn-primary list-btn pull-right" tooltip-placement="top" uib-tooltip="New"
-              href="#/customer" ui-sref="admin.marketing.affiliate"><i class="fa fa-plus"></i>
-            </a>
-          </div>
-        </div><br>
-        <div>
-          <div ui-grid="affiliatesCtrl.gridAffiliates" class="grid" ui-grid-edit ui-grid-cellNav></div>
-        </div>
-      </div>
+    </div>
+  </form>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title"><span class="menu-icon fa fa-user-plus"></span> Affiliates</h3>
+    </div>
+    <div class="panel-body">
+      <div ui-grid="affiliatesCtrl.gridAffiliates" class="grid" ui-grid-edit ui-grid-cellNav></div>
     </div>
   </div>
 </div>

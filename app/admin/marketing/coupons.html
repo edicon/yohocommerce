@@ -1,47 +1,47 @@
-<!-- Start Coupons List Panel -->
-<div class="row">
-  <div class="col-xs-12">
-    <div class="panel panel-default">
-<!-- Start Panel Heading -->
-      <div class="panel-heading">
-        <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> Coupon List</h3>
-      </div>
-<!-- Start Panel Body -->
-      <div class="panel-body">
-<!-- Start Add Coupons Line -->
-        <div class="row">
-          <div class="form-group">
-<!-- Coupon Name Box -->
-            <div class="col-xs-3">
-              <label class="control-label">Coupon Name</label>
-              <input type="text" ng-model="couponsCtrl.coupon.coupon_name" placeholder="Coupon Name" class="form-control">
-            </div>
-<!-- Coupon Discount Box -->
-            <div class="col-xs-3">
-              <label class="control-label">Discount</label>
-              <input type="text" ng-model="couponsCtrl.coupon.coupon_discount" placeholder="Coupon Value" class="form-control">
-            </div>
-<!-- Coupon Dropdown Box -->
-            <div class="col-xs-3">
-              <label class="control-label">Coupon Type</label>
-              <select ng-model="couponsCtrl.coupon.coupon_type_id" class="form-control">
-                <option value= "$">Value Discount</option>
-                <option value= "%">Percentage Discount</option>
-              </select>
-            </div>
-<!-- Coupon Add Button -->
-            <div class="col-xs-1 inline-btn">
-              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon"
-                ng-click="couponsCtrl.addCoupon()">
-                <i class="fa fa-plus"></i>
-              </button>
+<div class="container-fluid">
+  <div class="col-sm-12">
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="col-sm-4">
+          <div class="input-group input-group-sm">
+            <span class="input-group-addon">Name</span>
+            <input type="text" ng-model="couponsCtrl.coupon.coupon_name" placeholder="Enter Coupon Name" class="form-control">
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="input-group input-group-sm">
+            <span class="input-group-addon">Discount</span>
+            <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
+            <div class="input-group-btn">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Type <span class="caret"></span></button>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li><a href="" ng-click="couponsCtrl.updateType('Percent')">Percent (<i class="fa fa-percent"></i>)</a></li>
+                <li><a href="" ng-click="couponsCtrl.updateType('Dollar')">Dollar (<i class="fa fa-dollar"></i>)</a></li>
+              </ul>
             </div>
           </div>
-        </div><br>
-<!-- Start Coupons Grid -->
-        <div class="row">
-          <div ui-grid="couponsCtrl.gridCoupons" class="grid-500"></div>
         </div>
+        <div class="col-sm-3">
+          <div class="input-group input-group-sm">
+            <span class="input-group-addon">Amount</span>
+            <input type="text" ng-model="couponsCtrl.coupon.coupon_discount" placeholder="Enter Amount" class="form-control">
+          </div>
+        </div>
+        <div class="col-sm-1" align="right">
+          <div class="input-group input-group-sm">
+            <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon" ng-click="couponsCtrl.addCoupon()">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-tag"></span> Coupons</h3>
+      </div>
+      <div class="panel-body">
+        <div ui-grid="couponsCtrl.gridCoupons" class="grid-500"></div>
       </div>
     </div>
   </div>
