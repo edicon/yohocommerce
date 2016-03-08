@@ -1,39 +1,21 @@
-<div class="row">
+<div class="container-fluid">
   <div class="col-sm-12">
-    <div class="row">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title"><span class="menu-icon fa fa-users"></span> Users</h3>
-        </div>
-        <div class="panel-body">
-          <div class="container-fluid">
-            <div class="row">
-              <form class="form-horizontal">
-                <div class="form-group">
-                  <label class="control-label col-sm-1">Email</label>
-                  <div class="col-sm-4"><input type="email" ng-model="usersCtrl.user_email" class="form-control" placeholder="Enter User Email"></div>
-                  <label class="control-label col-sm-1">Role</label>
-                  <div class="col-sm-3">
-                    <select class="form-control">
-                      <option></option>
-                      <option>Admin</option>
-                      <option>Sales</option>
-                      <option>Customer</option>
-                      <option>Affiliate</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-3">
-                    <a type="button" class="btn btn-sm btn-primary pull-right" tooltip-placement="top" uib-tooltip="New"
-                      href="#/user" ui-sref="admin.system.user"><i class="fa fa-plus"></i>
-                    </a>
-                  </div>
-                </div>
-                <div ui-grid="usersCtrl.gridUsers"></div>
-              </form>
-            </div>
-          </div>
-        </div>
+  <form class="form-horizontal">
+    <div class="form-group">
+      <div class="col-sm-12">
+        <a type="button" class="btn btn-sm btn-primary pull-right" tooltip-placement="top" uib-tooltip="New"
+          href="#/user" ui-sref="admin.system.user"><i class="fa fa-plus"></i>
+        </a>
       </div>
     </div>
+  </form>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title"><span class="menu-icon fa fa-users"></span> Users</h3>
+    </div>
+    <div class="panel-body">
+      <div ui-grid="usersCtrl.gridUsers"></div>
+    </div>
   </div>
+</div>
 </div>

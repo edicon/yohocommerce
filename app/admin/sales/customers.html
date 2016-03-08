@@ -1,61 +1,51 @@
-<div class="row">
+<div class="container-fluid">
   <div class="col-xs-12">
-    <span ng-if="customersCtrl.listButtons === true">
-      <div class="form-group-sm">
-        <a type="button" class="btn btn-sm btn-primary list-btn pull-right" tooltip-placement="top" uib-tooltip="New"
-          href="#/customer" ui-sref="admin.sales.customer"><i class="fa fa-plus"></i>
-        </a>
-      </div>
-    </span>
+    <div class="form-group-sm">
+      <a type="button" class="btn btn-sm btn-primary list-btn pull-right" tooltip-placement="top" uib-tooltip="New"
+        href="#/customer" ui-sref="admin.sales.customer"><i class="fa fa-plus"></i>
+      </a>
+    </div>
     <uib-tabset>
       <uib-tab>
         <uib-tab-heading>
           <i class="menu-icon fa fa-user"></i> Customers
-        </uib-tab-heading>
-        <div class="row">
-          <div class="col-xs-12"><br>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title"><span class="menu-icon fa fa-user"></span> Customers</h4>
-              </div>
-              <div class="panel-body">
-                <div ui-grid="customersCtrl.gridCustomers" class="grid-500" ui-grid-edit ui-grid-cellNav></div>
-              </div>
-            </div>
+        </uib-tab-heading><br>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title"><span class="menu-icon fa fa-user"></span> Customers</h4>
+          </div>
+          <div class="panel-body">
+            <div ui-grid="customersCtrl.gridCustomers" class="grid-500" ui-grid-edit ui-grid-cellNav></div>
           </div>
         </div>
       </uib-tab>
       <uib-tab>
         <uib-tab-heading>
           <i class="menu-icon fa fa-users"></i> Customer Groups
-        </uib-tab-heading>
-        <div class="row">
-          <div class="col-xs-12"><br>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title"><span class="menu-icon fa fa-users"></span> Customer Groups</h4>
-              </div>
-              <div class="panel-body">
-                <div class="row">
-                  <div class="row">
-                    <div class="col-xs-4">
-                      <div class="input-group input-group-sm list-search">
-                        <input type="text" ng-model="customersCtrl.groupName" class="form-control" placeholder="Enter New Group">
-                        <span class="input-group-btn">
-                          <button class="btn btn-primary" ng-click="customersCtrl.addGroup()" type="button"><span class="menu-icon fa fa-plus"></span></button>
-                        </span>
-                      </div>
-                    </div>
-                  </div><br>
-                  <div class="row">
-                    <div ui-grid="customersCtrl.gridGroups" class="grid" ui-grid-edit ui-grid-cellNav></div>
+        </uib-tab-heading><br>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title"><span class="menu-icon fa fa-users"></span> Customer Groups</h4>
+          </div>
+          <div class="panel-body">
+            <div class="row">
+              <div class="row">
+                <div class="col-xs-4">
+                  <div class="input-group input-group-sm list-search">
+                    <input type="text" ng-model="customersCtrl.groupName" class="form-control" placeholder="Enter New Group">
+                    <span class="input-group-btn">
+                      <button class="btn btn-primary" ng-click="customersCtrl.addGroup()" type="button"><span class="menu-icon fa fa-plus"></span></button>
+                    </span>
                   </div>
                 </div>
+              </div><br>
+              <div class="row">
+                <div ui-grid="customersCtrl.gridGroups" class="grid" ui-grid-edit ui-grid-cellNav></div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </uib-tab>
+    </uib-tabset>
   </div>
 </div>
