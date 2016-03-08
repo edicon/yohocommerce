@@ -62,7 +62,7 @@ app.controller('UserCtrl', ['Auth', 'Profile', 'Users', 'User', 'Customers', 'Al
       var key = userCtrl.userIndex + 1;
       if (key != userCtrl.totalCount) {
         userCtrl.uid = User.getKey(key);
-        userCtrl.loadUseruserCtrl.uid);
+        userCtrl.loadUser(userCtrl.uid);
       }
     }, function(error) {
       userCtrl.error = error;
