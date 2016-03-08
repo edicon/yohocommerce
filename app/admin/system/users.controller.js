@@ -13,7 +13,9 @@ app.controller('UsersCtrl', ['Users', '$state', '$scope',
       columnDefs: [
         { name: '', field: '$id', shown: false, cellTemplate: 'admin/system/gridTemplates/editUser.html',
           width: 34, enableColumnMenu: false, headerTooltip: 'Edit User' },
-        { name:'email', field: 'email', width: '70%', enableHiding: false },
+        { name:'firstName', field: 'first_name', enableHiding: false },
+        { name:'lastName', field: 'last_name', enableHiding: false },
+        { name:'email', field: 'email', width: '50%', enableHiding: false },
         { name:'type', field: 'type', enableHiding: false },
         { name:'status', field: 'status', enableHiding: false },
       ]

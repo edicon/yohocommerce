@@ -32,6 +32,7 @@ app.controller('UserCtrl', ['Auth', 'Profile', 'Users', 'User', 'Customers', 'Al
         userCtrl.profile.emailHash = md5.createHash(userCtrl.user.email);
         userCtrl.profile.first_name = userCtrl.user.first_name;
         userCtrl.profile.last_name = userCtrl.user.last_name;
+        userCtrl.profile.full_name = userCtrl.user.first_name+' '+userCtrl.user.last_name;
         userCtrl.profile.email = userCtrl.user.email;
         userCtrl.profile.type = userCtrl.user.type;
         userCtrl.profile.status = userCtrl.user.status;

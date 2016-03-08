@@ -12,30 +12,27 @@ app.controller('AdminCtrl', ['Auth', '$scope', '$state', '$cookieStore', 'profil
       item.active = !item.active;
     };
 
-    $scope.items = [ {
-      link: ".dashboard", name: "Dashboard", icon: "menu-icon fa fa-tachometer",
-    },
-    {
-      link: ".catalogs", name: "Catalogs", icon: "menu-icon fa fa-tags",
-    },
-    {
-      link: ".sales", name: "Sales", icon: "menu-icon fa fa-shopping-cart",
-    },
-    {
-      link: ".marketing", name: "Marketing", icon: "menu-icon fa fa-share-alt",
-    },
-    {
-      link: "#", name: "Extensions", icon: "menu-icon fa fa-puzzle-piece",
-    },
-    {
-      link: ".system", name: "System", icon: "menu-icon fa fa-gear",
-    },
-    {
-      link: ".tools", name: "Tools", icon: "menu-icon fa fa-wrench",
-    },
-    {
-      link: ".reports", name: "Reports", icon: "menu-icon fa fa-bar-chart",
-    }];
+    if (adminCtrl.profile.type === "Admin" || adminCtrl.profile.type === "Tenant") {
+      $scope.items = [
+        {link: ".dashboard", name: "Dashboard", icon: "menu-icon fa fa-tachometer",},
+        {link: ".catalogs", name: "Catalogs", icon: "menu-icon fa fa-tags",},
+        {link: ".sales", name: "Sales", icon: "menu-icon fa fa-shopping-cart",},
+        {link: ".marketing", name: "Marketing", icon: "menu-icon fa fa-share-alt",},
+        {link: "#", name: "Extensions", icon: "menu-icon fa fa-puzzle-piece",},
+        {link: ".system", name: "System", icon: "menu-icon fa fa-gear",},
+        {link: ".tools", name: "Tools", icon: "menu-icon fa fa-wrench",},
+        {link: ".reports", name: "Reports", icon: "menu-icon fa fa-bar-chart",}
+      ];
+    }
+
+    if (adminCtrl.profile.type === "Sales") {
+      $scope.items = [
+        {link: ".dashboard", name: "Dashboard", icon: "menu-icon fa fa-tachometer",},
+        {link: ".catalogs", name: "Catalogs", icon: "menu-icon fa fa-tags",},
+        {link: ".sales", name: "Sales", icon: "menu-icon fa fa-shopping-cart",},
+        {link: ".marketing", name: "Marketing", icon: "menu-icon fa fa-share-alt",},
+      ];
+    }
 
     $scope.getWidth = function() {
       return window.innerWidth;

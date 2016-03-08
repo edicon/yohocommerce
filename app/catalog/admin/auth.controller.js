@@ -22,7 +22,7 @@ app.controller('AuthCtrl', ['Auth', 'RegisterTenant', 'Profile', 'AlertService',
         authCtrl.profile.emailHash = md5.createHash(authCtrl.user.email);
         authCtrl.profile.name = authCtrl.tenant.name;
         authCtrl.profile.tid = authCtrl.tid;
-        authCtrl.profile.type = 'tenant';
+        authCtrl.profile.type = 'Tenant';
         authCtrl.profile.$save();
         authCtrl.login();
       });
@@ -36,7 +36,8 @@ app.controller('AuthCtrl', ['Auth', 'RegisterTenant', 'Profile', 'AlertService',
       domainCode = domainCode.substring(0, n);
         Auth.$createUser(authCtrl.user).then(function (user) {
           authCtrl.tenant.uid = user.uid;
-          authCtrl.tenant.name = authCtrl.user.name;
+          authCtrl.tenant.first_name = authCtrl.user.first_name;
+          authCtrl.tenant.last_name = authCtrl.user.last_name;
           authCtrl.tenant.domain = authCtrl.user.email.replace(/.*@/, "");
           authCtrl.tenant.domain_code = domainCode;
           authCtrl.tenant.invoice_number = 1;
