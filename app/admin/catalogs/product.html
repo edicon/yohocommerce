@@ -37,7 +37,10 @@
       </div>
     </form>
     <div class="panel panel-default">
-      <div class="panel-heading">
+      <div ng-if="productCtrl.product.pid === null" class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Product Detail - New Product</h3>
+      </div>
+      <div ng-if="productCtrl.product.pid !== null" class="panel-heading">
         <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Product Detail - {{productCtrl.product.product_name}}</h3>
       </div>
       <div class="panel-body">

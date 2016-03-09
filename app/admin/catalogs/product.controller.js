@@ -66,11 +66,9 @@ app.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'Custom
       $state.go('admin.catalogs.products');
     } else {
       if ($stateParams.rowEntity != undefined) {
-        productCtrl.productName = $stateParams.rowEntity.product_name;
         productCtrl.pid = $stateParams.rowEntity.$id;
         productCtrl.loadProduct(productCtrl.pid);
       } else {
-        productCtrl.productName = 'New Product';
         productCtrl.product.pid = null;
       }
     }

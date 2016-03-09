@@ -9,7 +9,7 @@ app.controller('CouponsCtrl', ['Coupons', '$state', '$scope', '$stateParams',
     Coupons.addCoupon(couponsCtrl.coupon);
     couponsCtrl.coupon.coupon_name = null;
     couponsCtrl.coupon.coupon_discount = null;
-    couponsCtrl.coupon.coupon_type_id = null;
+    couponsCtrl.coupon.coupon_type = null;
   }, function(error) {
     couponsCtrl.error = error;
   };
@@ -19,10 +19,10 @@ app.controller('CouponsCtrl', ['Coupons', '$state', '$scope', '$stateParams',
     enableCellEditOnFocus: true,
     data: Coupons.all,
     columnDefs: [
-      { name:'couponName', field: 'coupon_name', width: '35%', enableHiding: false },
-      { name:'couponCode', field: '$id', enableHiding: false },
-      { name:'discount', field: 'coupon_discount', width: '15%', enableHiding: false, cellClass: 'grid-align-right' },
+      { name:'couponName', field: 'coupon_name', width: '30%', enableHiding: false },
+      { name:'discountAmount', field: 'coupon_discount', width: '20%', enableHiding: false, cellClass: 'grid-align-right' },
       { name:'type', field: 'coupon_type', width: '10%', enableHiding: false, cellClass: 'grid-align-right' },
+      { name:'couponCode', field: '$id', enableHiding: false, cellClass: 'grid-align-right' },
       { name: ' ', field: '$id', cellTemplate:'admin/marketing/gridTemplates/removeCoupon.html',
         width: 35, enableCellEdit: false, enableColumnMenu: false }
     ]
