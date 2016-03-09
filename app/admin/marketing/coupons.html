@@ -4,27 +4,27 @@
       <div class="form-group">
         <div class="col-sm-4">
           <div class="input-group input-group-sm">
-            <span class="input-group-addon">Name</span>
+            <span class="input-group-addon">Coupon Name</span>
             <input type="text" ng-model="couponsCtrl.coupon.coupon_name" placeholder="Enter Coupon Name" class="form-control">
           </div>
         </div>
         <div class="col-sm-4">
           <div class="input-group input-group-sm">
-            <span class="input-group-addon">Discount</span>
-            <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
-            <div class="input-group-btn">
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Type <span class="caret"></span></button>
-              <ul class="dropdown-menu dropdown-menu-right">
-                <li><a href="" ng-click="couponsCtrl.updateType('Percent')">Percent (<i class="fa fa-percent"></i>)</a></li>
-                <li><a href="" ng-click="couponsCtrl.updateType('Dollar')">Dollar (<i class="fa fa-dollar"></i>)</a></li>
-              </ul>
-            </div>
+            <span class="input-group-addon">Discount Amount</span>
+            <input type="text" ng-model="couponsCtrl.coupon.coupon_discount" placeholder="Enter Amount" class="form-control">
           </div>
         </div>
         <div class="col-sm-3">
           <div class="input-group input-group-sm">
-            <span class="input-group-addon">Amount</span>
-            <input type="text" ng-model="couponsCtrl.coupon.coupon_discount" placeholder="Enter Amount" class="form-control">
+            <span class="input-group-addon">Type</span>
+            <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
+            <div class="input-group-btn">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select <span class="caret"></span></button>
+              <ul class="dropdown-menu dropdown-menu-right">
+                <li><a href="" ng-click="couponsCtrl.updateType('%')">Percent (<i class="fa fa-percent"></i>)</a></li>
+                <li><a href="" ng-click="couponsCtrl.updateType('$')">Dollar (<i class="fa fa-dollar"></i>)</a></li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="col-sm-1" align="right">
