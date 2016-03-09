@@ -75,9 +75,9 @@ app.controller('AffiliateCtrl', ['Affiliate', 'Affiliates', 'Transactions', 'Cou
       enableSorting: true,
       enableCellEditOnFocus: true,
       columnDefs: [
-        { name:'dateAdded', field: 'transaction_date_added', type: 'date', enableHiding: false, cellClass: 'grid-align-right', enableCellEdit: false, cellFilter: 'date' },
+        { name:'dateAdded', field: 'transaction_date_added', width: '15%', type: 'date', enableHiding: false, cellClass: 'grid-align-left', enableCellEdit: false, cellFilter: 'date' },
         { name:'description', field: 'transaction_description', width: '70%', enableHiding: false },
-        { name:'amount', field: 'transaction_amount', width: '20%', enableHiding: false, cellClass: 'grid-align-right' },
+        { name:'amount', field: 'transaction_amount', width: '15%', enableHiding: false, cellFilter: 'currency' },
 
       ]
     };
