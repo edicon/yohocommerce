@@ -10,7 +10,7 @@ app.controller('UserCtrl', ['Auth', 'Profile', 'Users', 'User', 'Customers', 'Al
         userCtrl.user = theUser;
         userCtrl.user.uid = uid;
         userCtrl.userIndex = User.getIndex(uid);
-        if (userCtrl.user.type === 'customer') {
+        if (userCtrl.user.type === 'Customer') {
           var theCustomer = Customers.getCustomer(userCtrl.user.cid);
           theCustomer.$loaded().then(function() {
             userCtrl.customer = theCustomer;
