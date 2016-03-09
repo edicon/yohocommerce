@@ -181,6 +181,9 @@ app.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'Custom
 
     $scope.getBanner = function () {
       FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
+        console.log(result)
+
+
         productCtrl.imageEntity.imageSrc = result;
         productCtrl.imageEntity.pid = productCtrl.pid;
         Product.addProductImage(productCtrl.imageEntity);

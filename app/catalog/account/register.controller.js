@@ -32,6 +32,7 @@ app.controller('RegisterCtrl', ['Account', 'Auth', 'Profile', 'AlertService', 'C
         registerCtrl.profile.emailHash = md5.createHash(registerCtrl.customer.customer_email);
         registerCtrl.profile.first_name = registerCtrl.customer.customer_first_name;
         registerCtrl.profile.last_name = registerCtrl.customer.customer_last_name;
+        registerCtrl.profile.email = registerCtrl.customer.customer_email;
         registerCtrl.profile.type = 'Customer';
         registerCtrl.profile.status = 'Enabled';
         registerCtrl.profile.cid = registerCtrl.cid;

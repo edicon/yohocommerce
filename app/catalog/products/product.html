@@ -8,12 +8,13 @@
     <div class="col-sm-8">
       <div class="panel panel-default">
         <div class="panel-body">
-          <div align="center"><img ng-src="{{catalogProductCtrl.product.product_image}}"></div>
+          <div align="center"><img ng-src="{{catalogProductCtrl.product.product_image}}" height="210" width="225"></div>
         </div>
       </div>
       <ul class="thumbnails">
-        <li ng-repeat="t in catalogProductCtrl.thumbnails" class="image-additional"><a class="thumbnail" href=""><img ng-src="{{t.thumbnail_image}}" class="img-responsive"></a></li>
-      </ul>
+        <li ng-repeat="t in catalogProductCtrl.thumbnails" class="image-additional">
+          <img ng-src="{{t.thumbnail_image}}" height="65" width="70"></a></li>
+      </ul><br>
       <uib-tabset>
         <uib-tab heading="Description">
           <p ng-bind-html="catalogProductCtrl.product.product_description"></p>
