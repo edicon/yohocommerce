@@ -5,7 +5,7 @@ app.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'Custom
     productCtrl.imageEntity =[];
     productCtrl.categories = Categories.all;
     productCtrl.customerGroups = CustomerGroups.all;
-    productCtrl.count = Product.getCount();
+    productCtrl.totalCount = Product.getCount();
 
     productCtrl.tinymceOptions = {
       menubar:false,
@@ -46,6 +46,7 @@ app.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'Custom
           productCtrl.productIndex = Product.getIndex(pid);
           if (theProduct.product_category_id)
             productCtrl.getSubCategories(theProduct.product_category_id);
+            console.log(productCtrl.productIndex)
       });
       var thumbnails = Product.getProductThumbnails(pid);
         thumbnails.$loaded().then(function() {
@@ -215,37 +216,34 @@ app.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'Custom
       productCtrl.error = error;
     };
 
-    productCtrl.nextProduct = function() {
+    productCtrl.next = function() {
       var key = productCtrl.productIndex + 1;
-      if (key != productCtrl.count) {
-        var pid = Product.getKey(key);
-        productCtrl.loadProduct(pid);
+      if (key != productCtrl.totalCount) {
+        productCtrl.pid = Product.getKey(key);
+        productCtrl.loadProduct(productCtrl.pid);
       }
     }, function(error) {
       productCtrl.error = error;
     };
 
-    productCtrl.backProduct = function() {
+    productCtrl.back = function() {
       var key = productCtrl.productIndex - 1;
       if (key < 0) key = 0
-      var pid = Product.getKey(key);
-      productCtrl.loadProduct(pid);
+      productCtrl.pid = Product.getKey(key);
+      productCtrl.loadProduct(productCtrl.pid);
     }, function(error) {
       productCtrl.error = error;
     };
 
-    productCtrl.firstProduct = function() {
-      var key = 0;
-      var pid = Product.getKey(key);
-      productCtrl.loadProduct(pid);
+    productCtrl.first = function() {
+      productCtrl.loadProduct(0);
     }, function(error) {
       productCtrl.error = error;
     };
 
-    productCtrl.lastProduct = function() {
-      var key = productCtrl.count - 1;
-      var pid = Product.getKey(key);
-      productCtrl.loadProduct(pid);
+    productCtrl.last = function() {
+      productCtrl.pid = Product.getKey(productCtrl.totalCount - 1);
+      productCtrl.loadProduct(productCtrl.pid);
     }, function(error) {
       productCtrl.error = error;
     };

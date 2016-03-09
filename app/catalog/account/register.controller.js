@@ -30,8 +30,10 @@ app.controller('RegisterCtrl', ['Account', 'Auth', 'Profile', 'AlertService', 'C
       registerCtrl.profile = Profile.getProfile(registerCtrl.uid);
       registerCtrl.profile.$loaded().then(function() {
         registerCtrl.profile.emailHash = md5.createHash(registerCtrl.customer.customer_email);
-        registerCtrl.profile.name = registerCtrl.customer_first_name + ' ' + registerCtrl.customer_last_name;
-        registerCtrl.profile.type = 'customer';
+        registerCtrl.profile.first_name = registerCtrl.customer.customer_first_name;
+        registerCtrl.profile.last_name = registerCtrl.customer.customer_last_name;
+        registerCtrl.profile.type = 'Customer';
+        registerCtrl.profile.status = 'Enabled';
         registerCtrl.profile.cid = registerCtrl.cid;
         registerCtrl.profile.tid = tid;
         registerCtrl.profile.$save();

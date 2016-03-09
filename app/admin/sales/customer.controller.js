@@ -3,6 +3,7 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
     var customerCtrl = this;
     customerCtrl.customer = {};
     customerCtrl.groups = CustomerGroups.all;
+    customerCtrl.totalCount = Customers.all.length;
 
     customerCtrl.loadCustomer = function(cid) {
       var theCustomer = Customer.getCustomer(cid);
@@ -11,7 +12,7 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
           customerCtrl.customerIndex = Customer.getIndex(cid);
           customerCtrl.defaultAddressTab = "active";
           customerCtrl.cid = cid;
-          customerCtrl.count = Customers.all.length;
+
       });
       var theAddresses = Customer.getAddresses(cid);
         theAddresses.$loaded().then(function() {
@@ -115,13 +116,10 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
     };
 
     customerCtrl.next = function() {
-      if (customerCtrl.count > 0) {
-        key = customerCtrl.customerIndex;
-        if (key < customerCtrl.count - 1) {
-          key = customerCtrl.customerIndex + 1;
-          var cid = Customer.getKey(key);
-          customerCtrl.loadCustomer(cid);
-        }
+      var key = customerCtrl.customerIndex + 1;
+      if (key != customerCtrl.totalCount) {
+        customerCtrl.cid = Customer.getKey(key);
+        customerCtrl.loadCustomer(customerCtrl.cid);
       }
     }, function(error) {
       customerCtrl.error = error;
@@ -130,24 +128,22 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
     customerCtrl.back = function() {
       var key = customerCtrl.customerIndex - 1;
       if (key < 0) key = 0
-      var cid = Customer.getKey(key);
-      customerCtrl.loadCustomer(cid);
+      customerCtrl.cid = Customer.getKey(key);
+      customerCtrl.loadCustomer(customerCtrl.cid);
     }, function(error) {
       customerCtrl.error = error;
     };
 
     customerCtrl.first = function() {
-      var key = 0;
-      var cid = Customer.getKey(key);
-      customerCtrl.loadCustomer(cid);
+      customerCtrl.cid = Customer.getKey(0);
+      customerCtrl.loadCustomer(customerCtrl.cid);
     }, function(error) {
       customerCtrl.error = error;
     };
 
     customerCtrl.last = function() {
-      var key = customerCtrl.count - 1;
-      var cid = Customer.getKey(key);
-      customerCtrl.loadCustomer(cid);
+      customerCtrl.cid = Customer.getKey(customerCtrl.totalCount - 1);
+      customerCtrl.loadCustomer(customerCtrl.cid);
     }, function(error) {
       customerCtrl.error = error;
     };

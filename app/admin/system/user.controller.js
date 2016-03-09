@@ -2,6 +2,7 @@ app.controller('UserCtrl', ['Auth', 'Profile', 'Users', 'User', 'Customers', 'Al
   function (                 Auth,   Profile,   Users,   User,   Customers,   AlertService,   md5,   tid,   $scope,   $state,   $stateParams) {
     var userCtrl = this;
     userCtrl.user = {};
+    userCtrl.totalCount = Users.all.length;
 
     userCtrl.loadUser = function(uid) {
       var theUser = User.getUser(uid);
@@ -9,7 +10,6 @@ app.controller('UserCtrl', ['Auth', 'Profile', 'Users', 'User', 'Customers', 'Al
         userCtrl.user = theUser;
         userCtrl.user.uid = uid;
         userCtrl.userIndex = User.getIndex(uid);
-        userCtrl.count = Users.all.length;
         if (userCtrl.user.type === 'customer') {
           var theCustomer = Customers.getCustomer(userCtrl.user.cid);
           theCustomer.$loaded().then(function() {
@@ -59,13 +59,10 @@ app.controller('UserCtrl', ['Auth', 'Profile', 'Users', 'User', 'Customers', 'Al
     };
 
     userCtrl.next = function() {
-      if (userCtrl.count > 0) {
-        key = userCtrl.userIndex;
-        if (key < userCtrl.count - 1) {
-          key = userCtrl.userIndex + 1;
-          var uid = User.getKey(key);
-          userCtrl.loadUser(uid);
-        }
+      var key = userCtrl.userIndex + 1;
+      if (key != userCtrl.totalCount) {
+        userCtrl.uid = User.getKey(key);
+        userCtrl.loadUser(userCtrl.uid);
       }
     }, function(error) {
       userCtrl.error = error;
@@ -74,24 +71,22 @@ app.controller('UserCtrl', ['Auth', 'Profile', 'Users', 'User', 'Customers', 'Al
     userCtrl.back = function() {
       var key = userCtrl.userIndex - 1;
       if (key < 0) key = 0
-      var uid = User.getKey(key);
-      userCtrl.loadUser(uid);
+      userCtrl.uid = User.getKey(key);
+      userCtrl.loadUser(userCtrl.uid);
     }, function(error) {
       userCtrl.error = error;
     };
 
     userCtrl.first = function() {
-      var key = 0;
-      var uid = User.getKey(key);
-      userCtrl.loadUser(uid);
+      userCtrl.uid = User.getKey(0);
+      userCtrl.loadUser(userCtrl.uid);
     }, function(error) {
       userCtrl.error = error;
     };
 
     userCtrl.last = function() {
-      var key = userCtrl.count - 1;
-      var uid = User.getKey(key);
-      userCtrl.loadUser(uid);
+      userCtrl.uid = User.getKey(userCtrl.totalCount - 1);
+      userCtrl.loadUser(userCtrl.uid);
     }, function(error) {
       userCtrl.error = error;
     };

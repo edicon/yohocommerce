@@ -13,19 +13,19 @@
             <a type="button" class="btn btn-sm btn-default detail-btn pull-right" uib-tooltip-placement="top" uib-tooltip="Cancel"
               href="#/products" ui-sref="admin.catalogs.products"><i class="fa fa-reply"></i></a>
             <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
-              uib-tooltip-placement="top" uib-tooltip="Last" ng-click="productCtrl.lastProduct()">
+              uib-tooltip-placement="top" uib-tooltip="Last" ng-click="productCtrl.last()">
               <i class="fa fa-fast-forward"></i>
             </button>
             <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
-              uib-tooltip-placement="top" uib-tooltip="Next" ng-click="productCtrl.nextProduct()">
+              uib-tooltip-placement="top" uib-tooltip="Next" ng-click="productCtrl.next()">
               <i class="fa fa-step-forward"></i>
             </button>
             <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
-              uib-tooltip-placement="top" uib-tooltip="Back" ng-click="productCtrl.backProduct()">
+              uib-tooltip-placement="top" uib-tooltip="Back" ng-click="productCtrl.back()">
               <i class="fa fa-step-backward"></i>
             </button>
             <button ng-if="productCtrl.product.pid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
-              uib-tooltip-placement="top" uib-tooltip="First" ng-click="productCtrl.firstProduct()">
+              uib-tooltip-placement="top" uib-tooltip="First" ng-click="productCtrl.first()">
               <i class="fa fa-fast-backward"></i>
             </button>
             <button ng-if="productCtrl.product.pid === null" type="button" class="btn btn-sm btn-primary detail-btn pull-right"
@@ -37,10 +37,14 @@
       </div>
     </form>
     <div class="panel panel-default">
+<<<<<<< HEAD
       <div ng-if="productCtrl.product.pid === null" class="panel-heading">
         <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Product Detail - New Product</h3>
       </div>
       <div ng-if="productCtrl.product.pid !== null" class="panel-heading">
+=======
+      <div class="panel-heading">
+>>>>>>> master
         <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Product Detail - {{productCtrl.product.product_name}}</h3>
       </div>
       <div class="panel-body">
@@ -436,12 +440,12 @@
                     <h5><i class="fa fa-floppy-o"></i> Click or Drag (New or Update)</h5>
                     <input type="file" ng-banner-select="productCtrl.onFileSelect($files)">
                   </span>
-                  <span ng-if="productCtrl.product.product_image !== 'Placeholder'"><br>
+                  <span ng-if="productCtrl.product.product_image != undefined"><br>
                     <div class="row" align="center">
                       <img ng-src="{{productCtrl.product.product_image}}">
                     </div><br>
                     <button type="button" class="btn btn-xs btn-block btn-danger" ng-click="productCtrl.removeProductImage(productCtrl.product.$id)">
-                      <h5><i class="fa fa-trash"></i> Delete Product Banner Image</h5>
+                      <h5><i class="fa fa-trash"></i> Delete Product Banner Image - got here</h5>
                     </button>
                   </span>
                 </div>
