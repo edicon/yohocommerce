@@ -20,7 +20,8 @@ var app = angular.module('app', [
     'ui.tinymce',
     'ui.select',
     'ui.grid.importer',
-    'ui.grid.rowEdit'
+    'ui.grid.rowEdit',
+    'ngFileUpload'
   ])
   .constant('FirebaseUrl', 'https://ecomengine.firebaseio.com/')
   .constant('tid', '-K4zdSDMnu3vSyL069A1')
