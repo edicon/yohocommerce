@@ -5,7 +5,7 @@ app.controller('CatalogCtrl', ['Catalog', 'CartOrders', 'Products', '$scope', '$
     catalogCtrl.categories = Catalog.all;
     catalogCtrl.subPulldowns = Catalog.pulldown;
     catalogCtrl.subCategories = Catalog.allMenus;
-    $scope.products = Products.all;
+//    $scope.products = Products.all;
 
     catalogCtrl.getTotals = function() {
       var cartTotals = Catalog.getCart($cookies.get('cartId'));
