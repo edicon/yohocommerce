@@ -23,16 +23,17 @@
   </div>
 </nav>
 
-<header>
-  <div class="container">
+<div class="container">
+  <header>
     <div class="row">
-      <div class="col-sm-3">
+      <div class="col-sm-2">
         <div id="logo">
-          <a href="#" ui-sref="catalog.home"><img src="../images/bluerocktxtlogo185.png" class="img-responsive"></a>
+          <a href="#" ui-sref="catalog.home"><img src="../images/bluerockcommercelogo35.png" class="img-responsive"></a>
         </div>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-7">
         <div class="input-group">
+          <span class="input-group-addon">Products</span>
           <ui-select ng-model="product.selected" theme="bootstrap" ng-disabled="disabled">
             <ui-select-match placeholder="Search products...">{{$select.selected.product_name}}</ui-select-match>
             <ui-select-choices repeat="product in products | filter: $select.search">
@@ -46,7 +47,7 @@
       </div>
       <div class="col-sm-3">
         <div ng-if="catalogCtrl.cartTotals.items == 0" id="cart" class="btn-group btn-block">
-          <button type="button" data-toggle="dropdown" class="btn btn-inverse btn-block btn dropdown-toggle">
+          <button type="button" data-toggle="dropdown" class="btn btn-inverse btn-block dropdown-toggle">
             <i class="fa fa-shopping-cart"></i> {{catalogCtrl.cartTotals.items}} Item(s) - {{catalogCtrl.cartTotals.total | currency}}
           </button>
           <ul class="dropdown-menu pull-right">
@@ -56,7 +57,7 @@
           </ul>
         </div>
         <div ng-if="catalogCtrl.cartTotals.items > 0" id="cart" class="btn-group btn-block">
-          <button type="button" ng-click="catalogCtrl.getOrder()" data-toggle="dropdown" class="btn btn-inverse btn-block btn-lg dropdown-toggle">
+          <button type="button" ng-click="catalogCtrl.getOrder()" data-toggle="dropdown" class="btn btn-inverse btn-block dropdown-toggle">
             <i class="fa fa-shopping-cart"></i> {{catalogCtrl.cartTotals.items}} Item(s) - {{catalogCtrl.cartTotals.total | currency}}
           </button>
           <ul  class="dropdown-menu pull-right">
@@ -93,29 +94,33 @@
         </div>
       </div>
     </div>
-  </div>
-</header>
+  </header>
+</div>
 <br>
 
 <div class="container">
-  <nav id="menu" class="navbar">
-    <div class="navbar-header"><span id="category" class="visible-xs">Categories</span>
-      <button type="button" class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"><i class="fa fa-bars"></i></button>
+  <div class="row">
+    <div class="col-sm-12">
+      <nav id="menu" class="navbar">
+        <div class="navbar-header"><span id="category" class="visible-xs">Categories</span>
+          <button type="button" class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"><i class="fa fa-bars"></i></button>
+        </div>
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+          <ul ng-repeat="c in catalogCtrl.categories" class="nav navbar-nav">
+            <li ng-if="c.sub_count === 0"><a href="" class="dropdown-toggle" data-toggle="dropdown">{{c.category_name}}</a>
+            <li ng-if="c.sub_count > 0" class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown">{{c.category_name}}</a>
+              <div class="dropdown-menu">
+                <div class="dropdown-inner">
+                  <ul ng-repeat="s in catalogCtrl.subCategories | orderBy:'$priority'" class="list-unstyled">
+                    <li ng-if="c.$id === s.category_id"><a href="" ng-click="catalogCtrl.goSubCategory(s.$id)">{{s.category_name}}</a></li>
+                  </ul>
+                </div>
+                <a href="" ng-click="catalogCtrl.goCategory(c.$id)" class="see-all">see all</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
     </div>
-    <div class="collapse navbar-collapse navbar-ex1-collapse">
-      <ul ng-repeat="c in catalogCtrl.categories" class="nav navbar-nav">
-        <li ng-if="c.sub_count === 0"><a href="" class="dropdown-toggle" data-toggle="dropdown">{{c.category_name}}</a>
-        <li ng-if="c.sub_count > 0" class="dropdown"><a href="" class="dropdown-toggle" data-toggle="dropdown">{{c.category_name}}</a>
-          <div class="dropdown-menu">
-            <div class="dropdown-inner">
-              <ul ng-repeat="s in catalogCtrl.subCategories | orderBy:'$priority'" class="list-unstyled">
-                <li ng-if="c.$id === s.category_id"><a href="" ng-click="catalogCtrl.goSubCategory(s.$id)">{{s.category_name}}</a></li>
-              </ul>
-            </div>
-            <a href="" ng-click="catalogCtrl.goCategory(c.$id)" class="see-all">see all</a>
-          </div>
-        </li>
-      </ul>
-    </div>
-  </nav>
+  </div>
 </div>
