@@ -206,18 +206,18 @@ angular.module('app')
             }
           }
         })
-        .state('admin.sales.vouchers', {
-          url: '/vouchers',
+        .state('admin.sales.giftcards', {
+          url: '/giftcards',
           views: {
             "header@admin": {
-              templateUrl: 'admin/sales/vouchers.header.html'
+              templateUrl: 'admin/sales/giftcards.header.html'
             },
             "main@admin": {
               templateUrl: 'admin/sales/sales.html'
             },
-            "list@admin.sales.vouchers": {
-              controller: 'VouchersCtrl as vouchersCtrl',
-              templateUrl: 'admin/sales/vouchers.html'
+            "list@admin.sales.giftcards": {
+              controller: 'GiftcardsCtrl as giftcardsCtrl',
+              templateUrl: 'admin/sales/giftcards.html'
             }
           }
         })
@@ -267,21 +267,6 @@ angular.module('app')
             "list@admin.sales.customer": {
               controller: 'CustomerCtrl as customerCtrl',
               templateUrl: 'admin/sales/customer.html'
-            }
-          }
-        })
-        .state('admin.sales.voucher', {
-          url: '/vouchers',
-          views: {
-            "header@admin": {
-              templateUrl: 'admin/sales/vouchers.header.html'
-            },
-            "main@admin": {
-              templateUrl: 'admin/sales/sales.html'
-            },
-            "list@admin.sales.voucher": {
-              controller: 'VoucherCtrl as voucherCtrl',
-              templateUrl: 'admin/sales/vouchers.html'
             }
           }
         })

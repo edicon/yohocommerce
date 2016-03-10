@@ -1,0 +1,35 @@
+<div class="container-fluid">
+  <div class="col-sm-12">
+    <form class="form-horizontal">
+      <div class="form-group">
+<!--        <div class="col-sm-4">
+          <div class="input-group input-group-sm">
+            <span class="input-group-addon">Gift Card Name</span>
+            <input type="text" ng-model="giftcardsCtrl.giftcard.giftcard_name" placeholder="Enter Gift Card Name" class="form-control">
+          </div>
+        </div> -->
+        <div class="col-sm-3">
+          <div class="input-group input-group-sm">
+            <span class="input-group-addon">Amount</span>
+            <input type="text" ng-model="giftcardsCtrl.giftcard.giftcard_amount" placeholder="Enter Amount" class="form-control">
+          </div>
+        </div>
+        <div class="col-sm-9" align="right">
+          <div class="input-group input-group-sm">
+            <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Gift Card" ng-click="giftcardsCtrl.addGiftcard()">
+              <i class="fa fa-plus"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-gift"></span> Gift Cards List</h3>
+      </div>
+      <div class="panel-body">
+        <div ui-grid="giftcardsCtrl.gridGiftcards" class="grid-500"></div>
+      </div>
+    </div>
+  </div>
+</div>
