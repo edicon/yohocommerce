@@ -1,11 +1,12 @@
 <div class="container">
-  <div class="row">
+  <div ng-if="catalogSubCategoryCtrl.products.length > 1" class="row">
     <div class="col-sm-12">
       <ul class="breadcrumb">
         <li><a href="#" ui-sref="catalog.home"><i class="menu-icon fa fa-home"></i></a></li>
         <li><a href="" ng-click="catalogSubCategoryCtrl.goCategory(catalogSubCategoryCtrl.category.$id)">{{catalogSubCategoryCtrl.category.category_name}}</a></li>
         <li><a href="subcategory" ui-sref="catalog.subcategory">{{catalogSubCategoryCtrl.subCategory.category_name}}</a></li>
       </ul>
+      <span >
       <div>
         <h2>{{catalogSubCategoryCtrl.subCategory.category_name}}</h2>
         <div class="row">
@@ -27,7 +28,7 @@
       </form>
     </div>
   </div>
-  <div class="row">
+  <div ng-if="catalogSubCategoryCtrl.products.length > 1" class="row">
     <div class="product-layout">
       <div ng-repeat="p in catalogSubCategoryCtrl.products" class="product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12">
         <div class="product-thumb transition">
@@ -45,6 +46,55 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div ng-if="catalogSubCategoryCtrl.products.length === 1" class="row">
+    <div class="col-sm-8">
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <div align="center"><img ng-src="{{catalogSubCategoryCtrl.products[0].product_image}}" height="210" width="225"></div>
+        </div>
+      </div>
+      <ul class="thumbnails">
+        <li ng-repeat="t in catalogSubCategoryCtrl.products[0].thumbnails" class="image-additional">
+          <img ng-src="{{t.thumbnail_image}}" height="65" width="70"></a></li>
+      </ul><br>
+      <uib-tabset>
+        <uib-tab heading="Description">
+          <p ng-bind-html="catalogSubCategoryCtrl.products[0].product_description"></p>
+        </uib-tab>
+        <uib-tab heading="Specification">
+          <p ng-bind-html="catalogSubCategoryCtrl.products[0].product_description"></p>
+        </uib-tab>
+        <uib-tab heading="Reviews (0)">
+          <p ng-bind-html="catalogSubCategoryCtrl.products[0].product_description"></p>
+        </uib-tab>
+      </uib-tabset>
+    </div>
+    <div class="col-sm-4">
+      <h1>{{catalogSubCategoryCtrl.products[0].product_name}}</h1>
+      <ul class="list-unstyled">
+        <li>Reward Points: 100</li>
+      </ul>
+      <span ng-if="catalogProductCtrl.product.special_price != null">
+        <ul class="list-unstyled">
+          <li><s>{{catalogSubCategoryCtrl.products[0].product_price | currency}}</s></li>
+        </ul>
+        <h2>{{catalogSubCategoryCtrl.products[0].special_price | currency}}</h2>
+      </span>
+      <span ng-if="catalogProductCtrl.product.special_price == null"><p>
+        <h2>{{catalogSubCategoryCtrl.products[0].product_price | currency}}</h2>
+      </span>
+      <ul class="list-unstyled">
+        <li>Price in Reward Points: 1000</li>
+      </ul>
+      <div class="form-group">
+        <button type="button" ng-click="catalogProductCtrl.addOrder(catalogProductCtrl[0].product.$id)" class="btn btn-primary btn-lg btn-block">Add to Cart</button>
+      </div>
+      <p><span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
+      <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>
+      <a href="" ng-click="">Reviews</a> / <a href="" ng-click="">Write a Review</a></p>
     </div>
   </div>
 </div>
