@@ -35,7 +35,7 @@
           </div>
           <div class="caption">
             <p><h4><a href="" ng-click="catalogCategoryCtrl.goProduct(p.$id)">{{p.product_name}}</h4></a></p>
-            <p ng-bind-html="p.product_description | limitTo: 150"></p>
+            <p ng-bind-html="p.product_description | limitTo: 100"></p>
             <p class="price-new">{{p.product_price | currency}}</p>
           </div>
           <div class="button-group">
