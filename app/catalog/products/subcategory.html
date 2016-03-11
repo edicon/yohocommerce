@@ -42,7 +42,7 @@
             <p class="price-new">{{p.product_price | currency}}</p>
           </div>
           <div class="button-group">
-            <button type="button" ng-click=""><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Add to Cart</span></button>
+            <button type="button" ng-click="catalogSubCategoryCtrl.addOrder(p.$id)"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Add to Cart</span></button>
           </div>
         </div>
       </div>
@@ -77,20 +77,20 @@
       <ul class="list-unstyled">
         <li>Reward Points: 100</li>
       </ul>
-      <span ng-if="catalogProductCtrl.product.special_price != null">
+      <span ng-if="catalogSubCategoryCtrl.product.special_price != null">
         <ul class="list-unstyled">
           <li><s>{{catalogSubCategoryCtrl.products[0].product_price | currency}}</s></li>
         </ul>
         <h2>{{catalogSubCategoryCtrl.products[0].special_price | currency}}</h2>
       </span>
-      <span ng-if="catalogProductCtrl.product.special_price == null"><p>
+      <span ng-if="catalogSubCategoryCtrl.product.special_price == null"><p>
         <h2>{{catalogSubCategoryCtrl.products[0].product_price | currency}}</h2>
       </span>
       <ul class="list-unstyled">
         <li>Price in Reward Points: 1000</li>
       </ul>
       <div class="form-group">
-        <button type="button" ng-click="catalogProductCtrl.addOrder(catalogProductCtrl[0].product.$id)" class="btn btn-primary btn-lg btn-block">Add to Cart</button>
+        <button type="button" ng-click="catalogSubCategoryCtrl.addOrder(catalogSubCategoryCtrl.products[0].$id)" class="btn btn-primary btn-lg btn-block">Add to Cart</button>
       </div>
       <p><span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
       <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>
