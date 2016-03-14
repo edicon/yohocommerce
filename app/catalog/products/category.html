@@ -1,40 +1,46 @@
 <div class="container">
-  <ul class="breadcrumb">
-    <li><a href="#" ui-sref="catalog.home"><i class="menu-icon fa fa-home"></i></a></li>
-    <li><a href="category" ui-sref="catalog.category">{{catalogCategoryCtrl.category.category_name}}</a></li>
-  </ul>
-  <div>
-    <h2>{{catalogCategoryCtrl.category.category_name}}</h2>
-    <div class="row">
-      <div ng-if="catalogCategoryCtrl.category.category_banner_image" class="col-sm-2">
-        <img ng-src="{{catalogCategoryCtrl.category.category_banner_image}}" class="img-thumbnail">
+  <div class="row">
+    <div class="col-sm-12">
+      <ul class="breadcrumb">
+        <li><a href="#" ui-sref="catalog.home"><i class="menu-icon fa fa-home"></i></a></li>
+        <li><a href="category" ui-sref="catalog.category">{{catalogCategoryCtrl.category.category_name}}</a></li>
+      </ul>
+      <div>
+        <h2>{{catalogCategoryCtrl.category.category_name}}</h2>
+        <div class="row">
+          <div ng-if="catalogCategoryCtrl.category.category_banner_image" class="col-sm-2">
+            <img ng-src="{{catalogCategoryCtrl.category.category_banner_image}}" class="img-thumbnail">
+          </div>
+          <div class="col-sm-10" ng-bind-html="catalogCategoryCtrl.category.category_description"></div>
+        </div>
       </div>
-      <div class="col-sm-10" ng-bind-html="catalogCategoryCtrl.category.category_description"></div>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-3 col-sm-offset-9">
+            <select id="input-sort" class="form-control" onchange="">
+              <option value="" selected="selected">Sort By</option>
+              <option value="">Other Sort Items</option>
+            </select>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
-  <form class="form-horizontal">
-    <div class="form-group">
-      <div class="col-sm-3 col-sm-offset-9">
-        <select id="input-sort" class="form-control" onchange="">
-          <option value="" selected="selected">Sort By</option>
-          <option value="">Other Sort Items</option>
-        </select>
-      </div>
-    </div>
-  </form>
   <div class="row">
-    <div ng-repeat="p in catalogCategoryCtrl.products" class="product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12">
-      <div class="product-thumb transition">
-        <div class="panel-body">
-          <p><div class="image"><a href="" ng-click="catalogCategoryCtrl.goProduct(p.$id)"><img ng-src="{{p.product_image}}" height="175" width="185"></a></div></p>
-        </div>
-        <div class="caption">
-          <p><h4><a href="" ng-click="catalogCategoryCtrl.goProduct(p.$id)">{{p.product_name}}</h4></a></p>
-          <p ng-bind-html="p.product_description | limitTo: 150"></p>
-          <p class="price-new">{{p.product_price | currency}}</p>
-        </div>
-        <div class="button-group">
-          <button type="button" ng-click=""><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Add to Cart</span></button>
+    <div class="product-layout">
+      <div ng-repeat="p in catalogCategoryCtrl.products" class="product-layout col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="product-thumb transition">
+          <div class="panel-body">
+            <p><div class="image"><a href="" ng-click="catalogCategoryCtrl.goProduct(p.$id)"><img ng-src="{{p.product_image}}" height="175" width="185"></a></div></p>
+          </div>
+          <div class="caption">
+            <p><h4><a href="" ng-click="catalogCategoryCtrl.goProduct(p.$id)">{{p.product_name}}</h4></a></p>
+            <p ng-bind-html="p.product_description | limitTo: 100"></p>
+            <p class="price-new">{{p.product_price | currency}}</p>
+          </div>
+          <div class="button-group">
+            <button type="button" ng-click=""><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">Add to Cart</span></button>
+          </div>
         </div>
       </div>
     </div>

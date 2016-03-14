@@ -15,7 +15,7 @@ app.controller('CarouselCtrl', ['Banner',
       carouselCtrl.bannerImages.$loaded().then(function() {
         if (carouselCtrl.bannerImages.length === 0) {
           carouselCtrl.bannerArray = 'no';
-          carouselCtrl.bannerImages = carouselCtrl.defaultSlides;
+
         }
     });
 
