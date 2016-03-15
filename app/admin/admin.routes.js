@@ -344,10 +344,77 @@ angular.module('app')
         // end marketing main menu
         // start extensions menu items
         .state('admin.extensions', {
-          url: '',
+          url: '/extensions',
           views: {
+            "header@admin": {
+              templateUrl: 'admin/extensions/extensions.header.html'
+            },
             "main@admin": {
-              templateUrl: 'admin/extensions/admin.extensions.html'
+              templateUrl: 'admin/extensions/extensions.html'
+            },
+            "list@admin.extensions": {
+              controller: 'ExtensionsCtrl as extensionsCtrl',
+              templateUrl: 'admin/extensions/modules.html'
+            }
+          }
+        })
+        .state('admin.extensions.modules', {
+          url: '/modules',
+          views: {
+            "header@admin": {
+              templateUrl: 'admin/extensions/modules.header.html'
+            },
+            "main@admin": {
+              templateUrl: 'admin/extensions/extensions.html'
+            },
+            "list@admin.extensions.modules": {
+              controller: 'ExtensionsCtrl as extensionsCtrl',
+              templateUrl: 'admin/extensions/modules.html'
+            }
+          }
+        })
+        .state('admin.extensions.shipping', {
+          url: '/shipping',
+          views: {
+            "header@admin": {
+              templateUrl: 'admin/extensions/shipping.header.html'
+            },
+            "main@admin": {
+              templateUrl: 'admin/extensions/extensions.html'
+            },
+            "list@admin.extensions.shipping": {
+              controller: 'ExtensionsCtrl as extensionsCtrl',
+              templateUrl: 'admin/extensions/shipping.html'
+            }
+          }
+        })
+        .state('admin.extensions.payment', {
+          url: '/payment',
+          views: {
+            "header@admin": {
+              templateUrl: 'admin/extensions/payment.header.html'
+            },
+            "main@admin": {
+              templateUrl: 'admin/extensions/extensions.html'
+            },
+            "list@admin.extensions.payment": {
+              controller: 'ExtensionsCtrl as extensionsCtrl',
+              templateUrl: 'admin/extensions/payment.html'
+            }
+          }
+        })
+        .state('admin.extensions.feeds', {
+          url: '/feeds',
+          views: {
+            "header@admin": {
+              templateUrl: 'admin/extensions/feeds.header.html'
+            },
+            "main@admin": {
+              templateUrl: 'admin/extensions/extensions.html'
+            },
+            "list@admin.extensions.feeds": {
+              controller: 'ExtensionsCtrl as extensionsCtrl',
+              templateUrl: 'admin/extensions/feeds.html'
             }
           }
         })
