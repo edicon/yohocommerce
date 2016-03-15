@@ -483,12 +483,15 @@ angular.module('app')
         })
         .state('admin.system.stores', {
           url: '/stores',
+          params: {
+            rowEntity: null,
+          },
           views: {
             "header@admin": {
               templateUrl: 'admin/system/stores.header.html'
             },
             "main@admin": {
-              templateUrl: 'admin/system/stores.html'
+              templateUrl: 'admin/system/system.html'
             },
             "list@admin.system.stores": {
               controller: 'StoresCtrl as storesCtrl',
@@ -498,12 +501,15 @@ angular.module('app')
         })
         .state('admin.system.store', {
           url: '/store',
+          params: {
+            rowEntity: null,
+          },
           views: {
             "header@admin": {
               templateUrl: 'admin/system/store.header.html'
             },
             "main@admin": {
-              templateUrl: 'admin/system/store.html'
+              templateUrl: 'admin/system/system.html'
             },
             "list@admin.system.store": {
               controller: 'StoreCtrl as storeCtrl',
