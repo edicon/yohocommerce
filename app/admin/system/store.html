@@ -1,43 +1,205 @@
-<div id="content-wrapper">
-	<div class="page-content">
-		<div class="row header">
-			<div class="col-xs-12">
-				<span ng-include="'admin/common/topbar.html'"></span>
-        <div class="meta">
-          <div class="page"><span class="menu-icon fa fa-shopping-bag"></span> Store</div>
-          <div class="breadcrumb-links">Home / Setup / Store</div>
+<div class="container-fluid">
+  <div class="row">
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="col-sm-12">
+          <a type="button" class="btn btn-sm btn-default detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Cancel" href="#/stores" ui-sref="admin.system.stores">
+            <i class="fa fa-reply"></i>
+          </a>
+          <button ng-if="storeCtrl.sid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Last" ng-click="storeCtrl.last()">
+            <i class="fa fa-fast-forward"></i>
+          </button>
+          <button ng-if="storeCtrl.sid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Next" ng-click="storeCtrl.next()">
+            <i class="fa fa-step-forward"></i>
+          </button>
+          <button ng-if="storeCtrl.sid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Back" ng-click="storeCtrl.back()">
+            <i class="fa fa-step-backward"></i>
+          </button>
+          <button ng-if="storeCtrl.sid !== null" type="button" class="btn btn-sm btn-default detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="First" ng-click="storeCtrl.first()">
+            <i class="fa fa-fast-backward"></i>
+          </button>
+          <button ng-if="storeCtrl.sid === null" type="button" class="btn btn-sm btn-primary detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Save" href="#/stores" ui-sref="admin.system.stores" ng-click="storeCtrl.addStore()">
+            <i class="fa fa-floppy-o"></i>
+          </button>
         </div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<div class="row">
-  <div class="col-xs-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> Store List</h3>
       </div>
-      <div class="panel-body">
-        <div class="row">
-          <div class="col-xs-4">
-            <div class="input-group input-group-sm">
-              <input type="text" class="form-control" placeholder="Search stores">
-              <span class="input-group-btn">
-                <button class="btn btn-primary" type="button"> <span class="menu-icon fa fa-search"></span></button>
-              </span>
-            </div>
-          </div>
-          <div class="col-xs-8">
-            <a ng-if="systemCtrl.currentState === 'admin.system.stores'" href="#/store" ui-sref="admin.system.store" class="btn btn-primary btn-sm pull-right">
-              <span class="menu-icon fa fa-sitemap"></span> New Store</a>
-            <a ng-if="catalogsCtrl.currentState === 'admin.system'" href="#/store" ui-sref=".store" class="btn btn-primary btn-sm pull-right">
-              <span class="menu-icon fa fa-sitemap"></span> Add New Store</a>
-          </div>
-        </div><br>
-        <div>
-          <div id="grid1" ui-grid="{ data: systemCtrl.myData }"></div>
-        </div>
+    </form>
+  </div>
+  <div class="panel panel-default">
+    <div ng-if="storeCtrl.sid === null" class="panel-heading">
+      <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Store Detail - New Store</h3>
+    </div>
+    <div ng-if="storeCtrl.sid !== null" class="panel-heading">
+      <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Store Detail - {{storeCtrl.store.store_name}}</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+		    <uib-tabset>
+					<uib-tab>
+            <uib-tab-heading>
+              <i class="menu-icon fa fa-user-plus"></i> Store Information
+            </uib-tab-heading><br>
+            <form name:="storeProfileForm" class="form-horizontal" ng-submit="storeCtrl.addStore()">
+              <fieldset>
+                <div class="form-group required">
+                  <label class="col-sm-2 control-label" align="right">Store Name</label>
+                  <div ng-if="storeCtrl.sid === null" class="col-sm-8">
+                    <input type="text" name:="name" ng-model="storeCtrl.store.store_name" placeholder="Store Name" class="form-control" required>
+                    <div ng-messages="storeProfileForm.storeName.$error" ng-if="storeProfileForm.firstName.$touched">
+                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                    </div>
+                  </div>
+                  <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
+                    <input type="text" ng-model="storeCtrl.store.store_name" ng-change="storeCtrl.store.$save()"
+                      placeholder="First Name" class="form-control" required>
+                  </div>
+                </div>
+                <div class="form-group required">
+                  <label class="col-sm-2 control-label" align="right">Store URL</label>
+                  <div ng-if="storeCtrl.sid === null" class="col-sm-8">
+                    <input type="text" name:="storeUrl" ng-model="storeCtrl.store.store_url" placeholder="Store URL" class="form-control" required>
+                    <div ng-messages="storeProfileForm.storeUrl.$error" ng-if="storeProfileForm.storeUrl.$touched">
+                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                    </div>
+                  </div>
+                  <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
+                    <input type="text" ng-model="storeCtrl.store.store_url" ng-change="storeCtrl.store.$save()"
+                      placeholder="Last Name" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group required">
+                  <label class="col-sm-2 control-label" align="right">E-Mail</label>
+                  <div ng-if="storeCtrl.sid === null" class="col-sm-8">
+                    <input type="email" name="email" ng-model="storeCtrl.store.store_email" placeholder="E-mail Address" class="form-control" required email>
+                    <div ng-messages="storeProfileForm.email.$error" ng-if="storeProfileForm.email.$touched">
+                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                    </div>
+                  </div>
+                  <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
+                    <input type="email" ng-model="storeCtrl.store.store_email" ng-change="storeCtrl.store.$save()"
+                      placeholder="E-mail Address" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group required">
+                  <label class="col-sm-2 control-label" align="right">Phone Number</label>
+                  <div ng-if="storeCtrl.sid === null" class="col-sm-8">
+                    <input type="text" name="phoneNumber" ng-model="storeCtrl.store.store_phone" placeholder="Phone Number" class="form-control" required>
+                    <div ng-messages="storeProfileForm.phoneNumber.$error" ng-if="storeProfileForm.phoneNumber.$touched">
+                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                    </div>
+                  </div>
+                  <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
+                    <input type="text" ng-model="storeCtrl.store.store_phone" ng-change="storeCtrl.store.$save()"
+                      placeholder="Phone Number" class="form-control">
+                  </div>
+                </div>
+
+                <div class="form-group required">
+                  <label class="control-label col-xs-2">Default Store</label>
+                  <div ng-if="storeCtrl.sid === null" class="col-xs-8">
+                    <select ng-model="storeCtrl.store.store_status" class="form-control">
+                      <option value="Default">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                  </div>
+                  <div ng-if="storeCtrl.sid !== null" class="col-xs-8">
+                    <select class="form-control" ng-model="storeCtrl.store.store_status"
+                      ng-change="storeCtrl.store.$save" class="form-control">
+                        <option value="Default">Default</option>
+                        <option value="No">No</option>
+                    </select>
+                  </div>
+                </div>
+
+              </fieldset>
+              <fieldset>
+                <legend>Address</legend>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" align="right">Search Address</label>
+                  <div class="col-sm-8">
+                    <ui-select ng-change="storeCtrl.parseAddress($select.selected.formatted_address)" ng-model="storeCtrl.address.selected" theme="bootstrap" ng-disabled="disabled" reset-search-input="false">
+                      <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
+                      <ui-select-choices repeat="address in (addresses) track by $index" refresh="storeCtrl.refreshAddresses($select.search)" refresh-delay="0">
+                        <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
+                      </ui-select-choices>
+                    </ui-select>
+                  </div>
+                </div>
+                <div class="form-group required">
+                  <label class="col-sm-2 control-label" align="right">Street</label>
+                  <div ng-if="storeCtrl.sid === null" class="col-sm-8">
+                    <input type="text" name="street" ng-model="storeCtrl.store.store_address_street" placeholder="Street" class="form-control" required>
+                    <div ng-messages="storeProfileForm.street.$error" ng-if="storeProfileForm.steet.$touched">
+                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                    </div>
+                  </div>
+                  <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
+                    <input type="text" ng-model="storeCtrl.store.store_address_street" ng-change="storeCtrl.store.$save()"
+                      placeholder="Street" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group required">
+                  <label class="col-sm-2 control-label" align="right">City</label>
+                  <div ng-if="storeCtrl.sid === null" class="col-sm-8">
+                    <input type="text" name="city" ng-model="storeCtrl.store.store_address_city" placeholder="City" class="form-control" required>
+                    <div ng-messages="storeProfileForm.city.$error" ng-if="storeProfileForm.city.$touched">
+                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                    </div>
+                  </div>
+                  <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
+                    <input type="text" ng-model="storeCtrl.store.store_address_city" ng-change="storeCtrl.store.$save()"
+                      placeholder="City" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group required">
+                  <label class="col-sm-2 control-label" align="right">Country</label>
+                  <div ng-if="storeCtrl.sid === null" class="col-sm-8">
+                    <input type="text" name="country" ng-model="storeCtrl.store.store_address_country" placeholder="Country" class="form-control" required>
+                    <div ng-messages="storeProfileForm.country.$error" ng-if="storeProfileForm.country.$touched">
+                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                    </div>
+                  </div>
+                  <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
+                    <input type="text" ng-model="storeCtrl.store.store_address_country" ng-change="storeCtrl.store.$save()"
+                      placeholder="Country" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group required">
+                  <label class="col-sm-2 control-label" align="right">Region</label>
+                  <div ng-if="storeCtrl.sid === null" class="col-sm-8">
+                    <input type="text" name="region" ng-model="storeCtrl.store.store_address_region" placeholder="Region" class="form-control" required>
+                    <div ng-messages="storeProfileForm.region.$error" ng-if="storeProfileForm.region.$touched">
+                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                    </div>
+                  </div>
+                  <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
+                    <input type="text" ng-model="storeCtrl.store.store_address_region" ng-change="storeCtrl.store.$save()"
+                      placeholder="Region" class="form-control">
+                  </div>
+                </div>
+                <div class="form-group required">
+                  <label class="col-sm-2 control-label" align="right">Postal Code / Zip</label>
+                  <div ng-if="storeCtrl.sid === null" class="col-sm-8">
+                    <input type="text" name="postalZip" ng-model="storeCtrl.store.store_address_postal_code" placeholder="Postal Code / Zip" class="form-control" required>
+                    <div ng-messages="storeProfileForm.postalZip.$error" ng-if="storeProfileForm.postalZip.$touched">
+                      <div ng-messages-include="catalog/common/registration.messages.html"></div>
+                    </div>
+                  </div>
+                  <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
+                    <input type="text" ng-model="storeCtrl.store.store_address_postal_code" ng-change="storeCtrl.store.$save()"
+                      placeholder="Postal Code / Zip" class="form-control">
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+          </uib-tab>
+				</uib-tabset>
       </div>
     </div>
   </div>
