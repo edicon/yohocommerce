@@ -3,7 +3,6 @@ app.controller('StoreCtrl', ['Store', 'Stores', 'Transactions', 'Countries', 'Al
   var storeCtrl = this;
   storeCtrl.store = {};
   $scope.countries = Countries.all;
-  $scope.transactions = Transactions.all;
   $scope.address = {};
 
   storeCtrl.refreshAddresses = function(address) {
@@ -38,7 +37,6 @@ app.controller('StoreCtrl', ['Store', 'Stores', 'Transactions', 'Countries', 'Al
   storeCtrl.loadStore = function(sid) {
     var theStore = Store.getStore(sid);
       theStore.$loaded().then(function() {
-        storeCtrl.store.store_full_name = storeCtrl.store.store_first_name + ' ' + storeCtrl.store.store_last_name;
         storeCtrl.store = theStore;
         storeCtrl.storeIndex = Store.getIndex(sid);
         storeCtrl.count = Stores.all.length;
