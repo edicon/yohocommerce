@@ -1,0 +1,38 @@
+<div class="container">
+  <ul class="breadcrumb">
+    <li><a href="#" ui-sref="catalog.home"><i class="menu-icon fa fa-home"></i></a></li>
+    <li><a href="#/login" ui-sref="catalog.contact">Help and Contact</a></li>
+  </ul>
+  <div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+      <div class="well well-sm">
+        <h2>Contact Us</h2>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+      <div class="well">
+        <h3>By Mail</h3>
+          <address>
+            {{contactCtrl.store.store_name}}<br>
+            {{contactCtrl.store.store_address_street}}<br>
+            {{contactCtrl.store.store_address_city}}, {{contactCtrl.store.store_address_region}}<br>
+            {{contactCtrl.store.store_address_postal_code}} {{contactCtrl.store.store_address_country}}
+          </address>
+      </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+      <div class="well">
+        <h3>By Phone</h3>
+        <p>{{contactCtrl.store.store_phone}}</p>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+      <div class="well">
+        <h3>By E-Mail</h3>
+          <a type="button" class="btn btn-sm btn-primary" href=mailto:info@bluerockapps.com>
+            Send Us A Message
+          </a>
+      </div>
+    </div>
+  </div>
+</div>

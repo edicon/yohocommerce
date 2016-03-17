@@ -36,6 +36,22 @@ angular.module('app')
           }
         }
       })
+      .state('catalog.contact', {
+        url: 'contact',
+        views: {
+          "header@catalog": {
+            controller: 'CatalogCtrl as catalogCtrl',
+            templateUrl: 'catalog/common/header.html'
+          },
+          "main@catalog": {
+            controller: 'ContactCtrl as contactCtrl',
+            templateUrl: 'catalog/common/contact.html'
+          },
+          "footer@catalog": {
+            templateUrl: 'catalog/common/footer.html'
+          }
+        }
+      })
       .state('catalog.login', {
         url: 'login',
         views: {
@@ -103,7 +119,6 @@ angular.module('app')
             templateUrl: 'catalog/products/subcategory.html'
           },
           "footer@catalog": {
-            controller: 'CatalogCtrl as catalogCtrl',
             templateUrl: 'catalog/common/footer.html'
           }
         }
@@ -123,7 +138,6 @@ angular.module('app')
             templateUrl: 'catalog/products/product.html'
           },
           "footer@catalog": {
-            controller: 'CatalogCtrl as catalogCtrl',
             templateUrl: 'catalog/common/footer.html'
           }
         }
