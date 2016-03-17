@@ -20,19 +20,15 @@ app.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$sta
       });
     };
 
-    if ($stateParams.rowEntity === null) {
-      $state.go('admin.sales.customers');
-    } else {
-      if ($stateParams.cid === null) {
-        if ($stateParams.rowEntity != undefined) {
-          customerCtrl.loadCustomer($stateParams.rowEntity.$id);
-        } else {
-          customerCtrl.customer.customer_full_name = 'New Customer';
-          customerCtrl.cid = null;
-        }
+    if ($stateParams.cid === null) {
+      if ($stateParams.rowEntity != undefined) {
+        customerCtrl.loadCustomer($stateParams.rowEntity.$id);
       } else {
-        customerCtrl.loadCustomer($stateParams.cid);
+        customerCtrl.customer.customer_full_name = 'New Customer';
+        customerCtrl.cid = null;
       }
+    } else {
+      customerCtrl.loadCustomer($stateParams.cid);
     }
 
     customerCtrl.routeGroups = function() {

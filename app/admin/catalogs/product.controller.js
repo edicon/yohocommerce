@@ -62,15 +62,11 @@ app.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'Custom
       });
     };
 
-    if ($stateParams.rowEntity === null) {
-      $state.go('admin.catalogs.products');
+    if ($stateParams.rowEntity != undefined) {
+      productCtrl.pid = $stateParams.rowEntity.$id;
+      productCtrl.loadProduct(productCtrl.pid);
     } else {
-      if ($stateParams.rowEntity != undefined) {
-        productCtrl.pid = $stateParams.rowEntity.$id;
-        productCtrl.loadProduct(productCtrl.pid);
-      } else {
-        productCtrl.product.pid = null;
-      }
+      productCtrl.product.pid = null;
     }
 
     productCtrl.featuredProducts = function() {

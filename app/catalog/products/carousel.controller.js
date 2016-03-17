@@ -10,7 +10,7 @@ app.controller('CarouselCtrl', ['Banner',
       { image: "/images/carousel-default-image.png" },
       { image: "/images/carousel-default-image.png" }
     ]
-
+/* removed until file upload working
     carouselCtrl.bannerImages = Banner.getImages("1");
       carouselCtrl.bannerImages.$loaded().then(function() {
         if (carouselCtrl.bannerImages.length === 0) {
@@ -18,5 +18,5 @@ app.controller('CarouselCtrl', ['Banner',
 
         }
     });
-
+*/
 }]);
