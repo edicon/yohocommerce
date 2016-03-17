@@ -1,5 +1,5 @@
-app.controller('LibraryCtrl', ['Upload', '$timeout', '$state', '$scope', '$stateParams',
-  function (                    Upload,   $timeout,   $state,   $scope,   $stateParams) {
+app.controller('LibraryCtrl', ['Upload', 'DreamFactoryFilesUrl', '$timeout', '$state', '$scope', '$stateParams',
+  function (                    Upload,   DreamFactoryFilesUrl,   $timeout,   $state,   $scope,   $stateParams) {
     var libraryCtrl = this;
 
 /*    $scope.uploadFiles = function(file, errFiles) {
@@ -28,7 +28,7 @@ app.controller('LibraryCtrl', ['Upload', '$timeout', '$state', '$scope', '$state
   $scope.uploadFiles = function (blob) {
 
     Upload.http({
-        url: 'http://ec2-54-187-192-104.us-west-2.compute.amazonaws.com/files/marketplace',
+        url: DreamFactoryFilesUrl,
         headers : {
             "Content-Type": "image/png",
             "X-File-Name": blob.name
