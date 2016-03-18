@@ -28,6 +28,7 @@ app.factory('Store', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       },
 
     all: stores
+
     };
 
     return store;
