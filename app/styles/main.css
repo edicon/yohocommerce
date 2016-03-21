@@ -151,3 +151,8 @@ legend {
 	font-size: 18px;
 	padding: 7px 0px
 }
+
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
