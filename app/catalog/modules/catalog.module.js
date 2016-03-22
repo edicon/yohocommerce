@@ -598,7 +598,7 @@ angular.module('CatalogModule', [
       function (             $scope,   Tenant,   Store) {
           var contactCtrl = this;
 
-          var tenant = Catalog.getTenant();
+          var tenant = Tenant.getStoreTenant();
               tenant.$loaded().then(function() {
                 contactCtrl.store = Store.getStore(tenant.default_store_id)
           });
