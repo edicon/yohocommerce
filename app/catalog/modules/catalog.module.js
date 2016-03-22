@@ -296,9 +296,10 @@ angular.module('CatalogModule', [
               },
 
               nextProduct: function(theObj) {
+                  var cnt = 1;
+                  var i = 0;
                   var data = $firebaseArray(ref.child(tid).child(theObj.oid));
                   data.$loaded().then(function() {
-                        cnt = 1;
                         for(i = 0; i < data.length; i++) {
 
                             if (theObj.$id === data[i].$id)
@@ -359,6 +360,52 @@ angular.module('CatalogModule', [
             			return deferred.promise;
         		};
 	     }
+])
+
+
+.service('CartHelper', ['Catalog', 'CartOrders', 'Products', '$cookies',
+      function (         Catalog,   CartOrders,   Products,   $cookies) {
+    		      this.initiate = function (pid) {
+
+              var theProduct = Products.getProduct(pid);
+                  theProduct.$loaded().then(function() {
+
+                  if (theProduct.special_price === undefined)
+                      theProduct.special_price = null;
+
+                  if ($cookies.get('orderId') === undefined) {
+
+                      CartOrders.addOrder().then(function(theRef) {
+                          theProduct.oid = theRef;
+                          theProduct.product_quantity = 1;
+                          $cookies.put("orderId", theRef);
+                          CartOrders.addProduct(theProduct);
+                      });
+
+                  } else {
+
+                      theProduct.oid = $cookies.get('orderId');
+                      CartOrders.nextProduct(theProduct);
+                  }
+
+                  var theCart = Catalog.getCart($cookies.get('cartId'));
+                      theCart.$loaded().then(function() {
+                          theCart.items = theCart.items + 1;
+
+                          if (theProduct.special_price != null)
+                                theCart.total = theCart.total + theProduct.special_price;
+
+                          else
+                                theCart.total = theCart.total + theProduct.product_price;
+
+                          theCart.cid = $cookies.get('cartId');
+                          CartOrders.updateCart(theCart);
+                      });
+                  });
+            };
+
+      }
+
 ])
 
 .controller('CatalogCtrl', ['Catalog', 'CartOrders', 'Products', '$scope', '$state', '$cookies',
@@ -647,8 +694,8 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CatalogCategoryCtrl', ['$state', 'Products', 'Categories', '$scope', '$stateParams',
-      function (                            $state,   Products,   Categories,   $scope,   $stateParams) {
+.controller('CatalogCategoryCtrl', ['Products', 'Categories', 'CartHelper', '$state', '$stateParams',
+      function (                     Products,   Categories,   CartHelper,   $state,   $stateParams) {
           var catalogCategoryCtrl = this;
           var cid = $stateParams.cid
 
@@ -669,12 +716,16 @@ angular.module('CatalogModule', [
               $state.go('catalog.product', {'pid': pid});
           };
 
+          catalogCategoryCtrl.addOrder = function(pid) {
+              CartHelper.initiate(pid);
+          };
+
       }
 
 ])
 
-.controller('CatalogFeaturedCtrl', ['$state', 'Catalog', 'CartOrders', 'Products', '$scope', '$stateParams', '$cookies',
-      function (                     $state,   Catalog,   CartOrders,   Products,   $scope,   $stateParams,   $cookies) {
+.controller('CatalogFeaturedCtrl', ['CartHelper', 'Products', '$state',
+      function (                     CartHelper,   Products,   $state) {
           var catalogFeaturedCtrl = this;
           catalogFeaturedCtrl.featuredProducts = Products.allFeatured;
 
@@ -683,47 +734,15 @@ angular.module('CatalogModule', [
           };
 
           catalogFeaturedCtrl.addOrder = function(pid) {
-              var theProduct = Products.getProduct(pid);
-                theProduct.$loaded().then(function() {
-
-                    if (theProduct.special_price === undefined)
-                        theProduct.special_price = null;
-
-                    if ($cookies.get('orderId') === undefined) {
-
-                        CartOrders.addOrder().then(function(theRef) {
-                            theProduct.oid = theRef;
-                            theProduct.product_quantity = 1;
-                            $cookies.put("orderId", theRef);
-                            CartOrders.addProduct(theProduct);
-                        });
-
-                    } else {
-
-                        theProduct.oid = $cookies.get('orderId');
-                        CartOrders.nextProduct(theProduct);
-                    }
-                    var theCart = Catalog.getCart($cookies.get('cartId'));
-                      theCart.$loaded().then(function() {
-                          theCart.items = theCart.items + 1;
-
-                            if (theProduct.special_price != null)
-                                theCart.total = theCart.total + theProduct.special_price;
-                            else
-                                theCart.total = theCart.total + theProduct.product_price;
-
-                            theCart.cid = $cookies.get('cartId');
-                            CartOrders.updateCart(theCart);
-                    });
-                });
+              CartHelper.initiate(pid);
           };
 
       }
 
 ])
 
-.controller('CatalogProductCtrl', ['$state', 'Product', 'Products', 'CartOrders', '$scope', '$stateParams', '$cookies',
-      function (                    $state,   Product,   Products,   CartOrders,   $scope,   $stateParams,   $cookies) {
+.controller('CatalogProductCtrl', ['$state', 'Product', 'CartHelper' '$stateParams',
+      function (                    $state,   Product,   CartHelper,  $stateParams) {
           var catalogProductCtrl = this;
 
           var pid = $stateParams.pid
@@ -745,36 +764,16 @@ angular.module('CatalogModule', [
               $state.go('catalog.category', {'cid': cid});
           };
 
-          catalogProductCtrl.addOrder = function(pid) {
-              var theProduct = Products.getProduct(pid);
-                theProduct.$loaded().then(function() {
-                    if (theProduct.product_special_price === undefined)
-                        theProduct.special_price = null;
-
-                    var theOrderId = $cookies.get('orderId');
-
-                    if (theOrderId === undefined) {
-                        Carts.addOrder().then(function(theRef) {
-                            theProduct.orderId = theRef;
-                            theProduct.product_quantity = 1;
-                            $cookies.put("orderId", theRef);
-                            Carts.addProduct(theProduct);
-                        });
-
-                    } else {
-                        theProduct.orderId = theOrderId;
-                        Carts.nextProduct(theProduct);
-                    }
-              //    Cart.totalCart(theProduct.cartId);
-              });
+          catalogFeaturedCtrl.addOrder = function(pid) {
+              CartHelper.initiate(pid);
           };
 
       }
 
 ])
 
-.controller('CatalogSubCategoryCtrl', ['$state', 'Catalog', 'CartOrders', 'Products', 'SubCategories', 'Categories', '$scope', '$stateParams', '$cookies',
-      function (                        $state,   Catalog,   CartOrders,   Products,   SubCategories,   Categories,   $scope,   $stateParams,   $cookies) {
+.controller('CatalogSubCategoryCtrl', ['Catalog', 'CartOrders', 'Products', 'SubCategories', 'Categories', '$state', '$scope', '$stateParams', '$cookies',
+      function (                        Catalog,   CartOrders,   Products,   SubCategories,   Categories,   $state,   $scope,   $stateParams,   $cookies) {
           var catalogSubCategoryCtrl = this;
           var subCid = $stateParams.subCid;
 
