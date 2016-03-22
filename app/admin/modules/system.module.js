@@ -325,6 +325,10 @@ angular.module('SystemModule', [
                   return tenants.$getRecord(uid)
               },
 
+              getStoreTenant: function() {
+                  return $firebaseObject(ref.child(tid));
+              },
+
               getInstanceCredentials: function() {
                   return $firebaseObject(ref.child(tid));
               },
