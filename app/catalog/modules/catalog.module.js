@@ -741,7 +741,7 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CatalogProductCtrl', ['$state', 'Product', 'CartHelper' '$stateParams',
+.controller('CatalogProductCtrl', ['$state', 'Product', 'CartHelper', '$stateParams',
       function (                    $state,   Product,   CartHelper,  $stateParams) {
           var catalogProductCtrl = this;
 
