@@ -266,31 +266,31 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountGiftCardCtrl', ['Account',  'GiftCard', 'AlertService', 'Customer', 'uiGridConstants', 'tid', '$scope', 'profile',
-      function (                     Account,    GiftCard,   AlertService,   Customer,   uiGridConstants,   tid,   $scope,   profile) {
+.controller('AccountGiftCardCtrl', ['Account',  'GiftCard', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
+      function (                     Account,    GiftCard,   AlertService,   Customer,   tid,   $scope,   profile) {
           var accountGiftCardCtrl = this;
 
           // Gift Cards e-mail association
-                    var theGiftCard = GiftCard.getGiftCard(profile);
-                        theGiftCard.$loaded().then(function() {
-                            console.log(theGiftCard);
-                            accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
-                            console.log(accountGiftCardCtrl.gridGiftCards.data);
+          var theGiftCard = GiftCard.getGiftCard(profile);
+              theGiftCard.$loaded().then(function() {
+                console.log(theGiftCard);
+                accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
+                console.log(accountGiftCardCtrl.gridGiftCards.data);
 
-                            accountGiftCardCtrl.gridGiftCards = {
-                                enableSorting: true,
-                                enableCellEditOnFocus: true,
-                                enableFiltering: true,
-                                columnDefs: [
-                                    { name:'giftCardCode', field: '$id', enableHiding: false, enableFiltering: false },
-                                    { name:'amount', field: 'giftcard_amount', width: '15%', enableHiding: false, enableFiltering: false,
-                                    cellClass: 'grid-align-right', cellFilter:'currency' },
-                                    { name:'status', field: 'giftcard_status', width: '15%', enableHiding: false, enableFiltering: true,
-                                    cellClass: 'grid-align-right' },
-                                ]
-                            };
+          });
 
-                        });
+          accountGiftCardCtrl.gridGiftCards = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              enableFiltering: true,
+              columnDefs: [
+                  { name:'giftCardCode', field: '$id', enableHiding: false, enableFiltering: false },
+                  { name:'amount', field: 'giftcard_amount', width: '15%', enableHiding: false, enableFiltering: false,
+                  cellClass: 'grid-align-right', cellFilter:'currency' },
+                  { name:'status', field: 'giftcard_status', width: '15%', enableHiding: false, enableFiltering: true,
+                  cellClass: 'grid-align-right' },
+              ]
+          };
 
 
 

@@ -288,8 +288,9 @@ angular.module('CatalogModule', [
               },
 
               updateQty: function(theObj) {
+                console.log(theObj)
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
-                  theRef.update( {product_quantity: theObj.product_quantity, order_update_date: Firebase.ServerValue.TIMESTAMP} );
+                  theRef.update( {product_quantity: theObj.qty, order_update_date: Firebase.ServerValue.TIMESTAMP} );
               },
 
               updateCart: function(theObj) {
@@ -462,8 +463,10 @@ angular.module('CatalogModule', [
                 });
           };
 
-          catalogCtrl.updateQty = function($id) {
-              theProduct = {};
+          catalogCtrl.updateQty = function($id, qty) {
+            console.log($id)
+              var theProduct = {};
+              theProduct.qty = qty;
               theProduct.oid = $cookies.get('orderId');
               theProduct.$id = $id;
               CartOrders.updateQty(theProduct);
