@@ -109,7 +109,7 @@ angular.module('SalesModule', [
                           templateUrl: 'admin/views/sales/sales.html'
                       },
                       "list@admin.sales.giftcards": {
-                          controller: 'GiftcardsCtrl as giftcardsCtrl',
+                          controller: 'GiftCardsCtrl as giftCardsCtrl',
                           templateUrl: 'admin/views/sales/giftcards.html'
                       }
                   }
@@ -454,19 +454,23 @@ angular.module('SalesModule', [
 
 ])
 
-.factory('Giftcards', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+.factory('GiftCards', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (        $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'giftcards');
           var giftcards = $firebaseArray(ref.child(tid).orderByPriority());
 
           var giftcard = {
 
-              addGiftcard: function(theObj) {
+              getGiftCard: function(gid) {
+                  return $firebaseObject(ref.child(tid).child(gid));
+              },
+
+              addGiftCard: function(theObj) {
                   var theRef = new Firebase(FirebaseUrl+'giftcards/'+tid);
                   return theRef.push(theObj);
               },
 
-              removeGiftcard: function(gid) {
+              removeGiftCard: function(gid) {
                   return $firebaseObject(ref.child(tid).child(gid)).$remove();
               },
 
@@ -810,37 +814,37 @@ angular.module('SalesModule', [
       };
 })
 
-.controller('GiftcardsCtrl', ['Giftcards', '$state', '$scope', '$stateParams',
-      function (               Giftcards,   $state,   $scope,   $stateParams) {
-          var giftcardsCtrl = this;
-          giftcardsCtrl.allGiftcards = Giftcards.all;
-          giftcardsCtrl.giftcard = {};
-          giftcardsCtrl.giftcard.giftcard_status = 'Unclaimed';
+.controller('GiftCardsCtrl', ['GiftCards', '$state', '$scope', '$stateParams',
+      function (               GiftCards,   $state,   $scope,   $stateParams) {
+          var giftCardsCtrl = this;
+          giftCardsCtrl.allGiftcards = GiftCards.all;
+          giftCardsCtrl.giftcard = {};
+          giftCardsCtrl.giftcard.giftcard_status = 'Unclaimed';
 
-          giftcardsCtrl.addGiftcard = function() {
-                Giftcards.addGiftcard(giftcardsCtrl.giftcard);
-                //      giftcardsCtrl.giftcard.giftcard_name = null;
-                giftcardsCtrl.giftcard.giftcard_amount = null;
-
-          }, function(error) {
-                giftcardsCtrl.error = error;
-          };
-
-          giftcardsCtrl.removeGiftcard = function(row) {
-                Giftcards.removeGiftcard(row.entity.$id);
+          giftCardsCtrl.addGiftcard = function() {
+                Giftcards.addGiftcard(giftCardsCtrl.giftcard);
+                giftCardsCtrl.giftcard.customer_email = null;
+                giftCardsCtrl.giftcard.giftcard_amount = null;
 
           }, function(error) {
-                giftcardsCtrl.error = error;
+                giftCardsCtrl.error = error;
           };
 
-          giftcardsCtrl.gridGiftcards = {
+          giftCardsCtrl.removeGiftCard = function(row) {
+                Giftcards.removeGiftCard(row.entity.$id);
+
+          }, function(error) {
+                giftCardsCtrl.error = error;
+          };
+
+          giftCardsCtrl.gridGiftCards = {
                 enableSorting: true,
                 enableCellEditOnFocus: true,
                 enableFiltering: true,
-                data: Giftcards.all,
+                data: GiftCards.all,
                 columnDefs: [
-                //        { name:'giftCardName', field: 'giftcard_name', width: '20%', enableHiding: false },
                       { name:'giftCardCode', field: '$id', enableHiding: false, enableFiltering: false },
+                      { name:'customerEmail', field: 'customer_email',  width: '35%', enableHiding: false, enableFiltering: false },
                       { name:'amount', field: 'giftcard_amount', width: '15%', enableHiding: false, enableFiltering: false,
                           cellClass: 'grid-align-right', cellFilter:'currency' },
                       { name:'status', field: 'giftcard_status', width: '15%', enableHiding: false, enableFiltering: true,
