@@ -287,6 +287,10 @@ angular.module('CatalogModule', [
 
               },
 
+              updateQty: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
+                  theRef.update( {product_quantity: theObj.product_quantity, order_update_date: Firebase.ServerValue.TIMESTAMP} );
+              },
 
               updateCart: function(theObj) {
                   var theRef = new Firebase(FirebaseUrl+'carts/'+tid+'/'+theObj.cid);
@@ -453,8 +457,16 @@ angular.module('CatalogModule', [
           catalogCtrl.getOrder = function() {
               var theOrder = CartOrders.getOrder($cookies.get('orderId'))
                 theOrder.$loaded().then(function() {
+                  console.log(theOrder)
                     catalogCtrl.order = theOrder;
                 });
+          };
+
+          catalogCtrl.updateQty = function($id) {
+              theProduct = {};
+              theProduct.oid = $cookies.get('orderId');
+              theProduct.$id = $id;
+              CartOrders.updateQty(theProduct);
           };
 
           catalogCtrl.removeProduct = function(pid) {
