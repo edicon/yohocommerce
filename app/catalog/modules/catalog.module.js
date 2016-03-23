@@ -446,10 +446,8 @@ angular.module('CatalogModule', [
           };
 
           if ($cookies.get('cartId') === undefined)
-
               catalogCtrl.addCart();
           else
-
               catalogCtrl.getTotals();
 
           catalogCtrl.getOrder = function() {
@@ -470,10 +468,8 @@ angular.module('CatalogModule', [
                 theProduct.$loaded().then(function() {
 
                     if (theProduct.special_price != null)
-
                         productPrice = theProduct.special_price;
                     else
-
                         productPrice = theProduct.product_price;
 
                     var cartTotals = Catalog.getCart(theCart.cid);

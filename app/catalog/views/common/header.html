@@ -60,7 +60,7 @@
           <button type="button" ng-click="catalogCtrl.getOrder()" data-toggle="dropdown" class="btn btn-inverse btn-block dropdown-toggle">
             <i class="fa fa-shopping-cart"></i> {{catalogCtrl.cartTotals.items}} Item(s) - {{catalogCtrl.cartTotals.total | currency}}
           </button>
-          <ul  class="dropdown-menu pull-right">
+          <ul class="dropdown-menu pull-right">
             <li>
               <table class="table table-striped">
                 <tr ng-repeat="o in catalogCtrl.order">
@@ -68,9 +68,11 @@
                     <a href="" ng-click="catalogCtrl.goProduct(o.product_id)"><img ng-src="{{o.product_image}}" width="35px" height="35px"></a>
                   </td>
                   <td class="text-left"><a href="" ng-click="catalogCtrl.goProduct(o.product_id)">{{o.product_name}}</a>
-                  <td class="text-right">{{o.product_quantity}}</td>
+                  <td width="70px">
+                    <input type="text" ng-model="o.product_quantity" ng-change="" class="form-control" style="text-align: right;">
+                  </td>
                   <td ng-if="o.product_special_price" class="text-right">
-                    {{o.product_special_price | currency}} &nbsp;&nbsp;<s>{{o.product_regular_price | currency}}</s>
+                    <s>{{o.product_regular_price | currency}}</s>&nbsp;{{o.product_special_price | currency}}
                   </td>
                   <td ng-if="o.product_special_price == null" class="text-right">
                     {{o.product_regular_price | currency}}
