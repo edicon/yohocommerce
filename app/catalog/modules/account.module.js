@@ -239,12 +239,6 @@ angular.module('AccountModule', [
           else
               $state.go('catalog.home');
 
-          if (accountCtrl.profile.type === 'Customer')
-            accountCtrl.authInfo = Auth.$getAuth();
-          else
-            $state.go('catalog.home');
-
-
           accountCtrl.logout = function() {
               Auth.$unauth();
               $state.go('catalog.home');

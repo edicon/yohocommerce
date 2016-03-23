@@ -764,11 +764,7 @@ angular.module('CatalogModule', [
 ])
 
 .controller('CatalogProductCtrl', ['$state', 'Product', 'CartHelper', '$stateParams',
-<<<<<<< HEAD
-      function (                    $state,   Product,   CartHelper,  $stateParams) {
-=======
       function (                    $state,   Product,   CartHelper,   $stateParams) {
->>>>>>> master
           var catalogProductCtrl = this;
 
           var pid = $stateParams.pid
