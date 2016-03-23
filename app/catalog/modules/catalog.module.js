@@ -344,7 +344,6 @@ angular.module('CatalogModule', [
             var countries = $firebaseArray(ref);
 
             var country = {
-
               all: countries
             };
 
