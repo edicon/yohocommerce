@@ -237,6 +237,31 @@ angular.module('CatalogModule', [
           var ref = new Firebase(FirebaseUrl);
           var auth = $firebaseAuth(ref);
 
+          var authorize = {
+
+              updatePassword: function(theObj) {
+/*                var email = String(theObj.email);
+                var oldpass = String(pStuff.oldpassword);
+                var newpass = String(pStuff.newpassword);
+                return auth.$changePassword(email, oldpass, newpass)
+*/
+                  return auth.$changePassword(String(theObj.email), String(theObj.oldpassword), String(theObj.newpassword);)
+                      .catch(function(error) {
+                          return error;
+                      });
+              },
+
+              sendPasswordEmail: function(email) {
+//                  var email = String(email);
+//                      return auth.$sendPasswordResetEmail(email)
+                      return auth.$sendPasswordResetEmail(String(email))
+                          .catch(function(error) {
+                            return error;
+                      });
+              }
+
+          };
+
           return auth;
 
       }

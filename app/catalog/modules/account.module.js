@@ -217,9 +217,8 @@ angular.module('AccountModule', [
           var giftcard = {
 
               getGiftCard: function(theObj) {
-                console.log("gothere")
-    //              return $firebaseArray(ref.child(tid).equalTo(theObj.email));
-                    return $firebaseArray(ref.child(tid));
+                  return $firebaseArray(ref.child(tid).equalTo(theObj.email));
+    //                return $firebaseArray(ref.child(tid));
               },
 
           };
@@ -273,10 +272,7 @@ angular.module('AccountModule', [
           // Gift Cards e-mail association
           var theGiftCard = GiftCard.getGiftCard(profile);
               theGiftCard.$loaded().then(function() {
-                console.log(theGiftCard);
                 accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
-                console.log(accountGiftCardCtrl.gridGiftCards.data);
-
           });
 
           accountGiftCardCtrl.gridGiftCards = {
