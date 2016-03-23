@@ -12,23 +12,26 @@
     <h3>Our Location</h3>
       <div class="panel panel-default">
         <div class="panel-body">
-          <div class="col-sm-4">
-            <h4>Mailing Address</h4>
-              <address>
-                {{contactCtrl.store.store_name}}<br>
-                {{contactCtrl.store.store_address_street}}<br>
-                {{contactCtrl.store.store_address_city}}, {{contactCtrl.store.store_address_region}}<br>
-                {{contactCtrl.store.store_address_postal_code}} {{contactCtrl.store.store_address_country}}
-              </address>
-          </div>
-          <div class="col-sm-4">
-            <h4>Telephone</h4>
-            <p>{{contactCtrl.store.store_phone}}</p>
-          </div>
-          <div class="col-sm-4">
-            <h4>E-Mail</h4>
-              <a href=mailto:info@bluerockapps.com>info@bluerockapps.com</a><br>
-              <a href=mailto:info@bluerockapps.com>support@bluerockapps.com</a>
+          <div class="col-sm-12 col-md-offset-2">
+            <div class="col-sm-3">
+              <h4>Mailing Address</h4>
+                <address>
+                  {{contactCtrl.store.store_name}}<br>
+                  {{contactCtrl.store.store_address_street}}<br>
+                  {{contactCtrl.store.store_address_city}}, {{contactCtrl.store.store_address_region}}<br>
+                  {{contactCtrl.store.store_address_postal_code}} {{contactCtrl.store.store_address_country}}
+                </address>
+            </div>
+            <div class="col-sm-3">
+              <h4>E-Mail</h4>
+                <a href=mailto:info@bluerockapps.com>info@bluerockapps.com</a><br>
+                <a href=mailto:info@bluerockapps.com>support@bluerockapps.com</a>
+            </div>
+            <div class="col-sm-3">
+              <h4>Telephone</h4>
+              <p>{{contactCtrl.store.store_phone}}</p>
+            </div>
+
           </div>
         </div>
       </div>

@@ -277,12 +277,27 @@ angular.module('CatalogModule', [
                   });
               },
 
-              updateCart: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'carts/'+tid+'/'+theObj.cid);
-                  return theRef.update( {items: theObj.items, total: theObj.total, update_date: Firebase.ServerValue.TIMESTAMP} );
+              updateOrder: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
+
+                  if (theObj.items === 0)
+                      return theRef.remove();
+                  else
+                      return theRef.update( {product_quantity: theObj.product_quantity, update_date: Firebase.ServerValue.TIMESTAMP} );
+
               },
 
-              /* product ID is used as node ID (theObj.$id) on order array */
+
+              updateCart: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'carts/'+tid+'/'+theObj.cid);
+
+                  if (theObj.items === 0)
+                      return theRef.remove();
+                   else
+                      return theRef.update( {items: theObj.items, total: theObj.total, update_date: Firebase.ServerValue.TIMESTAMP} );
+
+              },
+
               addProduct: function(theObj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
                   theRef.update( {product_id: theObj.$id, product_name: theObj.product_name, product_regular_price: theObj.product_price,
@@ -367,40 +382,40 @@ angular.module('CatalogModule', [
       function (         Catalog,   CartOrders,   Products,   $cookies) {
     		      this.initiate = function (pid) {
 
-              var theProduct = Products.getProduct(pid);
-                  theProduct.$loaded().then(function() {
+                  var theProduct = Products.getProduct(pid);
+                    theProduct.$loaded().then(function() {
 
-                  if (theProduct.special_price === undefined)
-                      theProduct.special_price = null;
+                        if (theProduct.special_price === undefined)
+                              theProduct.special_price = null;
 
-                  if ($cookies.get('orderId') === undefined) {
+                        if ($cookies.get('orderId') === undefined) {
 
-                      CartOrders.addOrder().then(function(theRef) {
-                          theProduct.oid = theRef;
-                          theProduct.product_quantity = 1;
-                          $cookies.put("orderId", theRef);
-                          CartOrders.addProduct(theProduct);
-                      });
+                            CartOrders.addOrder().then(function(theRef) {
+                                theProduct.oid = theRef;
+                                theProduct.product_quantity = 1;
+                                $cookies.put("orderId", theRef);
+                                CartOrders.addProduct(theProduct);
+                            });
 
-                  } else {
+                        } else {
 
-                      theProduct.oid = $cookies.get('orderId');
-                      CartOrders.nextProduct(theProduct);
-                  }
+                            theProduct.oid = $cookies.get('orderId');
+                            CartOrders.nextProduct(theProduct);
+                        }
 
-                  var theCart = Catalog.getCart($cookies.get('cartId'));
-                      theCart.$loaded().then(function() {
-                          theCart.items = theCart.items + 1;
+                        var theCart = Catalog.getCart($cookies.get('cartId'));
+                          theCart.$loaded().then(function() {
+                              theCart.items = theCart.items + 1;
 
-                          if (theProduct.special_price != null)
-                                theCart.total = theCart.total + theProduct.special_price;
+                              if (theProduct.special_price != null)
+                                    theCart.total = theCart.total + theProduct.special_price;
 
-                          else
-                                theCart.total = theCart.total + theProduct.product_price;
+                              else
+                                    theCart.total = theCart.total + theProduct.product_price;
 
-                          theCart.cid = $cookies.get('cartId');
-                          CartOrders.updateCart(theCart);
-                      });
+                              theCart.cid = $cookies.get('cartId');
+                              CartOrders.updateCart(theCart);
+                          });
                   });
             };
 
@@ -416,6 +431,13 @@ angular.module('CatalogModule', [
           catalogCtrl.subPulldowns = Catalog.pulldown;
           catalogCtrl.subCategories = Catalog.allMenus;
 
+          catalogCtrl.addCart = function() {
+              Catalog.addCart().then(function(theRef) {
+                  $cookies.put("cartId", theRef);
+                  catalogCtrl.getTotals();
+              });
+          };
+
           catalogCtrl.getTotals = function() {
               var cartTotals = Catalog.getCart($cookies.get('cartId'));
                   cartTotals.$loaded().then(function() {
@@ -423,16 +445,10 @@ angular.module('CatalogModule', [
                   });
           };
 
-          if ($cookies.get('cartId') === undefined) {
-
-              Catalog.addCart().then(function(theRef) {
-                  $cookies.put("cartId", theRef);
-                  catalogCtrl.getTotals();
-              });
-
-          } else {
+          if ($cookies.get('cartId') === undefined)
+              catalogCtrl.addCart();
+          else
               catalogCtrl.getTotals();
-          }
 
           catalogCtrl.getOrder = function() {
               var theOrder = CartOrders.getOrder($cookies.get('orderId'))
@@ -445,16 +461,16 @@ angular.module('CatalogModule', [
               var theOrder = {};
               var productPrice = {};
               var theCart = {};
-              theOrder.oid = $cookies.get('orderId');
               theOrder.pid = pid;
               theCart.cid = $cookies.get('cartId');
+              theOrder.oid = $cookies.get('orderId');
               var theProduct = Products.getProduct(pid);
                 theProduct.$loaded().then(function() {
 
                     if (theProduct.special_price != null)
-                      productPrice = theProduct.special_price;
+                        productPrice = theProduct.special_price;
                     else
-                      productPrice = theProduct.product_price;
+                        productPrice = theProduct.product_price;
 
                     var cartTotals = Catalog.getCart(theCart.cid);
                       cartTotals.$loaded().then(function() {
@@ -462,6 +478,12 @@ angular.module('CatalogModule', [
                           theCart.items = cartTotals.items - 1;
                           CartOrders.updateCart(theCart);
                           CartOrders.removeProduct(theOrder);
+
+                              if (theCart.items === 0) {
+                                    $cookies.remove('cartId');
+                                    $cookies.remove('orderId');
+                                    catalogCtrl.addCart();
+                              }
                       });
                 });
 
@@ -641,8 +663,8 @@ angular.module('CatalogModule', [
 
 
 
-.controller('ContactCtrl', ['$scope', 'Tenant', 'Store',
-      function (             $scope,   Tenant,   Store) {
+.controller('ContactCtrl', ['Tenant', 'Store',
+      function (             Tenant,   Store) {
           var contactCtrl = this;
 
           var tenant = Tenant.getStoreTenant();
@@ -651,19 +673,19 @@ angular.module('CatalogModule', [
           });
 //auto resizing comment box.
       $(document)
-		    .one('focus.textarea', '.autoExpand', function(){
-			       var savedValue = this.value;
-			          this.value = '';
-			          this.baseScrollHeight = this.scrollHeight;
-			          this.value = savedValue;
-		    })
-		    .on('input.textarea', '.autoExpand', function(){
-			       var minRows = this.getAttribute('data-min-rows')|0, rows;
-			          this.rows = minRows;
-                console.log(this.scrollHeight , this.baseScrollHeight);
-			          rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 17);
-			          this.rows = minRows + rows;
-		    });
+  		    .one('focus.textarea', '.autoExpand', function(){
+  			       var savedValue = this.value;
+  			          this.value = '';
+  			          this.baseScrollHeight = this.scrollHeight;
+  			          this.value = savedValue;
+  		    })
+  		    .on('input.textarea', '.autoExpand', function(){
+  			       var minRows = this.getAttribute('data-min-rows')|0, rows;
+  			          this.rows = minRows;
+                  console.log(this.scrollHeight , this.baseScrollHeight);
+  			          rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 17);
+  			          this.rows = minRows + rows;
+  		    });
 
       }
 
@@ -742,7 +764,11 @@ angular.module('CatalogModule', [
 ])
 
 .controller('CatalogProductCtrl', ['$state', 'Product', 'CartHelper', '$stateParams',
+<<<<<<< HEAD
       function (                    $state,   Product,   CartHelper,  $stateParams) {
+=======
+      function (                    $state,   Product,   CartHelper,   $stateParams) {
+>>>>>>> master
           var catalogProductCtrl = this;
 
           var pid = $stateParams.pid
@@ -764,7 +790,7 @@ angular.module('CatalogModule', [
               $state.go('catalog.category', {'cid': cid});
           };
 
-          catalogFeaturedCtrl.addOrder = function(pid) {
+          catalogProductCtrl.addOrder = function(pid) {
               CartHelper.initiate(pid);
           };
 
@@ -772,8 +798,8 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CatalogSubCategoryCtrl', ['Catalog', 'CartOrders', 'Products', 'SubCategories', 'Categories', '$state', '$scope', '$stateParams', '$cookies',
-      function (                        Catalog,   CartOrders,   Products,   SubCategories,   Categories,   $state,   $scope,   $stateParams,   $cookies) {
+.controller('CatalogSubCategoryCtrl', ['CartHelper', 'Products', 'SubCategories', 'Categories', '$state', '$stateParams',
+      function (                        CartHelper,   Products,   SubCategories,   Categories,   $state,   $stateParams) {
           var catalogSubCategoryCtrl = this;
           var subCid = $stateParams.subCid;
 
@@ -792,49 +818,18 @@ angular.module('CatalogModule', [
                   subCategory.$loaded().then(function() {
                       catalogSubCategoryCtrl.subCategory = subCategory;
                         var category = Categories.getCategory(catalogSubCategoryCtrl.subCategory.category_id);
-                            category.$loaded().then(function() {
-                                  catalogSubCategoryCtrl.category = category;
+                          category.$loaded().then(function() {
+                                catalogSubCategoryCtrl.category = category;
                                   var products = Products.getProductSubCategory(subCid);
                                       products.$loaded().then(function() {
                                             catalogSubCategoryCtrl.products = products;
-                                      });
-                            });
+                                });
+                        });
                 });
           }
 
           catalogSubCategoryCtrl.addOrder = function(pid) {
-              var theProduct = Products.getProduct(pid);
-                  theProduct.$loaded().then(function() {
-
-                      if (theProduct.special_price === undefined)
-                            theProduct.special_price = null;
-
-                      if ($cookies.get('orderId') === undefined) {
-                          CartOrders.addOrder().then(function(theRef) {
-                              theProduct.oid = theRef;
-                              theProduct.product_quantity = 1;
-                              $cookies.put("orderId", theRef);
-                              CartOrders.addProduct(theProduct);
-                          });
-
-                    } else {
-
-                          theProduct.oid = $cookies.get('orderId');
-                          CartOrders.nextProduct(theProduct);
-                    }
-                      var theCart = Catalog.getCart($cookies.get('cartId'));
-                      theCart.$loaded().then(function() {
-                          theCart.items = theCart.items + 1;
-
-                              if (theProduct.special_price != null)
-                                theCart.total = theCart.total + theProduct.special_price;
-                              else
-                                theCart.total = theCart.total + theProduct.product_price;
-
-                          theCart.cid = $cookies.get('cartId');
-                          CartOrders.updateCart(theCart);
-                      });
-                });
+              CartHelper.initiate(pid);
           };
 
       }

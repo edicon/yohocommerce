@@ -39,7 +39,7 @@ angular.module('AccountModule', [
                             return Profile.getProfile(auth.uid).$loaded();
                         });
                     }
-              }
+                }
           })
           .state('account.detail', {
               url: '',
@@ -59,7 +59,7 @@ angular.module('AccountModule', [
                   "accountFooter@account": {
                       controller: 'CatalogCtrl as catalogCtrl',
                       templateUrl: 'catalog/views/common/footer.html'
-                  }
+                  },
               }
           })
           .state('account.address', {
@@ -230,10 +230,14 @@ angular.module('AccountModule', [
 ])
 
 .controller('AccountCtrl', ['Auth', '$state', 'profile',
-      function (             Auth,   $state,  profile) {
+      function (             Auth,   $state,   profile) {
           var accountCtrl = this;
           accountCtrl.profile = profile;
-          accountCtrl.authInfo = Auth.$getAuth();
+
+          if (accountCtrl.profile.type === 'Customer')
+              accountCtrl.authInfo = Auth.$getAuth();
+          else
+              $state.go('catalog.home');
 
           if (accountCtrl.profile.type === 'Customer')
             accountCtrl.authInfo = Auth.$getAuth();
@@ -251,7 +255,7 @@ angular.module('AccountModule', [
 ])
 
 .controller('AccountAddressCtrl', ['Account',  'Countries', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
-      function (                    Account,    Countries,   AlertService,   Customer,   tid,   $scope,  profile) {
+      function (                    Account,    Countries,   AlertService,   Customer,   tid,   $scope,   profile) {
           var accountAddressCtrl = this;
           $scope.country = {};
           $scope.country.selected = {};
