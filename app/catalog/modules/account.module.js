@@ -264,16 +264,10 @@ angular.module('AccountModule', [
       function (                     Account,    GiftCard,   AlertService,   Customer,   tid,   $scope,   profile) {
           var accountGiftCardCtrl = this;
 
-<<<<<<< HEAD
-          // Gift Cards e-mail association
-          var theGiftCard = GiftCard.getGiftCard(profile);
-              theGiftCard.$loaded().then(function() {
-              accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
-=======
           var theGiftCard = GiftCard.getGiftCard(profile);
               theGiftCard.$loaded().then(function() {
                 accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
->>>>>>> master
+
           });
 
           accountGiftCardCtrl.gridGiftCards = {
