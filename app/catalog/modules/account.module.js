@@ -260,14 +260,21 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountGiftCardCtrl', ['Account',  'GiftCard', 'AlertService', 'Customer', 'uiGridConstants', 'tid', '$scope', 'profile',
-      function (                     Account,    GiftCard,   AlertService,   Customer,   uiGridConstants,   tid,   $scope,   profile) {
+.controller('AccountGiftCardCtrl', ['Account',  'GiftCard', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
+      function (                     Account,    GiftCard,   AlertService,   Customer,   tid,   $scope,   profile) {
           var accountGiftCardCtrl = this;
 
           // Gift Cards e-mail association
           var theGiftCard = GiftCard.getGiftCard(profile);
               theGiftCard.$loaded().then(function() {
+<<<<<<< HEAD
               accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
+=======
+                console.log(theGiftCard);
+                accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
+                console.log(accountGiftCardCtrl.gridGiftCards.data);
+
+>>>>>>> master
           });
 
           accountGiftCardCtrl.gridGiftCards = {
@@ -282,6 +289,13 @@ angular.module('AccountModule', [
                   cellClass: 'grid-align-right' },
               ]
           };
+<<<<<<< HEAD
+=======
+
+
+
+
+>>>>>>> master
 
       }
 ])
