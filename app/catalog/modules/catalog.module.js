@@ -245,7 +245,7 @@ angular.module('CatalogModule', [
                 var newpass = String(pStuff.newpassword);
                 return auth.$changePassword(email, oldpass, newpass)
 */
-                  return auth.$changePassword(String(theObj.email), String(theObj.oldpassword), String(theObj.newpassword);)
+                  return auth.$changePassword(String(theObj.email), String(theObj.oldpassword), String(theObj.newpassword))
                       .catch(function(error) {
                           return error;
                       });
