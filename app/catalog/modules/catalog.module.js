@@ -237,6 +237,31 @@ angular.module('CatalogModule', [
           var ref = new Firebase(FirebaseUrl);
           var auth = $firebaseAuth(ref);
 
+          var authorize = {
+
+              updatePassword: function(theObj) {
+/*                var email = String(theObj.email);
+                var oldpass = String(pStuff.oldpassword);
+                var newpass = String(pStuff.newpassword);
+                return auth.$changePassword(email, oldpass, newpass)
+*/
+                  return auth.$changePassword(String(theObj.email), String(theObj.oldpassword), String(theObj.newpassword);)
+                      .catch(function(error) {
+                          return error;
+                      });
+              },
+
+              sendPasswordEmail: function(email) {
+//                  var email = String(email);
+//                      return auth.$sendPasswordResetEmail(email)
+                      return auth.$sendPasswordResetEmail(String(email))
+                          .catch(function(error) {
+                            return error;
+                      });
+              }
+
+          };
+
           return auth;
 
       }
@@ -287,6 +312,11 @@ angular.module('CatalogModule', [
 
               },
 
+              updateQty: function(theObj) {
+                console.log(theObj)
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
+                  theRef.update( {product_quantity: theObj.qty, order_update_date: Firebase.ServerValue.TIMESTAMP} );
+              },
 
               updateCart: function(theObj) {
                   var theRef = new Firebase(FirebaseUrl+'carts/'+tid+'/'+theObj.cid);
@@ -452,8 +482,18 @@ angular.module('CatalogModule', [
           catalogCtrl.getOrder = function() {
               var theOrder = CartOrders.getOrder($cookies.get('orderId'))
                 theOrder.$loaded().then(function() {
+                  console.log(theOrder)
                     catalogCtrl.order = theOrder;
                 });
+          };
+
+          catalogCtrl.updateQty = function($id, qty) {
+            console.log($id)
+              var theProduct = {};
+              theProduct.qty = qty;
+              theProduct.oid = $cookies.get('orderId');
+              theProduct.$id = $id;
+              CartOrders.updateQty(theProduct);
           };
 
           catalogCtrl.removeProduct = function(pid) {

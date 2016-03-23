@@ -260,14 +260,20 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountGiftCardCtrl', ['Account',  'GiftCard', 'AlertService', 'Customer', 'uiGridConstants', 'tid', '$scope', 'profile',
-      function (                     Account,    GiftCard,   AlertService,   Customer,   uiGridConstants,   tid,   $scope,   profile) {
+.controller('AccountGiftCardCtrl', ['Account',  'GiftCard', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
+      function (                     Account,    GiftCard,   AlertService,   Customer,   tid,   $scope,   profile) {
           var accountGiftCardCtrl = this;
 
+<<<<<<< HEAD
           // Gift Cards e-mail association
           var theGiftCard = GiftCard.getGiftCard(profile);
               theGiftCard.$loaded().then(function() {
               accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
+=======
+          var theGiftCard = GiftCard.getGiftCard(profile);
+              theGiftCard.$loaded().then(function() {
+                accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
+>>>>>>> master
           });
 
           accountGiftCardCtrl.gridGiftCards = {
