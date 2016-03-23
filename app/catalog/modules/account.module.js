@@ -211,20 +211,16 @@ angular.module('AccountModule', [
 ])
 
 .factory('GiftCard', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (        $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'giftcards');
 
           var giftcard = {
-
               getGiftCard: function(theObj) {
                   return $firebaseArray(ref.child(tid).orderByChild("customer_email").equalTo(theObj.email));
               },
-
           };
-
           return giftcard;
       }
-
 ])
 
 .controller('AccountCtrl', ['Auth', '$state', 'profile',
@@ -271,6 +267,7 @@ angular.module('AccountModule', [
           var theGiftCard = GiftCard.getGiftCard(profile);
               theGiftCard.$loaded().then(function() {
                 accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
+
           });
 
           accountGiftCardCtrl.gridGiftCards = {
@@ -287,5 +284,4 @@ angular.module('AccountModule', [
           };
 
       }
-
 ])
