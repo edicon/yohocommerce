@@ -34,8 +34,11 @@
           </div>
         </form>
         <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Customer Detail - {{customerCtrl.customer.customer_full_name}}</h3>
+          <div ng-if="customerCtrl.cid === null" class="panel-heading">
+            <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Customer Detail - New Customer</h3>
+          </div>
+          <div ng-if="customerCtrl.cid !== null" class="panel-heading">
+            <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Customer Detail - {{customerCtrl.customer.customer_first_name}} {{customerCtrl.customer.customer_last_name}}</h3>
           </div>
           <div class="panel-body">
             <div class="row">
@@ -373,6 +376,23 @@
                         <form class="form-horizontal" role="form">
                           reward points
                         </form>
+                      </div>
+                    </div>
+                  </div>
+                </uib-tab>
+                <uib-tab>
+                  <uib-tab-heading>
+                    <i class="menu-icon fa fa-gift"></i> GiftCards
+                  </uib-tab-heading>
+                  <div class="row">
+                    <div class="col-xs-12"><br>
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h3 class="panel-title"><span class="menu-icon fa fa-gift"></span> Gift Cards List</h3>
+                        </div>
+                        <div class="panel-body">
+                          <div ui-grid="customerCtrl.gridGiftCard" class="grid-250"></div>
+                        </div>
                       </div>
                     </div>
                   </div>
