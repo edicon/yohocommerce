@@ -218,10 +218,7 @@ angular.module('AccountModule', [
 
               getGiftCard: function(theObj) {
                   return $firebaseArray(ref.child(tid).orderByChild("customer_email").equalTo(theObj.email));
-<<<<<<< HEAD
 
-=======
->>>>>>> master
               },
 
           };
