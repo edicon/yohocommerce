@@ -244,8 +244,13 @@ angular.module('CatalogModule', [
                 var oldpass = String(pStuff.oldpassword);
                 var newpass = String(pStuff.newpassword);
                 return auth.$changePassword(email, oldpass, newpass)
+<<<<<<< HEAD
 
                   return auth.$changePassword(String(theObj.email), String(theObj.oldpassword), String(theObj.newpassword);)
+=======
+*/
+                  return auth.$changePassword(String(theObj.email), String(theObj.oldpassword), String(theObj.newpassword))
+>>>>>>> master
                       .catch(function(error) {
                           return error;
                       });

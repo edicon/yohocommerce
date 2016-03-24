@@ -271,7 +271,12 @@ angular.module('AccountModule', [
 
           var theGiftCard = GiftCard.getGiftCard(profile);
               theGiftCard.$loaded().then(function() {
+<<<<<<< HEAD
               accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
+=======
+                accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
+
+>>>>>>> master
           });
 
           accountGiftCardCtrl.gridGiftCards = {
