@@ -16,8 +16,8 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#/login" ui-sref="catalog.login"><i class="fa fa-user"></i> Register or Login</a></li>
-        <li><a href="#"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
-        <li><a href="#"><i class="fa fa-mail-forward"></i> Checkout</a></li>
+        <li><a href="#/cart" ui-sref="catalog.cart"><i class="fa fa-shopping-cart"></i> Shopping Cart</a></li>
+        <li><a href="#/checkout" ui-sref="catalog.checkout"><i class="fa fa-mail-forward"></i> Checkout</a></li>
       </ul>
     </div>
   </div>
@@ -69,7 +69,8 @@
                   </td>
                   <td class="text-left"><a href="" ng-click="catalogCtrl.goProduct(o.product_id)">{{o.product_name}}</a>
                   <td width="70px">
-                    <input type="text" ng-model="o.product_quantity" ng-change="catalogCtrl.updateQty(o.$id, o.product_quantity)" class="form-control" style="text-align: right;">
+                    <input type="text" ng-model="o.product_quantity" ng-change="catalogCtrl.updateQty(o.$id, o.product_quantity)"
+                      class="form-control" style="text-align: right;">
                   </td>
                   <td ng-if="o.product_special_price" class="text-right">
                     <s>{{o.product_regular_price | currency}}</s>&nbsp;{{o.product_special_price | currency}}
@@ -89,7 +90,10 @@
                     <td class="text-right">{{catalogCtrl.cartTotals.total | currency}}</td>
                   </tr>
                 </table>
-                <p class="text-right"><a href="<?php echo $cart; ?>"><strong><i class="fa fa-shopping-cart"></i> View Cart</strong></a>&nbsp;&nbsp;&nbsp;<a href="<?php echo $checkout; ?>"><strong><i class="fa fa-share"></i> checkout</strong></a></p>
+                <p class="text-right">
+                    <a href="#/cart" ui-sref="catalog.cart"><strong><i class="fa fa-shopping-cart"></i> View Cart</strong></a>
+                    &nbsp;&nbsp;&nbsp;<a href="<a href="#/checkout" ui-sref="catalog.checkout"><strong><i class="fa fa-share"></i> checkout</strong></a>
+                </p>
               </div>
             </li>
           </ul>

@@ -49,54 +49,6 @@ angular.module('CatalogModule', [
                     }
                 }
             })
-            .state('catalog.contact', {
-                url: 'contact',
-                views: {
-                    "header@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/header.html'
-                    },
-                    "main@catalog": {
-                        controller: 'ContactCtrl as contactCtrl',
-                        templateUrl: 'catalog/views/common/contact.html'
-                    },
-                    "footer@catalog": {
-                        templateUrl: 'catalog/views/common/footer.html'
-                    }
-                }
-            })
-            .state('catalog.login', {
-                url: 'login',
-                views: {
-                    "header@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/header.html'
-                    },
-                    "main@catalog": {
-                        controller: 'AuthCtrl as authCtrl',
-                        templateUrl: 'catalog/views/account/login.html'
-                    },
-                    "footer@catalog": {
-                        templateUrl: 'catalog/views/common/footer.html'
-                    }
-                }
-            })
-            .state('catalog.register', {
-                url: 'register',
-                views: {
-                    "header@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/header.html'
-                    },
-                    "main@catalog": {
-                        controller: 'RegisterCtrl as registerCtrl',
-                        templateUrl: 'catalog/views/account/register.html'
-                    },
-                    "footer@catalog": {
-                        templateUrl: 'catalog/views/common/footer.html'
-                    }
-                }
-            })
             .state('catalog.category', {
                 url: 'category',
                 params: {
@@ -149,6 +101,86 @@ angular.module('CatalogModule', [
                     "main@catalog": {
                         controller: 'CatalogProductCtrl as catalogProductCtrl',
                         templateUrl: 'catalog/views/products/product.html'
+                    },
+                    "footer@catalog": {
+                        templateUrl: 'catalog/views/common/footer.html'
+                    }
+                }
+            })
+            .state('catalog.cart', {
+                url: 'cart',
+                views: {
+                    "header@catalog": {
+                        controller: 'CatalogCtrl as catalogCtrl',
+                        templateUrl: 'catalog/views/common/header.html'
+                    },
+                    "main@catalog": {
+                        controller: 'CartCtrl as cartCtrl',
+                        templateUrl: 'catalog/views/shoppingcart/cart.html'
+                    },
+                    "footer@catalog": {
+                        templateUrl: 'catalog/views/common/footer.html'
+                    }
+                }
+            })
+            .state('catalog.checkout', {
+                url: 'checkout',
+                views: {
+                    "header@catalog": {
+                        controller: 'CatalogCtrl as catalogCtrl',
+                        templateUrl: 'catalog/views/common/header.html'
+                    },
+                    "main@catalog": {
+                        controller: 'CheckoutCtrl as checkoutCtrl',
+                        templateUrl: 'catalog/views/shoppingcart/checkout.html'
+                    },
+                    "footer@catalog": {
+                        templateUrl: 'catalog/views/common/footer.html'
+                    }
+                }
+            })
+            .state('catalog.contact', {
+                url: 'contact',
+                views: {
+                    "header@catalog": {
+                        controller: 'CatalogCtrl as catalogCtrl',
+                        templateUrl: 'catalog/views/common/header.html'
+                    },
+                    "main@catalog": {
+                        controller: 'ContactCtrl as contactCtrl',
+                        templateUrl: 'catalog/views/common/contact.html'
+                    },
+                    "footer@catalog": {
+                        templateUrl: 'catalog/views/common/footer.html'
+                    }
+                }
+            })
+            .state('catalog.login', {
+                url: 'login',
+                views: {
+                    "header@catalog": {
+                        controller: 'CatalogCtrl as catalogCtrl',
+                        templateUrl: 'catalog/views/common/header.html'
+                    },
+                    "main@catalog": {
+                        controller: 'AuthCtrl as authCtrl',
+                        templateUrl: 'catalog/views/account/login.html'
+                    },
+                    "footer@catalog": {
+                        templateUrl: 'catalog/views/common/footer.html'
+                    }
+                }
+            })
+            .state('catalog.register', {
+                url: 'register',
+                views: {
+                    "header@catalog": {
+                        controller: 'CatalogCtrl as catalogCtrl',
+                        templateUrl: 'catalog/views/common/header.html'
+                    },
+                    "main@catalog": {
+                        controller: 'RegisterCtrl as registerCtrl',
+                        templateUrl: 'catalog/views/account/register.html'
                     },
                     "footer@catalog": {
                         templateUrl: 'catalog/views/common/footer.html'
@@ -312,10 +344,10 @@ angular.module('CatalogModule', [
 
               },
 
-              updateQty: function(theObj) {
-                console.log(theObj)
+              updateItemQty: function(theObj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
                   theRef.update( {product_quantity: theObj.qty, order_update_date: Firebase.ServerValue.TIMESTAMP} );
+
               },
 
               updateCart: function(theObj) {
@@ -326,6 +358,11 @@ angular.module('CatalogModule', [
                    else
                       return theRef.update( {items: theObj.items, total: theObj.total, update_date: Firebase.ServerValue.TIMESTAMP} );
 
+              },
+
+              updateCartPrice: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'carts/'+tid+'/'+theObj.cid);
+                  return theRef.update( {items: theObj.items, total: theObj.total, update_date: Firebase.ServerValue.TIMESTAMP} );
               },
 
               addProduct: function(theObj) {
@@ -461,90 +498,290 @@ angular.module('CatalogModule', [
           catalogCtrl.subCategories = Catalog.allMenus;
 
           catalogCtrl.addCart = function() {
-              Catalog.addCart().then(function(theRef) {
-                  $cookies.put("cartId", theRef);
-                  catalogCtrl.getTotals();
-              });
+                Catalog.addCart().then(function(theRef) {
+                      $cookies.put("cartId", theRef);
+                      catalogCtrl.getTotals();
+                });
+          }, function(error) {
+                catalogCtrl.error = error;
           };
 
           catalogCtrl.getTotals = function() {
-              var cartTotals = Catalog.getCart($cookies.get('cartId'));
-                  cartTotals.$loaded().then(function() {
-                      catalogCtrl.cartTotals = cartTotals;
-                  });
+                var cartTotals = Catalog.getCart($cookies.get('cartId'));
+                    cartTotals.$loaded().then(function() {
+                        catalogCtrl.cartTotals = cartTotals;
+                    });
+          }, function(error) {
+                catalogCtrl.error = error;
           };
 
           if ($cookies.get('cartId') === undefined)
-              catalogCtrl.addCart();
+                catalogCtrl.addCart();
           else
-              catalogCtrl.getTotals();
+                catalogCtrl.getTotals();
 
           catalogCtrl.getOrder = function() {
               var theOrder = CartOrders.getOrder($cookies.get('orderId'))
-                theOrder.$loaded().then(function() {
-                  console.log(theOrder)
-                    catalogCtrl.order = theOrder;
-                });
+                  theOrder.$loaded().then(function() {
+                      catalogCtrl.order = theOrder;
+                  });
+          }, function(error) {
+                catalogCtrl.error = error;
           };
 
           catalogCtrl.updateQty = function($id, qty) {
-            console.log($id)
-              var theProduct = {};
-              theProduct.qty = qty;
-              theProduct.oid = $cookies.get('orderId');
-              theProduct.$id = $id;
-              CartOrders.updateQty(theProduct);
+              if (qty > 0) {
+                    var i = 0;
+                    var theCart = {};
+                    var theItem = {};
+                    theCart.items = 0;
+                    theCart.total = 0;
+                    theItem.qty = Number(qty);
+                    theItem.$id = $id;
+                    theItem.oid = $cookies.get('orderId');
+                    CartOrders.updateItemQty(theItem);
+
+                    theCart.cid = $cookies.get('cartId');
+                    var theOrder = CartOrders.getOrder(theItem.oid);
+                          theOrder.$loaded().then(function() {
+
+                              for(i = 0; i < theOrder.length; i++) {
+                                  if (theOrder.product_id === theItem.$id)
+                                      theCart.item = theItem.qty;
+                                  else
+                                      theCart.item = theOrder[i].product_quantity;
+
+                                  if (theOrder[i].product_special_price === undefined)
+                                      theCart.price = theOrder[i].product_regular_price;
+                                  else
+                                      theCart.price = theOrder[i].product_special_price;
+
+                                  theCart.total = theCart.total + (theCart.item * theCart.price);
+                                  theCart.items = theCart.items + theCart.item;
+
+                              }
+
+                              CartOrders.updateCartPrice(theCart);
+                        });
+
+              }
+          }, function(error) {
+                catalogCtrl.error = error;
           };
 
           catalogCtrl.removeProduct = function(pid) {
-              var theOrder = {};
-              var productPrice = {};
-              var theCart = {};
-              theOrder.pid = pid;
-              theCart.cid = $cookies.get('cartId');
-              theOrder.oid = $cookies.get('orderId');
-              var theProduct = Products.getProduct(pid);
-                theProduct.$loaded().then(function() {
+                var i = 0;
+                var theProduct = {};
+                var theCart = {};
+                var theItem = {};
+                theCart.items = 0;
+                theCart.total = 0;
+                theProduct.pid = pid;
+                theProduct.oid = $cookies.get('orderId');
+                CartOrders.removeProduct(theProduct);
 
-                    if (theProduct.special_price != null)
-                        productPrice = theProduct.special_price;
-                    else
-                        productPrice = theProduct.product_price;
+                theCart.cid = $cookies.get('cartId');
+                var theOrder = CartOrders.getOrder($cookies.get('orderId'));
+                      theOrder.$loaded().then(function() {
 
-                    var cartTotals = Catalog.getCart(theCart.cid);
-                      cartTotals.$loaded().then(function() {
-                          theCart.total = cartTotals.total - productPrice;
-                          theCart.items = cartTotals.items - 1;
-                          CartOrders.updateCart(theCart);
-                          CartOrders.removeProduct(theOrder);
+                          for(i = 0; i < theOrder.length; i++) {
+                              theCart.item = theOrder[i].product_quantity;
 
-                              if (theCart.items === 0) {
-                                    $cookies.remove('cartId');
-                                    $cookies.remove('orderId');
-                                    catalogCtrl.addCart();
-                              }
-                      });
-                });
+                              if (theOrder[i].product_special_price === undefined)
+                                  theCart.price = theOrder[i].product_regular_price;
+                              else
+                                  theCart.price = theOrder[i].product_special_price;
 
+                              theCart.total = theCart.total + (theCart.item * theCart.price);
+                              theCart.items = theCart.items + theCart.item;
+
+                          }
+
+                          if (theCart.items === 0)
+                              $cookies.remove('orderId');
+
+                          CartOrders.updateCartPrice(theCart);
+
+                    });
           }, function(error) {
-              catalogCtrl.error = error;
+                catalogCtrl.error = error;
           };
 
           catalogCtrl.goCategory = function(cid) {
-              $state.go('catalog.category', {'cid': cid});
+                $state.go('catalog.category', {'cid': cid});
           };
 
           catalogCtrl.goSubCategory = function(subCid) {
-              $state.go('catalog.subcategory', {'subCid': subCid});
+                $state.go('catalog.subcategory', {'subCid': subCid});
           };
 
           catalogCtrl.goProduct = function(pid) {
-              $state.go('catalog.product', {'pid': pid});
+                $state.go('catalog.product', {'pid': pid});
           };
 
           catalogCtrl.findProduct = function() {
-              $state.go('catalog.product', {'pid': $scope.product.selected.$id});
+                $state.go('catalog.product', {'pid': $scope.product.selected.$id});
           };
+
+      }
+
+])
+
+
+.controller('CarouselCtrl', ['Banner',
+      function (              Banner) {
+          var carouselCtrl = this;
+
+          carouselCtrl.myInterval = 7000;
+          carouselCtrl.noWrapSlides = false;
+
+          carouselCtrl.defaultSlides = [
+              { image: "/images/carousel-default-image.png" },
+              { image: "/images/carousel-default-image.png" },
+              { image: "/images/carousel-default-image.png" }
+          ]
+          /* removed until file upload working
+              carouselCtrl.bannerImages = Banner.getImages("1");
+                carouselCtrl.bannerImages.$loaded().then(function() {
+                  if (carouselCtrl.bannerImages.length === 0) {
+                    carouselCtrl.bannerArray = 'no';
+
+                  }
+              });
+          */
+      }
+
+])
+
+.controller('CatalogCategoryCtrl', ['Products', 'Categories', 'CartHelper', '$state', '$stateParams',
+      function (                     Products,   Categories,   CartHelper,   $state,   $stateParams) {
+          var catalogCategoryCtrl = this;
+          var cid = $stateParams.cid
+
+          if (cid === null) {
+                $state.go('catalog.home');
+          } else {
+                var category = Categories.getCategory(cid);
+                    category.$loaded().then(function() {
+                        catalogCategoryCtrl.category = category;
+                        var products = Products.getProductCategory(cid);
+                            products.$loaded().then(function() {
+                              catalogCategoryCtrl.products = products;
+                        });
+                });
+          }
+
+          catalogCategoryCtrl.goProduct = function(pid) {
+              $state.go('catalog.product', {'pid': pid});
+          };
+
+          catalogCategoryCtrl.addOrder = function(pid) {
+              CartHelper.initiate(pid);
+          };
+
+      }
+
+])
+
+.controller('CatalogFeaturedCtrl', ['CartHelper', 'Products', '$state',
+      function (                     CartHelper,   Products,   $state) {
+          var catalogFeaturedCtrl = this;
+          catalogFeaturedCtrl.featuredProducts = Products.allFeatured;
+
+          catalogFeaturedCtrl.goProduct = function(pid) {
+              $state.go('catalog.product', {'pid': pid});
+          };
+
+          catalogFeaturedCtrl.addOrder = function(pid) {
+              CartHelper.initiate(pid);
+          };
+
+      }
+
+])
+
+.controller('CatalogProductCtrl', ['$state', 'Product', 'CartHelper', '$stateParams',
+      function (                    $state,   Product,   CartHelper,   $stateParams) {
+          var catalogProductCtrl = this;
+
+          var pid = $stateParams.pid
+
+          if (pid === null) {
+              $state.go('catalog.home');
+          } else {
+              var product = Product.getProduct(pid);
+                  product.$loaded().then(function() {
+                    catalogProductCtrl.product = product;
+              });
+              var thumbnails = Product.getProductThumbnails(pid);
+                  thumbnails.$loaded().then(function() {
+                    catalogProductCtrl.thumbnails = thumbnails;
+              });
+          }
+
+          catalogProductCtrl.goCategory = function(cid) {
+              $state.go('catalog.category', {'cid': cid});
+          };
+
+          catalogProductCtrl.addOrder = function(pid) {
+              CartHelper.initiate(pid);
+          };
+
+      }
+
+])
+
+.controller('CatalogSubCategoryCtrl', ['CartHelper', 'Products', 'SubCategories', 'Categories', '$state', '$stateParams',
+      function (                        CartHelper,   Products,   SubCategories,   Categories,   $state,   $stateParams) {
+          var catalogSubCategoryCtrl = this;
+          var subCid = $stateParams.subCid;
+
+          catalogSubCategoryCtrl.goCategory = function(cid) {
+              $state.go('catalog.category', {'cid': cid});
+          };
+
+          catalogSubCategoryCtrl.goProduct = function(pid) {
+              $state.go('catalog.product', {'pid': pid});
+          };
+
+          if (subCid === null) {
+              $state.go('catalog.home');
+          } else {
+              var subCategory = SubCategories.getSubCategory(subCid);
+                  subCategory.$loaded().then(function() {
+                      catalogSubCategoryCtrl.subCategory = subCategory;
+                        var category = Categories.getCategory(catalogSubCategoryCtrl.subCategory.category_id);
+                          category.$loaded().then(function() {
+                                catalogSubCategoryCtrl.category = category;
+                                  var products = Products.getProductSubCategory(subCid);
+                                      products.$loaded().then(function() {
+                                            catalogSubCategoryCtrl.products = products;
+                                });
+                        });
+                });
+          }
+
+          catalogSubCategoryCtrl.addOrder = function(pid) {
+              CartHelper.initiate(pid);
+          };
+
+      }
+
+])
+
+.controller('CartCtrl', ['Catalog', 'CartOrders', 'Products', '$scope', '$state', '$cookies',
+      function (          Catalog,   CartOrders,   Products,   $scope,   $state,   $cookies) {
+          var catalogCtrl = this;
+
+
+      }
+
+])
+
+.controller('CheckoutCtrl', ['Catalog', 'CartOrders', 'Products', '$scope', '$state', '$cookies',
+      function (          Catalog,   CartOrders,   Products,   $scope,   $state,   $cookies) {
+          var catalogCtrl = this;
+
 
       }
 
@@ -725,147 +962,6 @@ angular.module('CatalogModule', [
   			          rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 17);
   			          this.rows = minRows + rows;
   		    });
-
-      }
-
-])
-
-.controller('CarouselCtrl', ['Banner',
-      function (              Banner) {
-          var carouselCtrl = this;
-
-          carouselCtrl.myInterval = 7000;
-          carouselCtrl.noWrapSlides = false;
-
-          carouselCtrl.defaultSlides = [
-              { image: "/images/carousel-default-image.png" },
-              { image: "/images/carousel-default-image.png" },
-              { image: "/images/carousel-default-image.png" }
-          ]
-          /* removed until file upload working
-              carouselCtrl.bannerImages = Banner.getImages("1");
-                carouselCtrl.bannerImages.$loaded().then(function() {
-                  if (carouselCtrl.bannerImages.length === 0) {
-                    carouselCtrl.bannerArray = 'no';
-
-                  }
-              });
-          */
-      }
-
-])
-
-.controller('CatalogCategoryCtrl', ['Products', 'Categories', 'CartHelper', '$state', '$stateParams',
-      function (                     Products,   Categories,   CartHelper,   $state,   $stateParams) {
-          var catalogCategoryCtrl = this;
-          var cid = $stateParams.cid
-
-          if (cid === null) {
-                $state.go('catalog.home');
-          } else {
-                var category = Categories.getCategory(cid);
-                    category.$loaded().then(function() {
-                        catalogCategoryCtrl.category = category;
-                        var products = Products.getProductCategory(cid);
-                            products.$loaded().then(function() {
-                              catalogCategoryCtrl.products = products;
-                        });
-                });
-          }
-
-          catalogCategoryCtrl.goProduct = function(pid) {
-              $state.go('catalog.product', {'pid': pid});
-          };
-
-          catalogCategoryCtrl.addOrder = function(pid) {
-              CartHelper.initiate(pid);
-          };
-
-      }
-
-])
-
-.controller('CatalogFeaturedCtrl', ['CartHelper', 'Products', '$state',
-      function (                     CartHelper,   Products,   $state) {
-          var catalogFeaturedCtrl = this;
-          catalogFeaturedCtrl.featuredProducts = Products.allFeatured;
-
-          catalogFeaturedCtrl.goProduct = function(pid) {
-              $state.go('catalog.product', {'pid': pid});
-          };
-
-          catalogFeaturedCtrl.addOrder = function(pid) {
-              CartHelper.initiate(pid);
-          };
-
-      }
-
-])
-
-.controller('CatalogProductCtrl', ['$state', 'Product', 'CartHelper', '$stateParams',
-      function (                    $state,   Product,   CartHelper,   $stateParams) {
-          var catalogProductCtrl = this;
-
-          var pid = $stateParams.pid
-
-          if (pid === null) {
-              $state.go('catalog.home');
-          } else {
-              var product = Product.getProduct(pid);
-                  product.$loaded().then(function() {
-                    catalogProductCtrl.product = product;
-              });
-              var thumbnails = Product.getProductThumbnails(pid);
-                  thumbnails.$loaded().then(function() {
-                    catalogProductCtrl.thumbnails = thumbnails;
-              });
-          }
-
-          catalogProductCtrl.goCategory = function(cid) {
-              $state.go('catalog.category', {'cid': cid});
-          };
-
-          catalogProductCtrl.addOrder = function(pid) {
-              CartHelper.initiate(pid);
-          };
-
-      }
-
-])
-
-.controller('CatalogSubCategoryCtrl', ['CartHelper', 'Products', 'SubCategories', 'Categories', '$state', '$stateParams',
-      function (                        CartHelper,   Products,   SubCategories,   Categories,   $state,   $stateParams) {
-          var catalogSubCategoryCtrl = this;
-          var subCid = $stateParams.subCid;
-
-          catalogSubCategoryCtrl.goCategory = function(cid) {
-              $state.go('catalog.category', {'cid': cid});
-          };
-
-          catalogSubCategoryCtrl.goProduct = function(pid) {
-              $state.go('catalog.product', {'pid': pid});
-          };
-
-          if (subCid === null) {
-              $state.go('catalog.home');
-          } else {
-              var subCategory = SubCategories.getSubCategory(subCid);
-                  subCategory.$loaded().then(function() {
-                      catalogSubCategoryCtrl.subCategory = subCategory;
-                        var category = Categories.getCategory(catalogSubCategoryCtrl.subCategory.category_id);
-                          category.$loaded().then(function() {
-                                catalogSubCategoryCtrl.category = category;
-                                  var products = Products.getProductSubCategory(subCid);
-                                      products.$loaded().then(function() {
-                                            catalogSubCategoryCtrl.products = products;
-                                });
-                        });
-                });
-          }
-
-          catalogSubCategoryCtrl.addOrder = function(pid) {
-              CartHelper.initiate(pid);
-          };
 
       }
 
