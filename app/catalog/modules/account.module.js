@@ -244,7 +244,13 @@ angular.module('AccountModule', [
           });
 
           accountCtrl.forgotPassword = function() {
-            Auth.sendPasswordEmail(profile.email);
+            Auth.updatePassword(profile.email);
+            console.log("reset password sent");
+            $state.go('catalog.home');
+          };
+
+          accountCtrl.saveNewPassword = function() {
+            Auth.sendPasswordEmail(accountCtrl.customer.customer_email, accountCtrl.customer.customer_password, accountCtrl.customer.customer_new_password);
             console.log("reset password sent");
             $state.go('catalog.home');
           };

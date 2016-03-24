@@ -546,19 +546,20 @@ angular.module('SalesModule', [
                       customerCtrl.customerIndex = Customer.getIndex(cid);
                       customerCtrl.defaultAddressTab = "active";
                       customerCtrl.cid = cid;
-              });
+                      var theGiftCard = GiftCards.getCustomerGiftCard(customerCtrl.customer);
+                          theGiftCard.$loaded().then(function() {
+                          customerCtrl.gridGiftCard.data = theGiftCard;
+                          });
+                  });
               var theAddresses = Customer.getAddresses(cid);
                   theAddresses.$loaded().then(function() {
                       customerCtrl.addresses = theAddresses;
                   });
+
           };
 
           if ($stateParams.rowEntity != undefined) {
                 customerCtrl.loadCustomer($stateParams.rowEntity.$id);
-                var theGiftCard = GiftCards.getCustomerGiftCard($stateParams.rowEntity);
-                    theGiftCard.$loaded().then(function() {
-                    customerCtrl.gridGiftCard.data = theGiftCard;
-                });
           } else {
                 customerCtrl.cid = null;
           }
@@ -667,6 +668,7 @@ angular.module('SalesModule', [
               var key = customerCtrl.customerIndex + 1;
                   if (key != customerCtrl.totalCount) {
                         customerCtrl.cid = Customer.getKey(key);
+                        console.log(customerCtrl.cid);
                         customerCtrl.loadCustomer(customerCtrl.cid);
                   }
 
