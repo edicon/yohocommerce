@@ -271,17 +271,18 @@ angular.module('CatalogModule', [
 
           var authorize = {
 
-              updatePassword: function(theObj) {
-/*                var email = String(theObj.email);
+/*               updatePassword: function(theObj) {
+               var email = String(theObj.email);
                 var oldpass = String(pStuff.oldpassword);
                 var newpass = String(pStuff.newpassword);
                 return auth.$changePassword(email, oldpass, newpass)
 */
                   return auth.$changePassword(String(theObj.email), String(theObj.oldpassword), String(theObj.newpassword))
+
                       .catch(function(error) {
                           return error;
                       });
-              },
+              }, */
 
               sendPasswordEmail: function(email) {
 //                  var email = String(email);

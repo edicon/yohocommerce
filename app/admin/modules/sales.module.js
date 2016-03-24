@@ -461,6 +461,11 @@ angular.module('SalesModule', [
 
           var giftcard = {
 
+              getCustomerGiftCard: function(theObj) {
+                  return $firebaseArray(ref.child(tid).orderByChild("customer_email").equalTo(theObj.customer_email));
+
+              },
+
               getGiftCard: function(gid) {
                   return $firebaseObject(ref.child(tid).child(gid));
               },
@@ -525,12 +530,14 @@ angular.module('SalesModule', [
 
 ])
 
-.controller('CustomerCtrl', ['Customer', 'Customers', 'CustomerGroups', '$state', '$scope', '$stateParams',
-      function (              Customer,   Customers,   CustomerGroups,   $state,   $scope,   $stateParams) {
+.controller('CustomerCtrl', ['Customer', 'GiftCards', 'Customers', 'CustomerGroups', '$state', '$scope', '$stateParams',
+      function (              Customer,   GiftCards,   Customers,   CustomerGroups,   $state,   $scope,   $stateParams) {
           var customerCtrl = this;
           customerCtrl.customer = {};
           customerCtrl.groups = CustomerGroups.all;
           customerCtrl.totalCount = Customers.all.length;
+
+
 
           customerCtrl.loadCustomer = function(cid) {
               var theCustomer = Customer.getCustomer(cid);
@@ -548,8 +555,11 @@ angular.module('SalesModule', [
 
           if ($stateParams.rowEntity != undefined) {
                 customerCtrl.loadCustomer($stateParams.rowEntity.$id);
+                var theGiftCard = GiftCards.getCustomerGiftCard($stateParams.rowEntity);
+                    theGiftCard.$loaded().then(function() {
+                    customerCtrl.gridGiftCard.data = theGiftCard;
+                });
           } else {
-                customerCtrl.customer.customer_full_name = 'New Customer';
                 customerCtrl.cid = null;
           }
 
@@ -632,6 +642,19 @@ angular.module('SalesModule', [
             customerCtrl.error = error;
           };
 
+          customerCtrl.gridGiftCard = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              enableFiltering: true,
+              columnDefs: [
+                  { name:'giftCardCode', field: '$id', enableHiding: false, enableFiltering: false },
+                  { name:'amount', field: 'giftcard_amount', width: '20%', enableHiding: false, enableFiltering: false,
+                  cellClass: 'grid-align-right', cellFilter:'currency' },
+                  { name:'status', field: 'giftcard_status', width: '25%', enableHiding: false, enableFiltering: true,
+                  cellClass: 'grid-align-right' },
+              ]
+          };
+
           customerCtrl.saveCustomerStatus = function() {
                 customerCtrl.getStatus();
                 customerCtrl.customer.$save();
@@ -712,7 +735,8 @@ angular.module('SalesModule', [
                 columnDefs: [
                       { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/sales/gridTemplates/editCustomer.html',
                         width: 34, enableColumnMenu: false, headerTooltip: 'Edit Customer', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-                      { name:'customerName', field: 'customer_full_name', enableHiding: false, enableCellEdit: false, width: '30%' },
+                      { name:'customerName', cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.customer_first_name}} {{row.entity.customer_last_name}}</div>',
+                       enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '25%' },
                       { name:'email', field: 'customer_email', enableHiding: false, width: '20%', enableCellEdit: false },
                       { name:'customerGroup', field: 'customer_group_name', enableHiding: false, width: '15%', enableCellEdit: false },
                       { name: 'customer_status_id', displayName: 'Status', editableCellTemplate: 'ui-grid/dropdownEditor', width: '15%',
