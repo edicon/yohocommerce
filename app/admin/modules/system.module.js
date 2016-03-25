@@ -82,6 +82,21 @@ angular.module('SystemModule', [
                 }
             }
         })
+        .state('admin.system.localization', {
+            url: '/localization',
+            views: {
+                "header@admin": {
+                    templateUrl: 'admin/views/system/localization.header.html'
+                },
+                "main@admin": {
+                    templateUrl: 'admin/views/system/system.html'
+                },
+                "list@admin.system.localization": {
+                    controller: 'LocalizationCtrl as localizationCtrl',
+                    templateUrl: 'admin/views/system/localization.html'
+                }
+            }
+        })
         .state('admin.system.stores', {
             url: '/stores',
             params: {
@@ -387,59 +402,6 @@ angular.module('SystemModule', [
 
 ])
 
-.controller('BannerCtrl', ['Banner', '$state', '$scope', 'FileReader', '$stateParams',
-      function (            Banner,   $state,   $scope,   FileReader,   $stateParams) {
-
-          var bannerCtrl = this;
-          var imageEntity = [];
-          bannerCtrl.bannerName = "Home Page Banner";
-          bannerCtrl.bid = "1";
-          bannerCtrl.myInterval = 5000;
-          bannerCtrl.noWrapSlides = false;
-          bannerCtrl.bannerArray = 'yes';
-
-          bannerCtrl.defaultSlides = [ {
-              image: "/images/carousel-default-image.png",
-          },
-          {
-              image: "/images/carousel-default-image.png",
-          },
-          {
-              image: "/images/carousel-default-image.png",
-          }]
-
-          bannerCtrl.bannerImages = Banner.getImages(bannerCtrl.bid);
-              bannerCtrl.bannerImages.$loaded().then(function() {
-                if (bannerCtrl.bannerImages.length === 0) {
-                    bannerCtrl.bannerArray = 'no';
-                    bannerCtrl.bannerImages = bannerCtrl.defaultSlides;
-                }
-          });
-
-          bannerCtrl.removeImage = function($id) {
-              imageEntity.$id = $id;
-              imageEntity.bid = bannerCtrl.bid;
-              Banner.removeImage(imageEntity);
-              $state.reload(bannerCtrl.currentState);
-          }, function(error) {
-              bannerCtrl.error = error;
-          };
-
-          $scope.getFile = function () {
-              FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
-                  imageEntity.imageSrc = result;
-                  imageEntity.bid = bannerCtrl.bid;
-                  Banner.addImage(imageEntity).then(function() {
-                      $state.reload(bannerCtrl.currentState);
-          //          bannerCtrl.bannerArray = 'yes';
-                  });
-              });
-          };
-
-      }
-
-])
-
 .controller('LibraryCtrl', ['Upload', 'Tenant', 'InstanceUrl', '$timeout', '$state', '$scope', '$stateParams',
       function (             Upload,   Tenant,   InstanceUrl,   $timeout,   $state,   $scope,   $stateParams) {
 
@@ -498,108 +460,151 @@ angular.module('SystemModule', [
 
 ])
 
-.controller('StoreCtrl', ['Store', 'Stores', 'Transactions', 'Countries', 'AlertService', '$state', '$scope', '$stateParams', '$http',
-      function (           Store,   Stores,   Transactions,   Countries,   AlertService,   $state,   $scope,   $stateParams,   $http) {
+.controller('StoreCtrl', ['Store', 'Stores', 'Transactions', 'Banner', 'Countries', 'FileReader', 'AlertService', '$state', '$scope', '$stateParams', '$http',
+      function (           Store,   Stores,   Transactions,   Banner,   Countries,   FileReader,   AlertService,   $state,   $scope,   $stateParams,   $http) {
 
-          var storeCtrl = this;
-          storeCtrl.store = {};
-          $scope.countries = Countries.all;
-          $scope.address = {};
+            var storeCtrl = this;
+            storeCtrl.store = {};
+            $scope.countries = Countries.all;
+            $scope.address = {};
+            storeCtrl.bid = "1";
+            storeCtrl.myInterval = 5000;
+            storeCtrl.noWrapSlides = false;
+            storeCtrl.bannerArray = 'yes';
 
-          storeCtrl.refreshAddresses = function(address) {
-              var params = {address: address, sensor: false};
-              return $http.get(
-                  'http://maps.googleapis.com/maps/api/geocode/json',
-                  {params: params}
-              ).then(function(response) {
-                  $scope.addresses = response.data.results
-              });
-          };
+            storeCtrl.refreshAddresses = function(address) {
+                  var params = {address: address, sensor: false};
+                  return $http.get(
+                      'http://maps.googleapis.com/maps/api/geocode/json',
+                      {params: params}
+                  ).then(function(response) {
+                      $scope.addresses = response.data.results
+                  });
+            };
 
-          storeCtrl.parseAddress = function(address) {
-              var addressArray = address.split(", ");
-              var regionArray = addressArray[2].split(" ");
-              storeCtrl.store.store_address_street = addressArray[0];
-              storeCtrl.store.store_address_city = addressArray[1];
-              storeCtrl.store.store_address_postal_code = regionArray[1] + " " + regionArray[2];
-              storeCtrl.store.store_address_region = regionArray[0];
-              storeCtrl.store.store_address_country = addressArray[3];
+            storeCtrl.parseAddress = function(address) {
+                  var addressArray = address.split(", ");
+                  var regionArray = addressArray[2].split(" ");
+                  storeCtrl.store.store_address_street = addressArray[0];
+                  storeCtrl.store.store_address_city = addressArray[1];
+                  storeCtrl.store.store_address_postal_code = regionArray[1] + " " + regionArray[2];
+                  storeCtrl.store.store_address_region = regionArray[0];
+                  storeCtrl.store.store_address_country = addressArray[3];
 
-              if (regionArray[2] == undefined) {
-                  storeCtrl.store.store_address_postal_code = regionArray[1];
-              };
+                  if (regionArray[2] == undefined) {
+                        storeCtrl.store.store_address_postal_code = regionArray[1];
+                  };
 
-              if (regionArray[1] == undefined && regionArray[2] == undefined) {
-                  storeCtrl.store.store_address_postal_code = "n/a";
-              };
-          };
+                  if (regionArray[1] == undefined && regionArray[2] == undefined) {
+                        storeCtrl.store.store_address_postal_code = "n/a";
+                  };
+            };
 
-          storeCtrl.loadStore = function(sid) {
-              var theStore = Store.getStore(sid);
-              theStore.$loaded().then(function() {
-                  storeCtrl.store = theStore;
-                  storeCtrl.storeIndex = Store.getIndex(sid);
-                  storeCtrl.count = Stores.all.length;
-              });
-          };
+            storeCtrl.loadStore = function(sid) {
+                  var theStore = Store.getStore(sid);
+                  theStore.$loaded().then(function() {
+                      storeCtrl.store = theStore;
+                      storeCtrl.storeIndex = Store.getIndex(sid);
+                      storeCtrl.count = Stores.all.length;
+                  });
+            };
 
-          if ($stateParams.rowEntity != undefined) {
-              storeCtrl.loadStore($stateParams.rowEntity.$id);
-              storeCtrl.sid = $stateParams.rowEntity.$id;
-          } else {
-              storeCtrl.sid = null;
-          };
+            if ($stateParams.rowEntity != undefined) {
+                  storeCtrl.loadStore($stateParams.rowEntity.$id);
+                  storeCtrl.sid = $stateParams.rowEntity.$id;
+            } else {
+                  storeCtrl.sid = null;
+            };
 
-          storeCtrl.addStore = function() {
-              Store.addStore(storeCtrl.store).then(function(sid) {
-                  storeCtrl.loadStore(sid)
-              });
-          }, function(error) {
+            storeCtrl.addStore = function() {
+                  Store.addStore(storeCtrl.store).then(function(sid) {
+                    storeCtrl.loadStore(sid)
+                  });
+            }, function(error) {
                   AlertService.addError(error.message);
-          };
+            };
 
-          storeCtrl.next = function() {
+            storeCtrl.next = function() {
 
-              if (storeCtrl.count > 0) {
-                  key = storeCtrl.storeIndex;
+                  if (storeCtrl.count > 0) {
+                        key = storeCtrl.storeIndex;
 
-                  if (key < storeCtrl.count - 1) {
-                      key = storeCtrl.storeIndex + 1;
-                      var sid = Store.getKey(key);
-                      storeCtrl.loadStore(sid);
+                        if (key < storeCtrl.count - 1) {
+                              key = storeCtrl.storeIndex + 1;
+                              var sid = Store.getKey(key);
+                              storeCtrl.loadStore(sid);
+                        }
                   }
-              }
 
-          }, function(error) {
-              storeCtrl.error = error;
-          };
+            }, function(error) {
+                  storeCtrl.error = error;
+            };
 
-          storeCtrl.back = function() {
-              var key = storeCtrl.storeIndex - 1;
+            storeCtrl.back = function() {
+                var key = storeCtrl.storeIndex - 1;
 
-              if (key < 0) key = 0
-                var sid = Store.getKey(key);
-                storeCtrl.loadStore(sid);
+                if (key < 0) key = 0
+                  var sid = Store.getKey(key);
+                  storeCtrl.loadStore(sid);
 
-          }, function(error) {
-                storeCtrl.error = error;
-          };
+            }, function(error) {
+                  storeCtrl.error = error;
+            };
 
-          storeCtrl.first = function() {
-              var key = 0;
-              var sid = Store.getKey(key);
-              storeCtrl.loadStore(sid);
-          }, function(error) {
-              storeCtrl.error = error;
-          };
+            storeCtrl.first = function() {
+                  var key = 0;
+                  var sid = Store.getKey(key);
+                  storeCtrl.loadStore(sid);
+            }, function(error) {
+                  storeCtrl.error = error;
+            };
 
-          storeCtrl.last = function() {
-              var key = storeCtrl.count - 1;
-              var sid = Store.getKey(key);
-              storeCtrl.loadStore(sid);
-          }, function(error) {
-              storeCtrl.error = error;
-          };
+            storeCtrl.last = function() {
+                  var key = storeCtrl.count - 1;
+                  var sid = Store.getKey(key);
+                  storeCtrl.loadStore(sid);
+            }, function(error) {
+                  storeCtrl.error = error;
+            };
+
+            storeCtrl.defaultSlides = [ {
+                  image: "/images/carousel-default-image.png",
+            },
+            {
+                  image: "/images/carousel-default-image.png",
+            },
+            {
+                  image: "/images/carousel-default-image.png",
+            }]
+
+            storeCtrl.bannerImages = Banner.getImages(storeCtrl.bid);
+            storeCtrl.bannerImages.$loaded().then(function() {
+                  if (storeCtrl.bannerImages.length === 0) {
+                          storeCtrl.bannerArray = 'no';
+                          storeCtrl.bannerImages = storeCtrl.defaultSlides;
+                  }
+            });
+
+            storeCtrl.removeImage = function($id) {
+                  imageEntity.$id = $id;
+                  imageEntity.bid = bannerCtrl.bid;
+                  Banner.removeImage(imageEntity);
+                  $state.reload(bannerCtrl.currentState);
+            }, function(error) {
+                  bannerCtrl.error = error;
+            };
+
+            $scope.getFile = function () {
+                  FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
+                        imageEntity.imageSrc = result;
+                        imageEntity.bid = bannerCtrl.bid;
+                        Banner.addImage(imageEntity).then(function() {
+                            $state.reload(bannerCtrl.currentState);
+                //          bannerCtrl.bannerArray = 'yes';
+                        });
+                  });
+            };
+
       }
 
 ])
@@ -763,6 +768,16 @@ angular.module('SystemModule', [
                   { name:'status', field: 'status', enableHiding: false },
               ]
           };
+      }
+
+])
+
+.controller('LocalizationCtrl', ['Stores', '$state', '$scope', '$stateParams',
+      function (                  Stores,   $state,   $scope,   $stateParams) {
+
+          var localizationCtrl = this;
+
+
       }
 
 ])

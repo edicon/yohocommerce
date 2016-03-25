@@ -33,17 +33,17 @@
   </div>
   <div class="panel panel-default">
     <div ng-if="storeCtrl.sid === null" class="panel-heading">
-      <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Store Detail - New Store</h3>
+      <h3 class="panel-title"><span class="menu-icon fa fa-shopping-bag"></span> Store Detail - New Store</h3>
     </div>
     <div ng-if="storeCtrl.sid !== null" class="panel-heading">
-      <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Store Detail - {{storeCtrl.store.store_name}}</h3>
+      <h3 class="panel-title"><span class="menu-icon fa fa-shopping-bag"></span> Store Detail - {{storeCtrl.store.store_name}}</h3>
     </div>
     <div class="panel-body">
       <div class="row">
 		    <uib-tabset>
 					<uib-tab>
             <uib-tab-heading>
-              <i class="menu-icon fa fa-user-plus"></i> Store Information
+              <i class="menu-icon fa fa-shopping-bag"></i> General
             </uib-tab-heading><br>
             <form name:="storeProfileForm" class="form-horizontal" ng-submit="storeCtrl.addStore()">
               <fieldset>
@@ -99,24 +99,6 @@
                       placeholder="Phone Number" class="form-control">
                   </div>
                 </div>
-
-                <div class="form-group required">
-                  <label class="control-label col-xs-2">Default Store</label>
-                  <div ng-if="storeCtrl.sid === null" class="col-xs-8">
-                    <select ng-model="storeCtrl.store.store_status" class="form-control">
-                      <option value="Default">Yes</option>
-                      <option value="No">No</option>
-                    </select>
-                  </div>
-                  <div ng-if="storeCtrl.sid !== null" class="col-xs-8">
-                    <select class="form-control" ng-model="storeCtrl.store.store_status"
-                      ng-change="storeCtrl.store.$save" class="form-control">
-                        <option value="Default">Default</option>
-                        <option value="No">No</option>
-                    </select>
-                  </div>
-                </div>
-
               </fieldset>
               <fieldset>
                 <legend>Address</legend>
@@ -198,6 +180,163 @@
                 </div>
               </fieldset>
             </form>
+          </uib-tab>
+
+          <uib-tab>
+            <uib-tab-heading>
+              <i class="menu-icon fa fa-picture-o"></i> Image Library
+            </uib-tab-heading><br>
+            <uib-tabset>
+              <uib-tab>
+                <uib-tab-heading>
+                  <i class="menu-icon fa fa-picture-o"></i> Library
+                </uib-tab-heading><br>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title"><span class="menu-icon fa fa-picture-o"></span> Library</h4>
+                  </div>
+                  <div class="panel-body">
+                    <div class="row">
+                      images go here
+                    </div>
+                  </div>
+                </div>
+              </uib-tab>
+              <uib-tab>
+                <uib-tab-heading>
+                  <i class="menu-icon fa fa-cloud-upload"></i> Uploads
+                </uib-tab-heading><br>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title"><span class="menu-icon fa fa-cloud-upload"></span> Uploads</h4>
+                  </div>
+                  <div class="panel-body">
+                    <div class="col-sm-2">
+                      <div class="row">
+                        <button type="file" ngf-select="uploadFiles($file, $invalidFiles)"
+                                accept="image/*" ngf-max-height="1000" ngf-max-size="1MB">
+                          Select File</button><br><br>
+                          File:
+                          <div style="font:smaller">{{f.name}} {{errFile.name}} {{errFile.$error}} {{errFile.$errorParam}}
+                              <span class="progress" ng-show="f.progress >= 0">
+                                  <div style="width:{{f.progress}}%"
+                                        ng-bind="f.progress + '%'"></div>
+                              </span>
+                          </div>
+                          {{errorMsg}}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </uib-tab>
+              <uib-tab>
+                <uib-tab-heading>
+                  <i class="menu-icon fa fa-key"></i> Security
+                </uib-tab-heading><br>
+                <div class="row">
+                  <form class="form-horizontal">
+                    <div class="form-group">
+                      <div class="col-sm-12">
+                        <button type="button" class="btn btn-sm btn-primary detail-btn pull-right" tooltip-placement="top" uib-tooltip="Save" ng-click="libraryCtrl.saveDreamFactoryUser()">
+                          <i class="fa fa-floppy-o"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h4 class="panel-title"><span class="menu-icon fa fa-key"></span> Security</h4>
+                  </div>
+                  <div class="panel-body">
+                    <div class="row">
+                      <form class="form-horizontal">
+                        <div class="form-group">
+                          <label class="control-label col-sm-3">Email</label>
+                          <div class="col-sm-6">
+                            <input type="email" ng-model="libraryCtrl.user.dreamfactory_email" placeholder="Enter DreamFactory Email" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label col-sm-3">Password</label>
+                          <div class="col-sm-6">
+                            <input type="password" ng-model="libraryCtrl.user.dreamfactory_password" placeholder="Enter DreamFactory Password" class="form-control">
+                          </div>
+                        </div>
+                        <div class="form-group">
+                          <label class="control-label col-sm-3">Verify Password</label>
+                          <div class="col-sm-6">
+                            <input type="password" ng-model="libraryCtrl.user.confirm_password" placeholder="Verify DreamFactory Password" class="form-control">
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </uib-tab>
+            </uib-tabset>
+          </uib-tab>
+          <uib-tab>
+            <uib-tab-heading>
+              <i class="menu-icon fa fa-flag-checkered"></i> Home Page Banner
+            </uib-tab-heading><br>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> {{bannerCtrl.bannerName}}</h3>
+              </div>
+              <div class="panel-body">
+                <div class="col-xs-2">
+                  <div class="row">
+                    <span class="file-input btn btn-primary btn-block btn-file">
+                      Select or Drag File Here
+                      <input type="file" ng-file-select="storeCtrl.onFileSelect($files)">
+                    </span>
+                  </div><br>
+                  <div ng-if="storeCtrl.bannerArray === 'yes'" class="panel panel-default">
+                    <div class="panel-body">
+                      <div ng-repeat="s in storeCtrl.bannerImages">
+                        <div class="row">
+                          <div>
+                            <img ng-src="{{s.image}}" class="img-responsive">
+                          </div>
+                        </div>
+                        <div class="row">
+                          <button type="button" class="btn btn-xs btn-block btn-danger" ng-click="bannerCtrl.removeImage(s.$id)">
+                            Click to Delete Image
+                          </button>
+                        </div><br>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xs-10">
+                  <div class="row">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <uib-carousel interval="storeCtrl.myInterval" no-wrap="storeCtrl.noWrapSlides">
+                          <uib-slide ng-repeat="s in storeCtrl.bannerImages" active="slide.active">
+                            <img ng-src="{{s.image}}" style="margin:auto; height: 305px; width: 800px">
+                          </uib-slide>
+                        </uib-carousel>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </uib-tab>
+          <uib-tab>
+            <uib-tab-heading>
+              <i class="menu-icon fa fa-tasks"></i> Setup
+            </uib-tab-heading><br>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title"><span class="menu-icon fa fa-tasks"></span> Setup</h3>
+              </div>
+              <div class="panel-body">
+
+              </div>
+            </div>
           </uib-tab>
 				</uib-tabset>
       </div>
