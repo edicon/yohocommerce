@@ -155,7 +155,7 @@ angular.module('SystemModule', [
 ])
 
 .factory('Banner', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,  tid) {
+      function (     $firebaseArray,   $firebaseObject,   FirebaseUrl,  tid) {
           var ref = new Firebase(FirebaseUrl+'banner_images');
 
           var banner = {
@@ -181,7 +181,7 @@ angular.module('SystemModule', [
 ])
 
 .factory('Library', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (          $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (      $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'banner_images');
 
           var banner = {
@@ -207,7 +207,7 @@ angular.module('SystemModule', [
 ])
 
 .factory('Store', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (           $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (    $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'stores');
           var stores = $firebaseArray(ref.child(tid).orderByPriority());
 
@@ -246,7 +246,7 @@ angular.module('SystemModule', [
 ])
 
 .factory('Stores', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (     $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'stores');
           var stores = $firebaseArray(ref.child(tid).orderByPriority());
 
@@ -267,7 +267,7 @@ angular.module('SystemModule', [
 ])
 
 .factory('User', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (   $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'profiles');
           var users = $firebaseArray(ref);
 
@@ -309,7 +309,7 @@ angular.module('SystemModule', [
 ])
 
 .factory('Users', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (        $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (    $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'profiles');
           var users = $firebaseArray(ref);
 
@@ -330,7 +330,7 @@ angular.module('SystemModule', [
 ])
 
 .factory('Tenant', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (         $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (     $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'tenants');
           var tenants = $firebaseArray(ref);
 
@@ -567,15 +567,11 @@ angular.module('SystemModule', [
                   storeCtrl.error = error;
             };
 
-            storeCtrl.defaultSlides = [ {
-                  image: "/images/carousel-default-image.png",
-            },
-            {
-                  image: "/images/carousel-default-image.png",
-            },
-            {
-                  image: "/images/carousel-default-image.png",
-            }]
+            storeCtrl.defaultSlides = [
+                  {image: "/images/carousel-default-image.png",},
+                  {image: "/images/carousel-default-image.png",},
+                  {image: "/images/carousel-default-image.png",}
+            ]
 
             storeCtrl.bannerImages = Banner.getImages(storeCtrl.bid);
             storeCtrl.bannerImages.$loaded().then(function() {

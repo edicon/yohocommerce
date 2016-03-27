@@ -466,7 +466,7 @@ angular.module('CatalogsModule', [
 ])
 
 .factory('Products', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (              $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
             var ref = new Firebase(FirebaseUrl+'products');
             var products = $firebaseArray(ref.child(tid));
             var featuredProducts = $firebaseArray(ref.child(tid).orderByChild("product_featured").equalTo(true));
@@ -497,10 +497,9 @@ angular.module('CatalogsModule', [
 
                 recountFeaturedProduct: function() {
                     var cnt = 1;
-                    var i = 0;
                     var data = $firebaseArray(ref.child(tid).orderByChild("product_featured").equalTo(true));
                     data.$loaded().then(function() {
-                        for(i = 0; i < data.length; i++) {
+                        for(var i = 0; i < data.length; i++) {
                             var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+data[i].$id);
                             theRef.update({ product_featured_order: cnt });
                             cnt = cnt + 1;
@@ -534,7 +533,7 @@ angular.module('CatalogsModule', [
 ])
 
 .factory('SubCategories', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (                   $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
             var ref = new Firebase(FirebaseUrl+'sub_categories');
             var subCategories = $firebaseArray(ref.child(tid).orderByPriority());
 

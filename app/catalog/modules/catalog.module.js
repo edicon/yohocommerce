@@ -532,7 +532,6 @@ angular.module('CatalogModule', [
 
           catalogCtrl.updateQty = function($id, qty) {
               if (qty > 0) {
-                    var i = 0;
                     var theCart = {};
                     var theItem = {};
                     theCart.items = 0;
@@ -546,7 +545,7 @@ angular.module('CatalogModule', [
                     var theOrder = CartOrders.getOrder(theItem.oid);
                           theOrder.$loaded().then(function() {
 
-                              for(i = 0; i < theOrder.length; i++) {
+                              for(var i = 0; i < theOrder.length; i++) {
                                   if (theOrder.product_id === theItem.$id)
                                       theCart.item = theItem.qty;
                                   else
@@ -571,7 +570,6 @@ angular.module('CatalogModule', [
           };
 
           catalogCtrl.removeProduct = function(pid) {
-                var i = 0;
                 var theProduct = {};
                 var theCart = {};
                 var theItem = {};
@@ -585,7 +583,7 @@ angular.module('CatalogModule', [
                 var theOrder = CartOrders.getOrder($cookies.get('orderId'));
                       theOrder.$loaded().then(function() {
 
-                          for(i = 0; i < theOrder.length; i++) {
+                          for(var i = 0; i < theOrder.length; i++) {
                               theCart.item = theOrder[i].product_quantity;
 
                               if (theOrder[i].product_special_price === undefined)
