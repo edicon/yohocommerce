@@ -375,8 +375,8 @@ angular.module('SystemModule', [
                   return theRef.push(theObj);
               },
 
-              removeTax: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'taxes/'+tid+'/'+theObj.taxId);
+              removeTax: function(theId) {
+                  var theRef = new Firebase(FirebaseUrl+'taxes/'+tid+'/'+theId);
                   return theRef.remove();
               },
 
@@ -391,7 +391,7 @@ angular.module('SystemModule', [
 ])
 
 .factory('TaxGroups', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (      $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (        $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'tax_groups');
           var taxgroups = $firebaseArray(ref.child(tid).orderByPriority());
 
@@ -402,8 +402,8 @@ angular.module('SystemModule', [
                   return theRef.push(theObj);
               },
 
-              removeTaxGroup: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'tax_groups/'+tid+'/'+theObj.taxGrpId);
+              removeTaxGroup: function(theId) {
+                  var theRef = new Firebase(FirebaseUrl+'tax_groups/'+tid+'/'+theId);
                   return theRef.remove();
               },
 
@@ -412,6 +412,87 @@ angular.module('SystemModule', [
           };
 
           return taxgroup;
+
+      }
+
+])
+
+.factory('ReturnStatuses', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (             $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'return_statuses');
+          var returnstatuses = $firebaseArray(ref.child(tid).orderByPriority());
+
+          var returnstatus = {
+
+              addReturnStatus: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'return_statuses/'+tid);
+                  return theRef.push(theObj);
+              },
+
+              removeReturnStatus: function(theId) {
+                  var theRef = new Firebase(FirebaseUrl+'return_statuses/'+tid+'/'+theId);
+                  return theRef.remove();
+              },
+
+              all: returnstatuses,
+
+          };
+
+          return returnstatus;
+
+      }
+
+])
+
+.factory('ReturnActions', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'return_actions');
+          var returnactions = $firebaseArray(ref.child(tid).orderByPriority());
+
+          var returnaction = {
+
+              addReturnAction: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'return_actions/'+tid);
+                  return theRef.push(theObj);
+              },
+
+              removeReturnAction: function(theId) {
+                  var theRef = new Firebase(FirebaseUrl+'return_actions/'+tid+'/'+theId);
+                  return theRef.remove();
+              },
+
+              all: returnactions,
+
+          };
+
+          return returnaction;
+
+      }
+
+])
+
+.factory('ReturnReasons', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'return_reasons');
+          var returnreasons = $firebaseArray(ref.child(tid).orderByPriority());
+
+          var returnreason = {
+
+              addReturnReason: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'return_reasons/'+tid);
+                  return theRef.push(theObj);
+              },
+
+              removeReturnStatus: function(theId) {
+                  var theRef = new Firebase(FirebaseUrl+'return_reasons/'+tid+'/'+theId);
+                  return theRef.remove();
+              },
+
+              all: returnreasons,
+
+          };
+
+          return returnreason;
 
       }
 
@@ -824,15 +905,17 @@ angular.module('SystemModule', [
 
 ])
 
-.controller('LocalizationCtrl', ['Taxes', 'TaxGroups', '$state', '$scope', '$stateParams',
-      function (                  Taxes,   TaxGroups,   $state,   $scope,   $stateParams) {
+.controller('LocalizationCtrl', ['Taxes', 'TaxGroups', 'ReturnStatuses', 'ReturnActions', 'ReturnReasons', '$state', '$scope', '$stateParams',
+      function (                  Taxes,   TaxGroups,   ReturnStatuses,   ReturnActions,   ReturnReasons,   $state,   $scope,   $stateParams) {
           var localizationCtrl = this;
-          localizationCtrl.allTaxes = Taxes.all;
           localizationCtrl.tax = {};
           localizationCtrl.tax.tax_type = 'Percent';
 
           localizationCtrl.tax_group = {};
-
+          localizationCtrl.return_status = {};
+          localizationCtrl.return_action = {};
+          localizationCtrl.return_reason = {};
+console.log($scope)
           localizationCtrl.addTax = function() {
               Taxes.addTax(localizationCtrl.tax);
               localizationCtrl.tax.tax_name = null;
@@ -849,9 +932,7 @@ angular.module('SystemModule', [
           };
 
           localizationCtrl.removeTax = function(row) {
-              var theTax = {};
-              theTax.taxId = row.entity.$id;
-              Taxes.removeTax(theTax);
+              Taxes.removeTax(row.entity.$id);
           }, function(error) {
               localizationCtrl.error = error;
           };
@@ -875,7 +956,7 @@ angular.module('SystemModule', [
               localizationCtrl.tax_group.group_label = null;
               localizationCtrl.tax_group.group_based_on = null;
           }, function(error) {
-            localizationCtrl.error = error;
+              localizationCtrl.error = error;
           };
 
           localizationCtrl.updateTaxRate = function(name, rate, type) {
@@ -893,9 +974,7 @@ angular.module('SystemModule', [
           };
 
           localizationCtrl.removeTaxGroup = function(row) {
-              var theTaxGroup = {};
-              theTaxGroup.taxId = row.entity.$id;
-              TaxGroups.removeTaxGroup(theTaxGroup);
+              TaxGroups.removeTaxGroup(row.entity.$id);
           }, function(error) {
               localizationCtrl.error = error;
           };
@@ -905,14 +984,85 @@ angular.module('SystemModule', [
               enableCellEditOnFocus: true,
               data: TaxGroups.all,
               columnDefs: [
-                  { name:'taxGroupDescription', field: 'group_label', width: '40%', enableHiding: false },
+                  { name:'groupDescription', field: 'group_description', width: '25%', enableHiding: false },
+                  { name:'taxRate', field: 'group_label', enableHiding: false },
                   { name:'basedOn', field: 'group_based_on', enableHiding: false },
                   { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeTaxGroup.html',
                     width: 35, enableCellEdit: false, enableColumnMenu: false }
               ]
           };
 
+          localizationCtrl.addReturnStatus = function() {
+              ReturnStatuses.addReturnStatus(localizationCtrl.return_status);
+              localizationCtrl.return_status.status_name = null;
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
 
+          localizationCtrl.removeReturnStatus = function(row) {
+              ReturnStatuses.removeReturnStatus(row.entity.$id);
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.gridReturnStatus = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              data: ReturnStatuses.all,
+              columnDefs: [
+                  { name:'statusName', field: 'status_name', enableHiding: false },
+                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeReturnStatus.html',
+                    width: 35, enableCellEdit: false, enableColumnMenu: false }
+              ]
+          };
+
+          localizationCtrl.addReturnAction = function() {
+              ReturnActions.addReturnAction(localizationCtrl.return_action);
+              localizationCtrl.return_action.action_name = null;
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.removeReturnAction = function(row) {
+              ReturnActions.removeReturnAction(row.entity.$id);
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.gridReturnAction = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              data: ReturnActions.all,
+              columnDefs: [
+                  { name:'actionName', field: 'action_name', enableHiding: false },
+                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeReturnAction.html',
+                    width: 35, enableCellEdit: false, enableColumnMenu: false }
+              ]
+          };
+
+          localizationCtrl.addReturnReason = function() {
+              ReturnReasons.addReturnReason(localizationCtrl.return_reason);
+              localizationCtrl.return_reason.reason_name = null;
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.removeReturnReason = function(row) {
+              ReturnReasons.removeReturnReason(row.entity.$id);
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.gridReturnReason = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              data: ReturnReasons.all,
+              columnDefs: [
+                  { name:'reasonName', field: 'reason_name', enableHiding: false },
+                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeReturnReason.html',
+                    width: 35, enableCellEdit: false, enableColumnMenu: false }
+              ]
+          };
 
 
       }
