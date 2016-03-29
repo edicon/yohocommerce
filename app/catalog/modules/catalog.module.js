@@ -291,7 +291,7 @@ angular.module('CatalogModule', [
                           .catch(function(error) {
                             return error;
                       });
-              }
+              },
 
           };
 
