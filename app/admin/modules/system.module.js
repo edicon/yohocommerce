@@ -82,6 +82,21 @@ angular.module('SystemModule', [
                 }
             }
         })
+        .state('admin.system.localization', {
+            url: '/localization',
+            views: {
+                "header@admin": {
+                    templateUrl: 'admin/views/system/localization.header.html'
+                },
+                "main@admin": {
+                    templateUrl: 'admin/views/system/system.html'
+                },
+                "list@admin.system.localization": {
+                    controller: 'LocalizationCtrl as localizationCtrl',
+                    templateUrl: 'admin/views/system/localization.html'
+                }
+            }
+        })
         .state('admin.system.stores', {
             url: '/stores',
             params: {
@@ -139,120 +154,29 @@ angular.module('SystemModule', [
     }
 ])
 
-.factory('Banner', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,  tid) {
-          var ref = new Firebase(FirebaseUrl+'banner_images');
+.factory('Users', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (    $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'profiles');
+          var users = $firebaseArray(ref);
 
-          var banner = {
+          var user = {
 
-              getImages: function(bid) {
-                  return $firebaseArray(ref.child(tid).child(bid));
+              getProfile: function(uid) {
+                  return $firebaseObject(ref.child(uid));
               },
 
-              addImage: function(imageEntity) {
-                  return $firebaseArray(ref.child(tid).child(imageEntity.bid)).$add({image: imageEntity.imageSrc});
-              },
-
-              removeImage: function(imageEntity) {
-                  return $firebaseObject(ref.child(tid).child(imageEntity.bid).child(imageEntity.$id)).$remove();
-              }
+              all: users
 
           };
 
-          return banner;
-
-      }
-
-])
-
-.factory('Library', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (          $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
-          var ref = new Firebase(FirebaseUrl+'banner_images');
-
-          var banner = {
-
-              getImages: function(bid) {
-                  return $firebaseArray(ref.child(tid).child(bid));
-              },
-
-              addImage: function(imageEntity) {
-                  return $firebaseArray(ref.child(tid).child(imageEntity.bid)).$add({image: imageEntity.imageSrc});
-              },
-
-              removeImage: function(imageEntity) {
-                  return $firebaseObject(ref.child(tid).child(imageEntity.bid).child(imageEntity.$id)).$remove();
-              }
-
-          };
-
-          return banner;
-
-      }
-
-])
-
-.factory('Store', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (           $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
-          var ref = new Firebase(FirebaseUrl+'stores');
-          var stores = $firebaseArray(ref.child(tid).orderByPriority());
-
-          var store = {
-
-              getStore: function(sid) {
-                  return $firebaseObject(ref.child(tid).child(sid));
-              },
-
-              addStore: function(theObj) {
-                  return store.all.$add(theObj).then(function(postRef){
-                      return postRef.key();
-                  });
-              },
-
-              getIndex: function(sid) {
-                  return stores.$indexFor(sid);
-              },
-
-              getKey: function(key) {
-                  return stores.$keyAt(key);
-              },
-
-              getCount: function() {
-                  return stores.length;
-              },
-
-              all: stores
-
-          };
-
-          return store;
-
-      }
-
-])
-
-.factory('Stores', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
-          var ref = new Firebase(FirebaseUrl+'stores');
-          var stores = $firebaseArray(ref.child(tid).orderByPriority());
-
-          var store = {
-
-            removeStore: function(sid) {
-                return $firebaseObject(ref.child(tid).child(sid)).$remove();
-            },
-
-            all: stores
-
-          };
-
-          return store;
+          return user;
 
       }
 
 ])
 
 .factory('User', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (   $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'profiles');
           var users = $firebaseArray(ref);
 
@@ -293,29 +217,8 @@ angular.module('SystemModule', [
 
 ])
 
-.factory('Users', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (        $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
-          var ref = new Firebase(FirebaseUrl+'profiles');
-          var users = $firebaseArray(ref);
-
-          var user = {
-
-              getProfile: function(uid) {
-                  return $firebaseObject(ref.child(uid));
-              },
-
-              all: users
-
-          };
-
-          return user;
-
-      }
-
-])
-
 .factory('Tenant', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (         $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (     $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'tenants');
           var tenants = $firebaseArray(ref);
 
@@ -347,6 +250,173 @@ angular.module('SystemModule', [
       }
 
 ])
+
+.factory('Stores', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (     $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'stores');
+          var stores = $firebaseArray(ref.child(tid).orderByPriority());
+
+          var store = {
+
+            removeStore: function(sid) {
+                return $firebaseObject(ref.child(tid).child(sid)).$remove();
+            },
+
+            all: stores
+
+          };
+
+          return store;
+
+      }
+
+])
+
+.factory('Store', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (    $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'stores');
+          var stores = $firebaseArray(ref.child(tid).orderByPriority());
+
+          var store = {
+
+              getStore: function(sid) {
+                  return $firebaseObject(ref.child(tid).child(sid));
+              },
+
+              addStore: function(theObj) {
+                  return store.all.$add(theObj).then(function(postRef){
+                      return postRef.key();
+                  });
+              },
+
+              getIndex: function(sid) {
+                  return stores.$indexFor(sid);
+              },
+
+              getKey: function(key) {
+                  return stores.$keyAt(key);
+              },
+
+              getCount: function() {
+                  return stores.length;
+              },
+
+              all: stores
+
+          };
+
+          return store;
+
+      }
+
+])
+
+.factory('Library', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (      $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'banner_images');
+
+          var banner = {
+
+              getImages: function(bid) {
+                  return $firebaseArray(ref.child(tid).child(bid));
+              },
+
+              addImage: function(imageEntity) {
+                  return $firebaseArray(ref.child(tid).child(imageEntity.bid)).$add({image: imageEntity.imageSrc});
+              },
+
+              removeImage: function(imageEntity) {
+                  return $firebaseObject(ref.child(tid).child(imageEntity.bid).child(imageEntity.$id)).$remove();
+              }
+
+          };
+
+          return banner;
+
+      }
+
+])
+
+.factory('Banner', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (     $firebaseArray,   $firebaseObject,   FirebaseUrl,  tid) {
+          var ref = new Firebase(FirebaseUrl+'banner_images');
+
+          var banner = {
+
+              getImages: function(bid) {
+                  return $firebaseArray(ref.child(tid).child(bid));
+              },
+
+              addImage: function(imageEntity) {
+                  return $firebaseArray(ref.child(tid).child(imageEntity.bid)).$add({image: imageEntity.imageSrc});
+              },
+
+              removeImage: function(imageEntity) {
+                  return $firebaseObject(ref.child(tid).child(imageEntity.bid).child(imageEntity.$id)).$remove();
+              }
+
+          };
+
+          return banner;
+
+      }
+
+])
+
+.factory('Taxes', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (    $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'taxes');
+          var taxes = $firebaseArray(ref.child(tid).orderByPriority());
+
+          var tax = {
+
+              addTax: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'taxes/'+tid);
+                  return theRef.push(theObj);
+              },
+
+              removeTax: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'taxes/'+tid+'/'+theObj.taxId);
+                  return theRef.remove();
+              },
+
+              all: taxes,
+
+          };
+
+          return tax;
+
+      }
+
+])
+
+.factory('TaxGroups', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (      $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'tax_groups');
+          var taxgroups = $firebaseArray(ref.child(tid).orderByPriority());
+
+          var taxgroup = {
+
+              addTaxGroup: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'tax_groups/'+tid);
+                  return theRef.push(theObj);
+              },
+
+              removeTaxGroup: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'tax_groups/'+tid+'/'+theObj.taxGrpId);
+                  return theRef.remove();
+              },
+
+              all: taxgroups,
+
+          };
+
+          return taxgroup;
+
+      }
+
+])
+
 
 .factory('httpInterceptor', ['$location', '$q', '$injector', 'InstanceUrl',
     function (                $location,   $q,   $injector,   InstanceUrl) {
@@ -382,59 +452,6 @@ angular.module('SystemModule', [
           				return $q.reject(result);
           			}
   		    };
-
-      }
-
-])
-
-.controller('BannerCtrl', ['Banner', '$state', '$scope', 'FileReader', '$stateParams',
-      function (            Banner,   $state,   $scope,   FileReader,   $stateParams) {
-
-          var bannerCtrl = this;
-          var imageEntity = [];
-          bannerCtrl.bannerName = "Home Page Banner";
-          bannerCtrl.bid = "1";
-          bannerCtrl.myInterval = 5000;
-          bannerCtrl.noWrapSlides = false;
-          bannerCtrl.bannerArray = 'yes';
-
-          bannerCtrl.defaultSlides = [ {
-              image: "/images/carousel-default-image.png",
-          },
-          {
-              image: "/images/carousel-default-image.png",
-          },
-          {
-              image: "/images/carousel-default-image.png",
-          }]
-
-          bannerCtrl.bannerImages = Banner.getImages(bannerCtrl.bid);
-              bannerCtrl.bannerImages.$loaded().then(function() {
-                if (bannerCtrl.bannerImages.length === 0) {
-                    bannerCtrl.bannerArray = 'no';
-                    bannerCtrl.bannerImages = bannerCtrl.defaultSlides;
-                }
-          });
-
-          bannerCtrl.removeImage = function($id) {
-              imageEntity.$id = $id;
-              imageEntity.bid = bannerCtrl.bid;
-              Banner.removeImage(imageEntity);
-              $state.reload(bannerCtrl.currentState);
-          }, function(error) {
-              bannerCtrl.error = error;
-          };
-
-          $scope.getFile = function () {
-              FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
-                  imageEntity.imageSrc = result;
-                  imageEntity.bid = bannerCtrl.bid;
-                  Banner.addImage(imageEntity).then(function() {
-                      $state.reload(bannerCtrl.currentState);
-          //          bannerCtrl.bannerArray = 'yes';
-                  });
-              });
-          };
 
       }
 
@@ -498,108 +515,148 @@ angular.module('SystemModule', [
 
 ])
 
-.controller('StoreCtrl', ['Store', 'Stores', 'Transactions', 'Countries', 'AlertService', '$state', '$scope', '$stateParams', '$http',
-      function (           Store,   Stores,   Transactions,   Countries,   AlertService,   $state,   $scope,   $stateParams,   $http) {
+.controller('StoreCtrl', ['Store', 'Stores', 'Transactions', 'Banner', 'Countries', 'FileReader', 'AlertService', '$state', '$scope', '$stateParams', '$http',
+      function (           Store,   Stores,   Transactions,   Banner,   Countries,   FileReader,   AlertService,   $state,   $scope,   $stateParams,   $http) {
 
-          var storeCtrl = this;
-          storeCtrl.store = {};
-          $scope.countries = Countries.all;
-          $scope.address = {};
+            var storeCtrl = this;
+            storeCtrl.store = {};
+            $scope.countries = Countries.all;
+            $scope.address = {};
+            storeCtrl.bid = "1";
+            storeCtrl.myInterval = 5000;
+            storeCtrl.noWrapSlides = false;
+            storeCtrl.bannerArray = 'yes';
 
-          storeCtrl.refreshAddresses = function(address) {
-              var params = {address: address, sensor: false};
-              return $http.get(
-                  'http://maps.googleapis.com/maps/api/geocode/json',
-                  {params: params}
-              ).then(function(response) {
-                  $scope.addresses = response.data.results
-              });
-          };
+            storeCtrl.refreshAddresses = function(address) {
+                  var params = {address: address, sensor: false};
+                  return $http.get(
+                      'http://maps.googleapis.com/maps/api/geocode/json',
+                      {params: params}
+                  ).then(function(response) {
+                      $scope.addresses = response.data.results
+                  });
+            };
 
-          storeCtrl.parseAddress = function(address) {
-              var addressArray = address.split(", ");
-              var regionArray = addressArray[2].split(" ");
-              storeCtrl.store.store_address_street = addressArray[0];
-              storeCtrl.store.store_address_city = addressArray[1];
-              storeCtrl.store.store_address_postal_code = regionArray[1] + " " + regionArray[2];
-              storeCtrl.store.store_address_region = regionArray[0];
-              storeCtrl.store.store_address_country = addressArray[3];
+            storeCtrl.parseAddress = function(address) {
+                  var addressArray = address.split(", ");
+                  var regionArray = addressArray[2].split(" ");
+                  storeCtrl.store.store_address_street = addressArray[0];
+                  storeCtrl.store.store_address_city = addressArray[1];
+                  storeCtrl.store.store_address_postal_code = regionArray[1] + " " + regionArray[2];
+                  storeCtrl.store.store_address_region = regionArray[0];
+                  storeCtrl.store.store_address_country = addressArray[3];
 
-              if (regionArray[2] == undefined) {
-                  storeCtrl.store.store_address_postal_code = regionArray[1];
-              };
+                  if (regionArray[2] == undefined) {
+                        storeCtrl.store.store_address_postal_code = regionArray[1];
+                  };
 
-              if (regionArray[1] == undefined && regionArray[2] == undefined) {
-                  storeCtrl.store.store_address_postal_code = "n/a";
-              };
-          };
+                  if (regionArray[1] == undefined && regionArray[2] == undefined) {
+                        storeCtrl.store.store_address_postal_code = "n/a";
+                  };
+            };
 
-          storeCtrl.loadStore = function(sid) {
-              var theStore = Store.getStore(sid);
-              theStore.$loaded().then(function() {
-                  storeCtrl.store = theStore;
-                  storeCtrl.storeIndex = Store.getIndex(sid);
-                  storeCtrl.count = Stores.all.length;
-              });
-          };
+            storeCtrl.loadStore = function(sid) {
+                  var theStore = Store.getStore(sid);
+                  theStore.$loaded().then(function() {
+                      storeCtrl.store = theStore;
+                      storeCtrl.storeIndex = Store.getIndex(sid);
+                      storeCtrl.count = Stores.all.length;
+                  });
+            };
 
-          if ($stateParams.rowEntity != undefined) {
-              storeCtrl.loadStore($stateParams.rowEntity.$id);
-              storeCtrl.sid = $stateParams.rowEntity.$id;
-          } else {
-              storeCtrl.sid = null;
-          };
+            if ($stateParams.rowEntity != undefined) {
+                  storeCtrl.loadStore($stateParams.rowEntity.$id);
+                  storeCtrl.sid = $stateParams.rowEntity.$id;
+            } else {
+                  storeCtrl.sid = null;
+            };
 
-          storeCtrl.addStore = function() {
-              Store.addStore(storeCtrl.store).then(function(sid) {
-                  storeCtrl.loadStore(sid)
-              });
-          }, function(error) {
+            storeCtrl.addStore = function() {
+                  Store.addStore(storeCtrl.store).then(function(sid) {
+                        storeCtrl.loadStore(sid)
+                  });
+            }, function(error) {
                   AlertService.addError(error.message);
-          };
+            };
 
-          storeCtrl.next = function() {
+            storeCtrl.next = function() {
 
-              if (storeCtrl.count > 0) {
-                  key = storeCtrl.storeIndex;
+                  if (storeCtrl.count > 0) {
+                        key = storeCtrl.storeIndex;
 
-                  if (key < storeCtrl.count - 1) {
-                      key = storeCtrl.storeIndex + 1;
-                      var sid = Store.getKey(key);
-                      storeCtrl.loadStore(sid);
+                        if (key < storeCtrl.count - 1) {
+                              key = storeCtrl.storeIndex + 1;
+                              var sid = Store.getKey(key);
+                              storeCtrl.loadStore(sid);
+                        }
                   }
-              }
 
-          }, function(error) {
-              storeCtrl.error = error;
-          };
+            }, function(error) {
+                  storeCtrl.error = error;
+            };
 
-          storeCtrl.back = function() {
-              var key = storeCtrl.storeIndex - 1;
+            storeCtrl.back = function() {
+                var key = storeCtrl.storeIndex - 1;
 
-              if (key < 0) key = 0
-                var sid = Store.getKey(key);
-                storeCtrl.loadStore(sid);
+                if (key < 0) key = 0
+                      var sid = Store.getKey(key);
 
-          }, function(error) {
-                storeCtrl.error = error;
-          };
+                  storeCtrl.loadStore(sid);
 
-          storeCtrl.first = function() {
-              var key = 0;
-              var sid = Store.getKey(key);
-              storeCtrl.loadStore(sid);
-          }, function(error) {
-              storeCtrl.error = error;
-          };
+            }, function(error) {
+                  storeCtrl.error = error;
+            };
 
-          storeCtrl.last = function() {
-              var key = storeCtrl.count - 1;
-              var sid = Store.getKey(key);
-              storeCtrl.loadStore(sid);
-          }, function(error) {
-              storeCtrl.error = error;
-          };
+            storeCtrl.first = function() {
+                  var key = 0;
+                  var sid = Store.getKey(key);
+                  storeCtrl.loadStore(sid);
+            }, function(error) {
+                  storeCtrl.error = error;
+            };
+
+            storeCtrl.last = function() {
+                  var key = storeCtrl.count - 1;
+                  var sid = Store.getKey(key);
+                  storeCtrl.loadStore(sid);
+            }, function(error) {
+                  storeCtrl.error = error;
+            };
+
+            storeCtrl.defaultSlides = [
+                  {image: "/images/carousel-default-image.png",},
+                  {image: "/images/carousel-default-image.png",},
+                  {image: "/images/carousel-default-image.png",}
+            ]
+
+            storeCtrl.bannerImages = Banner.getImages(storeCtrl.bid);
+            storeCtrl.bannerImages.$loaded().then(function() {
+                  if (storeCtrl.bannerImages.length === 0) {
+                          storeCtrl.bannerArray = 'no';
+                          storeCtrl.bannerImages = storeCtrl.defaultSlides;
+                  }
+            });
+
+            storeCtrl.removeImage = function($id) {
+                  imageEntity.$id = $id;
+                  imageEntity.bid = bannerCtrl.bid;
+                  Banner.removeImage(imageEntity);
+                  $state.reload(bannerCtrl.currentState);
+            }, function(error) {
+                  bannerCtrl.error = error;
+            };
+
+            $scope.getFile = function () {
+                  FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
+                        imageEntity.imageSrc = result;
+                        imageEntity.bid = bannerCtrl.bid;
+                        Banner.addImage(imageEntity).then(function() {
+                            $state.reload(bannerCtrl.currentState);
+                //          bannerCtrl.bannerArray = 'yes';
+                        });
+                  });
+            };
+
       }
 
 ])
@@ -763,6 +820,101 @@ angular.module('SystemModule', [
                   { name:'status', field: 'status', enableHiding: false },
               ]
           };
+      }
+
+])
+
+.controller('LocalizationCtrl', ['Taxes', 'TaxGroups', '$state', '$scope', '$stateParams',
+      function (                  Taxes,   TaxGroups,   $state,   $scope,   $stateParams) {
+          var localizationCtrl = this;
+          localizationCtrl.allTaxes = Taxes.all;
+          localizationCtrl.tax = {};
+          localizationCtrl.tax.tax_type = 'Percent';
+
+          localizationCtrl.tax_group = {};
+
+          localizationCtrl.addTax = function() {
+              Taxes.addTax(localizationCtrl.tax);
+              localizationCtrl.tax.tax_name = null;
+              localizationCtrl.tax.tax_rate = null;
+              localizationCtrl.tax.tax_type = 'Percent';
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.updateTaxType = function(type) {
+              localizationCtrl.tax.tax_group = type;
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.removeTax = function(row) {
+              var theTax = {};
+              theTax.taxId = row.entity.$id;
+              Taxes.removeTax(theTax);
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.gridTaxes = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              data: Taxes.all,
+              columnDefs: [
+                  { name:'taxName', field: 'tax_name', width: '40%', enableHiding: false },
+                  { name:'taxRate', field: 'tax_rate', width: '30%', enableHiding: false, cellClass: 'grid-align-right' },
+                  { name:'type', field: 'tax_type', enableHiding: false, cellClass: 'grid-align-right' },
+                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeTax.html',
+                    width: 35, enableCellEdit: false, enableColumnMenu: false }
+              ]
+          };
+
+          localizationCtrl.addTaxGroup = function() {
+              TaxGroups.addTaxGroup(localizationCtrl.tax_group);
+              localizationCtrl.tax_group.group_tax_description = null;
+              localizationCtrl.tax_group.group_label = null;
+              localizationCtrl.tax_group.group_based_on = null;
+          }, function(error) {
+            localizationCtrl.error = error;
+          };
+
+          localizationCtrl.updateTaxRate = function(name, rate, type) {
+              localizationCtrl.tax_group.group_label = name+' - '+rate+' '+type;
+              localizationCtrl.tax_group.group_tax_rate = rate;
+              localizationCtrl.tax_group.group_tax_rate_type = type;
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.updateGroupBasedOn = function(type) {
+              localizationCtrl.tax_group.group_based_on = type;
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.removeTaxGroup = function(row) {
+              var theTaxGroup = {};
+              theTaxGroup.taxId = row.entity.$id;
+              TaxGroups.removeTaxGroup(theTaxGroup);
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.gridTaxGroup = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              data: TaxGroups.all,
+              columnDefs: [
+                  { name:'taxGroupDescription', field: 'group_label', width: '40%', enableHiding: false },
+                  { name:'basedOn', field: 'group_based_on', enableHiding: false },
+                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeTaxGroup.html',
+                    width: 35, enableCellEdit: false, enableColumnMenu: false }
+              ]
+          };
+
+
+
+
       }
 
 ])

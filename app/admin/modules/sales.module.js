@@ -361,10 +361,9 @@ angular.module('SalesModule', [
 
               recountAddresses: function(cid) {
                   var cnt = 1;
-                  var i = 0;
                   var data = $firebaseArray(ref.child(tid).child(cid).child("addresses").orderByChild("priority"));
                   data.$loaded().then(function() {
-                      for(i = 0; i < data.length; i++) {
+                      for(var i = 0; i < data.length; i++) {
                           var addressRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+cid+'/addresses/'+data[i].$id);
                           addressRef.update({ priority: cnt });
                           cnt = cnt + 1;
