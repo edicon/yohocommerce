@@ -901,7 +901,7 @@ angular.module('SystemModule', [
               localizationCtrl.error = error;
           };
 
-          $scope.gridTaxes = {
+          localizationCtrl.gridTaxes = {
               enableSorting: true,
               enableCellEditOnFocus: true,
               data: Taxes.all,
