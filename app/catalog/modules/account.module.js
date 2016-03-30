@@ -229,7 +229,7 @@ angular.module('AccountModule', [
 ])
 
 .controller('AccountCtrl', ['Auth', 'Customer', '$state', 'profile',
-      function (             Auth,   Customer, $state,   profile) {
+      function (             Auth,   Customer,   $state,   profile) {
           var accountCtrl = this;
           accountCtrl.profile = profile;
 
@@ -244,6 +244,7 @@ angular.module('AccountModule', [
           });
 
           accountCtrl.forgotPassword = function() {
+            console.log("gothere");
             Auth.sendPasswordEmail(profile.email);
             console.log("reset password sent");
             $state.go('catalog.home');
@@ -251,7 +252,7 @@ angular.module('AccountModule', [
 
           accountCtrl.saveNewPassword = function() {
             Auth.updatePassword(accountCtrl.customer.customer_email, accountCtrl.customer.customer_password, accountCtrl.customer.customer_new_password);
-            console.log("reset password sent");
+            console.log("new password saved");
             $state.go('catalog.home');
           };
 

@@ -285,13 +285,14 @@ angular.module('CatalogModule', [
               },
 
               sendPasswordEmail: function(email) {
+                console.log("gothere");
 //                  var email = String(email);
 //                      return auth.$sendPasswordResetEmail(email)
                       return auth.$sendPasswordResetEmail(String(email))
                           .catch(function(error) {
                             return error;
                       });
-              },
+              }
 
           };
 
