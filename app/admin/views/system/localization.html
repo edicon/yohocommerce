@@ -1,313 +1,284 @@
 <div class="container-fluid">
   <div class="col-xs-12">
-    <uib-tabset>
-      <uib-tab>
-        <uib-tab-heading>
-          <i class="menu-icon fa fa-usd"></i> Taxes
-        </uib-tab-heading><br>
-        <uib-tabset>
-          <uib-tab>
-            <uib-tab-heading>
-              <i class="menu-icon fa fa-usd"></i> Tax Rates
-            </uib-tab-heading><br>
-            <form class="form-horizontal">
-              <div class="form-group">
-                <div class="col-sm-3">
-                  <div class="input-group input-group-sm">
-                    <span class="input-group-addon">Name</span>
-                    <input type="text" ng-model="localizationCtrl.tax.tax_name" class="form-control">
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="input-group input-group-sm">
-                    <span class="input-group-addon">Rate</span>
-                    <input type="text" ng-model="localizationCtrl.tax.tax_rate" class="form-control">
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="input-group input-group-sm">
-                    <span class="input-group-addon">Type</span>
-                    <input type="text" ng-model="localizationCtrl.tax.tax_type" class="form-control" readonly>
-                    <div class="input-group-btn">
-                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select <span class="caret"></span></button>
-                      <ul class="dropdown-menu dropdown-menu-right">
-                        <li><a href="" ng-click="localizationCtrl.updateTaxType('Percent')">Percent</a></li>
-                        <li><a href="" ng-click="localizationCtrl.updateTaxType('Dollars')">Dollar</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-3" align="right">
-                  <div class="input-group input-group-sm">
-                    <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Tax" ng-click="localizationCtrl.addTax()">
-                      <i class="fa fa-plus"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </form>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title"><i class="menu-icon fa fa-th"></i> Tax Rates</h3>
-              </div>
-              <div class="panel-body">
-                <div ui-grid="localizationCtrl.gridTaxes" class="grid-250"></div>
-              </div>
+    <fieldset>
+      <legend>Tax Rates</legend>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Name</span>
+              <input type="text" ng-model="localizationCtrl.tax.tax_name" class="form-control">
             </div>
-          </uib-tab>
-          <uib-tab>
-            <uib-tab-heading>
-              <i class="menu-icon fa fa-th"></i> Product Tax Groups
-            </uib-tab-heading><br>
-            <form class="form-horizontal">
-              <div class="form-group">
-                <div class="col-sm-3">
-                  <div class="input-group input-group-sm">
-                    <span class="input-group-addon">Description</span>
-                    <input type="text" ng-model="localizationCtrl.tax_group.group_description" class="form-control">
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="input-group input-group-sm">
-                    <span class="input-group-addon">Tax Rate</span>
-                    <input type="text" ng-model="localizationCtrl.tax_group.group_label" class="form-control" readonly>
-                    <div class="input-group-btn">
-                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select <span class="caret"></span></button>
-                      <ul class="dropdown-menu dropdown-menu-right">
-                        <li ng-repeat="t in localizationCtrl.allTaxes">
-                          <a href="" ng-click="localizationCtrl.updateTaxRate(t.tax_name, t.tax_rate, t.tax_type)">{{t.tax_name}} - {{t.tax_rate}} {{t.tax_type}}</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-3">
-                  <div class="input-group input-group-sm">
-                    <span class="input-group-addon">Based On</span>
-                    <input type="text" ng-model="localizationCtrl.tax_group.group_based_on" class="form-control" readonly>
-                    <div class="input-group-btn">
-                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select <span class="caret"></span></button>
-                      <ul class="dropdown-menu dropdown-menu-right">
-                        <li><a href="" ng-click="localizationCtrl.updateGroupBasedOn('Shipping Address')">Shipping Address</a></li>
-                        <li><a href="" ng-click="localizationCtrl.updateGroupBasedOn('Payment Address')">Payment Address</a></li>
-                        <li><a href="" ng-click="localizationCtrl.updateGroupBasedOn('Store Address')">Store Address</a></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm-3" align="right">
-                  <div class="input-group input-group-sm">
-                    <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Tax Group" ng-click="localizationCtrl.addTaxGroup()">
-                      <i class="fa fa-plus"></i>
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </form>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title"><i class="menu-icon fa fa-th"></i> Product Tax Groups</h3>
-              </div>
-              <div class="panel-body">
-                <div ui-grid="localizationCtrl.gridTaxGroup" class="grid-250"></div>
-              </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Rate</span>
+              <input type="text" ng-model="localizationCtrl.tax.tax_rate" class="form-control">
             </div>
-          </uib-tab>
-        </uib-tabset>
-      </uib-tab>
-      <uib-tab>
-        <uib-tab-heading>
-          <i class="menu-icon fa fa-reply-all"></i> Returns
-        </uib-tab-heading><br>
-        <uib-tabset>
-          <uib-tab>
-            <uib-tab-heading>
-              <i class="menu-icon fa fa-reply-all"></i> Return Statuses
-            </uib-tab-heading><br>
-            <form class="form-horizontal">
-              <div class="form-group">
-                <div class="col-sm-4">
-                  <div class="input-group input-group-sm">
-                    <span class="input-group-addon">Return Status</span>
-                    <input type="text" ng-model="localizationCtrl.return_status.status_name" class="form-control">
-                    <span class="input-group-btn">
-                      <button class="btn btn-primary" ng-click="localizationCtrl.addReturnStatus()" type="button"><span class="menu-icon fa fa-plus"></span></button>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </form>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title"><i class="menu-icon fa fa-reply-all"></i> Return Statuses</h3>
-              </div>
-              <div class="panel-body">
-                <div ui-grid="localizationCtrl.gridReturnStatus" class="grid-250"></div>
-              </div>
-            </div>
-          </uib-tab>
-          <uib-tab>
-            <uib-tab-heading>
-              <i class="menu-icon fa fa-reply-all"></i> Return Actions
-            </uib-tab-heading><br>
-            <form class="form-horizontal">
-              <div class="form-group">
-                <div class="col-sm-4">
-                  <div class="input-group input-group-sm">
-                    <span class="input-group-addon">Return Actions</span>
-                    <input type="text" ng-model="localizationCtrl.return_action.action_name" class="form-control">
-                    <span class="input-group-btn">
-                      <button class="btn btn-primary" ng-click="localizationCtrl.addReturnAction()" type="button"><span class="menu-icon fa fa-plus"></span></button>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </form>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title"><i class="menu-icon fa fa-reply-all"></i> Return Actions</h3>
-              </div>
-              <div class="panel-body">
-                <div ui-grid="localizationCtrl.gridReturnAction" class="grid-250"></div>
-              </div>
-            </div>
-          </uib-tab>
-          <uib-tab>
-            <uib-tab-heading>
-              <i class="menu-icon fa fa-reply-all"></i> Return Reasons
-            </uib-tab-heading><br>
-            <form class="form-horizontal">
-              <div class="form-group">
-                <div class="col-sm-4">
-                  <div class="input-group input-group-sm">
-                    <span class="input-group-addon">Return Reasons</span>
-                    <input type="text" ng-model="localizationCtrl.return_reason.reason_name" class="form-control">
-                    <span class="input-group-btn">
-                      <button class="btn btn-primary" ng-click="localizationCtrl.addReturnReason()" type="button"><span class="menu-icon fa fa-plus"></span></button>
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </form>
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title"><i class="menu-icon fa fa-reply-all"></i> Return Reasons</h3>
-              </div>
-              <div class="panel-body">
-                <div ui-grid="localizationCtrl.gridReturnReason" class="grid-250"></div>
-              </div>
-            </div>
-          </uib-tab>
-        </uib-tabset>
-      </uib-tab>
-      <uib-tab>
-        <uib-tab-heading>
-          <i class="menu-icon fa fa-file-text"></i> Orders
-        </uib-tab-heading><br>
-        <form class="form-horizontal">
-          <div class="form-group">
-            <div class="col-sm-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-addon">Order Status</span>
-                <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
-              </div>
-            </div>
-            <div class="col-sm-8" align="right">
-              <div class="input-group input-group-sm">
-                <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon" ng-click="couponsCtrl.addCoupon()">
-                  <i class="fa fa-plus"></i>
-                </button>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Type</span>
+              <input type="text" ng-model="localizationCtrl.tax.tax_type" class="form-control" readonly>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select <span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li><a href="" ng-click="localizationCtrl.updateTaxType('Percent')">Percent</a></li>
+                  <li><a href="" ng-click="localizationCtrl.updateTaxType('Dollars')">Dollar</a></li>
+                </ul>
               </div>
             </div>
           </div>
-        </form>
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title"><span class="menu-icon fa fa-file-text"></span> Order Statuses</h4>
-          </div>
-          <div class="panel-body">
-            <div class="row">
-              Orders
+          <div class="col-sm-3" align="right">
+            <div class="input-group input-group-sm">
+              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Tax" ng-click="localizationCtrl.addTax()">
+                <i class="fa fa-plus"></i>
+              </button>
             </div>
           </div>
         </div>
-      </uib-tab>
-      <uib-tab>
-        <uib-tab-heading>
-          <i class="menu-icon fa fa-arrows"></i> Length
-        </uib-tab-heading><br>
-        <form class="form-horizontal">
-          <div class="form-group">
-            <div class="col-sm-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-addon">Unit Title</span>
-                <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
-              </div>
+      </form>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="menu-icon fa fa-th"></i> Tax Rates</h3>
+        </div>
+        <div class="panel-body">
+          <div ui-grid="localizationCtrl.gridTaxes" class="grid-150"></div>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Product Tax Groups</legend>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Description</span>
+              <input type="text" ng-model="localizationCtrl.tax_group.group_description" class="form-control">
             </div>
-            <div class="col-sm-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-addon">Unit Abbreviation</span>
-                <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
-              </div>
-            </div>
-            <div class="col-sm-4" align="right">
-              <div class="input-group input-group-sm">
-                <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon" ng-click="couponsCtrl.addCoupon()">
-                  <i class="fa fa-plus"></i>
-                </button>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Tax Rate</span>
+              <input type="text" ng-model="localizationCtrl.tax_group.group_label" class="form-control" readonly>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select <span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li ng-repeat="t in localizationCtrl.allTaxes">
+                    <a href="" ng-click="localizationCtrl.updateTaxRate(t.tax_name, t.tax_rate, t.tax_type)">{{t.tax_name}} - {{t.tax_rate}} {{t.tax_type}}</a>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
-        </form>
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title"><span class="menu-icon fa fa-arrows"></span> Length Units</h4>
+          <div class="col-sm-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Based On</span>
+              <input type="text" ng-model="localizationCtrl.tax_group.group_based_on" class="form-control" readonly>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select <span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li><a href="" ng-click="localizationCtrl.updateGroupBasedOn('Shipping Address')">Shipping Address</a></li>
+                  <li><a href="" ng-click="localizationCtrl.updateGroupBasedOn('Payment Address')">Payment Address</a></li>
+                  <li><a href="" ng-click="localizationCtrl.updateGroupBasedOn('Store Address')">Store Address</a></li>
+                </ul>
+              </div>
+            </div>
           </div>
-          <div class="panel-body">
-            <div class="row">
-              Length
+          <div class="col-sm-3" align="right">
+            <div class="input-group input-group-sm">
+              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Tax Group" ng-click="localizationCtrl.addTaxGroup()">
+                <i class="fa fa-plus"></i>
+              </button>
             </div>
           </div>
         </div>
-      </uib-tab>
-      <uib-tab>
-        <uib-tab-heading>
-          <i class="menu-icon fa fa-balance-scale"></i> Weight
-        </uib-tab-heading><br>
-        <form class="form-horizontal">
-          <div class="form-group">
-            <div class="col-sm-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-addon">Unit Title</span>
-                <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
-              </div>
-            </div>
-            <div class="col-sm-4">
-              <div class="input-group input-group-sm">
-                <span class="input-group-addon">Unit Abbreviation</span>
-                <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
-              </div>
-            </div>
-            <div class="col-sm-4" align="right">
-              <div class="input-group input-group-sm">
-                <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon" ng-click="couponsCtrl.addCoupon()">
-                  <i class="fa fa-plus"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h4 class="panel-title"><span class="menu-icon fa fa-balance-scale"></span> Weight Units</h4>
-          </div>
-          <div class="panel-body">
-            <div class="row">
-              Weight
+      </form>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="menu-icon fa fa-th"></i> Product Tax Groups</h3>
+        </div>
+        <div class="panel-body">
+          <div ui-grid="localizationCtrl.gridTaxGroup" class="grid-150"></div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Return Statuses</legend>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Return Status</span>
+              <input type="text" ng-model="localizationCtrl.return_status.status_name" class="form-control">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" ng-click="localizationCtrl.addReturnStatus()" type="button"><span class="menu-icon fa fa-plus"></span></button>
+              </span>
             </div>
           </div>
         </div>
-      </uib-tab>
-    </uib-tabset>
+      </form>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="menu-icon fa fa-reply-all"></i> Return Statuses</h3>
+        </div>
+        <div class="panel-body">
+          <div ui-grid="localizationCtrl.gridReturnStatus" class="grid-150"></div>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Return Actions</legend>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Return Actions</span>
+              <input type="text" ng-model="localizationCtrl.return_action.action_name" class="form-control">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" ng-click="localizationCtrl.addReturnAction()" type="button"><span class="menu-icon fa fa-plus"></span></button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="menu-icon fa fa-reply-all"></i> Return Actions</h3>
+        </div>
+        <div class="panel-body">
+          <div ui-grid="localizationCtrl.gridReturnAction" class="grid-150"></div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Return Reasons</legend>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Return Reasons</span>
+              <input type="text" ng-model="localizationCtrl.return_reason.reason_name" class="form-control">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" ng-click="localizationCtrl.addReturnReason()" type="button"><span class="menu-icon fa fa-plus"></span></button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><i class="menu-icon fa fa-reply-all"></i> Return Reasons</h3>
+        </div>
+        <div class="panel-body">
+          <div ui-grid="localizationCtrl.gridReturnReason" class="grid-150"></div>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Order Statuses</legend>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Order Status</span>
+              <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
+            </div>
+          </div>
+          <div class="col-sm-8" align="right">
+            <div class="input-group input-group-sm">
+              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon" ng-click="couponsCtrl.addCoupon()">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title"><span class="menu-icon fa fa-file-text"></span> Order Statuses</h4>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            Orders
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Length Units</legend>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Unit Title</span>
+              <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Unit Abbreviation</span>
+              <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
+            </div>
+          </div>
+          <div class="col-sm-4" align="right">
+            <div class="input-group input-group-sm">
+              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon" ng-click="couponsCtrl.addCoupon()">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title"><span class="menu-icon fa fa-arrows"></span> Length Units</h4>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            Length
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset>
+      <legend>Weight Units</legend>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Unit Title</span>
+              <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Unit Abbreviation</span>
+              <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
+            </div>
+          </div>
+          <div class="col-sm-4" align="right">
+            <div class="input-group input-group-sm">
+              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon" ng-click="couponsCtrl.addCoupon()">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title"><span class="menu-icon fa fa-balance-scale"></span> Weight Units</h4>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            Weight
+          </div>
+        </div>
+      </div>
+    </fieldset>
   </div>
 </div>

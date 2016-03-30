@@ -875,12 +875,11 @@ angular.module('SystemModule', [
           localizationCtrl.tax.tax_type = 'Percent';
           localizationCtrl.allTaxes = Taxes.all;
 
-
           localizationCtrl.tax_group = {};
           localizationCtrl.return_status = {};
           localizationCtrl.return_action = {};
           localizationCtrl.return_reason = {};
-console.log($scope)
+
           localizationCtrl.addTax = function() {
               Taxes.addTax(localizationCtrl.tax);
               localizationCtrl.tax.tax_name = null;
@@ -902,7 +901,7 @@ console.log($scope)
               localizationCtrl.error = error;
           };
 
-          localizationCtrl.gridTaxes = {
+          $scope.gridTaxes = {
               enableSorting: true,
               enableCellEditOnFocus: true,
               data: Taxes.all,
