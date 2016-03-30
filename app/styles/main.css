@@ -52,6 +52,10 @@ table.mceLayout, textarea.tinyMCE {
   height: 360px;
 }
 
+.grid-150 {
+  height: 150px;
+}
+
 .grid-500 {
   height: 500px;
 }

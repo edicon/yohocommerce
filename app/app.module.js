@@ -36,6 +36,45 @@ var app = angular.module('app', [
     uiSelectConfig.theme = 'bootstrap';
 })
 
+/*.factory('httpInterceptor', ['$location', '$q', '$injector', 'InstanceUrl',
+    function (                $location,   $q,   $injector,   InstanceUrl) {
+
+  		    return {
+
+      			     request: function (config) {
+        				// Append instance url before every api call
+              				if (config.url.indexOf('/api/v2') > -1) {
+              				      config.url = InstanceUrl + config.url;
+              				};
+
+              				// delete x-dreamfactory-session-token header if login
+              				if (config.method.toLowerCase() === 'post' && config.url.indexOf('/api/v2/user/session') > -1) {
+              					     delete config.headers['X-DreamFactory-Session-Token'];
+              				}
+
+              				console.log(config);
+
+              				return config;
+      			     },
+
+          			responseError: function (result) {
+
+          				// If status is 401 or 403 with token blacklist error then redirect to login
+          				if (result.status === 401 || (result.status === 403 && result.data.error.message.indexOf('token') > -1)) {
+          					$location.path('/login');
+          				}
+
+          				var $mdToast = $injector.get('$mdToast');
+          				$mdToast.show($mdToast.simple().content('Error: ' + result.data.error.message));
+
+          				return $q.reject(result);
+          			}
+  		    };
+
+      }
+
+])*/
+
 .factory('AlertService', ['$rootScope',
       function (           $rootScope) {
 

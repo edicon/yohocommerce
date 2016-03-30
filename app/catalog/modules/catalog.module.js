@@ -14,8 +14,8 @@ angular.module('CatalogModule', [
 ])
 
 
-.config (    ['$stateProvider', '$urlRouterProvider',
-    function (   $stateProvider,   $urlRouterProvider) {
+.config (       ['$stateProvider', '$urlRouterProvider',
+    function (    $stateProvider,   $urlRouterProvider) {
 
         $urlRouterProvider.otherwise('/');
 
@@ -268,33 +268,6 @@ angular.module('CatalogModule', [
       function (   $firebaseAuth,   FirebaseUrl) {
           var ref = new Firebase(FirebaseUrl);
           var auth = $firebaseAuth(ref);
-
-          var authorize = {
-
-              updatePassword: function(theObj) {
-/*             var email = String(theObj.email);
-                var oldpass = String(pStuff.oldpassword);
-                var newpass = String(pStuff.newpassword);
-                return auth.$changePassword(email, oldpass, newpass)
-*/
-                  return auth.$changePassword(String(theObj.email), String(theObj.oldpassword), String(theObj.newpassword))
-
-                      .catch(function(error) {
-                          return error;
-                      });
-              },
-
-              sendPasswordEmail: function(email) {
-                console.log("gothere");
-//                  var email = String(email);
-//                      return auth.$sendPasswordResetEmail(email)
-                      return auth.$sendPasswordResetEmail(String(email))
-                          .catch(function(error) {
-                            return error;
-                      });
-              }
-
-          };
 
           return auth;
 
@@ -795,16 +768,23 @@ angular.module('CatalogModule', [
 
           authCtrl.adminLogin = function() {
               Auth.$authWithPassword(authCtrl.user).then(function(auth) {
-                authCtrl.tenant = Tenant.getInstanceCredentials();
+                console.log(auth)
+                  $state.go('admin.dashboard');
+            /*    this is to setup file storing capabilities on Dreamfactory */
+            /*    authCtrl.tenant = Tenant.getInstanceCredentials();
                   authCtrl.tenant.$loaded().then(function() {
                       LoginHelper.initiate({
                           email: authCtrl.tenant.dreamfactory_email,
                           password: authCtrl.tenant.dreamfactory_password
                       })
 
+
+
                   }).then(function() {
                       $state.go('admin.dashboard');
                   });
+
+              */
               }, function(error) {
                   AlertService.addError(error.message);
               });
