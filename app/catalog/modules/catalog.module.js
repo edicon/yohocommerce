@@ -799,6 +799,11 @@ angular.module('CatalogModule', [
               });
           };
 
+          authCtrl.forgotPassword = function() {
+              Auth.sendPasswordEmail(authCtrl.user.email)
+          };
+
+
       }
 
 ])

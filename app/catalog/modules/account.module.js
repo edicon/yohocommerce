@@ -230,6 +230,7 @@ angular.module('AccountModule', [
 
 .controller('AccountCtrl', ['Auth', '$state', 'profile', '$scope',
       function (             Auth,   $state,   profile,   $scope) {
+
           var accountCtrl = this;
           accountCtrl.profile = profile;
 
@@ -243,6 +244,24 @@ angular.module('AccountModule', [
           accountCtrl.sendPasswordEmail = function(email) {
               console.log(email);
               Auth.sendPasswordEmail(email);
+          };
+
+          var theCustomer = Customer.getCustomer(accountCtrl.profile.cid);
+              theCustomer.$loaded().then(function() {
+                  accountCtrl.customer = theCustomer;
+          });
+
+          accountCtrl.forgotPassword = function() {
+            console.log("gothere");
+            Auth.sendPasswordEmail(profile.email);
+            console.log("reset password sent");
+            $state.go('catalog.home');
+          };
+
+          accountCtrl.saveNewPassword = function() {
+            Auth.updatePassword(accountCtrl.customer.customer_email, accountCtrl.customer.customer_password, accountCtrl.customer.customer_new_password);
+            console.log("new password saved");
+            $state.go('catalog.home');
           };
 
           accountCtrl.logout = function() {

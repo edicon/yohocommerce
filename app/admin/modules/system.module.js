@@ -498,8 +498,86 @@ angular.module('SystemModule', [
 
 ])
 
+.factory('OrderStatuses', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'order_statuses');
+          var orderstatuses = $firebaseArray(ref.child(tid));
 
+          var orderstatus = {
 
+              addOrderStatus: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'order_statuses/'+tid);
+                  return theRef.push(theObj);
+              },
+
+              removeOrderStatus: function(theId) {
+                  var theRef = new Firebase(FirebaseUrl+'order_statuses/'+tid+'/'+theId);
+                  return theRef.remove();
+              },
+
+              all: orderstatuses,
+
+          };
+
+          return orderstatus;
+
+      }
+
+])
+
+.factory('LengthUnits', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'length_units');
+          var lengthunits = $firebaseArray(ref.child(tid));
+
+          var lengthunit = {
+
+              addLengthUnit: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'length_units/'+tid);
+                  return theRef.push(theObj);
+              },
+
+              removeLengthUnit: function(theId) {
+                  var theRef = new Firebase(FirebaseUrl+'length_units/'+tid+'/'+theId);
+                  return theRef.remove();
+              },
+
+              all: lengthunits,
+
+          };
+
+          return lengthunit;
+
+      }
+
+])
+
+.factory('WeightUnits', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'weight_units');
+          var weightunits = $firebaseArray(ref.child(tid));
+
+          var weightunit = {
+
+              addWeightUnit: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'weight_units/'+tid);
+                  return theRef.push(theObj);
+              },
+
+              removeWeightUnit: function(theId) {
+                  var theRef = new Firebase(FirebaseUrl+'weight_units/'+tid+'/'+theId);
+                  return theRef.remove();
+              },
+
+              all: weightunits,
+
+          };
+
+          return weightunit;
+
+      }
+
+])
 
 .controller('LibraryCtrl', ['Upload', 'Tenant', 'InstanceUrl', '$timeout', '$state', '$scope', '$stateParams',
       function (             Upload,   Tenant,   InstanceUrl,   $timeout,   $state,   $scope,   $stateParams) {
@@ -868,8 +946,8 @@ angular.module('SystemModule', [
 
 ])
 
-.controller('LocalizationCtrl', ['Taxes', 'TaxGroups', 'ReturnStatuses', 'ReturnActions', 'ReturnReasons', '$state', '$scope', '$stateParams',
-      function (                  Taxes,   TaxGroups,   ReturnStatuses,   ReturnActions,   ReturnReasons,   $state,   $scope,   $stateParams) {
+.controller('LocalizationCtrl', ['Taxes', 'TaxGroups', 'ReturnStatuses', 'ReturnActions', 'ReturnReasons', 'OrderStatuses', 'LengthUnits', 'WeightUnits', '$state', '$scope', '$stateParams',
+      function (                  Taxes,   TaxGroups,   ReturnStatuses,   ReturnActions,   ReturnReasons,   OrderStatuses,   LengthUnits,   WeightUnits,  $state,   $scope,   $stateParams) {
           var localizationCtrl = this;
           localizationCtrl.tax = {};
           localizationCtrl.tax.tax_type = 'Percent';
@@ -1028,6 +1106,81 @@ angular.module('SystemModule', [
               ]
           };
 
+          localizationCtrl.addOrderStatus = function() {
+              OrderStatuses.addOrderStatus(localizationCtrl.order_status);
+              localizationCtrl.order_status.status_name = null;
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.removeOrderStatus = function(row) {
+              OrderStatuses.removeOrderStatus(row.entity.$id);
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.gridOrderStatuses = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              data: OrderStatuses.all,
+              columnDefs: [
+                  { name:'OrderStatusName', field: 'status_name', enableHiding: false },
+                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeOrderStatus.html',
+                    width: 35, enableCellEdit: false, enableColumnMenu: false }
+              ]
+          };
+
+          localizationCtrl.addLengthUnit = function() {
+              LengthUnits.addLengthUnit(localizationCtrl.length_unit);
+              localizationCtrl.length_unit.unit_title = null;
+              localizationCtrl.length_unit.unit_abbreviation = null;
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.removeLengthUnit = function(row) {
+              LengthUnits.removeLengthUnit(row.entity.$id);
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.gridLengthUnits = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              data: LengthUnits.all,
+              columnDefs: [
+                  { name:'unitTitle', field: 'unit_title', enableHiding: false },
+                  { name:'unitAbbreviation', field: 'unit_abbreviation', enableHiding: false },
+                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeLengthUnit.html',
+                    width: 35, enableCellEdit: false, enableColumnMenu: false }
+              ]
+          };
+
+          localizationCtrl.addWeightUnit = function() {
+              WeightUnits.addWeightUnit(localizationCtrl.weight_unit);
+              localizationCtrl.weight_unit.unit_title = null;
+              localizationCtrl.weight_unit.unit_abbreviation = null;
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.removeWeightUnit = function(row) {
+              WeightUnits.removeWeightUnit(row.entity.$id);
+          }, function(error) {
+              localizationCtrl.error = error;
+          };
+
+          localizationCtrl.gridWeightUnits = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              data: WeightUnits.all,
+              columnDefs: [
+                  { name:'unitTitle', field: 'unit_title', enableHiding: false },
+                  { name:'unitAbbreviation', field: 'unit_abbreviation', enableHiding: false },
+                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeWeightUnit.html',
+                    width: 35, enableCellEdit: false, enableColumnMenu: false }
+              ]
+          };
 
       }
 
