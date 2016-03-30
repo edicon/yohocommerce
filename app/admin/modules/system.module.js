@@ -366,7 +366,7 @@ angular.module('SystemModule', [
 .factory('Taxes', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (    $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'taxes');
-          var taxes = $firebaseArray(ref.child(tid).orderByPriority());
+          var taxes = $firebaseArray(ref.child(tid));
 
           var tax = {
 
@@ -393,7 +393,7 @@ angular.module('SystemModule', [
 .factory('TaxGroups', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (        $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'tax_groups');
-          var taxgroups = $firebaseArray(ref.child(tid).orderByPriority());
+          var taxgroups = $firebaseArray(ref.child(tid));
 
           var taxgroup = {
 
@@ -420,7 +420,7 @@ angular.module('SystemModule', [
 .factory('ReturnStatuses', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (             $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'return_statuses');
-          var returnstatuses = $firebaseArray(ref.child(tid).orderByPriority());
+          var returnstatuses = $firebaseArray(ref.child(tid));
 
           var returnstatus = {
 
@@ -447,7 +447,7 @@ angular.module('SystemModule', [
 .factory('ReturnActions', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'return_actions');
-          var returnactions = $firebaseArray(ref.child(tid).orderByPriority());
+          var returnactions = $firebaseArray(ref.child(tid));
 
           var returnaction = {
 
@@ -474,7 +474,7 @@ angular.module('SystemModule', [
 .factory('ReturnReasons', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'return_reasons');
-          var returnreasons = $firebaseArray(ref.child(tid).orderByPriority());
+          var returnreasons = $firebaseArray(ref.child(tid));
 
           var returnreason = {
 
@@ -499,44 +499,7 @@ angular.module('SystemModule', [
 ])
 
 
-.factory('httpInterceptor', ['$location', '$q', '$injector', 'InstanceUrl',
-    function (                $location,   $q,   $injector,   InstanceUrl) {
 
-  		    return {
-
-      			     request: function (config) {
-        				// Append instance url before every api call
-              				if (config.url.indexOf('/api/v2') > -1) {
-              				      config.url = InstanceUrl + config.url;
-              				};
-
-              				// delete x-dreamfactory-session-token header if login
-              				if (config.method.toLowerCase() === 'post' && config.url.indexOf('/api/v2/user/session') > -1) {
-              					     delete config.headers['X-DreamFactory-Session-Token'];
-              				}
-
-              				console.log(config);
-
-              				return config;
-      			     },
-
-          			responseError: function (result) {
-
-          				// If status is 401 or 403 with token blacklist error then redirect to login
-          				if (result.status === 401 || (result.status === 403 && result.data.error.message.indexOf('token') > -1)) {
-          					$location.path('/login');
-          				}
-
-          				var $mdToast = $injector.get('$mdToast');
-          				$mdToast.show($mdToast.simple().content('Error: ' + result.data.error.message));
-
-          				return $q.reject(result);
-          			}
-  		    };
-
-      }
-
-])
 
 .controller('LibraryCtrl', ['Upload', 'Tenant', 'InstanceUrl', '$timeout', '$state', '$scope', '$stateParams',
       function (             Upload,   Tenant,   InstanceUrl,   $timeout,   $state,   $scope,   $stateParams) {
@@ -910,6 +873,8 @@ angular.module('SystemModule', [
           var localizationCtrl = this;
           localizationCtrl.tax = {};
           localizationCtrl.tax.tax_type = 'Percent';
+          localizationCtrl.allTaxes = Taxes.all;
+
 
           localizationCtrl.tax_group = {};
           localizationCtrl.return_status = {};

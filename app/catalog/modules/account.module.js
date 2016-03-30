@@ -228,15 +228,22 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountCtrl', ['Auth', '$state', 'profile',
-      function (             Auth,   $state,   profile) {
+.controller('AccountCtrl', ['Auth', '$state', 'profile', '$scope',
+      function (             Auth,   $state,   profile,   $scope) {
           var accountCtrl = this;
           accountCtrl.profile = profile;
 
-          if (accountCtrl.profile.type === 'Customer')
+          if (accountCtrl.profile.type === 'Customer') {
               accountCtrl.authInfo = Auth.$getAuth();
-          else
+              console.log($scope)
+           } else {
               $state.go('catalog.home');
+          }
+
+          accountCtrl.sendPasswordEmail = function(email) {
+              console.log(email);
+              Auth.sendPasswordEmail(email);
+          };
 
           accountCtrl.logout = function() {
               Auth.$unauth();
