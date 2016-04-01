@@ -40,7 +40,7 @@
       </form>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="menu-icon fa fa-th"></i> Tax Rates</h3>
+          <h3 class="panel-title">Tax Rates</h3>
         </div>
         <div class="panel-body">
           <div ui-grid="localizationCtrl.gridTaxes" class="grid-150"></div>
@@ -96,7 +96,7 @@
       </form>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="menu-icon fa fa-th"></i> Product Tax Groups</h3>
+          <h3 class="panel-title">Product Tax Groups</h3>
         </div>
         <div class="panel-body">
           <div ui-grid="localizationCtrl.gridTaxGroup" class="grid-150"></div>
@@ -145,7 +145,7 @@
       </form>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="menu-icon fa fa-reply-all"></i> Return Actions</h3>
+          <h3 class="panel-title">Return Actions</h3>
         </div>
         <div class="panel-body">
           <div ui-grid="localizationCtrl.gridReturnAction" class="grid-150"></div>
@@ -170,7 +170,7 @@
       </form>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"><i class="menu-icon fa fa-reply-all"></i> Return Reasons</h3>
+          <h3 class="panel-title">Return Reasons</h3>
         </div>
         <div class="panel-body">
           <div ui-grid="localizationCtrl.gridReturnReason" class="grid-150"></div>
@@ -185,12 +185,12 @@
           <div class="col-sm-4">
             <div class="input-group input-group-sm">
               <span class="input-group-addon">Order Status</span>
-              <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
+              <input type="text" ng-model="localizationCtrl.order_status.status_name" class="form-control">
             </div>
           </div>
           <div class="col-sm-8" align="right">
             <div class="input-group input-group-sm">
-              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon" ng-click="couponsCtrl.addCoupon()">
+              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Status" ng-click="localizationCtrl.addOrderStatus()">
                 <i class="fa fa-plus"></i>
               </button>
             </div>
@@ -199,12 +199,10 @@
       </form>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h4 class="panel-title"><span class="menu-icon fa fa-file-text"></span> Order Statuses</h4>
+          <h4 class="panel-title">Order Statuses</h4>
         </div>
         <div class="panel-body">
-          <div class="row">
-            Orders
-          </div>
+          <div ui-grid="localizationCtrl.gridOrderStatuses" class="grid-150"></div>
         </div>
       </div>
     </fieldset>
@@ -215,18 +213,18 @@
           <div class="col-sm-4">
             <div class="input-group input-group-sm">
               <span class="input-group-addon">Unit Title</span>
-              <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
+              <input type="text" ng-model="localizationCtrl.length_unit.unit_title" class="form-control">
             </div>
           </div>
           <div class="col-sm-4">
             <div class="input-group input-group-sm">
               <span class="input-group-addon">Unit Abbreviation</span>
-              <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
+              <input type="text" ng-model="localizationCtrl.length_unit.unit_abbreviation" class="form-control">
             </div>
           </div>
           <div class="col-sm-4" align="right">
             <div class="input-group input-group-sm">
-              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon" ng-click="couponsCtrl.addCoupon()">
+              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Length Unit" ng-click="localizationCtrl.addLengthUnit()">
                 <i class="fa fa-plus"></i>
               </button>
             </div>
@@ -235,12 +233,10 @@
       </form>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h4 class="panel-title"><span class="menu-icon fa fa-arrows"></span> Length Units</h4>
+          <h4 class="panel-title">Length Units</h4>
         </div>
         <div class="panel-body">
-          <div class="row">
-            Length
-          </div>
+          <div ui-grid="localizationCtrl.gridLengthUnits" class="grid-150"></div>
         </div>
       </div>
     </fieldset>
@@ -251,18 +247,18 @@
           <div class="col-sm-4">
             <div class="input-group input-group-sm">
               <span class="input-group-addon">Unit Title</span>
-              <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
+              <input type="text" ng-model="localizationCtrl.weight_unit.unit_title" class="form-control">
             </div>
           </div>
           <div class="col-sm-4">
             <div class="input-group input-group-sm">
               <span class="input-group-addon">Unit Abbreviation</span>
-              <input type="text" ng-model="couponsCtrl.coupon.coupon_type" class="form-control" readonly>
+              <input type="text" ng-model="localizationCtrl.weight_unit.unit_abbreviation" class="form-control">
             </div>
           </div>
           <div class="col-sm-4" align="right">
             <div class="input-group input-group-sm">
-              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Coupon" ng-click="couponsCtrl.addCoupon()">
+              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Weight Unit" ng-click="localizationCtrl.addWeightUnit()">
                 <i class="fa fa-plus"></i>
               </button>
             </div>
@@ -271,12 +267,10 @@
       </form>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h4 class="panel-title"><span class="menu-icon fa fa-balance-scale"></span> Weight Units</h4>
+          <h4 class="panel-title">Weight Units</h4>
         </div>
         <div class="panel-body">
-          <div class="row">
-            Weight
-          </div>
+          <div ui-grid="localizationCtrl.gridWeightUnits" class="grid-150"></div>
         </div>
       </div>
     </fieldset>

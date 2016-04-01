@@ -115,7 +115,7 @@ angular.module('CatalogModule', [
                         templateUrl: 'catalog/views/common/header.html'
                     },
                     "main@catalog": {
-                        controller: 'CartCtrl as cartCtrl',
+                        controller: 'CatalogCtrl as catalogCtrl',
                         templateUrl: 'catalog/views/shoppingcart/cart.html'
                     },
                     "footer@catalog": {
@@ -419,8 +419,8 @@ angular.module('CatalogModule', [
 ])
 
 
-.service('CartHelper', ['Catalog', 'CartOrders', 'Products', '$cookies',
-      function (         Catalog,   CartOrders,   Products,   $cookies) {
+.service('CartAddOrder', ['Catalog', 'CartOrders', 'Products', '$cookies',
+      function (           Catalog,   CartOrders,   Products,   $cookies) {
     		      this.initiate = function (pid) {
 
                   var theProduct = Products.getProduct(pid);
@@ -464,137 +464,157 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CatalogCtrl', ['Catalog', 'CartOrders', 'Products', '$scope', '$state', '$cookies',
-      function (             Catalog,   CartOrders,   Products,   $scope,   $state,   $cookies) {
-          var catalogCtrl = this;
-          $scope.product = {};
-          catalogCtrl.categories = Catalog.all;
-          catalogCtrl.subPulldowns = Catalog.pulldown;
-          catalogCtrl.subCategories = Catalog.allMenus;
+.service('CartUpdateQty', ['CartOrders', '$cookies',
+      function (            CartOrders,   $cookies) {
+    		      this.initiate = function ($id, qty) {
 
-          catalogCtrl.addCart = function() {
-                Catalog.addCart().then(function(theRef) {
-                      $cookies.put("cartId", theRef);
-                      catalogCtrl.getTotals();
-                });
-          }, function(error) {
-                catalogCtrl.error = error;
-          };
+                  var theCart = {};
+                  var theItem = {};
+                  theCart.items = 0;
+                  theCart.total = 0;
+                  theItem.qty = Number(qty);
+                  theItem.$id = $id;
+                  theItem.oid = $cookies.get('orderId');
+                  CartOrders.updateItemQty(theItem);
 
-          catalogCtrl.getTotals = function() {
-                var cartTotals = Catalog.getCart($cookies.get('cartId'));
-                    cartTotals.$loaded().then(function() {
-                        catalogCtrl.cartTotals = cartTotals;
-                    });
-          }, function(error) {
-                catalogCtrl.error = error;
-          };
+                  theCart.cid = $cookies.get('cartId');
+                  var theOrder = CartOrders.getOrder(theItem.oid);
+                        theOrder.$loaded().then(function() {
 
-          if ($cookies.get('cartId') === undefined)
-                catalogCtrl.addCart();
-          else
-                catalogCtrl.getTotals();
+                            for(var i = 0; i < theOrder.length; i++) {
+                                if (theOrder.product_id === theItem.$id)
+                                    theCart.item = theItem.qty;
+                                else
+                                    theCart.item = theOrder[i].product_quantity;
 
-          catalogCtrl.getOrder = function() {
-              var theOrder = CartOrders.getOrder($cookies.get('orderId'))
-                  theOrder.$loaded().then(function() {
-                      catalogCtrl.order = theOrder;
+                                if (theOrder[i].product_special_price === undefined)
+                                    theCart.price = theOrder[i].product_regular_price;
+                                else
+                                    theCart.price = theOrder[i].product_special_price;
+
+                                theCart.total = theCart.total + (theCart.item * theCart.price);
+                                theCart.items = theCart.items + theCart.item;
+
+                            }
+
+                            CartOrders.updateCartPrice(theCart);
+                      });
+            };
+
+      }
+
+])
+
+.service('CartRemoveProduct', ['CartOrders', '$cookies',
+      function (                CartOrders,   $cookies) {
+    		      this.initiate = function (pid) {
+
+                  var theProduct = {};
+                  var theCart = {};
+                  var theItem = {};
+                  theCart.items = 0;
+                  theCart.total = 0;
+                  theProduct.pid = pid;
+                  theProduct.oid = $cookies.get('orderId');
+                  CartOrders.removeProduct(theProduct);
+
+                  theCart.cid = $cookies.get('cartId');
+                  var theOrder = CartOrders.getOrder($cookies.get('orderId'));
+                        theOrder.$loaded().then(function() {
+
+                            for(var i = 0; i < theOrder.length; i++) {
+                                theCart.item = theOrder[i].product_quantity;
+
+                                if (theOrder[i].product_special_price === undefined)
+                                    theCart.price = theOrder[i].product_regular_price;
+                                else
+                                    theCart.price = theOrder[i].product_special_price;
+
+                                theCart.total = theCart.total + (theCart.item * theCart.price);
+                                theCart.items = theCart.items + theCart.item;
+
+                            }
+
+                            if (theCart.items === 0)
+                                $cookies.remove('orderId');
+
+                            CartOrders.updateCartPrice(theCart);
+
+                      });
+
+            };
+      }
+
+])
+
+.controller('CatalogCtrl', ['Catalog', 'CartOrders', 'Products', 'CartUpdateQty', 'CartRemoveProduct', '$scope', '$state', '$cookies',
+      function (             Catalog,   CartOrders,   Products,   CartUpdateQty,   CartRemoveProduct,   $scope,   $state,   $cookies) {
+            var catalogCtrl = this;
+            $scope.product = {};
+            catalogCtrl.categories = Catalog.all;
+            catalogCtrl.subPulldowns = Catalog.pulldown;
+            catalogCtrl.subCategories = Catalog.allMenus;
+
+            catalogCtrl.addCart = function() {
+                  Catalog.addCart().then(function(theRef) {
+                        $cookies.put("cartId", theRef);
+                        catalogCtrl.getTotals();
                   });
-          }, function(error) {
-                catalogCtrl.error = error;
-          };
+            }, function(error) {
+                  catalogCtrl.error = error;
+            };
 
-          catalogCtrl.updateQty = function($id, qty) {
-              if (qty > 0) {
-                    var theCart = {};
-                    var theItem = {};
-                    theCart.items = 0;
-                    theCart.total = 0;
-                    theItem.qty = Number(qty);
-                    theItem.$id = $id;
-                    theItem.oid = $cookies.get('orderId');
-                    CartOrders.updateItemQty(theItem);
+            catalogCtrl.getTotals = function() {
+                  var cartTotals = Catalog.getCart($cookies.get('cartId'));
+                      cartTotals.$loaded().then(function() {
+                          catalogCtrl.cartTotals = cartTotals;
+                      });
+            }, function(error) {
+                  catalogCtrl.error = error;
+            };
 
-                    theCart.cid = $cookies.get('cartId');
-                    var theOrder = CartOrders.getOrder(theItem.oid);
-                          theOrder.$loaded().then(function() {
+            if ($cookies.get('cartId') === undefined)
+                  catalogCtrl.addCart();
+            else
+                  catalogCtrl.getTotals();
 
-                              for(var i = 0; i < theOrder.length; i++) {
-                                  if (theOrder.product_id === theItem.$id)
-                                      theCart.item = theItem.qty;
-                                  else
-                                      theCart.item = theOrder[i].product_quantity;
-
-                                  if (theOrder[i].product_special_price === undefined)
-                                      theCart.price = theOrder[i].product_regular_price;
-                                  else
-                                      theCart.price = theOrder[i].product_special_price;
-
-                                  theCart.total = theCart.total + (theCart.item * theCart.price);
-                                  theCart.items = theCart.items + theCart.item;
-
-                              }
-
-                              CartOrders.updateCartPrice(theCart);
-                        });
-
-              }
-          }, function(error) {
-                catalogCtrl.error = error;
-          };
-
-          catalogCtrl.removeProduct = function(pid) {
-                var theProduct = {};
-                var theCart = {};
-                var theItem = {};
-                theCart.items = 0;
-                theCart.total = 0;
-                theProduct.pid = pid;
-                theProduct.oid = $cookies.get('orderId');
-                CartOrders.removeProduct(theProduct);
-
-                theCart.cid = $cookies.get('cartId');
-                var theOrder = CartOrders.getOrder($cookies.get('orderId'));
-                      theOrder.$loaded().then(function() {
-
-                          for(var i = 0; i < theOrder.length; i++) {
-                              theCart.item = theOrder[i].product_quantity;
-
-                              if (theOrder[i].product_special_price === undefined)
-                                  theCart.price = theOrder[i].product_regular_price;
-                              else
-                                  theCart.price = theOrder[i].product_special_price;
-
-                              theCart.total = theCart.total + (theCart.item * theCart.price);
-                              theCart.items = theCart.items + theCart.item;
-
-                          }
-
-                          if (theCart.items === 0)
-                              $cookies.remove('orderId');
-
-                          CartOrders.updateCartPrice(theCart);
-
+            catalogCtrl.getOrder = function() {
+                var theOrder = CartOrders.getOrder($cookies.get('orderId'))
+                    theOrder.$loaded().then(function() {
+                        catalogCtrl.order = theOrder;
                     });
-          }, function(error) {
-                catalogCtrl.error = error;
-          };
+            }, function(error) {
+                    catalogCtrl.error = error;
+            };
 
-          catalogCtrl.goCategory = function(cid) {
-                $state.go('catalog.category', {'cid': cid});
-          };
+            catalogCtrl.updateQty = function($id, qty) {
+                if (qty > 0)
+                    CartUpdateQty.initiate($id, qty);
+            }, function(error) {
+                    catalogCtrl.error = error;
+            };
 
-          catalogCtrl.goSubCategory = function(subCid) {
-                $state.go('catalog.subcategory', {'subCid': subCid});
-          };
+            catalogCtrl.removeProduct = function(pid) {
+                  CartRemoveProduct.initiate(pid);
+            }, function(error) {
+                  catalogCtrl.error = error;
+            };
 
-          catalogCtrl.goProduct = function(pid) {
-                $state.go('catalog.product', {'pid': pid});
-          };
+            catalogCtrl.goCategory = function(cid) {
+                  $state.go('catalog.category', {'cid': cid});
+            };
 
-          catalogCtrl.findProduct = function() {
-                $state.go('catalog.product', {'pid': $scope.product.selected.$id});
-          };
+            catalogCtrl.goSubCategory = function(subCid) {
+                  $state.go('catalog.subcategory', {'subCid': subCid});
+            };
+
+            catalogCtrl.goProduct = function(pid) {
+                  $state.go('catalog.product', {'pid': pid});
+            };
+
+            catalogCtrl.findProduct = function() {
+                  $state.go('catalog.product', {'pid': $scope.product.selected.$id});
+            };
 
       }
 
@@ -626,134 +646,140 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CatalogCategoryCtrl', ['Products', 'Categories', 'CartHelper', '$state', '$stateParams',
-      function (                     Products,   Categories,   CartHelper,   $state,   $stateParams) {
-          var catalogCategoryCtrl = this;
-          var cid = $stateParams.cid
+.controller('CatalogCategoryCtrl', ['Products', 'Categories', 'CartAddOrder', '$state', '$stateParams',
+      function (                     Products,   Categories,   CartAddOrder,   $state,   $stateParams) {
+            var catalogCategoryCtrl = this;
+            var cid = $stateParams.cid
 
-          if (cid === null) {
+            if (cid === null) {
+                  $state.go('catalog.home');
+            } else {
+                  var category = Categories.getCategory(cid);
+                      category.$loaded().then(function() {
+                          catalogCategoryCtrl.category = category;
+                          var products = Products.getProductCategory(cid);
+                              products.$loaded().then(function() {
+                                catalogCategoryCtrl.products = products;
+                          });
+                  });
+            }
+
+            catalogCategoryCtrl.goProduct = function(pid) {
+                $state.go('catalog.product', {'pid': pid});
+            };
+
+            catalogCategoryCtrl.addOrder = function(pid) {
+                CartAddOrder.initiate(pid);
+            };
+
+      }
+
+])
+
+.controller('CatalogFeaturedCtrl', ['CartAddOrder', 'Products', '$state',
+      function (                     CartAddOrder,   Products,   $state) {
+            var catalogFeaturedCtrl = this;
+            catalogFeaturedCtrl.featuredProducts = Products.allFeatured;
+
+            catalogFeaturedCtrl.goProduct = function(pid) {
+                $state.go('catalog.product', {'pid': pid});
+            };
+
+            catalogFeaturedCtrl.addOrder = function(pid) {
+                CartAddOrder.initiate(pid);
+            };
+
+      }
+
+])
+
+.controller('CatalogProductCtrl', ['$state', 'Product', 'CartAddOrder', '$stateParams',
+      function (                    $state,   Product,   CartAddOrder,   $stateParams) {
+            var catalogProductCtrl = this;
+
+            var pid = $stateParams.pid
+
+            if (pid === null) {
                 $state.go('catalog.home');
-          } else {
-                var category = Categories.getCategory(cid);
-                    category.$loaded().then(function() {
-                        catalogCategoryCtrl.category = category;
-                        var products = Products.getProductCategory(cid);
-                            products.$loaded().then(function() {
-                              catalogCategoryCtrl.products = products;
-                        });
+            } else {
+                var product = Product.getProduct(pid);
+                    product.$loaded().then(function() {
+                      catalogProductCtrl.product = product;
                 });
-          }
-
-          catalogCategoryCtrl.goProduct = function(pid) {
-              $state.go('catalog.product', {'pid': pid});
-          };
-
-          catalogCategoryCtrl.addOrder = function(pid) {
-              CartHelper.initiate(pid);
-          };
-
-      }
-
-])
-
-.controller('CatalogFeaturedCtrl', ['CartHelper', 'Products', '$state',
-      function (                     CartHelper,   Products,   $state) {
-          var catalogFeaturedCtrl = this;
-          catalogFeaturedCtrl.featuredProducts = Products.allFeatured;
-
-          catalogFeaturedCtrl.goProduct = function(pid) {
-              $state.go('catalog.product', {'pid': pid});
-          };
-
-          catalogFeaturedCtrl.addOrder = function(pid) {
-              CartHelper.initiate(pid);
-          };
-
-      }
-
-])
-
-.controller('CatalogProductCtrl', ['$state', 'Product', 'CartHelper', '$stateParams',
-      function (                    $state,   Product,   CartHelper,   $stateParams) {
-          var catalogProductCtrl = this;
-
-          var pid = $stateParams.pid
-
-          if (pid === null) {
-              $state.go('catalog.home');
-          } else {
-              var product = Product.getProduct(pid);
-                  product.$loaded().then(function() {
-                    catalogProductCtrl.product = product;
-              });
-              var thumbnails = Product.getProductThumbnails(pid);
-                  thumbnails.$loaded().then(function() {
-                    catalogProductCtrl.thumbnails = thumbnails;
-              });
-          }
-
-          catalogProductCtrl.goCategory = function(cid) {
-              $state.go('catalog.category', {'cid': cid});
-          };
-
-          catalogProductCtrl.addOrder = function(pid) {
-              CartHelper.initiate(pid);
-          };
-
-      }
-
-])
-
-.controller('CatalogSubCategoryCtrl', ['CartHelper', 'Products', 'SubCategories', 'Categories', '$state', '$stateParams',
-      function (                        CartHelper,   Products,   SubCategories,   Categories,   $state,   $stateParams) {
-          var catalogSubCategoryCtrl = this;
-          var subCid = $stateParams.subCid;
-
-          catalogSubCategoryCtrl.goCategory = function(cid) {
-              $state.go('catalog.category', {'cid': cid});
-          };
-
-          catalogSubCategoryCtrl.goProduct = function(pid) {
-              $state.go('catalog.product', {'pid': pid});
-          };
-
-          if (subCid === null) {
-              $state.go('catalog.home');
-          } else {
-              var subCategory = SubCategories.getSubCategory(subCid);
-                  subCategory.$loaded().then(function() {
-                      catalogSubCategoryCtrl.subCategory = subCategory;
-                        var category = Categories.getCategory(catalogSubCategoryCtrl.subCategory.category_id);
-                          category.$loaded().then(function() {
-                                catalogSubCategoryCtrl.category = category;
-                                  var products = Products.getProductSubCategory(subCid);
-                                      products.$loaded().then(function() {
-                                            catalogSubCategoryCtrl.products = products;
-                                });
-                        });
+                var thumbnails = Product.getProductThumbnails(pid);
+                    thumbnails.$loaded().then(function() {
+                      catalogProductCtrl.thumbnails = thumbnails;
                 });
-          }
+            }
 
-          catalogSubCategoryCtrl.addOrder = function(pid) {
-              CartHelper.initiate(pid);
-          };
+            catalogProductCtrl.goCategory = function(cid) {
+                $state.go('catalog.category', {'cid': cid});
+            };
+
+            catalogProductCtrl.addOrder = function(pid) {
+                CartAddOrder.initiate(pid);
+            };
 
       }
 
 ])
 
-.controller('CartCtrl', ['Catalog', 'CartOrders', 'Products', '$scope', '$state', '$cookies',
-      function (          Catalog,   CartOrders,   Products,   $scope,   $state,   $cookies) {
-          var catalogCtrl = this;
+.controller('CatalogSubCategoryCtrl', ['CartAddOrder', 'Products', 'SubCategories', 'Categories', '$state', '$stateParams',
+      function (                        CartAddOrder,   Products,   SubCategories,   Categories,   $state,   $stateParams) {
+            var catalogSubCategoryCtrl = this;
+            var subCid = $stateParams.subCid;
 
+            catalogSubCategoryCtrl.goCategory = function(cid) {
+                $state.go('catalog.category', {'cid': cid});
+            };
 
+            catalogSubCategoryCtrl.goProduct = function(pid) {
+                $state.go('catalog.product', {'pid': pid});
+            };
+
+            if (subCid === null) {
+                $state.go('catalog.home');
+            } else {
+                var subCategory = SubCategories.getSubCategory(subCid);
+                    subCategory.$loaded().then(function() {
+                        catalogSubCategoryCtrl.subCategory = subCategory;
+                          var category = Categories.getCategory(catalogSubCategoryCtrl.subCategory.category_id);
+                            category.$loaded().then(function() {
+                                  catalogSubCategoryCtrl.category = category;
+                                    var products = Products.getProductSubCategory(subCid);
+                                        products.$loaded().then(function() {
+                                              catalogSubCategoryCtrl.products = products;
+                                  });
+                          });
+                  });
+            }
+
+            catalogSubCategoryCtrl.addOrder = function(pid) {
+                CartAddOrder.initiate(pid);
+            };
+
+      }
+
+])
+
+.controller('CartCtrl', ['Catalog', 'CartOrders', 'Products', 'CartUpdateQty', 'CartRemoveProduct', '$scope', '$state', '$cookies',
+      function (          Catalog,   CartOrders,   Products,   CartUpdateQty,   CartRemoveProduct,   $scope,   $state,   $cookies) {
+            var cartCtrl = this;
+            cartCtrl.order = {};
+
+            if ($cookies.get('orderId') != undefined) {
+                var theOrder = CartOrders.getOrder($cookies.get('orderId'))
+                    theOrder.$loaded().then(function() {
+                        cartCtrl.order = theOrder;
+                    });
+            };
       }
 
 ])
 
 .controller('CheckoutCtrl', ['Catalog', 'CartOrders', 'Products', '$scope', '$state', '$cookies',
-      function (          Catalog,   CartOrders,   Products,   $scope,   $state,   $cookies) {
-          var catalogCtrl = this;
+      function (              Catalog,   CartOrders,   Products,   $scope,   $state,   $cookies) {
+            var catalogCtrl = this;
 
 
       }
@@ -762,47 +788,46 @@ angular.module('CatalogModule', [
 
 .controller('AuthCtrl', ['Auth', 'AlertService', 'Tenant', 'LoginHelper', 'md5', 'tid', '$state',
       function (          Auth,   AlertService,   Tenant,   LoginHelper,   md5,   tid,   $state) {
-          var authCtrl = this;
-          authCtrl.tenant = {};
-          authCtrl.user = {};
+            var authCtrl = this;
+            authCtrl.tenant = {};
+            authCtrl.user = {};
 
-          authCtrl.adminLogin = function() {
-              Auth.$authWithPassword(authCtrl.user).then(function(auth) {
-                console.log(auth)
-                  $state.go('admin.dashboard');
-            /*    this is to setup file storing capabilities on Dreamfactory */
-            /*    authCtrl.tenant = Tenant.getInstanceCredentials();
-                  authCtrl.tenant.$loaded().then(function() {
-                      LoginHelper.initiate({
-                          email: authCtrl.tenant.dreamfactory_email,
-                          password: authCtrl.tenant.dreamfactory_password
-                      })
+            authCtrl.adminLogin = function() {
+                Auth.$authWithPassword(authCtrl.user).then(function(auth) {
+                  console.log(auth)
+                    $state.go('admin.dashboard');
+              /*    this is to setup file storing capabilities on Dreamfactory */
+              /*    authCtrl.tenant = Tenant.getInstanceCredentials();
+                    authCtrl.tenant.$loaded().then(function() {
+                        LoginHelper.initiate({
+                            email: authCtrl.tenant.dreamfactory_email,
+                            password: authCtrl.tenant.dreamfactory_password
+                        })
 
 
 
-                  }).then(function() {
-                      $state.go('admin.dashboard');
-                  });
+                    }).then(function() {
+                        $state.go('admin.dashboard');
+                    });
 
-              */
-              }, function(error) {
-                  AlertService.addError(error.message);
-              });
-          };
+                */
+                }, function(error) {
+                    AlertService.addError(error.message);
+                });
+            };
 
-          authCtrl.accountLogin = function() {
-              Auth.$authWithPassword(authCtrl.user).then(function (auth) {
-                  $state.go('account.detail');
+            authCtrl.accountLogin = function() {
+                Auth.$authWithPassword(authCtrl.user).then(function (auth) {
+                    $state.go('account.detail');
 
-              }, function(error) {
-                  AlertService.addError(error.message);
-              });
-          };
+                }, function(error) {
+                    AlertService.addError(error.message);
+                });
+            };
 
-          authCtrl.forgotPassword = function() {
-              Auth.sendPasswordEmail(authCtrl.user.email)
-          };
-
+            authCtrl.forgotPassword = function() {
+                Auth.sendPasswordEmail(authCtrl.user.email)
+            };
 
       }
 
@@ -878,45 +903,45 @@ angular.module('CatalogModule', [
 
 .controller('RegisterTenantCtrl', ['Auth', 'Profile', 'AlertService', 'Tenant', 'md5', 'tid', '$state',
       function (                    Auth,   Profile,   AlertService,   Tenant,   md5,   tid,   $state) {
-          var registerTenantCtrl = this;
-          registerTenantCtrl.tenant = {};
+            var registerTenantCtrl = this;
+            registerTenantCtrl.tenant = {};
 
-          registerTenantCtrl.createProfile = function() {
-              authCtrl.profile = Profile.getProfile(registerTenantCtrl.tenant.uid);
-                authCtrl.profile.$loaded().then(function() {
-                    registerTenantCtrl.profile.emailHash = md5.createHash(registerTenantCtrl.user.email);
-                    registerTenantCtrl.profile.name = registerTenantCtrl.tenant.name;
-                    registerTenantCtrl.profile.tid = registerTenantCtrl.tid;
-                    registerTenantCtrl.profile.type = 'Tenant';
-                    registerTenantCtrl.profile.$save();
-                    registerTenantCtrl.login();
-                });
-
-          }, function(error) {
-
-              AlertService.addError(error.message);
-          };
-
-          authCtrl.registerTenant = function() {
-              var domainCode = registerTenantCtrl.user.email.replace(/.*@/, "");
-              var n = domainCode.indexOf(".");
-                domainCode = domainCode.substring(0, n);
-                    Auth.$createUser(registerTenantCtrl.user).then(function (user) {
-                        registerTenantCtrl.tenant.uid = user.uid;
-                        registerTenantCtrl.tenant.first_name = authCtrl.user.first_name;
-                        registerTenantCtrl.tenant.last_name = authCtrl.user.last_name;
-                        registerTenantCtrl.tenant.domain = authCtrl.user.email.replace(/.*@/, "");
-                        registerTenantCtrl.tenant.domain_code = domainCode;
-                            Tenant.all.$add(registerTenantCtrl.tenant).then(function(ref) {
-                                authCtrl.tid = ref.key();
-                                authCtrl.createProfile();
-                            })
-                    });
+            registerTenantCtrl.createProfile = function() {
+                authCtrl.profile = Profile.getProfile(registerTenantCtrl.tenant.uid);
+                  authCtrl.profile.$loaded().then(function() {
+                      registerTenantCtrl.profile.emailHash = md5.createHash(registerTenantCtrl.user.email);
+                      registerTenantCtrl.profile.name = registerTenantCtrl.tenant.name;
+                      registerTenantCtrl.profile.tid = registerTenantCtrl.tid;
+                      registerTenantCtrl.profile.type = 'Tenant';
+                      registerTenantCtrl.profile.$save();
+                      registerTenantCtrl.login();
+                  });
 
             }, function(error) {
 
-              AlertService.addError(error.message);
+                AlertService.addError(error.message);
             };
+
+            authCtrl.registerTenant = function() {
+                var domainCode = registerTenantCtrl.user.email.replace(/.*@/, "");
+                var n = domainCode.indexOf(".");
+                  domainCode = domainCode.substring(0, n);
+                      Auth.$createUser(registerTenantCtrl.user).then(function (user) {
+                          registerTenantCtrl.tenant.uid = user.uid;
+                          registerTenantCtrl.tenant.first_name = authCtrl.user.first_name;
+                          registerTenantCtrl.tenant.last_name = authCtrl.user.last_name;
+                          registerTenantCtrl.tenant.domain = authCtrl.user.email.replace(/.*@/, "");
+                          registerTenantCtrl.tenant.domain_code = domainCode;
+                              Tenant.all.$add(registerTenantCtrl.tenant).then(function(ref) {
+                                  authCtrl.tid = ref.key();
+                                  authCtrl.createProfile();
+                              })
+                      });
+
+              }, function(error) {
+
+                AlertService.addError(error.message);
+              };
 
       }
 
@@ -926,27 +951,27 @@ angular.module('CatalogModule', [
 
 .controller('ContactCtrl', ['Tenant', 'Store',
       function (             Tenant,   Store) {
-          var contactCtrl = this;
+            var contactCtrl = this;
 
-          var tenant = Tenant.getStoreTenant();
-              tenant.$loaded().then(function() {
-                contactCtrl.store = Store.getStore(tenant.default_store_id)
-          });
-//auto resizing comment box.
-      $(document)
-  		    .one('focus.textarea', '.autoExpand', function(){
-  			       var savedValue = this.value;
-  			          this.value = '';
-  			          this.baseScrollHeight = this.scrollHeight;
-  			          this.value = savedValue;
-  		    })
-  		    .on('input.textarea', '.autoExpand', function(){
-  			       var minRows = this.getAttribute('data-min-rows')|0, rows;
-  			          this.rows = minRows;
-                  console.log(this.scrollHeight , this.baseScrollHeight);
-  			          rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 17);
-  			          this.rows = minRows + rows;
-  		    });
+            var tenant = Tenant.getStoreTenant();
+                tenant.$loaded().then(function() {
+                  contactCtrl.store = Store.getStore(tenant.default_store_id)
+            });
+  //auto resizing comment box.
+        $(document)
+    		    .one('focus.textarea', '.autoExpand', function(){
+    			       var savedValue = this.value;
+    			          this.value = '';
+    			          this.baseScrollHeight = this.scrollHeight;
+    			          this.value = savedValue;
+    		    })
+    		    .on('input.textarea', '.autoExpand', function(){
+    			       var minRows = this.getAttribute('data-min-rows')|0, rows;
+    			          this.rows = minRows;
+                    console.log(this.scrollHeight , this.baseScrollHeight);
+    			          rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 17);
+    			          this.rows = minRows + rows;
+    		    });
 
       }
 
