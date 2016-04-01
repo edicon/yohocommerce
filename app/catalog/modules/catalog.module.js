@@ -826,7 +826,14 @@ angular.module('CatalogModule', [
             };
 
             authCtrl.forgotPassword = function() {
-                Auth.sendPasswordEmail(authCtrl.user.email)
+                Auth.$resetPassword({
+                    email: authCtrl.user.email
+                    }).then(function() {
+                        console.log("Password reset email sent successfully!");
+                        $state.go('catalog.home');
+                    }).catch(function(error) {
+                        console.error("Error: ", error);
+                    });
             };
 
       }

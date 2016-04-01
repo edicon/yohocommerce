@@ -228,23 +228,18 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountCtrl', ['Auth', '$state', 'profile', '$scope',
-      function (             Auth,   $state,   profile,   $scope) {
+.controller('AccountCtrl', ['Auth', 'Customer', '$state', 'profile', '$scope',
+      function (             Auth,   Customer,   $state,   profile,   $scope) {
 
           var accountCtrl = this;
           accountCtrl.profile = profile;
 
           if (accountCtrl.profile.type === 'Customer') {
               accountCtrl.authInfo = Auth.$getAuth();
-              console.log($scope)
+//              console.log($scope)
            } else {
               $state.go('catalog.home');
           }
-
-          accountCtrl.sendPasswordEmail = function(email) {
-              console.log(email);
-              Auth.sendPasswordEmail(email);
-          };
 
           var theCustomer = Customer.getCustomer(accountCtrl.profile.cid);
               theCustomer.$loaded().then(function() {
@@ -252,16 +247,27 @@ angular.module('AccountModule', [
           });
 
           accountCtrl.forgotPassword = function() {
-            console.log("gothere");
-            Auth.sendPasswordEmail(profile.email);
-            console.log("reset password sent");
-            $state.go('catalog.home');
+              Auth.$resetPassword({
+                  email: accountCtrl.customer.customer_email
+                  }).then(function() {
+                      console.log("Password reset email sent successfully!");
+                      $state.go('catalog.home');
+                  }).catch(function(error) {
+                      console.error("Error: ", error);
+                  });
           };
 
-          accountCtrl.saveNewPassword = function() {
-            Auth.updatePassword(accountCtrl.customer.customer_email, accountCtrl.customer.customer_password, accountCtrl.customer.customer_new_password);
-            console.log("new password saved");
-            $state.go('catalog.home');
+          accountCtrl.newPassword = function() {
+            Auth.$changePassword({
+                email: accountCtrl.customer.customer_email,
+                oldPassword: accountCtrl.customer.customer_password,
+                newPassword: accountCtrl.customer.customer_new_password
+                }).then(function() {
+                    console.log("new password saved");
+                    $state.go('catalog.home');
+                }).catch(function(error) {
+                    console.error("Error: ", error);
+                });
           };
 
           accountCtrl.logout = function() {
