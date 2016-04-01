@@ -29,7 +29,7 @@
           <div class="form-group">
             <label class="control-label">Password</label>
             <input type="password" placeholder="Password" class="form-control" ng-model="authCtrl.user.password">
-            <a href="#">Forgot Password</a>
+            <a ng-click="authCtrl.forgotPassword()">Forgot Password</a>
           </div>
           <input class="btn btn-primary" type="submit" value="Login">
         </form>
