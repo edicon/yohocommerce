@@ -134,6 +134,12 @@ var app = angular.module('app', [
               			}
             		});
 
+                if (type == 'success') {
+                    window.setTimeout(function() {
+                        if ($rootScope.alerts.length === 1 && $rootScope.alerts[0].type === 'success') hide();
+                    }, 3000);
+                }
+
             		if (!visible) {
             			show();
             		}
