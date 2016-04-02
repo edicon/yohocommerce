@@ -42,7 +42,6 @@ angular.module('CatalogsModule', [
                   }
               }
           })
-
           .state('admin.catalogs.products', {
                 url: '/products',
                 params: {
@@ -58,6 +57,24 @@ angular.module('CatalogsModule', [
                     "list@admin.catalogs.products": {
                         controller: 'ProductsCtrl as productsCtrl',
                         templateUrl: 'admin/views/catalogs/products.html'
+                    }
+                }
+          })
+          .state('admin.catalogs.featuredproducts', {
+                url: '/featuredproducts',
+                params: {
+                  rowEntity: null,
+                },
+                views: {
+                    "header@admin": {
+                        templateUrl: 'admin/views/catalogs/featuredproducts.header.html'
+                    },
+                    "main@admin": {
+                        templateUrl: 'admin/views/catalogs/catalogs.html'
+                    },
+                    "list@admin.catalogs.featuredproducts": {
+                        controller: 'ProductsCtrl as productsCtrl',
+                        templateUrl: 'admin/views/catalogs/featuredproducts.html'
                     }
                 }
           })
@@ -97,6 +114,24 @@ angular.module('CatalogsModule', [
                     }
                 }
           })
+          .state('admin.catalogs.categorybanners', {
+                url: '/categorybanners',
+                params: {
+                  tabEntity: null,
+                },
+                views: {
+                    "header@admin": {
+                        templateUrl: 'admin/views/catalogs/categorybanners.header.html'
+                    },
+                    "main@admin": {
+                        templateUrl: 'admin/views/catalogs/catalogs.html'
+                    },
+                    "list@admin.catalogs.categorybanners": {
+                        controller: 'CategoriesCtrl as categoriesCtrl',
+                        templateUrl: 'admin/views/catalogs/categorybanners.html'
+                    }
+                }
+          })
           .state('admin.catalogs.subcategories', {
                 url: '/subcategories',
                 params: {
@@ -123,20 +158,6 @@ angular.module('CatalogsModule', [
                       return Auth.$requireAuth().catch(function(){
                           $state.go('home');
                       });
-                    },
-                    profile: function(Auth){
-                        return Auth.$requireAuth();
-                    }
-                }
-          })
-          .state('productFeatured', {
-                url: '/productFeatured',
-                controller: 'ProductsCtrl as productsCtrl',
-                resolve: {
-                    auth: function($state, Wow, Auth){
-                        return Auth.$requireAuth().catch(function(){
-                            $state.go('home');
-                        });
                     },
                     profile: function(Auth){
                         return Auth.$requireAuth();
@@ -255,20 +276,6 @@ angular.module('CatalogsModule', [
                     }
                 }
           })
-          .state('categoryBanners', {
-                url: '/categoryBanners',
-                controller: 'CategoriesCtrl as categoriesCtrl',
-                resolve: {
-                    auth: function($state, Wow, Auth) {
-                        return Auth.$requireAuth().catch(function(){
-                            $state.go('home');
-                        });
-                    },
-                    profile: function(Auth){
-                        return Auth.$requireAuth();
-                    }
-                }
-          })
           .state('subCats', {
                 url: '/subCats',
                 controller: 'SubCategoriesCtrl as subCategoriesCtrl',
@@ -306,7 +313,6 @@ angular.module('CatalogsModule', [
       function (         $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
             var ref = new Firebase(FirebaseUrl+'categories');
             var categories = $firebaseArray(ref.child(tid).orderByPriority());
-            var first = $firebaseArray(ref.child(tid).orderByPriority().limitToFirst(1));
 
             var category = {
 
@@ -345,9 +351,7 @@ angular.module('CatalogsModule', [
                     return theRef.update({category_banner_image: null});
                 },
 
-                all: categories,
-
-                firstCategory: first
+                all: categories
 
             };
 
@@ -580,7 +584,6 @@ angular.module('CatalogsModule', [
 .controller('CategoriesCtrl', ['Categories', '$state', '$scope', '$stateParams','FileReader',
       function (                Categories,   $state,   $scope,   $stateParams,  FileReader) {
           var categoriesCtrl = this;
-          categoriesCtrl.categoryTabActive = "active";
           categoriesCtrl.firstCategory = Categories.firstCategory;
           categoriesCtrl.category = {};
           categoriesCtrl.imageEntity =[];
@@ -599,18 +602,6 @@ angular.module('CatalogsModule', [
                       categoriesCtrl.category = theCategory;
                   });
           };
-
-          categoriesCtrl.getFirstCategory = function(cid) {
-              var theCategory = categoriesCtrl.firstCategory[0];
-                  categoriesCtrl.cid = theCategory.$id;
-                  categoriesCtrl.loadCategory(categoriesCtrl.cid);
-          };
-
-          if ($stateParams.tabEntity === 1) {
-              categoriesCtrl.bannerTabActive = "active";
-              categoriesCtrl.categoryTabActive = "";
-              categoriesCtrl.getFirstCategory();
-          }
 
           categoriesCtrl.categoriesGridOpts = {
               enableSorting: true,
@@ -890,12 +881,10 @@ angular.module('CatalogsModule', [
           };
 
           productCtrl.getStatus = function() {
-
-              if (productCtrl.product.product_status === "1") {
+              if (productCtrl.product.product_status === "1")
                   productCtrl.product.product_status_id = 1;
-              } else {
+              else
                   productCtrl.product.product_status_id = 2;
-              }
           };
 
           $scope.getBanner = function () {
@@ -1020,7 +1009,6 @@ angular.module('CatalogsModule', [
           var productsCtrl = this;
           productsCtrl.listButtons = true;
           $scope.file = {};
-          productsCtrl.productTabActive = "active";
 
           productsCtrl.showListBtns = function() {
               productsCtrl.listButtons = true;
@@ -1030,11 +1018,8 @@ angular.module('CatalogsModule', [
               productsCtrl.listButtons = false;
           };
 
-          if ($stateParams.tabEntity === 1) {
+          if ($stateParams.tabEntity === 1)
               productsCtrl.showFeatureBtns();
-              productsCtrl.featureTabActive = "active";
-              productsCtrl.productTabActive = "";
-          }
 
           productsCtrl.rowArray = [
               {id: 1, name: '350 px', px: 350},

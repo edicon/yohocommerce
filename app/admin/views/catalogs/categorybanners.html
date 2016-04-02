@@ -1,0 +1,40 @@
+<div class="container-fluid">
+  <div class="col-sm-12">
+    <div class="row">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title"><span class="menu-icon fa fa-flag-checkered"></span> Category Banners</h4>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-3">
+              <h5>{{categoriesCtrl.category.category_name}} Category</h5>
+              <div ui-grid="categoriesCtrl.catagoryListGridOpts" ui-grid-selection class="grid"></div>
+            </div>
+            <div class="col-sm-3">
+              <span class="file-input btn btn-primary btn-block btn-file">
+                <h5><i class="fa fa-floppy-o"></i> Click or Drag Image</h5>
+                <input type="file" ng-category-banner-select="categoriesCtrl.onFileSelect($files)">
+              </span>
+              <span ng-if="categoriesCtrl.category.category_banner_image != null"><br>
+                <div class="row" align="center">
+                  <img class="img-thumbnail" ng-src="{{categoriesCtrl.category.category_banner_image}}">
+                </div><br>
+                <button type="button" class="btn btn-block btn-danger" ng-click="categoriesCtrl.removeCategoryImage(categoriesCtrl.category.$id)">
+                  <h5><i class="fa fa-trash"></i> Delete Category Banner Image</h5>
+                </button>
+              </span>
+            </div>
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label class="control-label">Description</label><br>
+                <textarea class="tinyMCE" ui-tinymce="categoriesCtrl.tinymceOptions" ng-change="categoriesCtrl.category.$save()"
+                  ng-model="categoriesCtrl.category.category_description"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
