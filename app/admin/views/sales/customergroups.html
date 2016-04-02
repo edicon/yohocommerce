@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="col-sm-12">
+    <div class="row">
+      <form class="form-horizontal">
+        <div class="input-group input-group-sm col-sm-4">
+          <span class="input-group-addon">New Customer Group</span>
+          <input type="text" ng-model="customersCtrl.groupName" class="form-control" placeholder="Enter New Customer Group">
+          <span class="input-group-btn">
+            <button class="btn btn-primary" ng-click="customersCtrl.addGroup()" type="button"><span class="menu-icon fa fa-plus"></span></button>
+          </span>
+        </div>
+      </form><br>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title"><span class="menu-icon fa fa-users"></span> Customer Groups</h4>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div ui-grid="customersCtrl.gridGroups" class="grid" ui-grid-edit ui-grid-cellNav></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

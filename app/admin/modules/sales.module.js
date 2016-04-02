@@ -30,9 +30,9 @@ angular.module('SalesModule', [
                     "main@admin": {
                           templateUrl: 'admin/views/sales/sales.html'
                     },
-                    "list@admin.sales.orders": {
-                          controller: 'OrdersCtrl as ordersCtrl',
-                          templateUrl: 'admin/views/sales/orders.html'
+                    "list@admin.sales": {
+                          controller: 'CustomersCtrl as customersCtrl',
+                          templateUrl: 'admin/views/sales/customers.html'
                     }
                 }
             })
@@ -99,6 +99,24 @@ angular.module('SalesModule', [
                       }
                   }
             })
+            .state('admin.sales.customergroups', {
+                  url: '/customergroups',
+                  params: {
+                    tabEntity: null,
+                  },
+                  views: {
+                      "header@admin": {
+                          templateUrl: 'admin/views/sales/customergroups.header.html'
+                      },
+                      "main@admin": {
+                          templateUrl: 'admin/views/sales/sales.html'
+                      },
+                      "list@admin.sales.customergroups": {
+                          controller: 'CustomersCtrl as customersCtrl',
+                          templateUrl: 'admin/views/sales/customergroups.html'
+                      }
+                  }
+            })
             .state('admin.sales.giftcards', {
                   url: '/giftcards',
                   views: {
@@ -152,7 +170,7 @@ angular.module('SalesModule', [
                 },
                 views: {
                     "header@admin": {
-                        templateUrl: 'admin/views/sales/customers.header.html'
+                        templateUrl: 'admin/views/sales/customer.header.html'
                     },
                     "main@admin": {
                         templateUrl: 'admin/views/sales/sales.html'
@@ -536,8 +554,6 @@ angular.module('SalesModule', [
           customerCtrl.groups = CustomerGroups.all;
           customerCtrl.totalCount = Customers.all.length;
 
-
-
           customerCtrl.loadCustomer = function(cid) {
               var theCustomer = Customer.getCustomer(cid);
                   theCustomer.$loaded().then(function() {
@@ -711,7 +727,6 @@ angular.module('SalesModule', [
       function (               Customers,   CustomerGroups,  $state,   $scope,   $stateParams) {
           var customersCtrl = this;
           customersCtrl.listButtons = true;
-          customersCtrl.customersTabActive = "active";
 
           customersCtrl.showListBtns = function() {
                 customersCtrl.listButtons = true;
@@ -721,11 +736,8 @@ angular.module('SalesModule', [
                 customersCtrl.listButtons = false;
           };
 
-          if ($stateParams.tabEntity === 1) {
+          if ($stateParams.tabEntity === 1)
                 customersCtrl.showFeatureBtns();
-                customersCtrl.groupsTabActive = "active";
-                customersCtrl.customersTabActive = "";
-          }
 
           customersCtrl.gridCustomers = {
                 showGridFooter: true,

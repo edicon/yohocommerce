@@ -31,7 +31,7 @@ angular.module('CatalogsModule', [
               url: '/catalogs',
               views: {
                   "header@admin": {
-                      templateUrl: 'admin/views/catalogs/products.header.html'
+                      templateUrl: 'admin/views/catalogs/catalogs.header.html'
                   },
                   "main@admin": {
                       templateUrl: 'admin/views/catalogs/catalogs.html'
