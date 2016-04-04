@@ -1,0 +1,60 @@
+<div class="container-fluid">
+  <div class="col-xs-12">
+    <fieldset>
+      <legend>Product Tax Groups</legend>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Description</span>
+              <input type="text" ng-model="taxgroupsCtrl.tax_group.group_description" class="form-control">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Tax Rate</span>
+              <input type="text" ng-model="taxgroupsCtrl.tax_group.group_label" class="form-control" readonly>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select <span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li ng-repeat="t in taxgroupsCtrl.allTaxes">
+                    <a href="" ng-click="taxgroupsCtrl.updateTaxRate(t.tax_name, t.tax_rate, t.tax_type)">{{t.tax_name}} - {{t.tax_rate}} {{t.tax_type}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Based On</span>
+              <input type="text" ng-model="taxgroupsCtrl.tax_group.group_based_on" class="form-control" readonly>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select <span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li><a href="" ng-click="taxgroupsCtrl.updateGroupBasedOn('Shipping Address')">Shipping Address</a></li>
+                  <li><a href="" ng-click="taxgroupsCtrl.updateGroupBasedOn('Payment Address')">Payment Address</a></li>
+                  <li><a href="" ng-click="taxgroupsCtrl.updateGroupBasedOn('Store Address')">Store Address</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-3" align="right">
+            <div class="input-group input-group-sm">
+              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Tax Group" ng-click="taxgroupsCtrl.addTaxGroup()">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Product Tax Groups</h3>
+        </div>
+        <div class="panel-body">
+          <div ui-grid="taxgroupsCtrl.gridTaxGroup" class="grid-150"></div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</div>

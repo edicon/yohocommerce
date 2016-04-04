@@ -97,6 +97,21 @@ angular.module('SystemModule', [
                 }
             }
         })
+        .state('admin.system.taxgroups', {
+            url: '/taxgroups',
+            views: {
+                "header@admin": {
+                    templateUrl: 'admin/views/system/taxgroups.header.html'
+                },
+                "main@admin": {
+                    templateUrl: 'admin/views/system/system.html'
+                },
+                "list@admin.system.taxgroups": {
+                    controller: 'TaxgroupsCtrl as taxgroupsCtrl',
+                    templateUrl: 'admin/views/system/taxgroups.html'
+                }
+            }
+        })
         .state('admin.system.stores', {
             url: '/stores',
             params: {
@@ -992,46 +1007,12 @@ angular.module('SystemModule', [
               ]
           };
 
-          localizationCtrl.addTaxGroup = function() {
-              TaxGroups.addTaxGroup(localizationCtrl.tax_group);
-              localizationCtrl.tax_group.group_tax_description = null;
-              localizationCtrl.tax_group.group_label = null;
-              localizationCtrl.tax_group.group_based_on = null;
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
-
           localizationCtrl.updateTaxRate = function(name, rate, type) {
               localizationCtrl.tax_group.group_label = name+' - '+rate+' '+type;
               localizationCtrl.tax_group.group_tax_rate = rate;
               localizationCtrl.tax_group.group_tax_rate_type = type;
           }, function(error) {
               localizationCtrl.error = error;
-          };
-
-          localizationCtrl.updateGroupBasedOn = function(type) {
-              localizationCtrl.tax_group.group_based_on = type;
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
-
-          localizationCtrl.removeTaxGroup = function(row) {
-              TaxGroups.removeTaxGroup(row.entity.$id);
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
-
-          localizationCtrl.gridTaxGroup = {
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              data: TaxGroups.all,
-              columnDefs: [
-                  { name:'groupDescription', field: 'group_description', width: '25%', enableHiding: false },
-                  { name:'taxRate', field: 'group_label', enableHiding: false },
-                  { name:'basedOn', field: 'group_based_on', enableHiding: false },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeTaxGroup.html',
-                    width: 35, enableCellEdit: false, enableColumnMenu: false }
-              ]
           };
 
           localizationCtrl.addReturnStatus = function() {
@@ -1185,3 +1166,49 @@ angular.module('SystemModule', [
       }
 
 ])
+
+
+.controller('TaxgroupsCtrl', ['TaxGroups', 'Taxes', '$state', '$scope', '$stateParams',
+      function (              TaxGroups,    Taxes,   $state,   $scope,   $stateParams) {
+          var taxgroupsCtrl = this;
+          taxgroupsCtrl.allTaxes = Taxes.all;
+
+          taxgroupsCtrl.tax_group = {};
+
+          taxgroupsCtrl.addTaxGroup = function() {
+              TaxGroups.addTaxGroup(taxgroupsCtrl.tax_group);
+              taxgroupsCtrl.tax_group.group_tax_description = null;
+              taxgroupsCtrl.tax_group.group_label = null;
+              taxgroupsCtrl.tax_group.group_based_on = null;
+          }, function(error) {
+              taxgroupsCtrl.error = error;
+          };
+
+          taxgroupsCtrl.updateGroupBasedOn = function(type) {
+              taxgroupsCtrl.tax_group.group_based_on = type;
+          }, function(error) {
+              taxgroupsCtrl.error = error;
+          };
+
+          taxgroupsCtrl.removeTaxGroup = function(row) {
+              TaxGroups.removeTaxGroup(row.entity.$id);
+          }, function(error) {
+              taxgroupCtrl.error = error;
+          };
+
+          taxgroupsCtrl.gridTaxGroup = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              data: TaxGroups.all,
+              columnDefs: [
+                  { name:'groupDescription', field: 'group_description', width: '25%', enableHiding: false },
+                  { name:'taxRate', field: 'group_label', enableHiding: false },
+                  { name:'basedOn', field: 'group_based_on', enableHiding: false },
+                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeTaxGroup.html',
+                    width: 35, enableCellEdit: false, enableColumnMenu: false }
+              ]
+          };
+
+        }
+
+  ])
