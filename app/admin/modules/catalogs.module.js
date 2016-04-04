@@ -374,6 +374,11 @@ angular.module('CatalogsModule', [
                     });
                 },
 
+                updateTaxGroup: function(theObj) {
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid);
+                    return theRef.update( {product_tax_group_id: theObj.gid, product_tax_group_name: theObj.name} );
+                },
+
                 addProductImage: function(theObj) {
                     var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid);
                     return theRef.update( {product_image: theObj.imageSrc} );
@@ -703,13 +708,14 @@ angular.module('CatalogsModule', [
     }
 })
 
-.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'CustomerGroups', '$filter', '$state', '$scope', '$stateParams', 'FileReader',
-      function (             Product,   SubCategories,   Categories,   CustomerGroups,   $filter,   $state,   $scope,   $stateParams,   FileReader) {
+.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'CustomerGroups', 'TaxGroups', '$filter', '$state', '$scope', '$stateParams', 'FileReader',
+      function (             Product,   SubCategories,   Categories,   CustomerGroups,   TaxGroups,   $filter,   $state,   $scope,   $stateParams,   FileReader) {
           var productCtrl = this;
           productCtrl.product = {};
           productCtrl.imageEntity =[];
           productCtrl.categories = Categories.all;
           productCtrl.customerGroups = CustomerGroups.all;
+          productCtrl.taxGroups = TaxGroups.all;
           productCtrl.totalCount = Product.getCount();
 
           productCtrl.tinymceOptions = {
@@ -914,7 +920,20 @@ angular.module('CatalogsModule', [
               });
 
           }, function(error) {
-            productCtrl.error = error;
+              productCtrl.error = error;
+          };
+
+          productCtrl.updateTaxGroup = function() {
+              var theObj = {};
+              var theGroup = TaxGroups.getTaxGroup(productCtrl.product.product_tax_group_id);
+                  theGroup.$loaded().then(function() {
+                      theObj.pid = productCtrl.pid;
+                      theObj.gid = theGroup.$id;
+                      theObj.name = theGroup.group_name;
+                      Product.updateTaxGroup(theObj);
+                  });
+          }, function(error) {
+              productCtrl.error = error;
           };
 
           productCtrl.removeProductImage = function($id) {

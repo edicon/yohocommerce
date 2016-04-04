@@ -443,6 +443,10 @@ angular.module('SystemModule', [
                   return theRef.remove();
               },
 
+              getTaxGroup: function(gid) {
+                  return $firebaseObject(ref.child(tid).child(gid));
+              },
+
               all: taxgroups,
 
           };
@@ -1228,7 +1232,7 @@ angular.module('SystemModule', [
 
             taxgroupsCtrl.addTaxGroups = function() {
                   TaxGroups.addTaxGroups(taxgroupsCtrl.tax_groups);
-                  taxgroupsCtrl.tax_groups.group_description = null;
+                  taxgroupsCtrl.tax_groups.group_name = null;
             }, function(error) {
                   taxgroupsCtrl.error = error;
             };
@@ -1250,7 +1254,7 @@ angular.module('SystemModule', [
                   columnDefs: [
                         { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/system/gridTemplates/editTaxGroup.html',
                             width: 35, enableColumnMenu: false, headerTooltip: 'Edit Tax Group', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-                        { name:'groupDescription', field: 'group_description', enableHiding: false },
+                        { name:'groupName', field: 'group_name', enableHiding: false },
                         { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeTaxGroups.html',
                           width: 35, enableCellEdit: false, enableColumnMenu: false }
                   ]

@@ -118,6 +118,19 @@
                         </div>
                       </div>
                       <div class="form-group required">
+                        <label class="control-label col-xs-2">Tax Group</label>
+                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                          <select ng-model="productCtrl.product.product_tax_group_id" class="form-control">
+                            <option ng-repeat="t in productCtrl.taxGroups" value="{{t.$id}}">{{t.group_name}}</option>
+                          </select>
+                        </div>
+                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
+                          <select ng-model="productCtrl.product.product_tax_group_id" ng-change="productCtrl.updateTaxGroup()" class="form-control">
+                            <option ng-repeat="t in productCtrl.taxGroups" value="{{t.$id}}">{{t.group_name}}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="form-group required">
                         <label class="control-label col-xs-2">Description</label>
                         <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
                           <textarea class="tinyMCE" ui-tinymce="productCtrl.tinymceOptions"
@@ -180,22 +193,6 @@
                         <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
                           <input type="text" ng-model="productCtrl.product.product_mpn"
                             ng-change="productCtrl.product.$save()" placeholder="Manufacturer Part Number (MPN)" class="form-control">
-                        </div>
-                      </div>
-                      <div class="form-group">
-                        <label class="control-label col-xs-3">Taxable Goods</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
-                          <select ng-model="productCtrl.product.product_tax_code" class="form-control">
-                            <option value="Taxable">Taxable</option>
-                            <option value="Non-taxable">Non-Taxable</option>
-                          </select>
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <select ng-model="productCtrl.product.product_tax_code"
-                            ng-change="productCtrl.product.$save()" class="form-control">
-                            <option value="Taxable">Taxable</option>
-                            <option value="Non-taxable">Non-Taxable</option>
-                          </select>
                         </div>
                       </div>
                       <div class="form-group">
