@@ -794,7 +794,6 @@ angular.module('CatalogModule', [
 
             authCtrl.adminLogin = function() {
                 Auth.$authWithPassword(authCtrl.user).then(function(auth) {
-                  console.log(auth)
                     $state.go('admin.dashboard');
               /*    this is to setup file storing capabilities on Dreamfactory */
               /*    authCtrl.tenant = Tenant.getInstanceCredentials();

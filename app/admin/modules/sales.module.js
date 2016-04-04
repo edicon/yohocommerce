@@ -683,7 +683,6 @@ angular.module('SalesModule', [
               var key = customerCtrl.customerIndex + 1;
                   if (key != customerCtrl.totalCount) {
                         customerCtrl.cid = Customer.getKey(key);
-                        console.log(customerCtrl.cid);
                         customerCtrl.loadCustomer(customerCtrl.cid);
                   }
 
