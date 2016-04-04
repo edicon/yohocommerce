@@ -228,8 +228,8 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountCtrl', ['Auth', 'Customer', '$state', 'profile', '$scope',
-      function (             Auth,   Customer,   $state,   profile,   $scope) {
+.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', '$state', 'profile', '$scope',
+      function (             Auth,   Customer,   AlertService,   $state,   profile,   $scope) {
 
           var accountCtrl = this;
           accountCtrl.profile = profile;
@@ -250,7 +250,7 @@ angular.module('AccountModule', [
               Auth.$resetPassword({
                   email: accountCtrl.customer.customer_email
                   }).then(function() {
-                      console.log("Password reset email sent successfully!");
+                      AlertService.addSuccess('Password Reset E-Mail Sent');
                       $state.go('catalog.home');
                   }).catch(function(error) {
                       console.error("Error: ", error);
@@ -263,8 +263,10 @@ angular.module('AccountModule', [
                 oldPassword: accountCtrl.customer.customer_password,
                 newPassword: accountCtrl.customer.customer_new_password
                 }).then(function() {
-                    console.log("new password saved");
-                    $state.go('catalog.home');
+                    AlertService.addSuccess('New Password Saved');
+                    accountCtrl.customer.customer_password = null;
+                    accountCtrl.customer.customer_new_password = null;
+                    accountCtrl.customer.confirm_new_password = null;
                 }).catch(function(error) {
                     console.error("Error: ", error);
                 });

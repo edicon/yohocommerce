@@ -97,6 +97,42 @@ angular.module('SystemModule', [
                 }
             }
         })
+        .state('admin.system.taxgroups', {
+            url: '/taxgroups',
+            params: {
+                rowEntity: null,
+            },
+            views: {
+                "header@admin": {
+                    templateUrl: 'admin/views/system/taxgroups.header.html'
+                },
+                "main@admin": {
+                    templateUrl: 'admin/views/system/system.html'
+                },
+                "list@admin.system.taxgroups": {
+                    controller: 'TaxgroupsCtrl as taxgroupsCtrl',
+                    templateUrl: 'admin/views/system/taxgroups.html'
+                }
+            }
+        })
+        .state('admin.system.taxgroup', {
+            url: '/taxgroup',
+            params: {
+                rowEntity: null,
+            },
+            views: {
+                "header@admin": {
+                    templateUrl: 'admin/views/system/taxgroup.header.html'
+                },
+                "main@admin": {
+                    templateUrl: 'admin/views/system/system.html'
+                },
+                "list@admin.system.taxgroup": {
+                    controller: 'TaxgroupCtrl as taxgroupCtrl',
+                    templateUrl: 'admin/views/system/taxgroup.html'
+                }
+            }
+        })
         .state('admin.system.stores', {
             url: '/stores',
             params: {
@@ -397,13 +433,49 @@ angular.module('SystemModule', [
 
           var taxgroup = {
 
-              addTaxGroup: function(theObj) {
+              addTaxGroups: function(theObj) {
                   var theRef = new Firebase(FirebaseUrl+'tax_groups/'+tid);
                   return theRef.push(theObj);
               },
 
-              removeTaxGroup: function(theId) {
-                  var theRef = new Firebase(FirebaseUrl+'tax_groups/'+tid+'/'+theId);
+              removeTaxGroups: function(gid) {
+                  var theRef = new Firebase(FirebaseUrl+'tax_groups/'+tid+'/'+gid);
+                  return theRef.remove();
+              },
+
+              getTaxGroup: function(gid) {
+                  return $firebaseObject(ref.child(tid).child(gid));
+              },
+
+              all: taxgroups,
+
+          };
+
+          return taxgroup;
+
+      }
+
+])
+
+.factory('TaxGroup', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'tax_groups');
+          var taxgroups = $firebaseArray(ref.child(tid));
+
+          var taxgroup = {
+
+              addTaxGroup: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'tax_groups/'+tid+'/'+theObj.gid+'/tax_entries/');
+                  return theRef.push({ entry_description: theObj.entry_description, entry_rate: theObj.entry_rate,
+                      entry_type: theObj.entry_type, entry_based_on: theObj.entry_based_on});
+              },
+
+              getTaxGroup: function(gid) {
+                  return $firebaseArray(ref.child(tid).child(gid).child('/tax_entries/'));
+              },
+
+              removeTaxGroup: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'tax_groups/'+tid+'/'+theObj.gid+'/tax_entries/'+theObj.eid);
                   return theRef.remove();
               },
 
@@ -889,7 +961,7 @@ angular.module('SystemModule', [
                   userCtrl.loadUser(userCtrl.uid);
               }
           }, function(error) {
-              userCtrl.error = error;
+                  userCtrl.error = error;
           };
 
           userCtrl.back = function() {
@@ -899,21 +971,21 @@ angular.module('SystemModule', [
                   userCtrl.uid = User.getKey(key);
                   userCtrl.loadUser(userCtrl.uid);
           }, function(error) {
-              userCtrl.error = error;
+                  userCtrl.error = error;
           };
 
           userCtrl.first = function() {
-              userCtrl.uid = User.getKey(0);
-              userCtrl.loadUser(userCtrl.uid);
+                userCtrl.uid = User.getKey(0);
+                userCtrl.loadUser(userCtrl.uid);
           }, function(error) {
-              userCtrl.error = error;
+                userCtrl.error = error;
           };
 
           userCtrl.last = function() {
-              userCtrl.uid = User.getKey(userCtrl.totalCount - 1);
-              userCtrl.loadUser(userCtrl.uid);
+                userCtrl.uid = User.getKey(userCtrl.totalCount - 1);
+                userCtrl.loadUser(userCtrl.uid);
           }, function(error) {
-              userCtrl.error = error;
+                userCtrl.error = error;
           };
       }
 
@@ -948,239 +1020,307 @@ angular.module('SystemModule', [
 
 .controller('LocalizationCtrl', ['Taxes', 'TaxGroups', 'ReturnStatuses', 'ReturnActions', 'ReturnReasons', 'OrderStatuses', 'LengthUnits', 'WeightUnits', '$state', '$scope', '$stateParams',
       function (                  Taxes,   TaxGroups,   ReturnStatuses,   ReturnActions,   ReturnReasons,   OrderStatuses,   LengthUnits,   WeightUnits,   $state,   $scope,   $stateParams) {
-          var localizationCtrl = this;
-          localizationCtrl.tax = {};
-          localizationCtrl.tax.tax_type = 'Percent';
-          localizationCtrl.allTaxes = Taxes.all;
+            var localizationCtrl = this;
+            localizationCtrl.tax = {};
+            localizationCtrl.tax.tax_type = 'Percent';
+            localizationCtrl.allTaxes = Taxes.all;
 
-          localizationCtrl.tax_group = {};
-          localizationCtrl.return_status = {};
-          localizationCtrl.return_action = {};
-          localizationCtrl.return_reason = {};
+            localizationCtrl.tax_group = {};
+            localizationCtrl.return_status = {};
+            localizationCtrl.return_action = {};
+            localizationCtrl.return_reason = {};
 
-          localizationCtrl.addTax = function() {
-              Taxes.addTax(localizationCtrl.tax);
-              localizationCtrl.tax.tax_name = null;
-              localizationCtrl.tax.tax_rate = null;
-              localizationCtrl.tax.tax_type = 'Percent';
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.addTax = function() {
+                  Taxes.addTax(localizationCtrl.tax);
+                  localizationCtrl.tax.tax_name = null;
+                  localizationCtrl.tax.tax_rate = null;
+                  localizationCtrl.tax.tax_type = 'Percent';
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.updateTaxType = function(type) {
-              localizationCtrl.tax.tax_group = type;
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.updateTaxType = function(type) {
+                  localizationCtrl.tax.tax_group = type;
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.removeTax = function(row) {
-              Taxes.removeTax(row.entity.$id);
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.removeTax = function(row) {
+                  Taxes.removeTax(row.entity.$id);
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.gridTaxes = {
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              data: Taxes.all,
-              columnDefs: [
-                  { name:'taxName', field: 'tax_name', width: '40%', enableHiding: false },
-                  { name:'taxRate', field: 'tax_rate', width: '30%', enableHiding: false, cellClass: 'grid-align-right' },
-                  { name:'type', field: 'tax_type', enableHiding: false, cellClass: 'grid-align-right' },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeTax.html',
-                    width: 35, enableCellEdit: false, enableColumnMenu: false }
-              ]
-          };
+            localizationCtrl.gridTaxes = {
+                  enableSorting: true,
+                  enableCellEditOnFocus: true,
+                  data: Taxes.all,
+                  columnDefs: [
+                        { name:'taxName', field: 'tax_name', width: '40%', enableHiding: false },
+                        { name:'taxRate', field: 'tax_rate', width: '30%', enableHiding: false, cellClass: 'grid-align-right' },
+                        { name:'type', field: 'tax_type', enableHiding: false, cellClass: 'grid-align-right' },
+                        { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeTax.html',
+                          width: 35, enableCellEdit: false, enableColumnMenu: false }
+                  ]
+            };
 
-          localizationCtrl.addTaxGroup = function() {
-              TaxGroups.addTaxGroup(localizationCtrl.tax_group);
-              localizationCtrl.tax_group.group_tax_description = null;
-              localizationCtrl.tax_group.group_label = null;
-              localizationCtrl.tax_group.group_based_on = null;
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.updateTaxRate = function(name, rate, type) {
+                  localizationCtrl.tax_group.group_label = name+' - '+rate+' '+type;
+                  localizationCtrl.tax_group.group_tax_rate = rate;
+                  localizationCtrl.tax_group.group_tax_rate_type = type;
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.updateTaxRate = function(name, rate, type) {
-              localizationCtrl.tax_group.group_label = name+' - '+rate+' '+type;
-              localizationCtrl.tax_group.group_tax_rate = rate;
-              localizationCtrl.tax_group.group_tax_rate_type = type;
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.addReturnStatus = function() {
+                  ReturnStatuses.addReturnStatus(localizationCtrl.return_status);
+                  localizationCtrl.return_status.status_name = null;
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.updateGroupBasedOn = function(type) {
-              localizationCtrl.tax_group.group_based_on = type;
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.removeReturnStatus = function(row) {
+                  ReturnStatuses.removeReturnStatus(row.entity.$id);
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.removeTaxGroup = function(row) {
-              TaxGroups.removeTaxGroup(row.entity.$id);
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.gridReturnStatus = {
+                  enableSorting: true,
+                  enableCellEditOnFocus: true,
+                  data: ReturnStatuses.all,
+                  columnDefs: [
+                        { name:'statusName', field: 'status_name', enableHiding: false },
+                        { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeReturnStatus.html',
+                          width: 35, enableCellEdit: false, enableColumnMenu: false }
+                  ]
+            };
 
-          localizationCtrl.gridTaxGroup = {
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              data: TaxGroups.all,
-              columnDefs: [
-                  { name:'groupDescription', field: 'group_description', width: '25%', enableHiding: false },
-                  { name:'taxRate', field: 'group_label', enableHiding: false },
-                  { name:'basedOn', field: 'group_based_on', enableHiding: false },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeTaxGroup.html',
-                    width: 35, enableCellEdit: false, enableColumnMenu: false }
-              ]
-          };
+            localizationCtrl.addReturnAction = function() {
+                  ReturnActions.addReturnAction(localizationCtrl.return_action);
+                  localizationCtrl.return_action.action_name = null;
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.addReturnStatus = function() {
-              ReturnStatuses.addReturnStatus(localizationCtrl.return_status);
-              localizationCtrl.return_status.status_name = null;
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.removeReturnAction = function(row) {
+                  ReturnActions.removeReturnAction(row.entity.$id);
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.removeReturnStatus = function(row) {
-              ReturnStatuses.removeReturnStatus(row.entity.$id);
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.gridReturnAction = {
+                  enableSorting: true,
+                  enableCellEditOnFocus: true,
+                  data: ReturnActions.all,
+                  columnDefs: [
+                        { name:'actionName', field: 'action_name', enableHiding: false },
+                        { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeReturnAction.html',
+                          width: 35, enableCellEdit: false, enableColumnMenu: false }
+                  ]
+            };
 
-          localizationCtrl.gridReturnStatus = {
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              data: ReturnStatuses.all,
-              columnDefs: [
-                  { name:'statusName', field: 'status_name', enableHiding: false },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeReturnStatus.html',
-                    width: 35, enableCellEdit: false, enableColumnMenu: false }
-              ]
-          };
+            localizationCtrl.addReturnReason = function() {
+                  ReturnReasons.addReturnReason(localizationCtrl.return_reason);
+                  localizationCtrl.return_reason.reason_name = null;
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.addReturnAction = function() {
-              ReturnActions.addReturnAction(localizationCtrl.return_action);
-              localizationCtrl.return_action.action_name = null;
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.removeReturnReason = function(row) {
+                  ReturnReasons.removeReturnReason(row.entity.$id);
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.removeReturnAction = function(row) {
-              ReturnActions.removeReturnAction(row.entity.$id);
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.gridReturnReason = {
+                  enableSorting: true,
+                  enableCellEditOnFocus: true,
+                  data: ReturnReasons.all,
+                  columnDefs: [
+                        { name:'reasonName', field: 'reason_name', enableHiding: false },
+                        { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeReturnReason.html',
+                          width: 35, enableCellEdit: false, enableColumnMenu: false }
+                  ]
+            };
 
-          localizationCtrl.gridReturnAction = {
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              data: ReturnActions.all,
-              columnDefs: [
-                  { name:'actionName', field: 'action_name', enableHiding: false },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeReturnAction.html',
-                    width: 35, enableCellEdit: false, enableColumnMenu: false }
-              ]
-          };
+            localizationCtrl.addOrderStatus = function() {
+                  OrderStatuses.addOrderStatus(localizationCtrl.order_status);
+                  localizationCtrl.order_status.status_name = null;
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.addReturnReason = function() {
-              ReturnReasons.addReturnReason(localizationCtrl.return_reason);
-              localizationCtrl.return_reason.reason_name = null;
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.removeOrderStatus = function(row) {
+                  OrderStatuses.removeOrderStatus(row.entity.$id);
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.removeReturnReason = function(row) {
-              ReturnReasons.removeReturnReason(row.entity.$id);
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.gridOrderStatuses = {
+                  enableSorting: true,
+                  enableCellEditOnFocus: true,
+                  data: OrderStatuses.all,
+                  columnDefs: [
+                        { name:'OrderStatusName', field: 'status_name', enableHiding: false },
+                        { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeOrderStatus.html',
+                          width: 35, enableCellEdit: false, enableColumnMenu: false }
+                  ]
+            };
 
-          localizationCtrl.gridReturnReason = {
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              data: ReturnReasons.all,
-              columnDefs: [
-                  { name:'reasonName', field: 'reason_name', enableHiding: false },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeReturnReason.html',
-                    width: 35, enableCellEdit: false, enableColumnMenu: false }
-              ]
-          };
+            localizationCtrl.addLengthUnit = function() {
+                  LengthUnits.addLengthUnit(localizationCtrl.length_unit);
+                  localizationCtrl.length_unit.unit_title = null;
+                  localizationCtrl.length_unit.unit_abbreviation = null;
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.addOrderStatus = function() {
-              OrderStatuses.addOrderStatus(localizationCtrl.order_status);
-              localizationCtrl.order_status.status_name = null;
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.removeLengthUnit = function(row) {
+                  LengthUnits.removeLengthUnit(row.entity.$id);
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.removeOrderStatus = function(row) {
-              OrderStatuses.removeOrderStatus(row.entity.$id);
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.gridLengthUnits = {
+                  enableSorting: true,
+                  enableCellEditOnFocus: true,
+                  data: LengthUnits.all,
+                  columnDefs: [
+                        { name:'unitTitle', field: 'unit_title', enableHiding: false },
+                        { name:'unitAbbreviation', field: 'unit_abbreviation', enableHiding: false },
+                        { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeLengthUnit.html',
+                          width: 35, enableCellEdit: false, enableColumnMenu: false }
+                  ]
+            };
 
-          localizationCtrl.gridOrderStatuses = {
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              data: OrderStatuses.all,
-              columnDefs: [
-                  { name:'OrderStatusName', field: 'status_name', enableHiding: false },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeOrderStatus.html',
-                    width: 35, enableCellEdit: false, enableColumnMenu: false }
-              ]
-          };
+            localizationCtrl.addWeightUnit = function() {
+                  WeightUnits.addWeightUnit(localizationCtrl.weight_unit);
+                  localizationCtrl.weight_unit.unit_title = null;
+                  localizationCtrl.weight_unit.unit_abbreviation = null;
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.addLengthUnit = function() {
-              LengthUnits.addLengthUnit(localizationCtrl.length_unit);
-              localizationCtrl.length_unit.unit_title = null;
-              localizationCtrl.length_unit.unit_abbreviation = null;
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.removeWeightUnit = function(row) {
+                  WeightUnits.removeWeightUnit(row.entity.$id);
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
 
-          localizationCtrl.removeLengthUnit = function(row) {
-              LengthUnits.removeLengthUnit(row.entity.$id);
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+            localizationCtrl.gridWeightUnits = {
+                  enableSorting: true,
+                  enableCellEditOnFocus: true,
+                  data: WeightUnits.all,
+                  columnDefs: [
+                        { name:'unitTitle', field: 'unit_title', enableHiding: false },
+                        { name:'unitAbbreviation', field: 'unit_abbreviation', enableHiding: false },
+                        { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeWeightUnit.html',
+                          width: 35, enableCellEdit: false, enableColumnMenu: false }
+                  ]
+            };
 
-          localizationCtrl.gridLengthUnits = {
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              data: LengthUnits.all,
-              columnDefs: [
-                  { name:'unitTitle', field: 'unit_title', enableHiding: false },
-                  { name:'unitAbbreviation', field: 'unit_abbreviation', enableHiding: false },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeLengthUnit.html',
-                    width: 35, enableCellEdit: false, enableColumnMenu: false }
-              ]
-          };
+      }
 
-          localizationCtrl.addWeightUnit = function() {
-              WeightUnits.addWeightUnit(localizationCtrl.weight_unit);
-              localizationCtrl.weight_unit.unit_title = null;
-              localizationCtrl.weight_unit.unit_abbreviation = null;
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
+])
 
-          localizationCtrl.removeWeightUnit = function(row) {
-              WeightUnits.removeWeightUnit(row.entity.$id);
-          }, function(error) {
-              localizationCtrl.error = error;
-          };
 
-          localizationCtrl.gridWeightUnits = {
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              data: WeightUnits.all,
-              columnDefs: [
-                  { name:'unitTitle', field: 'unit_title', enableHiding: false },
-                  { name:'unitAbbreviation', field: 'unit_abbreviation', enableHiding: false },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeWeightUnit.html',
-                    width: 35, enableCellEdit: false, enableColumnMenu: false }
-              ]
-          };
+.controller('TaxgroupsCtrl', ['TaxGroups', '$state', '$stateParams',
+      function (               TaxGroups,   $state,   $stateParams) {
+            var taxgroupsCtrl = this;
+            taxgroupsCtrl.tax_groups = {};
+
+            taxgroupsCtrl.addTaxGroups = function() {
+                  TaxGroups.addTaxGroups(taxgroupsCtrl.tax_groups);
+                  taxgroupsCtrl.tax_groups.group_name = null;
+            }, function(error) {
+                  taxgroupsCtrl.error = error;
+            };
+
+            taxgroupsCtrl.removeTaxGroups = function(row) {
+                  TaxGroups.removeTaxGroups(row.entity.$id);
+            }, function(error) {
+                  taxgroupCtrl.error = error;
+            };
+
+            taxgroupsCtrl.editTaxGroup = function(row) {
+                  $state.go('admin.system.taxgroup', {'rowEntity': row.entity});
+            };
+
+            taxgroupsCtrl.gridTaxGroups = {
+                  enableSorting: true,
+                  enableCellEditOnFocus: true,
+                  data: TaxGroups.all,
+                  columnDefs: [
+                        { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/system/gridTemplates/editTaxGroup.html',
+                            width: 35, enableColumnMenu: false, headerTooltip: 'Edit Tax Group', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
+                        { name:'groupName', field: 'group_name', enableHiding: false },
+                        { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeTaxGroups.html',
+                          width: 35, enableCellEdit: false, enableColumnMenu: false }
+                  ]
+            };
+
+      }
+
+])
+
+
+.controller('TaxgroupCtrl', ['TaxGroup', 'Taxes', '$state', '$scope', '$stateParams',
+      function (              TaxGroup,   Taxes,   $state,   $scope,   $stateParams) {
+            var taxgroupCtrl = this;
+            taxgroupCtrl.allTaxes = Taxes.all;
+            taxgroupCtrl.tax_group = {};
+
+            if ($stateParams.rowEntity != null) {
+                taxgroupCtrl.tax_group.gid = $stateParams.rowEntity.$id;
+                var theTaxGroup = TaxGroup.getTaxGroup(taxgroupCtrl.tax_group.gid);
+                    theTaxGroup.$loaded().then(function() {
+                          taxgroupCtrl.gridTaxGroup.data = theTaxGroup;
+                    });
+            }
+
+            taxgroupCtrl.addTaxGroup = function() {
+                  TaxGroup.addTaxGroup(taxgroupCtrl.tax_group);
+                  taxgroupCtrl.tax_group.entry_description = null;
+                  taxgroupCtrl.tax_group.entry_rate = null;
+                  taxgroupCtrl.tax_group.entry_based_on = null;
+            }, function(error) {
+                  taxgroupCtrl.error = error;
+            };
+
+            taxgroupCtrl.updateTaxRate = function(name, rate, type) {
+                  taxgroupCtrl.tax_group.entry_rate = rate;
+                  taxgroupCtrl.tax_group.entry_type = type;
+                  taxgroupCtrl.tax_group.entry_description = name + ' - ' + rate + ' ' + type;
+            }, function(error) {
+                  taxgroupCtrl.error = error;
+            };
+
+            taxgroupCtrl.updateGroupBasedOn = function(type) {
+                  taxgroupCtrl.tax_group.entry_based_on = type;
+            }, function(error) {
+                  taxgroupCtrl.error = error;
+            };
+
+            taxgroupCtrl.removeTaxGroup = function(row) {
+                  var theObj = {};
+                  theObj.gid = taxgroupCtrl.tax_group.gid;
+                  theObj.eid = row.entity.$id;
+                  TaxGroup.removeTaxGroup(theObj);
+            }, function(error) {
+                  taxgroupCtrl.error = error;
+            };
+
+            taxgroupCtrl.gridTaxGroup = {
+                  enableSorting: true,
+                  enableCellEditOnFocus: true,
+                  columnDefs: [
+                        { name:'taxDescription', field: 'entry_description', width: '30%', enableHiding: false },
+                        { name:'basedOn', field: 'entry_based_on', enableHiding: false },
+                        { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeTaxGroup.html',
+                          width: 35, enableCellEdit: false, enableColumnMenu: false }
+                  ]
+            };
 
       }
 

@@ -1,0 +1,53 @@
+<div class="container-fluid">
+  <div class="col-xs-12">
+    <fieldset>
+      <form class="form-horizontal">
+        <div class="form-group">
+          <div class="col-sm-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Tax Description</span>
+              <input type="text" ng-model="taxgroupCtrl.tax_group.entry_description" class="form-control" readonly>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select <span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li ng-repeat="t in taxgroupCtrl.allTaxes">
+                    <a href="" ng-click="taxgroupCtrl.updateTaxRate(t.tax_name, t.tax_rate, t.tax_type)">{{t.tax_name}} - {{t.tax_rate}} {{t.tax_type}}</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4">
+            <div class="input-group input-group-sm">
+              <span class="input-group-addon">Based On</span>
+              <input type="text" ng-model="taxgroupCtrl.tax_group.entry_based_on" class="form-control" readonly>
+              <div class="input-group-btn">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select <span class="caret"></span></button>
+                <ul class="dropdown-menu dropdown-menu-right">
+                  <li><a href="" ng-click="taxgroupCtrl.updateGroupBasedOn('Shipping Address')">Shipping Address</a></li>
+                  <li><a href="" ng-click="taxgroupCtrl.updateGroupBasedOn('Payment Address')">Payment Address</a></li>
+                  <li><a href="" ng-click="taxgroupCtrl.updateGroupBasedOn('Store Address')">Store Address</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-sm-4" align="right">
+            <div class="input-group input-group-sm">
+              <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Tax Group" ng-click="taxgroupCtrl.addTaxGroup()">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Tax Group Entries</h3>
+        </div>
+        <div class="panel-body">
+          <div ui-grid="taxgroupCtrl.gridTaxGroup" class="grid-150"></div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</div>

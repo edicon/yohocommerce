@@ -31,7 +31,7 @@ angular.module('CatalogsModule', [
               url: '/catalogs',
               views: {
                   "header@admin": {
-                      templateUrl: 'admin/views/catalogs/products.header.html'
+                      templateUrl: 'admin/views/catalogs/catalogs.header.html'
                   },
                   "main@admin": {
                       templateUrl: 'admin/views/catalogs/catalogs.html'
@@ -42,7 +42,6 @@ angular.module('CatalogsModule', [
                   }
               }
           })
-
           .state('admin.catalogs.products', {
                 url: '/products',
                 params: {
@@ -58,6 +57,24 @@ angular.module('CatalogsModule', [
                     "list@admin.catalogs.products": {
                         controller: 'ProductsCtrl as productsCtrl',
                         templateUrl: 'admin/views/catalogs/products.html'
+                    }
+                }
+          })
+          .state('admin.catalogs.featuredproducts', {
+                url: '/featuredproducts',
+                params: {
+                  rowEntity: null,
+                },
+                views: {
+                    "header@admin": {
+                        templateUrl: 'admin/views/catalogs/featuredproducts.header.html'
+                    },
+                    "main@admin": {
+                        templateUrl: 'admin/views/catalogs/catalogs.html'
+                    },
+                    "list@admin.catalogs.featuredproducts": {
+                        controller: 'ProductsCtrl as productsCtrl',
+                        templateUrl: 'admin/views/catalogs/featuredproducts.html'
                     }
                 }
           })
@@ -97,6 +114,24 @@ angular.module('CatalogsModule', [
                     }
                 }
           })
+          .state('admin.catalogs.categorybanners', {
+                url: '/categorybanners',
+                params: {
+                  tabEntity: null,
+                },
+                views: {
+                    "header@admin": {
+                        templateUrl: 'admin/views/catalogs/categorybanners.header.html'
+                    },
+                    "main@admin": {
+                        templateUrl: 'admin/views/catalogs/catalogs.html'
+                    },
+                    "list@admin.catalogs.categorybanners": {
+                        controller: 'CategoriesCtrl as categoriesCtrl',
+                        templateUrl: 'admin/views/catalogs/categorybanners.html'
+                    }
+                }
+          })
           .state('admin.catalogs.subcategories', {
                 url: '/subcategories',
                 params: {
@@ -123,20 +158,6 @@ angular.module('CatalogsModule', [
                       return Auth.$requireAuth().catch(function(){
                           $state.go('home');
                       });
-                    },
-                    profile: function(Auth){
-                        return Auth.$requireAuth();
-                    }
-                }
-          })
-          .state('productFeatured', {
-                url: '/productFeatured',
-                controller: 'ProductsCtrl as productsCtrl',
-                resolve: {
-                    auth: function($state, Wow, Auth){
-                        return Auth.$requireAuth().catch(function(){
-                            $state.go('home');
-                        });
                     },
                     profile: function(Auth){
                         return Auth.$requireAuth();
@@ -255,20 +276,6 @@ angular.module('CatalogsModule', [
                     }
                 }
           })
-          .state('categoryBanners', {
-                url: '/categoryBanners',
-                controller: 'CategoriesCtrl as categoriesCtrl',
-                resolve: {
-                    auth: function($state, Wow, Auth) {
-                        return Auth.$requireAuth().catch(function(){
-                            $state.go('home');
-                        });
-                    },
-                    profile: function(Auth){
-                        return Auth.$requireAuth();
-                    }
-                }
-          })
           .state('subCats', {
                 url: '/subCats',
                 controller: 'SubCategoriesCtrl as subCategoriesCtrl',
@@ -306,7 +313,6 @@ angular.module('CatalogsModule', [
       function (         $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
             var ref = new Firebase(FirebaseUrl+'categories');
             var categories = $firebaseArray(ref.child(tid).orderByPriority());
-            var first = $firebaseArray(ref.child(tid).orderByPriority().limitToFirst(1));
 
             var category = {
 
@@ -345,9 +351,7 @@ angular.module('CatalogsModule', [
                     return theRef.update({category_banner_image: null});
                 },
 
-                all: categories,
-
-                firstCategory: first
+                all: categories
 
             };
 
@@ -368,6 +372,11 @@ angular.module('CatalogsModule', [
                     return product.all.$add(theObj).then(function(theRef) {
                         return theRef.key();
                     });
+                },
+
+                updateTaxGroup: function(theObj) {
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid);
+                    return theRef.update( {product_tax_group_id: theObj.gid, product_tax_group_name: theObj.name} );
                 },
 
                 addProductImage: function(theObj) {
@@ -430,10 +439,6 @@ angular.module('CatalogsModule', [
 
                 getKey: function(key) {
                     return products.$keyAt(key);
-                },
-
-                getCount: function() {
-                    return products.length;
                 },
 
                 getProductThumbnails: function(pid) {
@@ -579,123 +584,110 @@ angular.module('CatalogsModule', [
 
 .controller('CategoriesCtrl', ['Categories', '$state', '$scope', '$stateParams','FileReader',
       function (                Categories,   $state,   $scope,   $stateParams,  FileReader) {
-          var categoriesCtrl = this;
-          categoriesCtrl.categoryTabActive = "active";
-          categoriesCtrl.firstCategory = Categories.firstCategory;
-          categoriesCtrl.category = {};
-          categoriesCtrl.imageEntity =[];
+            var categoriesCtrl = this;
+            categoriesCtrl.firstCategory = Categories.firstCategory;
+            categoriesCtrl.category = {};
+            categoriesCtrl.imageEntity =[];
 
-          categoriesCtrl.tinymceOptions = {
-              menubar:false,
-              statusbar: false,
-              theme: "modern",
-              skin: 'light',
-              height: 350
-          };
+            categoriesCtrl.tinymceOptions = {
+                menubar:false,
+                statusbar: false,
+                theme: "modern",
+                skin: 'light',
+                height: 350
+            };
 
-          categoriesCtrl.loadCategory = function(cid) {
-              var theCategory = Categories.getCategory(cid);
-                  theCategory.$loaded().then(function() {
-                      categoriesCtrl.category = theCategory;
-                  });
-          };
+            categoriesCtrl.loadCategory = function(cid) {
+                var theCategory = Categories.getCategory(cid);
+                    theCategory.$loaded().then(function() {
+                        categoriesCtrl.category = theCategory;
+                    });
+            };
 
-          categoriesCtrl.getFirstCategory = function(cid) {
-              var theCategory = categoriesCtrl.firstCategory[0];
-                  categoriesCtrl.cid = theCategory.$id;
-                  categoriesCtrl.loadCategory(categoriesCtrl.cid);
-          };
+            categoriesCtrl.categoriesGridOpts = {
+                enableSorting: true,
+                enableCellEditOnFocus: true,
+                data: Categories.all,
+                columnDefs: [
+                    { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/catalogs/gridTemplates/editSubCategories.html',
+                      width: 34, enableColumnMenu: false, enableCellEdit: false, headerTooltip: 'Add Sub-categories' },
+                    { name:'categoryName', field: 'category_name', width: '70%', enableHiding: false },
+                    { name:'menuOrder', field: '$priority', enableHiding: false },
+                    { name:'subCount', field: 'sub_count', visible: false },
+                    { name: ' ', field: '$id', cellTemplate:'admin/views/catalogs/gridTemplates/removeCategory.html',
+                      width: 32, enableCellEdit: false, enableColumnMenu: false }
+                ]
+            };
 
-          if ($stateParams.tabEntity === 1) {
-              categoriesCtrl.bannerTabActive = "active";
-              categoriesCtrl.categoryTabActive = "";
-              categoriesCtrl.getFirstCategory();
-          }
+            categoriesCtrl.categoriesGridOpts.onRegisterApi = function(categoriesGridApi) {
+                $scope.categoriesGridApi = categoriesGridApi;
+                    categoriesGridApi.edit.on.afterCellEdit($scope, function(rowEntity, newValue, oldValue) {
 
-          categoriesCtrl.categoriesGridOpts = {
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              data: Categories.all,
-              columnDefs: [
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/catalogs/gridTemplates/editSubCategories.html',
-                    width: 34, enableColumnMenu: false, enableCellEdit: false, headerTooltip: 'Add Sub-categories' },
-                  { name:'categoryName', field: 'category_name', width: '70%', enableHiding: false },
-                  { name:'menuOrder', field: '$priority', enableHiding: false },
-                  { name:'subCount', field: 'sub_count', visible: false },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/catalogs/gridTemplates/removeCategory.html',
-                    width: 32, enableCellEdit: false, enableColumnMenu: false }
-              ]
-          };
+                        if (newValue != oldValue) {
+                            var currentCategory = Categories.getCategory(rowEntity.$id);
+                            currentCategory.category_name = rowEntity.category_name;
+                            currentCategory.sub_count = rowEntity.sub_count;
+                            currentCategory.$priority = rowEntity.$priority;
+                            currentCategory.$save();
+                        }
 
-          categoriesCtrl.categoriesGridOpts.onRegisterApi = function(categoriesGridApi) {
-              $scope.categoriesGridApi = categoriesGridApi;
-                  categoriesGridApi.edit.on.afterCellEdit($scope, function(rowEntity, newValue, oldValue) {
+                  }, function(error) {
+                      categoriesCtrl.error = error;
+                });
+            };
 
-                      if (newValue != oldValue) {
-                          var currentCategory = Categories.getCategory(rowEntity.$id);
-                          currentCategory.category_name = rowEntity.category_name;
-                          currentCategory.sub_count = rowEntity.sub_count;
-                          currentCategory.$priority = rowEntity.$priority;
-                          currentCategory.$save();
-                      }
+            categoriesCtrl.catagoryListGridOpts = {
+                enableRowHeaderSelection: false,
+                multiSelect: false,
+                enableSorting: false,
+                enableColumnMenus: false,
+                data: Categories.all,
+                columnDefs: [
+                    { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/catalogs/gridTemplates/editCategoryBanner.html',
+                      width: 34, enableColumnMenu: false, enableCellEdit: false, headerTooltip: 'Add Sub-categories' },
+                    { name:'categoryName', field: 'category_name', enableHiding: false }
+                ]
+            };
 
-                }, function(error) {
-                    categoriesCtrl.error = error;
-              });
-          };
+            categoriesCtrl.addCategory = function() {
+                var n = categoriesCtrl.categoriesGridOpts.data.length;
+                    Categories.all.$add({$priority: n+1, category_name: categoriesCtrl.categoryName, sub_count: 0});
+                    categoriesCtrl.categoryName = null;
 
-          categoriesCtrl.catagoryListGridOpts = {
-              enableRowHeaderSelection: false,
-              multiSelect: false,
-              enableSorting: false,
-              enableColumnMenus: false,
-              data: Categories.all,
-              columnDefs: [
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/catalogs/gridTemplates/editCategoryBanner.html',
-                    width: 34, enableColumnMenu: false, enableCellEdit: false, headerTooltip: 'Add Sub-categories' },
-                  { name:'categoryName', field: 'category_name', enableHiding: false }
-              ]
-          };
+            }, function(error) {
+                categoriesCtrl.error = error;
+            };
 
-          categoriesCtrl.addCategory = function() {
-              var n = categoriesCtrl.categoriesGridOpts.data.length;
-                  Categories.all.$add({$priority: n+1, category_name: categoriesCtrl.categoryName, sub_count: 0});
-                  categoriesCtrl.categoryName = null;
+            categoriesCtrl.removeCategory = function(row) {
+                Categories.removeCategory(row.entity.$id);
 
-          }, function(error) {
-              categoriesCtrl.error = error;
-          };
+            }, function(error) {
+                categoriesCtrl.error = error;
+            };
 
-          categoriesCtrl.removeCategory = function(row) {
-              Categories.removeCategory(row.entity.$id);
+            categoriesCtrl.editCategory = function(row) {
+                $state.go('admin.catalogs.subcategories', {'rowEntity': row.entity});
+            };
 
-          }, function(error) {
-              categoriesCtrl.error = error;
-          };
+            categoriesCtrl.editCategoryBanner = function(row) {
+                categoriesCtrl.cid = row.entity.$id;
+                categoriesCtrl.loadCategory(row.entity.$id);
+            };
 
-          categoriesCtrl.editCategory = function(row) {
-              $state.go('admin.catalogs.subcategories', {'rowEntity': row.entity});
-          };
+            categoriesCtrl.removeCategoryImage = function(cid) {
+                Categories.removeCategoryImage(cid);
 
-          categoriesCtrl.editCategoryBanner = function(row) {
-              categoriesCtrl.cid = row.entity.$id;
-              categoriesCtrl.loadCategory(row.entity.$id);
-          };
+            }, function(error) {
+                productCtrl.error = error;
+            };
 
-          categoriesCtrl.removeCategoryImage = function(cid) {
-              Categories.removeCategoryImage(cid);
-
-          }, function(error) {
-              productCtrl.error = error;
-          };
-
-          $scope.getCategoryBanner = function () {
-              FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
-                  categoriesCtrl.imageEntity.imageSrc = result;
-                  categoriesCtrl.imageEntity.cid = categoriesCtrl.cid;
-                  Categories.addCategoryImage(categoriesCtrl.imageEntity);
-              });
-          };
+            $scope.getCategoryBanner = function () {
+                FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
+                    categoriesCtrl.imageEntity.imageSrc = result;
+                    categoriesCtrl.imageEntity.cid = categoriesCtrl.cid;
+                    Categories.addCategoryImage(categoriesCtrl.imageEntity);
+                });
+            };
 
       }
 
@@ -712,283 +704,299 @@ angular.module('CatalogsModule', [
     }
 })
 
-.controller('ProductCtrl', ['Product', 'SubCategories', 'Categories', 'CustomerGroups', '$filter', '$state', '$scope', '$stateParams', 'FileReader',
-      function (             Product,   SubCategories,   Categories,   CustomerGroups,   $filter,   $state,   $scope,   $stateParams,   FileReader) {
-          var productCtrl = this;
-          productCtrl.product = {};
-          productCtrl.imageEntity =[];
-          productCtrl.categories = Categories.all;
-          productCtrl.customerGroups = CustomerGroups.all;
-          productCtrl.totalCount = Product.getCount();
+.controller('ProductCtrl', ['Product', 'Products', 'SubCategories', 'Categories', 'CustomerGroups', 'TaxGroups', '$filter', '$state', '$scope', '$stateParams', 'FileReader',
+      function (             Product,   Products,   SubCategories,   Categories,   CustomerGroups,   TaxGroups,   $filter,   $state,   $scope,   $stateParams,   FileReader) {
+              var productCtrl = this;
+              productCtrl.product = {};
+              productCtrl.imageEntity =[];
+              productCtrl.categories = Categories.all;
+              productCtrl.customerGroups = CustomerGroups.all;
+              productCtrl.taxGroups = TaxGroups.all;
+              productCtrl.totalCount = Products.all.length;
 
-          productCtrl.tinymceOptions = {
-              menubar:false,
-              statusbar: false,
-              theme: "modern",
-              skin: 'light',
-              height: 250
-          };
+              productCtrl.tinymceOptions = {
+                  menubar:false,
+                  statusbar: false,
+                  theme: "modern",
+                  skin: 'light',
+                  height: 250
+              };
 
-          productCtrl.getSubCategories = function(cid) {
-              var subCategories = SubCategories.getSubCategories(cid);
-              subCategories.$loaded().then(function() {
-                    productCtrl.subCategories = subCategories;
-              });
-          };
+              productCtrl.getSubCategories = function(cid) {
+                    var subCategories = SubCategories.getSubCategories(cid);
+                    subCategories.$loaded().then(function() {
+                          productCtrl.subCategories = subCategories;
+                    });
+              };
 
-          productCtrl.loadSubCategories = function() {
-              productCtrl.getSubCategories(productCtrl.product.product_category_id);
-          };
+              productCtrl.loadSubCategories = function() {
+                    productCtrl.getSubCategories(productCtrl.product.product_category_id);
+              };
 
-          productCtrl.saveCategory = function() {
-              productCtrl.product.product_sub_category_id = null;
-                  var cat = Categories.getCategory(productCtrl.product.product_category_id);
-                  cat.$loaded().then(function() {
-                      productCtrl.product.product_category = cat.category_name;
-                      productCtrl.product.$save();
-                      productCtrl.loadSubCategories();
-                  });
+              productCtrl.saveCategory = function() {
+                    productCtrl.product.product_sub_category_id = null;
+                        var cat = Categories.getCategory(productCtrl.product.product_category_id);
+                        cat.$loaded().then(function() {
+                              productCtrl.product.product_category = cat.category_name;
+                              productCtrl.product.$save();
+                              productCtrl.loadSubCategories();
+                        });
 
-          }, function(error) {
-              productCtrl.error = error;
-          };
+              }, function(error) {
+                    productCtrl.error = error;
+              };
 
-          productCtrl.loadProduct = function(pid) {
-              var theProduct = Product.getProduct(pid);
-                  theProduct.$loaded().then(function() {
-                      productCtrl.product = theProduct;
-                      productCtrl.regular_price = $filter('currency')(theProduct.product_price);
-                      productCtrl.productIndex = Product.getIndex(pid);
+              productCtrl.loadProduct = function(pid) {
+                    var theProduct = Product.getProduct(pid);
+                        theProduct.$loaded().then(function() {
+                              productCtrl.product = theProduct;
+                              productCtrl.regular_price = $filter('currency')(theProduct.product_price);
+                              productCtrl.productIndex = Product.getIndex(pid);
 
-                      if (theProduct.product_category_id)
-                          productCtrl.getSubCategories(theProduct.product_category_id);
-              });
+                              if (theProduct.product_category_id)
+                                    productCtrl.getSubCategories(theProduct.product_category_id);
+                        });
 
-              var thumbnails = Product.getProductThumbnails(pid);
-                  thumbnails.$loaded().then(function() {
-                      productCtrl.thumbnails = thumbnails;
-              });
+                    var thumbnails = Product.getProductThumbnails(pid);
+                        thumbnails.$loaded().then(function() {
+                            productCtrl.thumbnails = thumbnails;
+                    });
 
-              var discounts = Product.getDiscounts(pid);
-                  discounts.$loaded().then(function() {
-                      productCtrl.gridDiscount.data = discounts;
-              });
+                    var discounts = Product.getDiscounts(pid);
+                        discounts.$loaded().then(function() {
+                            productCtrl.gridDiscount.data = discounts;
+                    });
 
-              var specials = Product.getSpecials(pid);
-                  specials.$loaded().then(function() {
-                      productCtrl.gridSpecial.data = specials;
-              });
-          };
+                    var specials = Product.getSpecials(pid);
+                        specials.$loaded().then(function() {
+                            productCtrl.gridSpecial.data = specials;
+                    });
+              };
 
-          if ($stateParams.rowEntity != undefined) {
-              productCtrl.pid = $stateParams.rowEntity.$id;
-              productCtrl.loadProduct(productCtrl.pid);
-          } else {
-              productCtrl.product.pid = null;
-          }
-
-          productCtrl.featuredProducts = function() {
-              $state.go('admin.catalogs.products', {'tabEntity': 1});
-          };
-
-          productCtrl.gridDiscount = {
-              enableRowHeaderSelection: false,
-              multiSelect: false,
-              enableSorting: false,
-              enableColumnMenus: false,
-              columnDefs: [
-                  { name:'customerGroup', field: 'discount_customer_group_name', enableHiding: false },
-                  { name:'quantity', field: 'discount_product_quantity', width: 85, type: 'number', cellClass: 'grid-align-right', enableHiding: false },
-                  { name:'regularPrice', field: 'discount_regular_price', type: 'number', enableHiding: false, cellClass: 'grid-align-right' },
-                  { name:'discountPrice', field: 'discount_price', type: 'number', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'currency' },
-                  { name:'startDate', field: 'discount_start_date', type: 'date', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'date' },
-                  { name:'endDate', field: 'discount_end_date', type: 'date', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'date' },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/catalogs/gridTemplates/removeDiscount.html',
-                    width: 32, enableColumnMenu: false, enableCellEdit: false, enableFiltering: false }
-              ]
-          };
-
-          productCtrl.addDiscount = function() {
-              var theDiscount = {};
-              var group = CustomerGroups.getGroup(productCtrl.discount.customer_group_id);
-                  group.$loaded().then(function() {
-                      theDiscount.pid = productCtrl.pid;
-                      theDiscount.discount_customer_group_id = productCtrl.discount.customer_group_id;
-                      theDiscount.discount_customer_group_name = group.group_name;
-                      theDiscount.discount_product_quantity = productCtrl.discount.product_quantity;
-                      theDiscount.discount_regular_price = productCtrl.regular_price;
-                      theDiscount.discount_price = productCtrl.discount.discount_price;
-                      theDiscount.discount_start_date = productCtrl.discount.start_date.toDateString();
-                      theDiscount.discount_end_date = productCtrl.discount.end_date.toDateString();
-                      Product.addDiscount(theDiscount);
-                      productCtrl.discount.customer_group_id = null;
-                      productCtrl.discount.product_quantity = null;
-                      productCtrl.discount.discount_price = null;
-                      productCtrl.discount.start_date = null;
-                      productCtrl.discount.end_date = null;
-                });
-
-          }, function(error) {
-            customerCtrl.error = error;
-          };
-
-          productCtrl.removeDiscount = function(row) {
-              var theDiscount = {};
-                  theDiscount.discountId = row.entity.$id;
-                  theDiscount.pid = productCtrl.pid;
-                  Product.removeDiscount(theDiscount);
-
-          }, function(error) {
-              productCtrl.error = error;
-          };
-
-          productCtrl.gridSpecial = {
-              enableRowHeaderSelection: false,
-              multiSelect: false,
-              enableSorting: false,
-              enableColumnMenus: false,
-              columnDefs: [
-                  { name:'customerGroup', field: 'special_customer_group_name', enableHiding: false },
-                  { name:'quantity', field: 'special_product_quantity', width: 85, type: 'number', cellClass: 'grid-align-right', enableHiding: false },
-                  { name:'regularPrice', field: 'special_regular_price', type: 'number', enableHiding: false, cellClass: 'grid-align-right' },
-                  { name:'discountPrice', field: 'special_price', type: 'number', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'currency' },
-                  { name:'startDate', field: 'special_start_date', type: 'date', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'date' },
-                  { name:'endDate', field: 'special_end_date', type: 'date', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'date' },
-                  { name:'dateAdded', field: 'special_date_added', type: 'date', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'date' }
-              ]
-          };
-
-          productCtrl.addSpecial = function() {
-              var theSpecial = {};
-              var group = CustomerGroups.getGroup(productCtrl.special.customer_group_id);
-                    group.$loaded().then(function() {
-                        theSpecial.pid = productCtrl.pid;
-                        theSpecial.special_customer_group_id = productCtrl.special.customer_group_id;
-                        theSpecial.special_customer_group_name = group.group_name;
-                        theSpecial.special_product_quantity = productCtrl.special.product_quantity;
-                        theSpecial.special_regular_price = productCtrl.regular_price;
-                        theSpecial.special_price = parseFloat(productCtrl.special.special_price);
-                        theSpecial.special_start_date = productCtrl.special.start_date.toDateString();
-                        theSpecial.special_end_date = productCtrl.special.end_date.toDateString();
-                        Product.addSpecial(theSpecial);
-                        productCtrl.special.customer_group_id = null;
-                        productCtrl.special.product_quantity = null;
-                        productCtrl.special.special_price = null;
-                        productCtrl.special.start_date = null;
-                        productCtrl.special.end_date = null;
-                });
-
-          }, function(error) {
-            customerCtrl.error = error;
-          };
-
-          productCtrl.removeSpecial = function() {
-              Product.removeSpecial(productCtrl.pid);
-
-          }, function(error) {
-              productCtrl.error = error;
-          };
-
-          productCtrl.getStatus = function() {
-
-              if (productCtrl.product.product_status === "1") {
-                  productCtrl.product.product_status_id = 1;
-              } else {
-                  productCtrl.product.product_status_id = 2;
-              }
-          };
-
-          $scope.getBanner = function () {
-              FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
-                  productCtrl.imageEntity.imageSrc = result;
-                  productCtrl.imageEntity.pid = productCtrl.pid;
-                  Product.addProductImage(productCtrl.imageEntity);
-              });
-          };
-
-          $scope.getThumbnail = function () {
-              FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
-                  productCtrl.imageEntity.imageSrc = result;
-                  productCtrl.imageEntity.pid = productCtrl.pid;
-                  Product.addThumbnailImage(productCtrl.imageEntity);
-              });
-          };
-
-          productCtrl.addProduct = function() {
-              productCtrl.getStatus();
-              var cat = Categories.getCategory(productCtrl.product.product_category_id);
-                  cat.$loaded().then(function() {
-                      productCtrl.product.product_category = cat.category_name;
-                          Product.addProduct(productCtrl.product).then(function(pid) {
-                              productCtrl.loadProduct(pid);
-                      });
-              });
-
-          }, function(error) {
-            productCtrl.error = error;
-          };
-
-          productCtrl.removeProductImage = function($id) {
-              Product.removeProductImage($id);
-
-          }, function(error) {
-              productCtrl.error = error;
-          };
-
-          productCtrl.next = function() {
-              var key = productCtrl.productIndex + 1;
-                if (key != productCtrl.totalCount) {
-                    productCtrl.pid = Product.getKey(key);
+              if ($stateParams.rowEntity != undefined) {
+                    productCtrl.pid = $stateParams.rowEntity.$id;
                     productCtrl.loadProduct(productCtrl.pid);
-                }
+              } else {
+                    productCtrl.product.pid = null;
+              }
 
-          }, function(error) {
-              productCtrl.error = error;
-          };
+              productCtrl.featuredProducts = function() {
+                    $state.go('admin.catalogs.products', {'tabEntity': 1});
+              };
 
-          productCtrl.back = function() {
-              var key = productCtrl.productIndex - 1;
+              productCtrl.gridDiscount = {
+                    enableRowHeaderSelection: false,
+                    multiSelect: false,
+                    enableSorting: false,
+                    enableColumnMenus: false,
+                    columnDefs: [
+                          { name:'customerGroup', field: 'discount_customer_group_name', enableHiding: false },
+                          { name:'quantity', field: 'discount_product_quantity', width: 85, type: 'number', cellClass: 'grid-align-right', enableHiding: false },
+                          { name:'regularPrice', field: 'discount_regular_price', type: 'number', enableHiding: false, cellClass: 'grid-align-right' },
+                          { name:'discountPrice', field: 'discount_price', type: 'number', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'currency' },
+                          { name:'startDate', field: 'discount_start_date', type: 'date', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'date' },
+                          { name:'endDate', field: 'discount_end_date', type: 'date', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'date' },
+                          { name: ' ', field: '$id', cellTemplate:'admin/views/catalogs/gridTemplates/removeDiscount.html',
+                              width: 32, enableColumnMenu: false, enableCellEdit: false, enableFiltering: false }
+                    ]
+              };
 
-              if (key < 0) key = 0
-                  productCtrl.pid = Product.getKey(key);
-                  productCtrl.loadProduct(productCtrl.pid);
+              productCtrl.addDiscount = function() {
+                    var theDiscount = {};
+                    var group = CustomerGroups.getGroup(productCtrl.discount.customer_group_id);
+                          group.$loaded().then(function() {
+                                theDiscount.pid = productCtrl.pid;
+                                theDiscount.discount_customer_group_id = productCtrl.discount.customer_group_id;
+                                theDiscount.discount_customer_group_name = group.group_name;
+                                theDiscount.discount_product_quantity = productCtrl.discount.product_quantity;
+                                theDiscount.discount_regular_price = productCtrl.regular_price;
+                                theDiscount.discount_price = productCtrl.discount.discount_price;
+                                theDiscount.discount_start_date = productCtrl.discount.start_date.toDateString();
+                                theDiscount.discount_end_date = productCtrl.discount.end_date.toDateString();
+                                Product.addDiscount(theDiscount);
+                                productCtrl.discount.customer_group_id = null;
+                                productCtrl.discount.product_quantity = null;
+                                productCtrl.discount.discount_price = null;
+                                productCtrl.discount.start_date = null;
+                                productCtrl.discount.end_date = null;
+                      });
 
-          }, function(error) {
-              productCtrl.error = error;
-          };
+              }, function(error) {
+                    customerCtrl.error = error;
+              };
 
-          productCtrl.first = function() {
-              productCtrl.loadProduct(0);
-          }, function(error) {
-              productCtrl.error = error;
-          };
+              productCtrl.removeDiscount = function(row) {
+                    var theDiscount = {};
+                          theDiscount.discountId = row.entity.$id;
+                          theDiscount.pid = productCtrl.pid;
+                          Product.removeDiscount(theDiscount);
 
-          productCtrl.last = function() {
-              productCtrl.pid = Product.getKey(productCtrl.totalCount - 1);
-              productCtrl.loadProduct(productCtrl.pid);
+              }, function(error) {
+                    productCtrl.error = error;
+              };
 
-          }, function(error) {
-              productCtrl.error = error;
-          };
+              productCtrl.gridSpecial = {
+                    enableRowHeaderSelection: false,
+                    multiSelect: false,
+                    enableSorting: false,
+                    enableColumnMenus: false,
+                    columnDefs: [
+                          { name:'customerGroup', field: 'special_customer_group_name', enableHiding: false },
+                          { name:'quantity', field: 'special_product_quantity', width: 85, type: 'number', cellClass: 'grid-align-right', enableHiding: false },
+                          { name:'regularPrice', field: 'special_regular_price', type: 'number', enableHiding: false, cellClass: 'grid-align-right' },
+                          { name:'discountPrice', field: 'special_price', type: 'number', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'currency' },
+                          { name:'startDate', field: 'special_start_date', type: 'date', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'date' },
+                          { name:'endDate', field: 'special_end_date', type: 'date', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'date' },
+                          { name:'dateAdded', field: 'special_date_added', type: 'date', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'date' }
+                    ]
+              };
 
-          productCtrl.removeThumbnailImage = function($id) {
-              productCtrl.imageEntity.$id = $id;
-              productCtrl.imageEntity.pid = productCtrl.pid;
-              Product.removeThumbnailImage(productCtrl.imageEntity);
+              productCtrl.addSpecial = function() {
+                    var theSpecial = {};
+                    var group = CustomerGroups.getGroup(productCtrl.special.customer_group_id);
+                          group.$loaded().then(function() {
+                                theSpecial.pid = productCtrl.pid;
+                                theSpecial.special_customer_group_id = productCtrl.special.customer_group_id;
+                                theSpecial.special_customer_group_name = group.group_name;
+                                theSpecial.special_product_quantity = productCtrl.special.product_quantity;
+                                theSpecial.special_regular_price = productCtrl.regular_price;
+                                theSpecial.special_price = parseFloat(productCtrl.special.special_price);
+                                theSpecial.special_start_date = productCtrl.special.start_date.toDateString();
+                                theSpecial.special_end_date = productCtrl.special.end_date.toDateString();
+                                Product.addSpecial(theSpecial);
+                                productCtrl.special.customer_group_id = null;
+                                productCtrl.special.product_quantity = null;
+                                productCtrl.special.special_price = null;
+                                productCtrl.special.start_date = null;
+                                productCtrl.special.end_date = null;
+                      });
 
-          }, function(error) {
-              productCtrl.error = error;
-          };
+              }, function(error) {
+                customerCtrl.error = error;
+              };
 
-          productCtrl.saveProductStatus = function() {
-              productCtrl.getStatus();
-              productCtrl.product.$save();
+              productCtrl.removeSpecial = function() {
+                    Product.removeSpecial(productCtrl.pid);
 
-          }, function(error) {
-              productCtrl.error = error;
-          };
+              }, function(error) {
+                    productCtrl.error = error;
+              };
 
-    }
+              productCtrl.getStatus = function() {
+                    if (productCtrl.product.product_status === "1")
+                        productCtrl.product.product_status_id = 1;
+
+                    else
+                        productCtrl.product.product_status_id = 2;
+              };
+
+              $scope.getBanner = function () {
+                    FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
+                          productCtrl.imageEntity.imageSrc = result;
+                          productCtrl.imageEntity.pid = productCtrl.pid;
+                          Product.addProductImage(productCtrl.imageEntity);
+                    });
+              };
+
+              $scope.getThumbnail = function () {
+                    FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
+                          productCtrl.imageEntity.imageSrc = result;
+                          productCtrl.imageEntity.pid = productCtrl.pid;
+                          Product.addThumbnailImage(productCtrl.imageEntity);
+                    });
+              };
+
+              productCtrl.addProduct = function() {
+                    productCtrl.getStatus();
+                    var cat = Categories.getCategory(productCtrl.product.product_category_id);
+                          cat.$loaded().then(function() {
+                              productCtrl.product.product_category = cat.category_name;
+                                    Product.addProduct(productCtrl.product).then(function(pid) {
+                                        productCtrl.loadProduct(pid);
+                              });
+                    });
+
+              }, function(error) {
+                    productCtrl.error = error;
+              };
+
+              productCtrl.updateTaxGroup = function() {
+                    var theObj = {};
+                    var theGroup = TaxGroups.getTaxGroup(productCtrl.product.product_tax_group_id);
+                          theGroup.$loaded().then(function() {
+                                theObj.pid = productCtrl.pid;
+                                theObj.gid = theGroup.$id;
+                                theObj.name = theGroup.group_name;
+                                Product.updateTaxGroup(theObj);
+                          });
+              }, function(error) {
+                    productCtrl.error = error;
+              };
+
+              productCtrl.removeProductImage = function($id) {
+                    Product.removeProductImage($id);
+
+              }, function(error) {
+                    productCtrl.error = error;
+              };
+
+              productCtrl.next = function() {
+                    var key = productCtrl.productIndex + 1;
+                      if (key != productCtrl.totalCount) {
+                            productCtrl.pid = Product.getKey(key);
+                            productCtrl.loadProduct(productCtrl.pid);
+                      }
+
+              }, function(error) {
+                    productCtrl.error = error;
+              };
+
+              productCtrl.back = function() {
+                    var key = productCtrl.productIndex - 1;
+
+                    if (key < 0) key = 0
+                          productCtrl.pid = Product.getKey(key);
+
+                    productCtrl.loadProduct(productCtrl.pid);
+
+              }, function(error) {
+                    productCtrl.error = error;
+              };
+
+              productCtrl.first = function() {
+                    productCtrl.pid = Product.getKey(0);
+                    productCtrl.loadProduct(productCtrl.pid);
+
+              }, function(error) {
+                    productCtrl.error = error;
+              };
+
+              productCtrl.last = function() {
+                    productCtrl.pid = Product.getKey(productCtrl.totalCount - 1);
+                    productCtrl.loadProduct(productCtrl.pid);
+
+              }, function(error) {
+                    productCtrl.error = error;
+              };
+
+              productCtrl.removeThumbnailImage = function($id) {
+                    productCtrl.imageEntity.$id = $id;
+                    productCtrl.imageEntity.pid = productCtrl.pid;
+                    Product.removeThumbnailImage(productCtrl.imageEntity);
+
+              }, function(error) {
+                    productCtrl.error = error;
+              };
+
+              productCtrl.saveProductStatus = function() {
+                    productCtrl.getStatus();
+                    productCtrl.product.$save();
+
+              }, function(error) {
+                    productCtrl.error = error;
+              };
+
+        }
 
 ])
 
@@ -1017,159 +1025,155 @@ angular.module('CatalogsModule', [
 
 .controller('ProductsCtrl', ['Products', 'Categories', '$state', '$scope', '$stateParams', 'uiGridConstants',
       function (              Products,   Categories,   $state,   $scope,   $stateParams,   uiGridConstants) {
-          var productsCtrl = this;
-          productsCtrl.listButtons = true;
-          $scope.file = {};
-          productsCtrl.productTabActive = "active";
+            var productsCtrl = this;
+            productsCtrl.listButtons = true;
+            $scope.file = {};
 
-          productsCtrl.showListBtns = function() {
-              productsCtrl.listButtons = true;
-          };
+            productsCtrl.showListBtns = function() {
+                  productsCtrl.listButtons = true;
+            };
 
-          productsCtrl.showFeatureBtns = function() {
-              productsCtrl.listButtons = false;
-          };
+            productsCtrl.showFeatureBtns = function() {
+                  productsCtrl.listButtons = false;
+            };
 
-          if ($stateParams.tabEntity === 1) {
-              productsCtrl.showFeatureBtns();
-              productsCtrl.featureTabActive = "active";
-              productsCtrl.productTabActive = "";
-          }
+            if ($stateParams.tabEntity === 1)
+                  productsCtrl.showFeatureBtns();
 
-          productsCtrl.rowArray = [
-              {id: 1, name: '350 px', px: 350},
-              {id: 2, name: '500 px', px: 500},
-              {id: 3, name: '750 px', px: 750},
-          ];
+            productsCtrl.rowArray = [
+                  {id: 1, name: '350 px', px: 350},
+                  {id: 2, name: '500 px', px: 500},
+                  {id: 3, name: '750 px', px: 750},
+            ];
 
-          productsCtrl.gridProducts = {
-              showGridFooter: true,
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              enableFiltering: true,
-              data: Products.all,
-              columnDefs: [
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/catalogs/gridTemplates/editProduct.html',
-                    width: 34, enableColumnMenu: false, headerTooltip: 'Edit Product', enableCellEdit: false, enableFiltering: false },
-                  { name:'name', field: 'product_name', enableHiding: false, width: '40%' },
-                  { name:'category', field: 'product_category', enableHiding: false, width: '20%', enableCellEdit: false },
-                  { name: 'product_status_id', displayName: 'Status', editableCellTemplate: 'ui-grid/dropdownEditor', width: '15%',
-                    cellFilter: 'mapStatus', editDropdownValueLabel: 'status', enableFiltering: false, editDropdownOptionsArray: [
-                      { id: 1, status: 'Enabled' },
-                      { id: 2, status: 'Disabled' }
-                    ]},
-                  { name:'price', field: 'product_price', type: 'number', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'currency' },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/catalogs/gridTemplates/removeProduct.html',
-                    width: 32, enableColumnMenu: false, enableCellEdit: false, enableFiltering: false }
-              ]
-          };
+            productsCtrl.gridProducts = {
+                  showGridFooter: true,
+                  enableSorting: true,
+                  enableCellEditOnFocus: true,
+                  enableFiltering: true,
+                  data: Products.all,
+                  columnDefs: [
+                        { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/catalogs/gridTemplates/editProduct.html',
+                            width: 34, enableColumnMenu: false, headerTooltip: 'Edit Product', enableCellEdit: false, enableFiltering: false },
+                        { name:'name', field: 'product_name', enableHiding: false, width: '40%' },
+                        { name:'category', field: 'product_category', enableHiding: false, width: '20%', enableCellEdit: false },
+                        { name: 'product_status_id', displayName: 'Status', editableCellTemplate: 'ui-grid/dropdownEditor', width: '15%',
+                            cellFilter: 'mapStatus', editDropdownValueLabel: 'status', enableFiltering: false, editDropdownOptionsArray: [
+                              { id: 1, status: 'Enabled' },
+                              { id: 2, status: 'Disabled' }
+                            ]},
+                        { name:'price', field: 'product_price', type: 'number', enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'currency' },
+                        { name: ' ', field: '$id', cellTemplate:'admin/views/catalogs/gridTemplates/removeProduct.html',
+                            width: 32, enableColumnMenu: false, enableCellEdit: false, enableFiltering: false }
+                  ]
+            };
 
-          productsCtrl.selectProducts = {
-              enableRowHeaderSelection: false,
-              multiSelect: false,
-              enableSorting: true,
-              enableFiltering: true,
-              data: Products.all,
-              columnDefs: [
-                  { name: '', field: '$id', shown: false, width: 34, enableColumnMenu: false, enableCellEdit: false, enableFiltering: false,
-                    cellTemplate: '<div class="ui-grid-cell-contents" align="center"><a tooltip-placement="right" uib-tooltip="Add Featured"><i class="fa fa-plus-circle"></i></a></div>' },
-                  { name:'name', field: 'product_name', enableHiding: false, width: '40%' },
-                  { name:'category', field: 'product_category', enableHiding: false },
-                  { name:'price', field: 'product_price', type: 'number', width: 100, enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'currency' }
-              ]
-          };
+            productsCtrl.selectProducts = {
+                  enableRowHeaderSelection: false,
+                  multiSelect: false,
+                  enableSorting: true,
+                  enableFiltering: true,
+                  data: Products.all,
+                  columnDefs: [
+                        { name: '', field: '$id', shown: false, width: 34, enableColumnMenu: false, enableCellEdit: false, enableFiltering: false,
+                        cellTemplate: '<div class="ui-grid-cell-contents" align="center"><a tooltip-placement="right" uib-tooltip="Add Featured"><i class="fa fa-plus-circle"></i></a></div>' },
+                        { name:'name', field: 'product_name', enableHiding: false, width: '40%' },
+                        { name:'category', field: 'product_category', enableHiding: false },
+                        { name:'price', field: 'product_price', type: 'number', width: 100, enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'currency' }
+                  ]
+            };
 
-          productsCtrl.featuredProducts = {
-              enableRowHeaderSelection: false,
-              multiSelect: false,
-              enableSorting: false,
-              enableColumnMenus: false,
-              data: Products.allFeatured,
-              columnDefs: [
-                  { name: '', field: '$id', shown: false, width: 34, enableColumnMenu: false, enableCellEdit: false, enableFiltering: false,
-                    cellTemplate: '<div class="ui-grid-cell-contents" align="center"><a tooltip-placement="right" uib-tooltip="Remove Featured"><i class="fa fa-minus-circle text-danger"></i></a></div>' },
-                  { name:'name', field: 'product_name', enableHiding: false },
-                  { name:'category', field: 'product_category', enableHiding: false },
-                  { name:'price', field: 'product_price', type: 'number', width: 85, enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'currency' },
-                  { name:'order', field: 'product_featured_order', width: 65, enableHiding: false, cellClass: 'grid-align-right',
-                      sort: {
-                        direction: uiGridConstants.ASC,
-                        priority: 0,
-                      },
-                  }
-              ]
-          };
-
-          productsCtrl.removeProduct = function(row) {
-              Products.removeProduct(row.entity.$id);
-          }, function(error) {
-              productsCtrl.error = error;
-          };
-
-          productsCtrl.editProduct = function(row) {
-              $state.go('admin.catalogs.product', {'rowEntity': row.entity});
-          };
-
-          productsCtrl.gridProducts.onRegisterApi = function(gridProductsApi) {
-              $scope.gridProductsApi = gridProductsApi;
-                    gridProductsApi.edit.on.afterCellEdit($scope, function(rowEntity, newValue, oldValue) {
-
-                        if (rowEntity.product_price === undefined)
-                            rowEntity.product_price = null;
-
-                        if (rowEntity.product_category === undefined)
-                            rowEntity.product_category = null;
-
-                        if (rowEntity.product_status_id === undefined)
-                            rowEntity.product_status_id = 2;
-
-                        if (newValue != oldValue) {
-                            var currentProduct = {}
-                            currentProduct.pid = rowEntity.$id;
-                            currentProduct.product_name = rowEntity.product_name;
-                            currentProduct.product_price = rowEntity.product_price;
-                            currentProduct.product_category = rowEntity.product_category;
-                            currentProduct.product_status_id = rowEntity.product_status_id;
-
-                              if (rowEntity.product_status_id === 1)
-                                  currentProduct.product_status = "1";
-                              else
-                                  currentProduct.product_status = "2";
-
-                              Products.saveProduct(currentProduct);
+            productsCtrl.featuredProducts = {
+                  enableRowHeaderSelection: false,
+                  multiSelect: false,
+                  enableSorting: false,
+                  enableColumnMenus: false,
+                  data: Products.allFeatured,
+                  columnDefs: [
+                        { name: '', field: '$id', shown: false, width: 34, enableColumnMenu: false, enableCellEdit: false, enableFiltering: false,
+                            cellTemplate: '<div class="ui-grid-cell-contents" align="center"><a tooltip-placement="right" uib-tooltip="Remove Featured"><i class="fa fa-minus-circle text-danger"></i></a></div>' },
+                        { name:'name', field: 'product_name', enableHiding: false },
+                        { name:'category', field: 'product_category', enableHiding: false },
+                        { name:'price', field: 'product_price', type: 'number', width: 85, enableHiding: false, cellClass: 'grid-align-right', cellFilter: 'currency' },
+                        { name:'order', field: 'product_featured_order', width: 65, enableHiding: false, cellClass: 'grid-align-right',
+                              sort: {
+                                direction: uiGridConstants.ASC,
+                                priority: 0,
+                              },
                         }
+                  ]
+            };
 
-                  }, function(error) {
-                      productsCtrl.error = error;
-              });
-          };
+            productsCtrl.removeProduct = function(row) {
+                  Products.removeProduct(row.entity.$id);
+            }, function(error) {
+                  productsCtrl.error = error;
+            };
 
-          productsCtrl.selectProducts.onRegisterApi = function(selectProductsApi) {
-              $scope.selectProductsApi = selectProductsApi;
-                    selectProductsApi.selection.on.rowSelectionChanged($scope, function(row) {
-                        var rowEntity = row.entity;
-                        var count = Products.allFeatured.length;
-                        rowEntity.order = count+1;
-                        Products.addFeaturedProduct(rowEntity);
+            productsCtrl.editProduct = function(row) {
+                  $state.go('admin.catalogs.product', {'rowEntity': row.entity});
+            };
 
-                    }, function(error) {
-                        productsCtrl.error = error;
-                });
-          };
+            productsCtrl.gridProducts.onRegisterApi = function(gridProductsApi) {
+                  $scope.gridProductsApi = gridProductsApi;
+                        gridProductsApi.edit.on.afterCellEdit($scope, function(rowEntity, newValue, oldValue) {
 
-          productsCtrl.featuredProducts.onRegisterApi = function(featureProductsApi) {
-              $scope.featureProductsApi = featureProductsApi;
-                  featureProductsApi.selection.on.rowSelectionChanged($scope, function(row) {
-                      Products.removeFeaturedProduct(row.entity);
+                            if (rowEntity.product_price === undefined)
+                                  rowEntity.product_price = null;
 
-                  }, function(error) {
-                      productsCtrl.error = error;
-              });
-          };
+                            if (rowEntity.product_category === undefined)
+                                  rowEntity.product_category = null;
 
-          productsCtrl.getRows = function(item) {
-              angular.element(document.getElementsByClassName('grid')[0]).css('height', item.px + 'px');
-          };
+                            if (rowEntity.product_status_id === undefined)
+                                  rowEntity.product_status_id = 2;
+
+                            if (newValue != oldValue) {
+                                  var currentProduct = {}
+                                  currentProduct.pid = rowEntity.$id;
+                                  currentProduct.product_name = rowEntity.product_name;
+                                  currentProduct.product_price = rowEntity.product_price;
+                                  currentProduct.product_category = rowEntity.product_category;
+                                  currentProduct.product_status_id = rowEntity.product_status_id;
+
+                                    if (rowEntity.product_status_id === 1)
+                                          currentProduct.product_status = "1";
+                                    else
+                                          currentProduct.product_status = "2";
+
+                                    Products.saveProduct(currentProduct);
+                            }
+
+                      }, function(error) {
+                            productsCtrl.error = error;
+                  });
+            };
+
+            productsCtrl.selectProducts.onRegisterApi = function(selectProductsApi) {
+                  $scope.selectProductsApi = selectProductsApi;
+                        selectProductsApi.selection.on.rowSelectionChanged($scope, function(row) {
+                              var rowEntity = row.entity;
+                              var count = Products.allFeatured.length;
+                              rowEntity.order = count+1;
+                              Products.addFeaturedProduct(rowEntity);
+
+                        }, function(error) {
+                              productsCtrl.error = error;
+                    });
+            };
+
+            productsCtrl.featuredProducts.onRegisterApi = function(featureProductsApi) {
+                  $scope.featureProductsApi = featureProductsApi;
+                        featureProductsApi.selection.on.rowSelectionChanged($scope, function(row) {
+                              Products.removeFeaturedProduct(row.entity);
+
+                        }, function(error) {
+                              productsCtrl.error = error;
+                  });
+            };
+
+            productsCtrl.getRows = function(item) {
+                  angular.element(document.getElementsByClassName('grid')[0]).css('height', item.px + 'px');
+            };
 
       }
 ])
@@ -1191,203 +1195,203 @@ angular.module('CatalogsModule', [
 
 .controller('SubCategoriesCtrl', ['SubCategories', 'Categories', '$state', '$scope', '$stateParams', 'uiGridConstants', 'FileReader',
       function (                   SubCategories,   Categories,   $state,   $scope,   $stateParams,   uiGridConstants,   FileReader) {
-          var subCategoriesCtrl = this;
-          subCategoriesCtrl.imageEntity = [];
-          subCategoriesCtrl.totalCount = Categories.getCount();
+            var subCategoriesCtrl = this;
+            subCategoriesCtrl.imageEntity = [];
+            subCategoriesCtrl.totalCount = Categories.getCount();
 
-          subCategoriesCtrl.tinymceOptions = {
-              menubar:false,
-              statusbar: false,
-              theme: "modern",
-              skin: 'light',
-              height: 350
-          };
+            subCategoriesCtrl.tinymceOptions = {
+                  menubar:false,
+                  statusbar: false,
+                  theme: "modern",
+                  skin: 'light',
+                  height: 350
+            };
 
-          subCategoriesCtrl.loadSubCategory = function() {
-              var subCategory = SubCategories.getSubCategory(subCategoriesCtrl.subCid);
-                  subCategory.$loaded().then(function() {
-                    subCategoriesCtrl.subCategory = subCategory;
-              });
-          };
+            subCategoriesCtrl.loadSubCategory = function() {
+                  var subCategory = SubCategories.getSubCategory(subCategoriesCtrl.subCid);
+                      subCategory.$loaded().then(function() {
+                          subCategoriesCtrl.subCategory = subCategory;
+                      });
+            };
 
-          subCategoriesCtrl.loadSubCategories = function() {
-              var subCategories = SubCategories.getSubCategories(subCategoriesCtrl.cid);
-                  subCategories.$loaded().then(function() {
-                      subCategoriesCtrl.subCategoriesGridOpts.data = subCategories;
-                      subCategoriesCtrl.subCategoriesGridListOpts.data = subCategories;
-                      subCategoriesCtrl.subCategoriesIndex = Categories.getIndex(subCategoriesCtrl.cid);
-                  });
-          };
+            subCategoriesCtrl.loadSubCategories = function() {
+                var subCategories = SubCategories.getSubCategories(subCategoriesCtrl.cid);
+                      subCategories.$loaded().then(function() {
+                            subCategoriesCtrl.subCategoriesGridOpts.data = subCategories;
+                            subCategoriesCtrl.subCategoriesGridListOpts.data = subCategories;
+                            subCategoriesCtrl.subCategoriesIndex = Categories.getIndex(subCategoriesCtrl.cid);
+                      });
+            };
 
-          subCategoriesCtrl.loadCategory = function(cid) {
-              var category = Categories.getCategory(cid);
-                  category.$loaded().then(function() {
-                      subCategoriesCtrl.categoryName = category.category_name;
-                      subCategoriesCtrl.subCount = category.sub_count;
-                      subCategoriesCtrl.cid = category.$id;
-                      subCategoriesCtrl.loadSubCategories();
-                  });
-          };
+            subCategoriesCtrl.loadCategory = function(cid) {
+                var category = Categories.getCategory(cid);
+                      category.$loaded().then(function() {
+                            subCategoriesCtrl.categoryName = category.category_name;
+                            subCategoriesCtrl.subCount = category.sub_count;
+                            subCategoriesCtrl.cid = category.$id;
+                            subCategoriesCtrl.loadSubCategories();
+                      });
+            };
 
-          if ($stateParams.rowEntity === null) {
-              $state.go('admin.catalogs.categories');
-          } else {
-              subCategoriesCtrl.categoryName = $stateParams.rowEntity.category_name;
-              subCategoriesCtrl.subCount = $stateParams.rowEntity.sub_count;
-              subCategoriesCtrl.cid = $stateParams.rowEntity.$id;
-              subCategoriesCtrl.loadSubCategories(subCategoriesCtrl.cid);
-          }
+            if ($stateParams.rowEntity === null) {
+                  $state.go('admin.catalogs.categories');
+            } else {
+                  subCategoriesCtrl.categoryName = $stateParams.rowEntity.category_name;
+                  subCategoriesCtrl.subCount = $stateParams.rowEntity.sub_count;
+                  subCategoriesCtrl.cid = $stateParams.rowEntity.$id;
+                  subCategoriesCtrl.loadSubCategories(subCategoriesCtrl.cid);
+            }
 
-          subCategoriesCtrl.subCategoriesGridOpts = {
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              columnDefs: [
-                  { name:'categoryName', displayName: 'Sub-Category Name', field: 'category_name', width: '70%', enableHiding: false },
-                  { name:'navigationOrder', field: '$priority', enableHiding: false,
-                      sort: {
-                        direction: uiGridConstants.ASC,
-                        priority: 0,
-                      }
-                  },
-                  { name: ' ', field: '$id', cellTemplate:'admin/views/catalogs/gridTemplates/removeSubCategory.html',
-                      width: 32, enableColumnMenu: false }
-              ]
-          };
+            subCategoriesCtrl.subCategoriesGridOpts = {
+                  enableSorting: true,
+                  enableCellEditOnFocus: true,
+                  columnDefs: [
+                        { name:'categoryName', displayName: 'Sub-Category Name', field: 'category_name', width: '70%', enableHiding: false },
+                        { name:'navigationOrder', field: '$priority', enableHiding: false,
+                              sort: {
+                                direction: uiGridConstants.ASC,
+                                priority: 0,
+                              }
+                        },
+                        { name: ' ', field: '$id', cellTemplate:'admin/views/catalogs/gridTemplates/removeSubCategory.html',
+                              width: 32, enableColumnMenu: false }
+                  ]
+            };
 
-          subCategoriesCtrl.subCategoriesGridOpts.onRegisterApi = function(subCategoriesGridApi) {
-              $scope.subCategoriesGridApi = subCategoriesGridApi;
-                  subCategoriesGridApi.edit.on.afterCellEdit($scope, function(rowEntity, newValue, oldValue) {
+            subCategoriesCtrl.subCategoriesGridOpts.onRegisterApi = function(subCategoriesGridApi) {
+                  $scope.subCategoriesGridApi = subCategoriesGridApi;
+                        subCategoriesGridApi.edit.on.afterCellEdit($scope, function(rowEntity, newValue, oldValue) {
 
-                      if (newValue != oldValue) {
-                          var currentSubCategory = SubCategories.getSubCategory(rowEntity.$id);
-                              currentSubCategory.$loaded().then(function() {
-                                  currentSubCategory.category_name = rowEntity.category_name;
-                                  currentSubCategory.$priority = rowEntity.$priority;
-                                  currentSubCategory.$save();
-                              });
-                      }
+                              if (newValue != oldValue) {
+                                    var currentSubCategory = SubCategories.getSubCategory(rowEntity.$id);
+                                        currentSubCategory.$loaded().then(function() {
+                                              currentSubCategory.category_name = rowEntity.category_name;
+                                              currentSubCategory.$priority = rowEntity.$priority;
+                                              currentSubCategory.$save();
+                                        });
+                              }
 
-                }, function(error) {
-                    subCategoriesCtrl.error = error;
-                });
-          };
+                    }, function(error) {
+                          subCategoriesCtrl.error = error;
+                    });
+            };
 
-          subCategoriesCtrl.subCategoriesGridListOpts = {
-              enableRowHeaderSelection: false,
-              multiSelect: false,
-              enableSorting: false,
-              enableColumnMenus: false,
-              columnDefs: [
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/catalogs/gridTemplates/editSubCategoryBanner.html',
-                      width: 34, enableColumnMenu: false, enableCellEdit: false },
-                  { name:'categoryName', field: 'category_name', enableHiding: false },
-                  { name:'navigationOrder', field: '$priority', visible: false,
-                      sort: {
-                          direction: uiGridConstants.ASC,
-                          priority: 0,
-                      }
-                  },
-              ]
-          };
+            subCategoriesCtrl.subCategoriesGridListOpts = {
+                  enableRowHeaderSelection: false,
+                  multiSelect: false,
+                  enableSorting: false,
+                  enableColumnMenus: false,
+                  columnDefs: [
+                        { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/catalogs/gridTemplates/editSubCategoryBanner.html',
+                              width: 34, enableColumnMenu: false, enableCellEdit: false },
+                        { name:'categoryName', field: 'category_name', enableHiding: false },
+                        { name:'navigationOrder', field: '$priority', visible: false,
+                              sort: {
+                                  direction: uiGridConstants.ASC,
+                                  priority: 0,
+                              }
+                        },
+                  ]
+            };
 
-          subCategoriesCtrl.subCategoryBanners = function() {
-              subCategoriesCtrl.loadSubCategories();
-              $state.go('admin.catalogs.categories', {'tabEntity': 1});
-          };
+            subCategoriesCtrl.subCategoryBanners = function() {
+                  subCategoriesCtrl.loadSubCategories();
+                  $state.go('admin.catalogs.categories', {'tabEntity': 1});
+            };
 
-          subCategoriesCtrl.addSubCategory = function() {
-              var entity = {
-                  category_id: subCategoriesCtrl.cid,
-                  category_name: subCategoriesCtrl.subCategoryName
-              };
-              var currentCategory = SubCategories.getSubCategories(subCategoriesCtrl.cid);
-                  currentCategory.$loaded().then(function() {
-                      var currentLength = currentCategory.length;
-                      entity.priority = currentLength + 1;
-                          SubCategories.addSubCategory(entity).then(function() {
-                              Categories.addSubCount(entity);
-                                subCategoriesCtrl.subCategoryName = null;
-                          });
-                  });
+            subCategoriesCtrl.addSubCategory = function() {
+                  var entity = {
+                      category_id: subCategoriesCtrl.cid,
+                      category_name: subCategoriesCtrl.subCategoryName
+                  };
+                  var currentCategory = SubCategories.getSubCategories(subCategoriesCtrl.cid);
+                        currentCategory.$loaded().then(function() {
+                              var currentLength = currentCategory.length;
+                              entity.priority = currentLength + 1;
+                                    SubCategories.addSubCategory(entity).then(function() {
+                                          Categories.addSubCount(entity);
+                                              subCategoriesCtrl.subCategoryName = null;
+                                    });
+                        });
 
-          }, function(error) {
-              subCategoriesCtrl.error = error;
-          };
+            }, function(error) {
+                  subCategoriesCtrl.error = error;
+            };
 
-          subCategoriesCtrl.editSubCategoryBanner = function(row) {
-              subCategoriesCtrl.subCid = row.entity.$id;
-              subCategoriesCtrl.loadSubCategory();
-          };
+            subCategoriesCtrl.editSubCategoryBanner = function(row) {
+                  subCategoriesCtrl.subCid = row.entity.$id;
+                  subCategoriesCtrl.loadSubCategory();
+            };
 
-          subCategoriesCtrl.removeSubCategory = function(row) {
-              SubCategories.removeSubCategory(row.entity);
+            subCategoriesCtrl.removeSubCategory = function(row) {
+                  SubCategories.removeSubCategory(row.entity);
 
-          }, function(error) {
-              subCategoriesCtrl.error = error;
-          };
+            }, function(error) {
+                  subCategoriesCtrl.error = error;
+            };
 
-          subCategoriesCtrl.removeSubCategoryImage = function(cid) {
-              SubCategories.removeSubCategoryImage(cid);
+            subCategoriesCtrl.removeSubCategoryImage = function(cid) {
+                  SubCategories.removeSubCategoryImage(cid);
 
-          }, function(error) {
-              productCtrl.error = error;
-          };
+            }, function(error) {
+                  productCtrl.error = error;
+            };
 
-          subCategoriesCtrl.next = function() {
-              var key = subCategoriesCtrl.subCategoriesIndex + 1;
+            subCategoriesCtrl.next = function() {
+                  var key = subCategoriesCtrl.subCategoriesIndex + 1;
 
-              if (key != subCategoriesCtrl.totalCount) {
+                  if (key != subCategoriesCtrl.totalCount) {
+                        subCategoriesCtrl.cid = Categories.getKey(key);
+                        subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
+                  }
+
+            }, function(error) {
+                  subCategoriesCtrl.error = error;
+            };
+
+            subCategoriesCtrl.back = function() {
+                  var key = subCategoriesCtrl.subCategoriesIndex - 1;
+
+                  if (key < 0) key = 0
+                        subCategoriesCtrl.cid = Categories.getKey(key);
+
+                  subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
+
+            }, function(error) {
+                  subCategoriesCtrl.error = error;
+            };
+
+            subCategoriesCtrl.first = function() {
+                  var key = 0;
+                  subCategoriesCtrl.cid = Categories.getKey(0);
+                  subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
+            }, function(error) {
+                  subCategoriesCtrl.error = error;
+            };
+
+            subCategoriesCtrl.last = function() {
+                  var key = subCategoriesCtrl.count - 1;
                   subCategoriesCtrl.cid = Categories.getKey(key);
                   subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
-              }
 
-          }, function(error) {
-              subCategoriesCtrl.error = error;
-          };
+            }, function(error) {
+                  subCategoriesCtrl.error = error;
+            };
 
-          subCategoriesCtrl.back = function() {
-              var key = subCategoriesCtrl.subCategoriesIndex - 1;
+            $scope.addSubCategoryBanner = function () {
+                  FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
+                        subCategoriesCtrl.imageEntity.imageSrc = result;
+                        subCategoriesCtrl.imageEntity.subCid = subCategoriesCtrl.subCid;
+                        SubCategories.addSubCategoryImage(subCategoriesCtrl.imageEntity);
+                  });
+            };
 
-              if (key < 0) key = 0
-                  subCategoriesCtrl.cid = Categories.getKey(key);
+            subCategoriesCtrl.removeSubCategoryImage = function(subCid) {
+                  SubCategories.removeSubCategoryImage(subCid);
 
-              subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
-
-          }, function(error) {
-              subCategoriesCtrl.error = error;
-          };
-
-          subCategoriesCtrl.first = function() {
-              var key = 0;
-              subCategoriesCtrl.cid = Categories.getKey(0);
-              subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
-          }, function(error) {
-              subCategoriesCtrl.error = error;
-          };
-
-          subCategoriesCtrl.last = function() {
-              var key = subCategoriesCtrl.count - 1;
-              subCategoriesCtrl.cid = Categories.getKey(key);
-              subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
-
-          }, function(error) {
-              subCategoriesCtrl.error = error;
-          };
-
-          $scope.addSubCategoryBanner = function () {
-              FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
-                  subCategoriesCtrl.imageEntity.imageSrc = result;
-                  subCategoriesCtrl.imageEntity.subCid = subCategoriesCtrl.subCid;
-                  SubCategories.addSubCategoryImage(subCategoriesCtrl.imageEntity);
-              });
-          };
-
-          subCategoriesCtrl.removeSubCategoryImage = function(subCid) {
-              SubCategories.removeSubCategoryImage(subCid);
-
-          }, function(error) {
-              SubCategories.error = error;
-          };
+            }, function(error) {
+                  SubCategories.error = error;
+            };
 
       }
 ])

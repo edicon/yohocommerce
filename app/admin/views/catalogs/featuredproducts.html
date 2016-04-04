@@ -1,0 +1,23 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4 class="panel-title"><span class="menu-icon fa fa-certificate"></span> Featured Products</h4>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-xs-6">
+              <h5>Products</h5>
+              <div ui-grid="productsCtrl.selectProducts" ui-grid-selection></div>
+            </div>
+            <div class="col-xs-6">
+              <h5>Featured Products</h5>
+              <div class="grid" ui-grid="productsCtrl.featuredProducts" ui-grid-selection></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
