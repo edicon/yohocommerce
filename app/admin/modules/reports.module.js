@@ -178,8 +178,6 @@ angular.module('ToolsModule', [
                     enableFiltering: true,
             //        data: Orders.all,
                     columnDefs: [
-                          { name:'dateStart', field: 'date_start',enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '15%' },
-                          { name:'dateEnd', field: 'date_end', enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '15%' },
                           { name:'couponName', field: 'coupon_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
                           { name:'couponCode', field: '$id', enableHiding: false, enableFiltering: false, enableCellEdit: false },
                           { name:'orders', field: 'order_count', enableHiding: false, enableFiltering: true, width: '15%', enableCellEdit: false },
