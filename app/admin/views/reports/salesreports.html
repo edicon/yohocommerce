@@ -1,0 +1,39 @@
+<div class="container-fluid">
+  <div class="col-sm-12">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-bar-chart"></span> Sales Reports</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+  		    <uib-tabset>
+  					<uib-tab>
+              <uib-tab-heading>
+                <i></i> Orders
+              </uib-tab-heading><br>
+                <div ui-grid="reportsCtrl.gridOrders" class="grid-500"></div>
+            </uib-tab>
+            <uib-tab>
+              <uib-tab-heading>
+                <i></i> Taxes
+              </uib-tab-heading><br>
+                <div ui-grid="reportsCtrl.gridTaxes" class="grid-500"></div>
+            </uib-tab>
+            <uib-tab>
+              <uib-tab-heading>
+                <i></i> Shipping
+              </uib-tab-heading><br>
+                <div ui-grid="reportsCtrl.gridShipping" class="grid-500"></div>
+            </uib-tab>
+            <uib-tab>
+              <uib-tab-heading>
+                <i></i> Returns
+              </uib-tab-heading><br>
+                <div ui-grid="reportsCtrl.gridReturns" class="grid-500"></div>
+            </uib-tab>
+          </uib-tabset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
