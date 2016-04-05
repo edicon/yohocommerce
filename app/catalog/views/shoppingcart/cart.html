@@ -10,6 +10,66 @@
         <div ng-if="cartCtrl.order === undefined">
           <h4>Your shopping cart is empty.</h4>
         </div>
+        <form>
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <td class="text-center">Image</td>
+                  <td class="text-left">Product</td>
+                  <td class="text-left">Quantity</td>
+                  <td class="text-right">Unit Price</td>
+                  <td class="text-right">Total</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="o in cartCtrl.order">
+                  <td class="text-center">
+                    <a href="" ng-click="cartCtrl.goProduct(o.product_id)"><img ng-src="{{o.product_image}}" width="35px" height="35px"></a>
+                  </td>
+                  <td class="text-left">
+                    <a href="" ng-click="cartCtrl.goProduct(o.product_id)">{{o.product_name}}</a>
+                    <br>
+                    <small>Reward points</small>
+                  </td>
+                  <td>
+                    <input type="text" ng-model="o.product_quantity" ng-change="cartCtrl.updateQty(o.$id, o.product_quantity)"
+                      class="form-control" style="text-align: right;">
+                  </td>
+                  <td ng-if="o.product_special_price" class="text-right">
+                    {{o.product_special_price | currency}}
+                  </td>
+                  <td ng-if="o.product_special_price == null" class="text-right">
+                    {{o.product_regular_price | currency}}
+                  </td>
+                  <td class="text-right">total</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </form>
+      </div>
+      <div class="row">
+          <h4>Choose if you have a coupon or gift voucher you would like to use.</h4>
+
+
+            <div class="col-sm-4 col-sm-offset-8">
+              <table class="table table-bordered">
+                <tr>
+                  <td class="text-right"><strong>Sub Total</strong></td>
+                  <td class="text-right">$600.00</td>
+                </tr>
+                <tr>
+                  <td class="text-right"><strong>Total</strong></td>
+                  <td class="text-right">$600.00</td>
+                </tr>
+              </table>
+            </div>
+
+          <div class="buttons">
+            <div class="pull-left"><a href="" class="btn btn-default">Continue Shopping</a></div>
+            <div class="pull-right"><a href="" class="btn btn-primary">Checkout</a></div>
+          </div>
       </div>
     </div>
   </div>
