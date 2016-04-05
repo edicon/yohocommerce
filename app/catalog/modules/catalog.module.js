@@ -115,7 +115,7 @@ angular.module('CatalogModule', [
                         templateUrl: 'catalog/views/common/header.html'
                     },
                     "main@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
+                        controller: 'CartCtrl as cartCtrl',
                         templateUrl: 'catalog/views/shoppingcart/cart.html'
                     },
                     "footer@catalog": {
@@ -309,7 +309,7 @@ angular.module('CatalogModule', [
                   });
               },
 
-              updateOrder: function(theObj) {
+/*              updateOrder: function(theObj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
 
                   if (theObj.items === 0)
@@ -318,6 +318,18 @@ angular.module('CatalogModule', [
                       return theRef.update( {product_quantity: theObj.product_quantity, update_date: Firebase.ServerValue.TIMESTAMP} );
 
               },
+*/
+
+              updateOrderTotal: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
+
+                  if (theObj.items === 0)
+                      return theRef.remove();
+                  else
+                      return theRef.update( {product_quantity: theObj.product_quantity, update_date: Firebase.ServerValue.TIMESTAMP} );
+
+              },
+
 
               updateItemQty: function(theObj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
@@ -341,10 +353,16 @@ angular.module('CatalogModule', [
               },
 
               addProduct: function(theObj) {
+
+                  if (theObj.special_price)
+                      theObj.product_total_price = theObj.special_price * theObj.product_quantity;
+                  else
+                      theObj.product_total_price = theObj.product_price * theObj.product_quantity;
+
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
                   theRef.update( {product_id: theObj.$id, product_name: theObj.product_name, product_regular_price: theObj.product_price,
                       product_quantity: theObj.product_quantity, product_special_price: theObj.special_price, product_image: theObj.product_image,
-                      order_status: 'cart', order_update_date: Firebase.ServerValue.TIMESTAMP} );
+                      product_total_price: theObj.product_total_price, order_update_date: Firebase.ServerValue.TIMESTAMP} );
               },
 
               removeProduct: function(theObj) {
@@ -498,6 +516,7 @@ angular.module('CatalogModule', [
                             }
 
                             CartOrders.updateCartPrice(theCart);
+
                       });
             };
 
