@@ -108,6 +108,111 @@ angular.module('ToolsModule', [
                   }
               }
           })
+          .state('admin.reports.productsviewed', {
+              url: '/productsviewed',
+              views: {
+                  "header@admin": {
+                      templateUrl: 'admin/views/reports/productsviewed.header.html'
+                  },
+                  "main@admin": {
+                      templateUrl: 'admin/views/reports/reports.html'
+                  },
+                  "list@admin.reports.productsviewed": {
+                      controller: 'ReportsCtrl as reportsCtrl',
+                      templateUrl: 'admin/views/reports/productsviewed.html'
+                  }
+              }
+          })
+          .state('admin.reports.productspurchased', {
+              url: '/productspurchased',
+              views: {
+                  "header@admin": {
+                      templateUrl: 'admin/views/reports/productspurchased.header.html'
+                  },
+                  "main@admin": {
+                      templateUrl: 'admin/views/reports/reports.html'
+                  },
+                  "list@admin.reports.productspurchased": {
+                      controller: 'ReportsCtrl as reportsCtrl',
+                      templateUrl: 'admin/views/reports/productspurchased.html'
+                  }
+              }
+          })
+          .state('admin.reports.customersonline', {
+              url: '/customersonline',
+              views: {
+                  "header@admin": {
+                      templateUrl: 'admin/views/reports/customersonline.header.html'
+                  },
+                  "main@admin": {
+                      templateUrl: 'admin/views/reports/reports.html'
+                  },
+                  "list@admin.reports.customersonline": {
+                      controller: 'ReportsCtrl as reportsCtrl',
+                      templateUrl: 'admin/views/reports/customersonline.html'
+                  }
+              }
+          })
+          .state('admin.reports.customersactivity', {
+              url: '/customersactivity',
+              views: {
+                  "header@admin": {
+                      templateUrl: 'admin/views/reports/customersactivity.header.html'
+                  },
+                  "main@admin": {
+                      templateUrl: 'admin/views/reports/reports.html'
+                  },
+                  "list@admin.reports.customersactivity": {
+                      controller: 'ReportsCtrl as reportsCtrl',
+                      templateUrl: 'admin/views/reports/customersactivity.html'
+                  }
+              }
+          })
+          .state('admin.reports.customersorders', {
+              url: '/customersorders',
+              views: {
+                  "header@admin": {
+                      templateUrl: 'admin/views/reports/customersorders.header.html'
+                  },
+                  "main@admin": {
+                      templateUrl: 'admin/views/reports/reports.html'
+                  },
+                  "list@admin.reports.customersorders": {
+                      controller: 'ReportsCtrl as reportsCtrl',
+                      templateUrl: 'admin/views/reports/customersorders.html'
+                  }
+              }
+          })
+          .state('admin.reports.customersrewards', {
+              url: '/customersrewards',
+              views: {
+                  "header@admin": {
+                      templateUrl: 'admin/views/reports/customersrewards.header.html'
+                  },
+                  "main@admin": {
+                      templateUrl: 'admin/views/reports/reports.html'
+                  },
+                  "list@admin.reports.customersrewards": {
+                      controller: 'ReportsCtrl as reportsCtrl',
+                      templateUrl: 'admin/views/reports/customersrewards.html'
+                  }
+              }
+          })
+          .state('admin.reports.customerscredit', {
+              url: '/customerscredit',
+              views: {
+                  "header@admin": {
+                      templateUrl: 'admin/views/reports/customerscredit.header.html'
+                  },
+                  "main@admin": {
+                      templateUrl: 'admin/views/reports/reports.html'
+                  },
+                  "list@admin.reports.customerscredit": {
+                      controller: 'ReportsCtrl as reportsCtrl',
+                      templateUrl: 'admin/views/reports/customerscredit.html'
+                  }
+              }
+          })
 
   }
 
@@ -182,6 +287,103 @@ angular.module('ToolsModule', [
                           { name:'couponCode', field: '$id', enableHiding: false, enableFiltering: false, enableCellEdit: false },
                           { name:'orders', field: 'order_count', enableHiding: false, enableFiltering: true, width: '15%', enableCellEdit: false },
                           { name:'total', field: 'order_total', enableHiding: false, enableFiltering: true, width: '15%', enableCellEdit: false },
+                    ]
+              };
+
+              reportsCtrl.gridViewed = {
+                    enableSorting: true,
+                    enableCellEditOnFocus: false,
+                    enableFiltering: true,
+            //        data: Orders.all,
+                    columnDefs: [
+                          { name:'productName', field: 'product_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'views', field: 'view_count', enableHiding: false, enableFiltering: true, width: '15%', enableCellEdit: false },
+                          { name:'percent', field: 'view_percent', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
+                    ]
+              };
+
+              reportsCtrl.gridPurchased = {
+                    enableSorting: true,
+                    enableCellEditOnFocus: false,
+                    enableFiltering: true,
+            //        data: Orders.all,
+                    columnDefs: [
+                          { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'quantity', field: 'purchase_count', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
+                          { name:'total', field: 'purchase_total', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
+                    ]
+              };
+
+              reportsCtrl.gridOnline = {
+                    enableSorting: true,
+                    enableCellEditOnFocus: false,
+                    enableFiltering: true,
+            //        data: Orders.all,
+                    columnDefs: [
+                          { name:'iP', field: 'customer_ip', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'lastPageVisited', field: 'last_page_visited', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
+                          { name:'referer', field: 'customer_referer', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
+                          { name:'lastClick', field: 'last_click', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
+                          { name:'action', field: 'action', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
+                    ]
+              };
+
+              reportsCtrl.gridActivity = {
+                    enableSorting: true,
+                    enableCellEditOnFocus: false,
+                    enableFiltering: true,
+            //        data: Orders.all,
+                    columnDefs: [
+                          { name:'comment', field: 'customer_activity', enableHiding: false, enableFiltering: false, enableCellEdit: false },
+                          { name:'iP', field: 'customer_ip', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'dateAdded', field: 'activity_date', enableHiding: false, enableFiltering: true, width: '15%', enableCellEdit: false },
+                    ]
+              };
+
+              reportsCtrl.gridCustomerOrders = {
+                    enableSorting: true,
+                    enableCellEditOnFocus: false,
+                    enableFiltering: true,
+            //        data: Orders.all,
+                    columnDefs: [
+                          { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'Email', field: 'customer_email', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'customerGroup', field: 'customer_group', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'status', field: 'customer_status', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'orders', field: 'customer_orders', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false },
+                          { name:'products', field: 'customer_products', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false },
+                          { name:'total', field: 'customer_total', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false },
+                    ]
+              };
+
+              reportsCtrl.gridRewards = {
+                    enableSorting: true,
+                    enableCellEditOnFocus: false,
+                    enableFiltering: true,
+            //        data: Orders.all,
+                    columnDefs: [
+                          { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'Email', field: 'customer_email', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'customerGroup', field: 'customer_group', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'status', field: 'customer_status', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'rewardPoints', field: 'customer_rewards', enableHiding: false, enableFiltering: false, enableCellEdit: false },
+                          { name:'orders', field: 'customer_orders', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false },
+                          { name:'total', field: 'customer_total', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false },
+                    ]
+              };
+
+              reportsCtrl.gridCredit = {
+                    enableSorting: true,
+                    enableCellEditOnFocus: false,
+                    enableFiltering: true,
+            //        data: Orders.all,
+                    columnDefs: [
+                          { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'Email', field: 'customer_email', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'customerGroup', field: 'customer_group', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'status', field: 'customer_status', enableHiding: false, enableFiltering: true, width: '15%', enableCellEdit: false },
+                          { name:'total', field: 'customer_credit_total', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false },
                     ]
               };
 
