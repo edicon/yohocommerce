@@ -210,20 +210,7 @@ angular.module('CatalogModule', [
           var subCategories = $firebaseArray(subRef.child(tid).orderByChild('category_id'));
           var pulldownCategories = $firebaseArray(subRef.child(tid).orderByChild('category_id'));
 
-          var cartRef = new Firebase(FirebaseUrl+'carts');
-          var carts = $firebaseArray(cartRef.child(tid));
-
           var catalog = {
-
-              addCart: function() {
-                  return carts.$add({items: 0, total: 0}).then(function(theRef) {
-                      return theRef.key();
-                  });
-              },
-
-              getCart: function(cid) {
-                  return $firebaseObject(cartRef.child(tid).child(cid));
-              },
 
               all: categories,
 
@@ -299,93 +286,42 @@ angular.module('CatalogModule', [
 
           var cartorder = {
 
-              getOrder: function(oid) {
-                  return $firebaseArray(ref.child(tid).child(oid));
-              },
-
-              addOrder: function(theObj) {
-                  return cartorders.$add().then(function(theRef) {
+              addHeader: function() {
+                  return cartorders.$add({ status: 'cart', items: 0, total: 0, create_date: Firebase.ServerValue.TIMESTAMP }).then(function(theRef) {
                       return theRef.key();
                   });
               },
 
-/*              updateOrder: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
-
-                  if (theObj.items === 0)
-                      return theRef.remove();
-                  else
-                      return theRef.update( {product_quantity: theObj.product_quantity, update_date: Firebase.ServerValue.TIMESTAMP} );
-
-              },
-*/
-
-              updateOrderTotal: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
-
-                  if (theObj.items === 0)
-                      return theRef.remove();
-                  else
-                      return theRef.update( {product_quantity: theObj.product_quantity, update_date: Firebase.ServerValue.TIMESTAMP} );
-
+              getOrder: function(oid) {
+                  return $firebaseObject(ref.child(tid).child(oid));
               },
 
-
-              updateItemQty: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
-                  theRef.update( {product_quantity: theObj.qty, order_update_date: Firebase.ServerValue.TIMESTAMP} );
-
+              updateHeader: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid);
+                  return theRef.update( {items: theObj.items, total: theObj.total} );
               },
 
-              updateCart: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'carts/'+tid+'/'+theObj.cid);
-
-                  if (theObj.items === 0)
-                      return theRef.remove();
-                   else
-                      return theRef.update( {items: theObj.items, total: theObj.total, update_date: Firebase.ServerValue.TIMESTAMP} );
-
+              addLine: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/lines');
+                  theRef.push( {product_id: theObj.$id, product_name: theObj.product_name, regular_price: theObj.product_price,
+                      line_quantity: theObj.product_qty, special_price: theObj.special_price, product_image: theObj.product_image,
+                      line_total: theObj.line_total} );
               },
 
-              updateCartPrice: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'carts/'+tid+'/'+theObj.cid);
-                  return theRef.update( {items: theObj.items, total: theObj.total, update_date: Firebase.ServerValue.TIMESTAMP} );
-              },
-
-              addProduct: function(theObj) {
-
-                  if (theObj.special_price)
-                      theObj.product_total_price = theObj.special_price * theObj.product_quantity;
-                  else
-                      theObj.product_total_price = theObj.product_price * theObj.product_quantity;
-
-                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.$id);
-                  theRef.update( {product_id: theObj.$id, product_name: theObj.product_name, product_regular_price: theObj.product_price,
-                      product_quantity: theObj.product_quantity, product_special_price: theObj.special_price, product_image: theObj.product_image,
-                      product_total_price: theObj.product_total_price, order_update_date: Firebase.ServerValue.TIMESTAMP} );
-              },
-
-              removeProduct: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/'+theObj.pid);
+              removeLine: function(theObj) {
+                console.log(theObj)
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/lines/'+theObj.lid);
                   return theRef.remove();
               },
 
-              nextProduct: function(theObj) {
-                  var cnt = 1;
-                  var i = 0;
-                  var data = $firebaseArray(ref.child(tid).child(theObj.oid));
-                  data.$loaded().then(function() {
-                        for(i = 0; i < data.length; i++) {
+              getLines: function(oid) {
+                  return $firebaseArray(ref.child(tid).child(oid).child('/lines'));
+              },
 
-                            if (theObj.$id === data[i].$id)
-                                theObj.product_quantity = data[i].product_quantity + 1;
-                            else
-                                theObj.product_quantity = 1;
+              updateLineQty: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/lines/'+theObj.lid);
+                  theRef.update( {line_quantity: theObj.qty} );
 
-                            cartorder.addProduct(theObj);
-                            cnt = cnt + 1;
-                        }
-                  });
               },
 
               all: cartorders
@@ -439,166 +375,139 @@ angular.module('CatalogModule', [
 
 .service('CartAddOrder', ['Catalog', 'CartOrders', 'Products', '$cookies',
       function (           Catalog,   CartOrders,   Products,   $cookies) {
-    		      this.initiate = function (pid) {
+    		    this.initiate = function (pid) {
 
-                  var theProduct = Products.getProduct(pid);
-                    theProduct.$loaded().then(function() {
+                  var theHeader = CartOrders.getOrder($cookies.get('orderId'));
+                      theHeader.$loaded().then(function() {
+                            theHeader.items = theHeader.items + 1;
+                            theHeader.oid = $cookies.get('orderId');
 
-                        if (theProduct.special_price === undefined)
-                              theProduct.special_price = null;
+                            var theProduct = Products.getProduct(pid);
+                                  theProduct.$loaded().then(function() {
+                                        theProduct.oid = $cookies.get('orderId');
+                                        theProduct.product_qty = 1;
 
-                        if ($cookies.get('orderId') === undefined) {
+                                        if (theProduct.special_price === undefined) {
+                                              theProduct.special_price = null;
+                                              theProduct.line_total = theProduct.product_price;
+                                              theHeader.total = theHeader.total + theProduct.product_price;
+                                        } else {
+                                              theProduct.line_total = theProduct.special_price;
+                                              theHeader.total = theHeader.total + theProduct.special_price;
+                                        }
 
-                            CartOrders.addOrder().then(function(theRef) {
-                                theProduct.oid = theRef;
-                                theProduct.product_quantity = 1;
-                                $cookies.put("orderId", theRef);
-                                CartOrders.addProduct(theProduct);
-                            });
-
-                        } else {
-
-                            theProduct.oid = $cookies.get('orderId');
-                            CartOrders.nextProduct(theProduct);
-                        }
-
-                        var theCart = Catalog.getCart($cookies.get('cartId'));
-                          theCart.$loaded().then(function() {
-                              theCart.items = theCart.items + 1;
-
-                              if (theProduct.special_price != null)
-                                    theCart.total = theCart.total + theProduct.special_price;
-
-                              else
-                                    theCart.total = theCart.total + theProduct.product_price;
-
-                              theCart.cid = $cookies.get('cartId');
-                              CartOrders.updateCart(theCart);
-                          });
-                  });
-            };
-
-      }
-
-])
-
-.service('CartUpdateQty', ['CartOrders', '$cookies',
-      function (            CartOrders,   $cookies) {
-    		      this.initiate = function ($id, qty) {
-
-                  var theCart = {};
-                  var theItem = {};
-                  theCart.items = 0;
-                  theCart.total = 0;
-                  theItem.qty = Number(qty);
-                  theItem.$id = $id;
-                  theItem.oid = $cookies.get('orderId');
-                  CartOrders.updateItemQty(theItem);
-
-                  theCart.cid = $cookies.get('cartId');
-                  var theOrder = CartOrders.getOrder(theItem.oid);
-                        theOrder.$loaded().then(function() {
-
-                            for(var i = 0; i < theOrder.length; i++) {
-                                if (theOrder.product_id === theItem.$id)
-                                    theCart.item = theItem.qty;
-                                else
-                                    theCart.item = theOrder[i].product_quantity;
-
-                                if (theOrder[i].product_special_price === undefined)
-                                    theCart.price = theOrder[i].product_regular_price;
-                                else
-                                    theCart.price = theOrder[i].product_special_price;
-
-                                theCart.total = theCart.total + (theCart.item * theCart.price);
-                                theCart.items = theCart.items + theCart.item;
-
-                            }
-
-                            CartOrders.updateCartPrice(theCart);
-
-                      });
-            };
-
-      }
-
-])
-
-.service('CartRemoveProduct', ['CartOrders', '$cookies',
-      function (                CartOrders,   $cookies) {
-    		      this.initiate = function (pid) {
-
-                  var theProduct = {};
-                  var theCart = {};
-                  var theItem = {};
-                  theCart.items = 0;
-                  theCart.total = 0;
-                  theProduct.pid = pid;
-                  theProduct.oid = $cookies.get('orderId');
-                  CartOrders.removeProduct(theProduct);
-
-                  theCart.cid = $cookies.get('cartId');
-                  var theOrder = CartOrders.getOrder($cookies.get('orderId'));
-                        theOrder.$loaded().then(function() {
-
-                            for(var i = 0; i < theOrder.length; i++) {
-                                theCart.item = theOrder[i].product_quantity;
-
-                                if (theOrder[i].product_special_price === undefined)
-                                    theCart.price = theOrder[i].product_regular_price;
-                                else
-                                    theCart.price = theOrder[i].product_special_price;
-
-                                theCart.total = theCart.total + (theCart.item * theCart.price);
-                                theCart.items = theCart.items + theCart.item;
-
-                            }
-
-                            if (theCart.items === 0)
-                                $cookies.remove('orderId');
-
-                            CartOrders.updateCartPrice(theCart);
+                                        CartOrders.updateHeader(theHeader);
+                                        CartOrders.addLine(theProduct);
+                                  });
 
                       });
 
             };
+
       }
 
 ])
 
-.controller('CatalogCtrl', ['Catalog', 'CartOrders', 'Products', 'CartUpdateQty', 'CartRemoveProduct', '$scope', '$state', '$cookies',
-      function (             Catalog,   CartOrders,   Products,   CartUpdateQty,   CartRemoveProduct,   $scope,   $state,   $cookies) {
+.service('CartUpdateHeader', ['CartOrders',
+        function (             CartOrders) {
+      		      this.initiate = function (oid) {
+
+                    var theHeader = {};
+                    var theLine = {};
+                    theHeader.oid = oid;
+                    theHeader.items = 0;
+                    theHeader.total = 0;
+
+                    var theLines = CartOrders.getLines(oid);
+                          theLines.$loaded().then(function() {
+
+                              for(var i = 0; i < theLines.length; i++) {
+                                  theLine.qty = theLines[i].line_quantity;
+
+                                  if (theLines[i].special_price === undefined)
+                                      theLine.price = theLines[i].regular_price;
+                                  else
+                                      theLine.price = theLines[i].special_price;
+
+                                  theHeader.items = theHeader.items + theLine.qty;
+                                  theHeader.total = theHeader.total + (theLine.qty * theLine.price);
+
+                              }
+
+                              CartOrders.updateHeader(theHeader);
+
+                        });
+
+                };
+
+        }
+
+])
+
+.service('CartUpdateQty', ['CartOrders', 'CartUpdateHeader', '$cookies',
+      function (            CartOrders,   CartUpdateHeader,   $cookies) {
+    		      this.initiate = function (lid, qty) {
+                    var oid = $cookies.get('orderId');
+                    var theLine = {};
+                    theLine.qty = Number(qty);
+                    theLine.oid = oid;
+                    theLine.lid = lid;
+                    CartOrders.updateLineQty(theLine);
+                    CartUpdateHeader.initiate(oid);
+            };
+
+      }
+
+])
+
+.service('CartRemoveLine', ['CartOrders', 'CartUpdateHeader', '$cookies',
+        function (           CartOrders,   CartUpdateHeader,   $cookies) {
+      		      this.initiate = function (lid) {
+                      var oid = $cookies.get('orderId');
+                      var theLine = {};
+                      theLine.lid = lid;
+                      theLine.oid = oid;
+                      CartOrders.removeLine(theLine);
+                      CartUpdateHeader.initiate(oid);
+                };
+
+        }
+
+])
+
+.controller('CatalogCtrl', ['Catalog', 'CartOrders', 'Products', 'CartUpdateQty', 'CartRemoveLine', '$scope', '$state', '$cookies',
+      function (             Catalog,   CartOrders,   Products,   CartUpdateQty,   CartRemoveLine,   $scope,   $state,   $cookies) {
             var catalogCtrl = this;
             $scope.product = {};
             catalogCtrl.categories = Catalog.all;
             catalogCtrl.subPulldowns = Catalog.pulldown;
             catalogCtrl.subCategories = Catalog.allMenus;
 
-            catalogCtrl.addCart = function() {
-                  Catalog.addCart().then(function(theRef) {
-                        $cookies.put("cartId", theRef);
-                        catalogCtrl.getTotals();
+            catalogCtrl.addOrder = function() {
+                  CartOrders.addHeader().then(function(theRef) {
+                        $cookies.put("orderId", theRef);
+                        catalogCtrl.getTotal();
                   });
             }, function(error) {
                   catalogCtrl.error = error;
             };
 
-            catalogCtrl.getTotals = function() {
-                  var cartTotals = Catalog.getCart($cookies.get('cartId'));
-                      cartTotals.$loaded().then(function() {
-                          catalogCtrl.cartTotals = cartTotals;
+            catalogCtrl.getTotal = function() {
+                  var orderTotal = CartOrders.getOrder($cookies.get('orderId'));
+                      orderTotal.$loaded().then(function() {
+                          catalogCtrl.orderTotal = orderTotal;
                       });
             }, function(error) {
                   catalogCtrl.error = error;
             };
 
-            if ($cookies.get('cartId') === undefined)
-                  catalogCtrl.addCart();
+            if ($cookies.get('orderId') === undefined)
+                  catalogCtrl.addOrder();
             else
-                  catalogCtrl.getTotals();
+                  catalogCtrl.getTotal();
 
             catalogCtrl.getOrder = function() {
-                var theOrder = CartOrders.getOrder($cookies.get('orderId'))
+                var theOrder = CartOrders.getLines($cookies.get('orderId'))
                     theOrder.$loaded().then(function() {
                         catalogCtrl.order = theOrder;
                     });
@@ -606,15 +515,18 @@ angular.module('CatalogModule', [
                     catalogCtrl.error = error;
             };
 
-            catalogCtrl.updateQty = function($id, qty) {
-                if (qty > 0)
-                    CartUpdateQty.initiate($id, qty);
+            catalogCtrl.updateQty = function(lid, qty) {
+                  if (qty > 0 )
+                        CartUpdateQty.initiate(lid, qty);
+                  if (qty === "0")
+                        CartRemoveLine.initiate(lid);
+
             }, function(error) {
-                    catalogCtrl.error = error;
+                  catalogCtrl.error = error;
             };
 
-            catalogCtrl.removeProduct = function(pid) {
-                  CartRemoveProduct.initiate(pid);
+            catalogCtrl.removeLine = function(lid) {
+                  CartRemoveLine.initiate(lid);
             }, function(error) {
                   catalogCtrl.error = error;
             };
@@ -781,18 +693,39 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CartCtrl', ['Catalog', 'CartOrders', 'Products', 'CartUpdateQty', 'CartRemoveProduct', '$scope', '$state', '$cookies',
-      function (          Catalog,   CartOrders,   Products,   CartUpdateQty,   CartRemoveProduct,   $scope,   $state,   $cookies) {
-            var cartCtrl = this;
-            cartCtrl.order = {};
+.controller('CartCtrl', ['Catalog', 'CartOrders', 'Products', 'CartUpdateQty', 'CartRemoveLine', '$scope', '$state', '$cookies',
+        function (        Catalog,   CartOrders,   Products,   CartUpdateQty,   CartRemoveLine,   $scope,   $state,   $cookies) {
+                var cartCtrl = this;
+                cartCtrl.order = {};
+                var orderId = $cookies.get('orderId');
 
-            if ($cookies.get('orderId') != undefined) {
-                var theOrder = CartOrders.getOrder($cookies.get('orderId'))
-                    theOrder.$loaded().then(function() {
-                        cartCtrl.order = theOrder;
-                    });
-            };
-      }
+                var theOrder = CartOrders.getOrder(orderId)
+                      theOrder.$loaded().then(function() {
+                            cartCtrl.order = theOrder;
+
+                            var theLines = CartOrders.getLines(orderId)
+                                  theLines.$loaded().then(function() {
+                                        cartCtrl.lines = theLines;
+                                  });
+
+                      });
+
+                cartCtrl.removeLine = function(lid) {
+                      CartRemoveLine.initiate(lid);
+                }, function(error) {
+                      catalogCtrl.error = error;
+                };
+
+                cartCtrl.updateQty = function(lid, qty) {
+                      if (qty > 0 )
+                            CartUpdateQty.initiate(lid, qty);
+                      if (qty === "0")
+                            CartRemoveLine.initiate(lid);
+                }, function(error) {
+                      cartCtrl.error = error;
+                };
+
+        }
 
 ])
 
