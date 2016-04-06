@@ -46,9 +46,9 @@
         </div>
       </div>
       <div class="col-sm-3">
-        <div ng-if="catalogCtrl.cartTotals.items == 0" id="cart" class="btn-group btn-block">
+        <div ng-if="catalogCtrl.orderTotal.items == 0" id="cart" class="btn-group btn-block">
           <button type="button" data-toggle="dropdown" class="btn btn-inverse btn-block dropdown-toggle">
-            <i class="fa fa-shopping-cart"></i> {{catalogCtrl.cartTotals.items}} Item(s) - {{catalogCtrl.cartTotals.total | currency}}
+            <i class="fa fa-shopping-cart"></i> {{catalogCtrl.orderTotal.items}} Item(s) - {{catalogCtrl.orderTotal.total | currency}}
           </button>
           <ul class="dropdown-menu pull-right">
             <li>
@@ -56,9 +56,9 @@
             </li>
           </ul>
         </div>
-        <div ng-if="catalogCtrl.cartTotals.items > 0" id="cart" class="btn-group btn-block">
+        <div ng-if="catalogCtrl.orderTotal.items > 0" id="cart" class="btn-group btn-block">
           <button type="button" ng-click="catalogCtrl.getOrder()" data-toggle="dropdown" class="btn btn-inverse btn-block dropdown-toggle">
-            <i class="fa fa-shopping-cart"></i> {{catalogCtrl.cartTotals.items}} Item(s) - {{catalogCtrl.cartTotals.total | currency}}
+            <i class="fa fa-shopping-cart"></i> {{catalogCtrl.orderTotal.items}} Item(s) - {{catalogCtrl.orderTotal.total | currency}}
           </button>
           <ul class="dropdown-menu pull-right">
             <li>
@@ -69,16 +69,16 @@
                   </td>
                   <td class="text-left"><a href="" ng-click="catalogCtrl.goProduct(o.product_id)">{{o.product_name}}</a>
                   <td width="70px">
-                    <input type="text" ng-model="o.product_quantity" ng-change="catalogCtrl.updateQty(o.$id, o.product_quantity)"
+                    <input type="text" ng-model="o.line_quantity" ng-change="catalogCtrl.updateQty(o.$id, o.line_quantity)"
                       class="form-control" style="text-align: right;">
                   </td>
-                  <td ng-if="o.product_special_price" class="text-right">
-                    <s>{{o.product_regular_price | currency}}</s>&nbsp;{{o.product_special_price | currency}}
+                  <td ng-if="o.special_price" class="text-right">
+                    <s>{{o.regular_price | currency}}</s>&nbsp;{{o.special_price | currency}}
                   </td>
-                  <td ng-if="o.product_special_price == null" class="text-right">
-                    {{o.product_regular_price | currency}}
+                  <td ng-if="o.special_price == null" class="text-right">
+                    {{o.regular_price | currency}}
                   </td>
-                  <td class="text-center"><button type="button" ng-click="catalogCtrl.removeProduct(o.product_id)" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button></td>
+                  <td class="text-center"><button type="button" ng-click="catalogCtrl.removeLine(o.$id)" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button></td>
                 </tr>
               </table>
             </li>
@@ -87,12 +87,12 @@
                 <table class="table table-bordered">
                   <tr>
                     <td class="text-right"><strong>Total</strong></td>
-                    <td class="text-right">{{catalogCtrl.cartTotals.total | currency}}</td>
+                    <td class="text-right">{{catalogCtrl.orderTotal.total | currency}}</td>
                   </tr>
                 </table>
                 <p class="text-right">
                     <a href="#/cart" ui-sref="catalog.cart"><strong><i class="fa fa-shopping-cart"></i> View Cart</strong></a>
-                    &nbsp;&nbsp;&nbsp;<a href="<a href="#/checkout" ui-sref="catalog.checkout"><strong><i class="fa fa-share"></i> checkout</strong></a>
+                    &nbsp;&nbsp;&nbsp;<a href="#/checkout" ui-sref="catalog.checkout"><strong><i class="fa fa-share"></i> checkout</strong></a>
                 </p>
               </div>
             </li>

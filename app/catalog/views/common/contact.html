@@ -3,7 +3,7 @@
     <div class="col-sm-12">
       <ul class="breadcrumb">
         <li><a href="#" ui-sref="catalog.home"><i class="menu-icon fa fa-home"></i></a></li>
-        <li><a href="#/login" ui-sref="catalog.contact">Help and Contact</a></li>
+        <li><a href="#/contact" ui-sref="catalog.contact">Help and Contact</a></li>
       </ul>
     </div>
   </div>
@@ -16,10 +16,10 @@
             <div class="col-sm-3">
               <h4>Mailing Address</h4>
                 <address>
-                  {{contactCtrl.store.store_name}}<br>
-                  {{contactCtrl.store.store_address_street}}<br>
-                  {{contactCtrl.store.store_address_city}}, {{contactCtrl.store.store_address_region}}<br>
-                  {{contactCtrl.store.store_address_postal_code}} {{contactCtrl.store.store_address_country}}
+                  {{catalogCtrl.store.store_name}}<br>
+                  {{catalogCtrl.store.store_address_street}}<br>
+                  {{catalogCtrl.store.store_address_city}}, {{catalogCtrl.store.store_address_region}}<br>
+                  {{catalogCtrl.store.store_address_postal_code}} {{catalogCtrl.store.store_address_country}}
                 </address>
             </div>
             <div class="col-sm-3">
@@ -29,9 +29,8 @@
             </div>
             <div class="col-sm-3">
               <h4>Telephone</h4>
-              <p>{{contactCtrl.store.store_phone}}</p>
+              <p>{{catalogCtrl.store.store_phone}}</p>
             </div>
-
           </div>
         </div>
       </div>
@@ -40,22 +39,22 @@
           <legend><h3>Contact Form</h3></legend>
             <div class="form-group required">
               <div class="col-sm-6 col-centered">
-                <input type="text" name="Name" ng-model="contactCtrl.contact.contact_name" placeholder="Enter Your Name" class="form-control">
+                <input type="text" name="Name" ng-model="catalogCtrl.contact.contact_name" placeholder="Enter Your Name" class="form-control">
               </div>
             </div>
             <div class="form-group required">
               <div class="col-sm-6 col-centered">
-                <input type="text" name="Email" ng-model="contactCtrl.contact.contact_email" placeholder="Enter Your E-Mail Address" class="form-control">
+                <input type="text" name="Email" ng-model="catalogCtrl.contact.contact_email" placeholder="Enter Your E-Mail Address" class="form-control">
               </div>
             </div>
             <div class="form-group required">
               <div class="col-sm-6 col-centered">
-                <input type="text" name="Phone" ng-model="contactCtrl.contact.contact_phone" placeholder="Enter Your Phone Number" class="form-control">
+                <input type="text" name="Phone" ng-model="catalogCtrl.contact.contact_phone" placeholder="Enter Your Phone Number" class="form-control">
               </div>
             </div>
             <div class="form-group required">
               <div class="col-sm-6 col-centered">
-                <textarea rows="3" data-min-rows="3" name="Comment" ng-model="contactCtrl.contact.contact_comment" placeholder="Enter Your Comment" class="form-control autoExpand">
+                <textarea rows="3" data-min-rows="3" name="Comment" ng-model="catalogCtrl.contact.contact_comment" placeholder="Enter Your Comment" class="form-control autoExpand">
                 </textarea>
               </div>
             </div>

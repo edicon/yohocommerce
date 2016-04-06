@@ -1,0 +1,58 @@
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+	  <div class="collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Sales
+						<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#/salesorders" ui-sref="admin.reports.salesorders">Orders</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#/salestaxes" ui-sref="admin.reports.salestaxes">Taxes</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#/salsesshipping" ui-sref="admin.reports.salesshipping">Shipping</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#/salesreturns" ui-sref="admin.reports.salesreturns">Returns</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#/salescoupons" ui-sref="admin.reports.salescoupons">Coupons</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Products
+						<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#/productsviewed" ui-sref="admin.reports.productsviewed">Viewed</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#/productspurchased" ui-sref="admin.reports.productspurchased">Purchased</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Customers
+						<span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#/customersonline" ui-sref="admin.reports.customersonline">Online</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#/customersactivity" ui-sref="admin.reports.customersactivity">Activity</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#/customersorders" ui-sref="admin.reports.customersorders">Orders</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#/customersrewards" ui-sref="admin.reports.customersrewards">Reward Points</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#/customerscredit" ui-sref="admin.reports.customerscredit">Credit</a></li>
+					</ul>
+				</li>
+
+
+			</ul>
+	  </div>
+	</div>
+</nav>
+<div ui-view="list"></div>

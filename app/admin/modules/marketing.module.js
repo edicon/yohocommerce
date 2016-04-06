@@ -16,8 +16,8 @@ angular.module('MarketingModule', [
 
 ])
 
-.config(    ['$stateProvider', '$httpProvider',
-    function( $stateProvider,   $httpProvider) {
+.config(    ['$stateProvider',
+    function( $stateProvider) {
 
       $stateProvider
 
@@ -84,21 +84,6 @@ angular.module('MarketingModule', [
                   "list@admin.marketing.coupons": {
                       controller: 'CouponsCtrl as couponsCtrl',
                       templateUrl: 'admin/views/marketing/coupons.html'
-                  }
-              }
-          })
-          .state('admin.marketing.rewardpoints', {
-              url: '/rewardpoints',
-              views: {
-                  "header@admin": {
-                      templateUrl: 'admin/views/marketing/coupons.header.html'
-                  },
-                  "main@admin": {
-                      templateUrl: 'admin/views/marketing/marketing.html'
-                  },
-                  "list@admin.marketing.rewardpoints": {
-                      controller: 'RewardPointsCtrl as rewardPointsCtrl',
-                      templateUrl: 'admin/views/marketing/rewardpoints.html'
                   }
               }
           })
@@ -190,29 +175,6 @@ angular.module('MarketingModule', [
 
           return coupon;
 
-      }
-
-])
-
-.factory('RewardPoints', ['$firebaseObject', 'FirebaseUrl', 'tid',
-      function (           $firebaseObject,   FirebaseUrl,   tid) {
-            var ref = new Firebase(FirebaseUrl+'reward_points');
-
-            var rewardpoint = {
-
-                addRewardPoints: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'reward_points/'+tid);
-                    return theRef.push(theObj);
-                },
-
-                getRewardPoints: function() {
-                    var theRef = new Firebase(FirebaseUrl+'reward_points/'+tid);
-                    return $firebaseObject(theRef);
-                },
-
-            };
-
-            return rewardpoint;
       }
 
 ])
@@ -463,26 +425,6 @@ angular.module('MarketingModule', [
                     Coupons.removeCoupon(theCoupon);
               }, function(error) {
                     couponsCtrl.error = error;
-              };
-
-        }
-
-])
-
-.controller('RewardPointsCtrl', ['RewardPoints',
-        function (                RewardPoints) {
-              var rewardPointsCtrl = this;
-              rewardPointsCtrl.reward_points = {};
-
-              var thePoints = RewardPoints.getRewardPoints();
-                    thePoints.$loaded().then(function() {
-                        rewardPointsCtrl.reward_points = thePoints;
-                    });
-
-              rewardPointsCtrl.updateRewardPoints = function() {
-                    rewardPointsCtrl.reward_points.$save();
-              }, function(error) {
-                    rewardPointsCtrl.error = error;
               };
 
         }
