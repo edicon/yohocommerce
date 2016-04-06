@@ -278,52 +278,38 @@
           </uib-tab>
           <uib-tab>
             <uib-tab-heading>
-              <i class="menu-icon fa fa-globe"></i> Localization
+              <i class="menu-icon fa fa-tasks"></i> Default Settings
             </uib-tab-heading><br>
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title"><span class="menu-icon fa fa-globe"></span> Localization</h3>
+                <h3 class="panel-title"><span class="menu-icon fa fa-tasks"></span> Default Settings</h3>
               </div>
               <div class="panel-body">
-                <form name:="storeProfileForm" class="form-horizontal" ng-submit="storeCtrl.addStore()">
+                <form class="form-horizontal">
                   <fieldset>
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Default Currency</label>
-                      <div ng-if="storeCtrl.sid === null" class="col-sm-9">
-                        <input type="text" name:="name" ng-model="storeCtrl.store.store_name" placeholder="Store Name" class="form-control" required>
-                        <div ng-messages="storeProfileForm.storeName.$error" ng-if="storeProfileForm.firstName.$touched">
-                          <div ng-messages-include="catalog/common/registration.messages.html"></div>
-                        </div>
-                      </div>
-                      <div ng-if="storeCtrl.sid !== null" class="col-sm-9">
-                        <input type="text" ng-model="storeCtrl.store.store_name" ng-change="storeCtrl.store.$save()"
-                          placeholder="First Name" class="form-control" required>
+                      <div class="col-sm-9">
+                        <select ng-model="storeCtrl.store.store_default_currency" ng-change="storeCtrl.saveDefaults()" class="form-control">
+                          <option value= "usd">USD</option>
+                          <option value= "can">CAN</option>
+                        </select>
                       </div>
                     </div>
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Default Length Units</label>
-                      <div ng-if="storeCtrl.sid === null" class="col-sm-9">
-                        <input type="text" name:="storeUrl" ng-model="storeCtrl.store.store_url" placeholder="Store URL" class="form-control" required>
-                        <div ng-messages="storeProfileForm.storeUrl.$error" ng-if="storeProfileForm.storeUrl.$touched">
-                          <div ng-messages-include="catalog/common/registration.messages.html"></div>
-                        </div>
-                      </div>
-                      <div ng-if="storeCtrl.sid !== null" class="col-sm-9">
-                        <input type="text" ng-model="storeCtrl.store.store_url" ng-change="storeCtrl.store.$save()"
-                          placeholder="Last Name" class="form-control">
+                      <div class="col-sm-9">
+                        <select ng-model="storeCtrl.store.store_default_width_units" ng-change="storeCtrl.saveDefaults()" class="form-control">
+                          <option ng-repeat="w in storeCtrl.LengthUnits" value="{{w.$id}}">{{w.unit_title}}</option>
+                        </select>
                       </div>
                     </div>
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Default Weight Units</label>
-                      <div ng-if="storeCtrl.sid === null" class="col-sm-9">
-                        <input type="email" name="email" ng-model="storeCtrl.store.store_email" placeholder="E-mail Address" class="form-control" required email>
-                        <div ng-messages="storeProfileForm.email.$error" ng-if="storeProfileForm.email.$touched">
-                          <div ng-messages-include="catalog/common/registration.messages.html"></div>
-                        </div>
-                      </div>
-                      <div ng-if="storeCtrl.sid !== null" class="col-sm-9">
-                        <input type="email" ng-model="storeCtrl.store.store_email" ng-change="storeCtrl.store.$save()"
-                          placeholder="E-mail Address" class="form-control">
+                      <div class="col-sm-9">
+                        <select ng-model="storeCtrl.store.store_default_width_units" ng-change="storeCtrl.saveDefaults()" class="form-control">
+                          <option ng-repeat="w in storeCtrl.WeightUnits" value="{{w.$id}}">{{w.unit_title}}</option>
+                        </select>
                       </div>
                     </div>
                   </fieldset>

@@ -309,7 +309,6 @@ angular.module('CatalogModule', [
               },
 
               removeLine: function(theObj) {
-                console.log(theObj)
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/lines/'+theObj.lid);
                   return theRef.remove();
               },
@@ -693,8 +692,8 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CartCtrl', ['Catalog', 'CartOrders', 'Products', 'CartUpdateQty', 'CartRemoveLine', '$scope', '$state', '$cookies',
-        function (        Catalog,   CartOrders,   Products,   CartUpdateQty,   CartRemoveLine,   $scope,   $state,   $cookies) {
+.controller('CartCtrl', ['CartOrders', 'CartUpdateQty', 'CartRemoveLine', '$cookies',
+        function (        CartOrders,   CartUpdateQty,   CartRemoveLine,   $cookies) {
                 var cartCtrl = this;
                 cartCtrl.order = {};
                 var orderId = $cookies.get('orderId');

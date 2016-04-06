@@ -709,17 +709,23 @@ angular.module('SystemModule', [
 
 ])
 
-.controller('StoreCtrl', ['Store', 'Stores', 'Transactions', 'Banner', 'Countries', 'FileReader', 'AlertService', '$state', '$scope', '$stateParams', '$http',
-      function (           Store,   Stores,   Transactions,   Banner,   Countries,   FileReader,   AlertService,   $state,   $scope,   $stateParams,   $http) {
-
+.controller('StoreCtrl', ['Store', 'Stores',  'Banner', 'Countries', 'LengthUnits', 'WeightUnits', 'TaxGroups', 'OrderStatuses', 'ReturnStatuses', 'FileReader', 'AlertService', '$state', '$scope', '$stateParams', '$http',
+      function (           Store,   Stores,    Banner,   Countries,   LengthUnits,   WeightUnits,   TaxGroups,   OrderStatuses,   ReturnStatuses,   FileReader,   AlertService,   $state,   $scope,   $stateParams,   $http) {
             var storeCtrl = this;
             storeCtrl.store = {};
             $scope.countries = Countries.all;
             $scope.address = {};
+
             storeCtrl.bid = "1";
             storeCtrl.myInterval = 5000;
             storeCtrl.noWrapSlides = false;
             storeCtrl.bannerArray = 'yes';
+
+            storeCtrl.LengthUnits = LengthUnits.all;
+            storeCtrl.WeightUnits = WeightUnits.all;
+            storeCtrl.TaxGroups = TaxGroups.all;
+            storeCtrl.OrderStatuses = OrderStatuses.all;
+            storeCtrl.ReturnStatuses = ReturnStatuses.all;
 
             storeCtrl.refreshAddresses = function(address) {
                   var params = {address: address, sensor: false};
