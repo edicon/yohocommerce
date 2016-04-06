@@ -746,6 +746,13 @@ angular.module('CatalogsModule', [
                     productCtrl.error = error;
               };
 
+              productCtrl.updateProduct = function() {
+                if (productCtrl.pid != null)
+                    productCtrl.product.$save();
+              }, function(error) {
+                    storeCtrl.error = error;
+              };
+
               productCtrl.loadProduct = function(pid) {
                     var theProduct = Product.getProduct(pid);
                         theProduct.$loaded().then(function() {

@@ -780,7 +780,8 @@ angular.module('SystemModule', [
             };
 
             storeCtrl.updateStore = function() {
-                  storeCtrl.store.$save();
+                if (storeCtrl.sid != null)
+                    storeCtrl.store.$save();
             }, function(error) {
                   storeCtrl.error = error;
             };
