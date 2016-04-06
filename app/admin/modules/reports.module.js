@@ -17,8 +17,8 @@ angular.module('ToolsModule', [
 
 ])
 
-.config(    ['$stateProvider', '$httpProvider',
-    function( $stateProvider,   $httpProvider) {
+.config(    ['$stateProvider',
+    function( $stateProvider) {
 
       $stateProvider
 
@@ -26,10 +26,14 @@ angular.module('ToolsModule', [
               url: '/reports',
               views: {
                   "header@admin": {
-                      templateUrl: 'admin/views/reports/reports.header.html'
+                      templateUrl: 'admin/views/reports/salesorders.header.html'
                   },
                   "main@admin": {
                       templateUrl: 'admin/views/reports/reports.html'
+                  },
+                  "list@admin.reports": {
+                      controller: 'ReportsCtrl as reportsCtrl',
+                      templateUrl: 'admin/views/reports/salesorders.html'
                   }
               }
           })

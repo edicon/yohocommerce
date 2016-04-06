@@ -16,8 +16,8 @@ angular.module('SalesModule', [
 
 ])
 
-.config(    ['$stateProvider', '$httpProvider',
-    function( $stateProvider,   $httpProvider) {
+.config(    ['$stateProvider',
+    function( $stateProvider) {
 
         $stateProvider
 

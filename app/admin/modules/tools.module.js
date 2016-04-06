@@ -17,8 +17,8 @@ angular.module('ToolsModule', [
 
 ])
 
-.config(    ['$stateProvider', '$httpProvider',
-    function( $stateProvider,   $httpProvider) {
+.config(    ['$stateProvider',
+    function( $stateProvider) {
 
       $stateProvider
 
