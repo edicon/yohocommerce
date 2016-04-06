@@ -779,6 +779,12 @@ angular.module('SystemModule', [
                   AlertService.addError(error.message);
             };
 
+            storeCtrl.updateStore = function() {
+                  storeCtrl.store.$save();
+            }, function(error) {
+                  storeCtrl.error = error;
+            };
+
             storeCtrl.next = function() {
 
                   if (storeCtrl.count > 0) {

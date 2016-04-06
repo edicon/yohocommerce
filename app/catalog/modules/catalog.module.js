@@ -13,6 +13,7 @@ angular.module('CatalogModule', [
 
 ])
 
+.constant('sid', '-KCvkHlN5w6PS9QTgR4R')
 
 .config (       ['$stateProvider', '$urlRouterProvider',
     function (    $stateProvider,   $urlRouterProvider) {
@@ -147,7 +148,7 @@ angular.module('CatalogModule', [
                         templateUrl: 'catalog/views/common/header.html'
                     },
                     "main@catalog": {
-                        controller: 'ContactCtrl as contactCtrl',
+                        controller: 'CatalogCtrl as catalogCtrl',
                         templateUrl: 'catalog/views/common/contact.html'
                     },
                     "footer@catalog": {
@@ -201,8 +202,8 @@ angular.module('CatalogModule', [
       }
 ])
 
-.factory('Catalog', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (      $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+.factory('Catalog', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid', 'sid',
+      function (      $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid,   sid) {
           var ref = new Firebase(FirebaseUrl+'categories');
           var categories = $firebaseArray(ref.child(tid).orderByPriority());
 
@@ -210,13 +211,18 @@ angular.module('CatalogModule', [
           var subCategories = $firebaseArray(subRef.child(tid).orderByChild('category_id'));
           var pulldownCategories = $firebaseArray(subRef.child(tid).orderByChild('category_id'));
 
+          var storeRef = new Firebase(FirebaseUrl+'stores');
+          var storeDefaults = $firebaseObject(storeRef.child(tid).child(sid));
+
           var catalog = {
 
               all: categories,
 
               pulldown: pulldownCategories,
 
-              allMenus: subCategories
+              allMenus: subCategories,
+
+              storeDefaults: storeDefaults
 
           };
 
@@ -286,7 +292,7 @@ angular.module('CatalogModule', [
 
           var cartorder = {
 
-              addHeader: function() {
+              addOrder: function() {
                   return cartorders.$add({ status: 'cart', items: 0, total: 0, create_date: Firebase.ServerValue.TIMESTAMP }).then(function(theRef) {
                       return theRef.key();
                   });
@@ -479,11 +485,12 @@ angular.module('CatalogModule', [
             var catalogCtrl = this;
             $scope.product = {};
             catalogCtrl.categories = Catalog.all;
+            catalogCtrl.store = Catalog.storeDefaults;
             catalogCtrl.subPulldowns = Catalog.pulldown;
             catalogCtrl.subCategories = Catalog.allMenus;
 
             catalogCtrl.addOrder = function() {
-                  CartOrders.addHeader().then(function(theRef) {
+                  CartOrders.addOrder().then(function(theRef) {
                         $cookies.put("orderId", theRef);
                         catalogCtrl.getTotal();
                   });
@@ -503,7 +510,7 @@ angular.module('CatalogModule', [
             if ($cookies.get('orderId') === undefined)
                   catalogCtrl.addOrder();
             else
-                  catalogCtrl.getTotal();
+                catalogCtrl.getTotal();
 
             catalogCtrl.getOrder = function() {
                 var theOrder = CartOrders.getLines($cookies.get('orderId'))
@@ -899,36 +906,6 @@ angular.module('CatalogModule', [
 
                 AlertService.addError(error.message);
               };
-
-      }
-
-])
-
-
-
-.controller('ContactCtrl', ['Tenant', 'Store',
-      function (             Tenant,   Store) {
-            var contactCtrl = this;
-
-            var tenant = Tenant.getStoreTenant();
-                tenant.$loaded().then(function() {
-                  contactCtrl.store = Store.getStore(tenant.default_store_id)
-            });
-  //auto resizing comment box.
-        $(document)
-    		    .one('focus.textarea', '.autoExpand', function(){
-    			       var savedValue = this.value;
-    			          this.value = '';
-    			          this.baseScrollHeight = this.scrollHeight;
-    			          this.value = savedValue;
-    		    })
-    		    .on('input.textarea', '.autoExpand', function(){
-    			       var minRows = this.getAttribute('data-min-rows')|0, rows;
-    			          this.rows = minRows;
-                    console.log(this.scrollHeight , this.baseScrollHeight);
-    			          rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 17);
-    			          this.rows = minRows + rows;
-    		    });
 
       }
 

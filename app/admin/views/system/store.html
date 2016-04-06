@@ -47,6 +47,12 @@
             </uib-tab-heading><br>
             <form name:="storeProfileForm" class="form-horizontal" ng-submit="storeCtrl.addStore()">
               <fieldset>
+                <div ng-if="storeCtrl.sid !== null" class="form-group">
+                  <label class="col-sm-2 control-label" align="right">Store ID</label>
+                  <div class="col-sm-8">
+                    <input type="text" ng-model="storeCtrl.sid" class="form-control" readonly>
+                  </div>
+                </div>
                 <div class="form-group required">
                   <label class="col-sm-2 control-label" align="right">Store Name</label>
                   <div ng-if="storeCtrl.sid === null" class="col-sm-8">
@@ -290,7 +296,7 @@
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Default Currency</label>
                       <div class="col-sm-9">
-                        <select ng-model="storeCtrl.store.store_default_currency" ng-change="storeCtrl.saveDefaults()" class="form-control">
+                        <select ng-model="storeCtrl.store.store_default_currency" ng-change="storeCtrl.updateStore()" class="form-control">
                           <option value= "usd">USD</option>
                           <option value= "can">CAN</option>
                         </select>
@@ -299,44 +305,52 @@
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Default Length Units</label>
                       <div class="col-sm-9">
-                        <select ng-model="storeCtrl.store.store_default_width_units" ng-change="storeCtrl.saveDefaults()" class="form-control">
-                          <option ng-repeat="w in storeCtrl.LengthUnits" value="{{w.$id}}">{{w.unit_title}}</option>
+                        <select ng-model="storeCtrl.store.store_default_length" ng-change="storeCtrl.updateStore()" class="form-control">
+                          <option ng-repeat="w in storeCtrl.LengthUnits" value="{{w.unit_title}}">{{w.unit_title}}</option>
                         </select>
                       </div>
                     </div>
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Default Weight Units</label>
                       <div class="col-sm-9">
-                        <select ng-model="storeCtrl.store.store_default_width_units" ng-change="storeCtrl.saveDefaults()" class="form-control">
-                          <option ng-repeat="w in storeCtrl.WeightUnits" value="{{w.$id}}">{{w.unit_title}}</option>
+                        <select ng-model="storeCtrl.store.store_default_weight" ng-change="storeCtrl.updateStore()" class="form-control">
+                          <option ng-repeat="w in storeCtrl.WeightUnits" value="{{w.unit_title}}">{{w.unit_title}}</option>
                         </select>
                       </div>
                     </div>
                   </fieldset>
                   <fieldset>
-                    <legend>Tax Settings</legend>
-                    <div class="form-group">
-                      <label class="col-sm-2 control-label" align="right">Store Tax Address</label>
-                      <div class="col-sm-9">
-                        <ui-select ng-change="storeCtrl.parseAddress($select.selected.formatted_address)" ng-model="storeCtrl.address.selected" theme="bootstrap" ng-disabled="disabled" reset-search-input="false">
-                          <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
-                          <ui-select-choices repeat="address in (addresses) track by $index" refresh="storeCtrl.refreshAddresses($select.search)" refresh-delay="0">
-                            <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
-                          </ui-select-choices>
-                        </ui-select>
+                    <legend>Reward Point Settings</legend>
+                    <div class="form-group required">
+                      <label class="col-sm-3 control-label" align="right">Reward Points Awarded Per Dollar Spent</label>
+                      <div class="col-sm-8">
+                        <input type="text" ng-model="storeCtrl.store.store_points_per_dollar" ng-change="storeCtrl.updateStore()"
+                          placeholder="Points Per Dollar Spent" class="form-control">
                       </div>
                     </div>
                     <div class="form-group required">
-                      <label class="col-sm-2 control-label" align="right">Customer Tax Address</label>
-                      <div ng-if="storeCtrl.sid === null" class="col-sm-9">
-                        <input type="text" name="street" ng-model="storeCtrl.store.store_address_street" placeholder="Street" class="form-control" required>
-                        <div ng-messages="storeProfileForm.street.$error" ng-if="storeProfileForm.steet.$touched">
-                          <div ng-messages-include="catalog/common/registration.messages.html"></div>
-                        </div>
+                      <label class="col-sm-3 control-label" align="right">Minimum Redeemable Value</label>
+                      <div class="col-sm-8">
+                        <input type="text" ng-model="storeCtrl.store.store_points_minimum_value" ng-change="storeCtrl.updateStore()"
+                          placeholder="Minimum Value" class="form-control">
                       </div>
-                      <div ng-if="storeCtrl.sid !== null" class="col-sm-9">
-                        <input type="text" ng-model="storeCtrl.store.store_address_street" ng-change="storeCtrl.store.$save()"
-                          placeholder="Street" class="form-control">
+                    </div>
+                    <div class="form-group required">
+                      <label class="col-sm-3 control-label" align="right">Minimum Value Redeemable in Dollars</label>
+                      <div class="col-sm-8">
+                        <input type="text" ng-model="storeCtrl.store.store_points_minimum_dollar_value" ng-change="storeCtrl.updateStore()"
+                          placeholder="Redeemable Points Value in Dollars" class="form-control">
+                      </div>
+                    </div>
+                  </fieldset>
+                  <fieldset>
+                    <legend>Tax Settings</legend>
+                    <div class="form-group required">
+                      <label class="col-sm-2 control-label" align="right">Default Tax Group</label>
+                      <div class="col-sm-9">
+                        <select ng-model="storeCtrl.store.store_default_tax_group" ng-change="storeCtrl.updateStore()" class="form-control">
+                          <option ng-repeat="t in storeCtrl.TaxGroups" value="{{t.group_name}}">{{t.group_name}}</option>
+                        </select>
                       </div>
                     </div>
                   </fieldset>
@@ -345,52 +359,35 @@
                     <div class="form-group">
                       <label class="col-sm-2 control-label" align="right">Invoice Prefix</label>
                       <div class="col-sm-9">
-                        <ui-select ng-change="storeCtrl.parseAddress($select.selected.formatted_address)" ng-model="storeCtrl.address.selected" theme="bootstrap" ng-disabled="disabled" reset-search-input="false">
-                          <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
-                          <ui-select-choices repeat="address in (addresses) track by $index" refresh="storeCtrl.refreshAddresses($select.search)" refresh-delay="0">
-                            <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
-                          </ui-select-choices>
-                        </ui-select>
+                        <input type="text" ng-model="storeCtrl.store.store_default_invoice_prefix" ng-change="storeCtrl.updateStore()"
+                          placeholder="Enter Invoice Prefix" class="form-control">
                       </div>
                     </div>
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Processing Order Status</label>
-                      <div ng-if="storeCtrl.sid === null" class="col-sm-9">
-                        <input type="text" name="street" ng-model="storeCtrl.store.store_address_street" placeholder="Street" class="form-control" required>
-                        <div ng-messages="storeProfileForm.street.$error" ng-if="storeProfileForm.steet.$touched">
-                          <div ng-messages-include="catalog/common/registration.messages.html"></div>
-                        </div>
-                      </div>
-                      <div ng-if="storeCtrl.sid !== null" class="col-sm-9">
-                        <input type="text" ng-model="storeCtrl.store.store_address_street" ng-change="storeCtrl.store.$save()"
-                          placeholder="Street" class="form-control">
+                      <div class="col-sm-9">
+                        <select ng-model="storeCtrl.store.store_default_processing_status" ng-change="storeCtrl.updateStore()" class="form-control">
+                          <option ng-repeat="o in storeCtrl.OrderStatuses" value="{{o.status_name}}">{{o.status_name}}</option>
+                        </select>
                       </div>
                     </div>
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Completed Order Status</label>
-                      <div ng-if="storeCtrl.sid === null" class="col-sm-9">
-                        <input type="text" name="street" ng-model="storeCtrl.store.store_address_street" placeholder="Street" class="form-control" required>
-                        <div ng-messages="storeProfileForm.street.$error" ng-if="storeProfileForm.steet.$touched">
-                          <div ng-messages-include="catalog/common/registration.messages.html"></div>
-                        </div>
-                      </div>
-                      <div ng-if="storeCtrl.sid !== null" class="col-sm-9">
-                        <input type="text" ng-model="storeCtrl.store.store_address_street" ng-change="storeCtrl.store.$save()"
-                          placeholder="Street" class="form-control">
+                      <div class="col-sm-9">
+                        <select ng-model="storeCtrl.store.store_default_completed_status" ng-change="storeCtrl.updateStore()" class="form-control">
+                          <option ng-repeat="o in storeCtrl.OrderStatuses" value="{{o.status_name}}">{{o.status_name}}</option>
+                        </select>
                       </div>
                     </div>
                   </fieldset>
                   <fieldset>
                     <legend>Return Status Default</legend>
-                    <div class="form-group">
+                    <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Return Status</label>
                       <div class="col-sm-9">
-                        <ui-select ng-change="storeCtrl.parseAddress($select.selected.formatted_address)" ng-model="storeCtrl.address.selected" theme="bootstrap" ng-disabled="disabled" reset-search-input="false">
-                          <ui-select-match placeholder="Enter an address...">{{$select.selected.formatted_address}}</ui-select-match>
-                          <ui-select-choices repeat="address in (addresses) track by $index" refresh="storeCtrl.refreshAddresses($select.search)" refresh-delay="0">
-                            <div ng-bind-html="address.formatted_address | highlight: $select.search"></div>
-                          </ui-select-choices>
-                        </ui-select>
+                        <select ng-model="storeCtrl.store.store_default_return_status" ng-change="storeCtrl.updateStore" class="form-control">
+                          <option ng-repeat="r in storeCtrl.ReturnStatuses" value="{{r.status_name}}">{{r.status_name}}</option>
+                        </select>
                       </div>
                     </div>
                   </fieldset>
