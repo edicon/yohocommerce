@@ -30,10 +30,10 @@
     </form>
     <div class="panel panel-default">
       <div ng-if="customerCtrl.cid === null" class="panel-heading">
-        <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Customer Detail - New Customer</h3>
+        <h3 class="panel-title"><span class="menu-icon fa fa-user"></span> New Customer</h3>
       </div>
       <div ng-if="customerCtrl.cid !== null" class="panel-heading">
-        <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Customer Detail - {{customerCtrl.customer.customer_first_name}} {{customerCtrl.customer.customer_last_name}}</h3>
+        <h3 class="panel-title"><span class="menu-icon fa fa-user"></span> {{customerCtrl.customer.customer_first_name}} {{customerCtrl.customer.customer_last_name}}</h3>
       </div>
       <div class="panel-body">
         <div class="row">
