@@ -290,10 +290,12 @@ angular.module('CatalogModule', [
           var ref = new Firebase(FirebaseUrl+'orders');
           var cartorders = $firebaseArray(ref.child(tid));
 
+          var taxRef = new Firebase(FirebaseUrl+'tax_groups');
+
           var cartorder = {
 
               addOrder: function() {
-                  return cartorders.$add({ status: 'cart', items: 0, total: 0, create_date: Firebase.ServerValue.TIMESTAMP }).then(function(theRef) {
+                  return cartorders.$add({ status: 'cart', items: 0, sub_total: 0, create_date: Firebase.ServerValue.TIMESTAMP }).then(function(theRef) {
                       return theRef.key();
                   });
               },
@@ -302,20 +304,20 @@ angular.module('CatalogModule', [
                   return $firebaseObject(ref.child(tid).child(oid));
               },
 
-              updateHeader: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid);
-                  return theRef.update( {items: theObj.items, total: theObj.total} );
+              updateHeader: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
+                  return theRef.update( {items: obj.items, sub_total: obj.sub_total} );
               },
 
-              addLine: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/lines');
-                  theRef.push( {product_id: theObj.$id, product_name: theObj.product_name, regular_price: theObj.product_price,
-                      line_quantity: theObj.product_qty, special_price: theObj.special_price, product_image: theObj.product_image,
-                      line_total: theObj.line_total} );
+              addLine: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid+'/lines');
+                  theRef.push( {product_id: obj.$id, product_name: obj.product_name, regular_price: obj.product_price,
+                      line_quantity: obj.product_qty, special_price: obj.special_price, product_image: obj.product_image,
+                      line_total: obj.line_total} );
               },
 
-              removeLine: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/lines/'+theObj.lid);
+              removeLine: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid+'/lines/'+obj.lid);
                   return theRef.remove();
               },
 
@@ -323,10 +325,18 @@ angular.module('CatalogModule', [
                   return $firebaseArray(ref.child(tid).child(oid).child('/lines'));
               },
 
-              updateLineQty: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+theObj.oid+'/lines/'+theObj.lid);
-                  theRef.update( {line_quantity: theObj.qty} );
+              getTaxes: function(tgid) {
+                  return $firebaseArray(taxRef.child(tid).child(tgid).child('/tax_entries'));
+              },
 
+              addTax: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid+'/taxes');
+                  theRef.push( {product_id: obj.pid, tax_name: obj.tax_name, tax_total: obj.tax_total} );
+              },
+
+              updateLine: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid+'/lines/'+obj.lid);
+                  theRef.update( {line_quantity: obj.qty, line_total: obj.line_total} );
               },
 
               all: cartorders
@@ -377,32 +387,73 @@ angular.module('CatalogModule', [
 	     }
 ])
 
+.service('CartAddTax', ['CartOrders',
+        function (       CartOrders) {
+      		      this.initiate = function (theProduct) {
 
-.service('CartAddOrder', ['Catalog', 'CartOrders', 'Products', '$cookies',
-      function (           Catalog,   CartOrders,   Products,   $cookies) {
+                    var theTax = {};
+                    theTax.pid = theProduct.$id;
+                    theTax.oid = theProduct.oid;
+                    var theLine = {};
+
+                    var theTaxes = CartOrders.getTaxes(theProduct.product_tax_group_id);
+                          theTaxes.$loaded().then(function() {
+
+                                for(var i = 0; i < theTaxes.length; i++) {
+
+                                    if (theProduct.special_price === undefined)
+                                        theLine.price = Number(theProduct.regular_price);
+                                    else
+                                        theLine.price = Number(theProduct.special_price);
+
+                                    if (theTaxes[i].entry_type === "Percent")
+                                        theTax.tax_total = theLine.price * theTaxes[i].tax_rate;
+                                    else
+                                        theTax.tax_total = theLine.price + theTaxes[i].tax_rate;
+
+                                    theTax.tax_name = theTaxes[i].tax_name;
+
+                                    CartOrders.addTax(theTax);
+
+                                }
+
+                        });
+
+                };
+
+        }
+
+])
+
+.service('CartAddOrder', ['Catalog', 'CartOrders', 'Products', 'CartAddTax', '$cookies',
+      function (           Catalog,   CartOrders,   Products,   CartAddTax,   $cookies) {
     		    this.initiate = function (pid) {
 
-                  var theHeader = CartOrders.getOrder($cookies.get('orderId'));
+                  var oid = $cookies.get('orderId');
+
+                  var theHeader = CartOrders.getOrder(oid);
                       theHeader.$loaded().then(function() {
                             theHeader.items = theHeader.items + 1;
-                            theHeader.oid = $cookies.get('orderId');
+                            theHeader.oid = oid;
 
                             var theProduct = Products.getProduct(pid);
                                   theProduct.$loaded().then(function() {
-                                        theProduct.oid = $cookies.get('orderId');
+                                        theProduct.oid = oid;
                                         theProduct.product_qty = 1;
 
                                         if (theProduct.special_price === undefined) {
                                               theProduct.special_price = null;
                                               theProduct.line_total = theProduct.product_price;
-                                              theHeader.total = theHeader.total + theProduct.product_price;
+                                              theHeader.sub_total = theHeader.sub_total + theProduct.product_price;
                                         } else {
                                               theProduct.line_total = theProduct.special_price;
-                                              theHeader.total = theHeader.total + theProduct.special_price;
+                                              theHeader.sub_total = theHeader.sub_total + theProduct.special_price;
                                         }
 
                                         CartOrders.updateHeader(theHeader);
                                         CartOrders.addLine(theProduct);
+                                        CartAddTax.initiate(theProduct);
+
                                   });
 
                       });
@@ -413,14 +464,15 @@ angular.module('CatalogModule', [
 
 ])
 
-.service('CartUpdateHeader', ['CartOrders',
-        function (             CartOrders) {
+.service('CartUpdateHeader', ['CartOrders', 'CartAddTax',
+        function (             CartOrders,   CartAddTax) {
       		      this.initiate = function (oid) {
 
                     var theHeader = {};
                     var theLine = {};
                     theHeader.oid = oid;
                     theHeader.items = 0;
+                    theHeader.sub_total = 0;
                     theHeader.total = 0;
 
                     var theLines = CartOrders.getLines(oid);
@@ -435,7 +487,7 @@ angular.module('CatalogModule', [
                                       theLine.price = theLines[i].special_price;
 
                                   theHeader.items = theHeader.items + theLine.qty;
-                                  theHeader.total = theHeader.total + (theLine.qty * theLine.price);
+                                  theHeader.sub_total = theHeader.sub_total + (theLine.qty * theLine.price);
 
                               }
 
@@ -449,16 +501,28 @@ angular.module('CatalogModule', [
 
 ])
 
-.service('CartUpdateQty', ['CartOrders', 'CartUpdateHeader', '$cookies',
-      function (            CartOrders,   CartUpdateHeader,   $cookies) {
-    		      this.initiate = function (lid, qty) {
+.service('CartUpdateLine', ['CartOrders', 'CartUpdateHeader', 'Products', '$cookies',
+      function (             CartOrders,   CartUpdateHeader,   Products,   $cookies) {
+    		      this.initiate = function (lid, qty, pid) {
                     var oid = $cookies.get('orderId');
                     var theLine = {};
                     theLine.qty = Number(qty);
                     theLine.oid = oid;
                     theLine.lid = lid;
-                    CartOrders.updateLineQty(theLine);
-                    CartUpdateHeader.initiate(oid);
+
+                    var theProduct = Products.getProduct(pid);
+                          theProduct.$loaded().then(function() {
+
+                                if (theProduct.special_price === undefined)
+                                      theLine.line_total = theProduct.product_price * theLine.qty;
+                                else
+                                      theLine.line_total = theProduct.special_price * theLine.qty;
+
+                                CartOrders.updateLine(theLine);
+                                CartUpdateHeader.initiate(oid);
+
+                          });
+
             };
 
       }
@@ -480,8 +544,8 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CatalogCtrl', ['Catalog', 'CartOrders', 'Products', 'CartUpdateQty', 'CartRemoveLine', '$scope', '$state', '$cookies',
-      function (             Catalog,   CartOrders,   Products,   CartUpdateQty,   CartRemoveLine,   $scope,   $state,   $cookies) {
+.controller('CatalogCtrl', ['Catalog', 'CartOrders', 'Products', 'CartUpdateLine', 'CartRemoveLine', '$scope', '$state', '$cookies',
+      function (             Catalog,   CartOrders,   Products,   CartUpdateLine,   CartRemoveLine,   $scope,   $state,   $cookies) {
             var catalogCtrl = this;
             $scope.product = {};
             catalogCtrl.categories = Catalog.all;
@@ -499,7 +563,7 @@ angular.module('CatalogModule', [
             };
 
             catalogCtrl.getTotal = function() {
-                  var orderTotal = CartOrders.getOrder($cookies.get('orderId'));
+                  var orderTotal = CartOrders.getOrder($cookies.get('orderId'))
                       orderTotal.$loaded().then(function() {
                           catalogCtrl.orderTotal = orderTotal;
                       });
@@ -521,9 +585,9 @@ angular.module('CatalogModule', [
                     catalogCtrl.error = error;
             };
 
-            catalogCtrl.updateQty = function(lid, qty) {
+            catalogCtrl.updateline = function(lid, qty, pid) {
                   if (qty > 0 )
-                        CartUpdateQty.initiate(lid, qty);
+                        CartUpdateLine.initiate(lid, qty, pid);
                   if (qty === "0")
                         CartRemoveLine.initiate(lid);
 
@@ -699,11 +763,12 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CartCtrl', ['CartOrders', 'CartUpdateQty', 'CartRemoveLine', '$cookies',
-        function (        CartOrders,   CartUpdateQty,   CartRemoveLine,   $cookies) {
+.controller('CartCtrl', ['Catalog', 'CartOrders', 'CartUpdateLine', 'CartRemoveLine', '$cookies',
+        function (        Catalog,   CartOrders,   CartUpdateLine,   CartRemoveLine,   $cookies) {
                 var cartCtrl = this;
-                cartCtrl.order = {};
+  //              cartCtrl.store = Catalog.storeDefaults;
                 var orderId = $cookies.get('orderId');
+                cartCtrl.order = {};
 
                 var theOrder = CartOrders.getOrder(orderId)
                       theOrder.$loaded().then(function() {
@@ -716,15 +781,16 @@ angular.module('CatalogModule', [
 
                       });
 
+
                 cartCtrl.removeLine = function(lid) {
                       CartRemoveLine.initiate(lid);
                 }, function(error) {
                       catalogCtrl.error = error;
                 };
 
-                cartCtrl.updateQty = function(lid, qty) {
+                cartCtrl.updateLine = function(lid, qty, pid) {
                       if (qty > 0 )
-                            CartUpdateQty.initiate(lid, qty);
+                            CartUpdateLine.initiate(lid, qty, pid);
                       if (qty === "0")
                             CartRemoveLine.initiate(lid);
                 }, function(error) {

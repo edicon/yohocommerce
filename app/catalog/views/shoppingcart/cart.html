@@ -35,7 +35,7 @@
                     </td>
                     <td width="150px">
                       <div class="input-group">
-                        <input type="text" ng-model="o.line_quantity" ng-change="cartCtrl.updateQty(o.$id, o.line_quantity)"
+                        <input type="text" ng-model="o.line_quantity" ng-change="cartCtrl.updateLine(o.$id, o.line_quantity, o.product_id)"
                           class="form-control" style="text-align: right;">
                         <span class="input-group-btn">
                           <button class="btn btn-danger" ng-click="cartCtrl.removeLine(o.$id)" type="button"><span class="menu-icon fa fa-times"></span></button>
@@ -63,11 +63,15 @@
                   <table class="table table-bordered">
                     <tr>
                       <td class="text-right"><strong>Sub Total</strong></td>
-                      <td class="text-right">{{cartCtrl.order.total | currency}}</td>
+                      <td class="text-right">{{cartCtrl.order.sub_total | currency}}</td>
+                    </tr>
+                    <tr ng-repeat="t in cartCtrl.tax">
+                      <td class="text-right"><strong>{{t.entry_description}}</strong></td>
+                      <td class="text-right">{{cartCtrl.order.tax_total | currency}}</td>
                     </tr>
                     <tr>
                       <td class="text-right"><strong>Total</strong></td>
-                      <td class="text-right">$600.00</td>
+                      <td class="text-right">{{cartCtrl.order.total | currency}}</td>
                     </tr>
                   </table>
                 </div>
