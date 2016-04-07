@@ -78,7 +78,7 @@
                   <td ng-if="o.special_price == null" class="text-right">
                     {{o.regular_price | currency}}
                   </td>
-                  <td class="text-center"><button type="button" ng-click="catalogCtrl.removeLine(o.$id)" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button></td>
+                  <td class="text-center"><button type="button" ng-click="catalogCtrl.removeLine(o.$id, o.product_id)" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button></td>
                 </tr>
               </table>
             </li>

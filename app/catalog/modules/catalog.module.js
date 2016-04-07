@@ -309,9 +309,9 @@ angular.module('CatalogModule', [
                   return theRef.update( {items: obj.items, sub_total: obj.sub_total} );
               },
 
-              addLine: function(obj) {
-                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid+'/lines');
-                  theRef.push( {product_id: obj.$id, product_name: obj.product_name, regular_price: obj.product_price,
+              addLine: function(obj, oid) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+oid+'/lines');
+                  return theRef.push( {product_id: obj.$id, product_name: obj.product_name, regular_price: obj.product_price,
                       line_quantity: obj.product_qty, special_price: obj.special_price, product_image: obj.product_image,
                       line_total: obj.line_total} );
               },
@@ -329,14 +329,18 @@ angular.module('CatalogModule', [
                   return $firebaseArray(taxRef.child(tid).child(tgid).child('/tax_entries'));
               },
 
-              addTax: function(obj) {
+
+              updateTax: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
+                  theRef.update( {tax_total: obj.header_tax_total} );
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid+'/taxes');
-                  theRef.push( {product_id: obj.pid, tax_name: obj.tax_name, tax_total: obj.tax_total} );
+                  theRef.remove();
+                  return theRef.push( {tax_name: obj.tax_name, tax_total: obj.tax_total} );
               },
 
               updateLine: function(obj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid+'/lines/'+obj.lid);
-                  theRef.update( {line_quantity: obj.qty, line_total: obj.line_total} );
+                  return theRef.update( {line_quantity: obj.qty, line_total: obj.line_total} );
               },
 
               all: cartorders
@@ -387,37 +391,42 @@ angular.module('CatalogModule', [
 	     }
 ])
 
-.service('CartAddTax', ['CartOrders',
-        function (       CartOrders) {
-      		      this.initiate = function (theProduct) {
+.service('CartUpdateTax', ['CartOrders',
+        function (          CartOrders) {
+      		      this.initiate = function (obj, oid) {
 
                     var theTax = {};
-                    theTax.pid = theProduct.$id;
-                    theTax.oid = theProduct.oid;
-                    var theLine = {};
+                    theTax.oid = oid;
+                    theTax.header_tax_total = 0;
 
-                    var theTaxes = CartOrders.getTaxes(theProduct.product_tax_group_id);
-                          theTaxes.$loaded().then(function() {
+                    var lines = CartOrders.getLines(oid);
+                          lines.$loaded().then(function() {
 
-                                for(var i = 0; i < theTaxes.length; i++) {
+                                var taxRates = CartOrders.getTaxes(obj.product_tax_group_id);
+                                      taxRates.$loaded().then(function() {
 
-                                    if (theProduct.special_price === undefined)
-                                        theLine.price = Number(theProduct.regular_price);
-                                    else
-                                        theLine.price = Number(theProduct.special_price);
+                                              for(var i = 0; i < taxRates.length; i++) {
 
-                                    if (theTaxes[i].entry_type === "Percent")
-                                        theTax.tax_total = theLine.price * theTaxes[i].tax_rate;
-                                    else
-                                        theTax.tax_total = theLine.price + theTaxes[i].tax_rate;
+                                                    theTax.tax_total = 0;
+                                                    theTax.tax_name = taxRates[i].tax_name;
 
-                                    theTax.tax_name = theTaxes[i].tax_name;
+                                                    for(var x = 0; x < lines.length; x++) {
 
-                                    CartOrders.addTax(theTax);
+                                                          if (taxRates[i].tax_type === "Percent")
+                                                                theTax.tax_total = theTax.tax_total + (lines[x].line_total * (taxRates[i].tax_rate / 100));
+                                                          else
+                                                                theTax.tax_total = theTax.tax_total + taxRates[i].tax_rate;
 
-                                }
+                                                    }
 
-                        });
+                                                    theTax.header_tax_total = theTax.header_tax_total + theTax.tax_total;
+                                                    CartOrders.updateTax(theTax);
+
+                                              }
+
+                                      });
+
+                          });
 
                 };
 
@@ -425,8 +434,8 @@ angular.module('CatalogModule', [
 
 ])
 
-.service('CartAddOrder', ['Catalog', 'CartOrders', 'Products', 'CartAddTax', '$cookies',
-      function (           Catalog,   CartOrders,   Products,   CartAddTax,   $cookies) {
+.service('CartAddOrder', ['Catalog', 'CartOrders', 'Products', 'CartUpdateTax', '$cookies',
+      function (           Catalog,   CartOrders,   Products,   CartUpdateTax,   $cookies) {
     		    this.initiate = function (pid) {
 
                   var oid = $cookies.get('orderId');
@@ -438,7 +447,6 @@ angular.module('CatalogModule', [
 
                             var theProduct = Products.getProduct(pid);
                                   theProduct.$loaded().then(function() {
-                                        theProduct.oid = oid;
                                         theProduct.product_qty = 1;
 
                                         if (theProduct.special_price === undefined) {
@@ -451,8 +459,8 @@ angular.module('CatalogModule', [
                                         }
 
                                         CartOrders.updateHeader(theHeader);
-                                        CartOrders.addLine(theProduct);
-                                        CartAddTax.initiate(theProduct);
+                                        CartOrders.addLine(theProduct, oid);
+                                        CartUpdateTax.initiate(theProduct, oid);
 
                                   });
 
@@ -464,8 +472,8 @@ angular.module('CatalogModule', [
 
 ])
 
-.service('CartUpdateHeader', ['CartOrders', 'CartAddTax',
-        function (             CartOrders,   CartAddTax) {
+.service('CartUpdateHeader', ['CartOrders',
+        function (             CartOrders) {
       		      this.initiate = function (oid) {
 
                     var theHeader = {};
@@ -501,9 +509,10 @@ angular.module('CatalogModule', [
 
 ])
 
-.service('CartUpdateLine', ['CartOrders', 'CartUpdateHeader', 'Products', '$cookies',
-      function (             CartOrders,   CartUpdateHeader,   Products,   $cookies) {
+.service('CartUpdateLine', ['CartOrders', 'CartUpdateHeader', 'CartUpdateTax', 'Products', '$cookies',
+      function (             CartOrders,   CartUpdateHeader,   CartUpdateTax,   Products,   $cookies) {
     		      this.initiate = function (lid, qty, pid) {
+
                     var oid = $cookies.get('orderId');
                     var theLine = {};
                     theLine.qty = Number(qty);
@@ -520,6 +529,7 @@ angular.module('CatalogModule', [
 
                                 CartOrders.updateLine(theLine);
                                 CartUpdateHeader.initiate(oid);
+                                CartUpdateTax.initiate(theProduct, oid);
 
                           });
 
@@ -529,15 +539,20 @@ angular.module('CatalogModule', [
 
 ])
 
-.service('CartRemoveLine', ['CartOrders', 'CartUpdateHeader', '$cookies',
-        function (           CartOrders,   CartUpdateHeader,   $cookies) {
-      		      this.initiate = function (lid) {
+.service('CartRemoveLine', ['CartOrders', 'CartUpdateHeader', 'CartUpdateTax', 'Products', '$cookies',
+        function (           CartOrders,   CartUpdateHeader,   CartUpdateTax,   Products,   $cookies) {
+      		      this.initiate = function (lid, pid) {
                       var oid = $cookies.get('orderId');
                       var theLine = {};
                       theLine.lid = lid;
                       theLine.oid = oid;
                       CartOrders.removeLine(theLine);
                       CartUpdateHeader.initiate(oid);
+
+                      var theProduct = Products.getProduct(pid);
+                            theProduct.$loaded().then(function() {
+                                  CartUpdateTax.initiate(theProduct, oid);
+                            });
                 };
 
         }
@@ -585,7 +600,7 @@ angular.module('CatalogModule', [
                     catalogCtrl.error = error;
             };
 
-            catalogCtrl.updateline = function(lid, qty, pid) {
+            catalogCtrl.updateLine = function(lid, qty, pid) {
                   if (qty > 0 )
                         CartUpdateLine.initiate(lid, qty, pid);
                   if (qty === "0")
@@ -595,8 +610,8 @@ angular.module('CatalogModule', [
                   catalogCtrl.error = error;
             };
 
-            catalogCtrl.removeLine = function(lid) {
-                  CartRemoveLine.initiate(lid);
+            catalogCtrl.removeLine = function(lid, pid) {
+                  CartRemoveLine.initiate(lid, pid);
             }, function(error) {
                   catalogCtrl.error = error;
             };
