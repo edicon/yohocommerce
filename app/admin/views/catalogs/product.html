@@ -55,101 +55,61 @@
                     <form class="form-horizontal" role="form">
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Name</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
-                          <input type="text" ng-model="productCtrl.product.product_name" placeholder="Product Name" class="form-control">
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <input type="text" ng-model="productCtrl.product.product_name"
-                            ng-change="productCtrl.product.$save()" placeholder="Product Name" class="form-control">
+                        <div class="col-xs-8">
+                          <input type="text" ng-model="productCtrl.product.product_name" ng-change="productCtrl.updateProduct()"
+                          placeholder="Product Name" class="form-control">
                         </div>
                       </div>
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Status</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
-                          <select ng-model="productCtrl.product.product_status" class="form-control">
-                            <option value="1">Enabled</option>
-                            <option value="2">Disabled</option>
-                          </select>
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <select class="form-control" ng-model="productCtrl.product.product_status"
-                            ng-change="productCtrl.saveProductStatus()" class="form-control">
-                              <option value= "1">Enabled</option>
-                              <option value= "2">Disabled</option>
+                        <div class="col-xs-8">
+                          <select ng-model="productCtrl.product.product_status" ng-change="productCtrl.updateProduct()" class="form-control">
+                            <option value="Enabled">Enabled</option>
+                            <option value="Disabled">Disabled</option>
                           </select>
                         </div>
                       </div>
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Category</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
-                          <select ng-change="productCtrl.loadSubCategories()" ng-model="productCtrl.product.product_category_id" class="form-control">
-                            <option ng-repeat="c in productCtrl.categories" value="{{c.$id}}">{{c.category_name}}</option>
-                          </select>
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <select ng-model="productCtrl.product.product_category_id"
-                            ng-change="productCtrl.saveCategory()" class="form-control">
+                          <select ng-model="productCtrl.product.product_category_id" ng-change="productCtrl.updateProduct()" class="form-control">
                               <option ng-repeat="c in productCtrl.categories" value="{{c.$id}}">{{c.category_name}}</option>
                           </select>
                         </div>
                       </div>
                       <div class="form-group">
                         <label class="control-label col-xs-2">Sub-Category</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
-                          <select ng-model="productCtrl.product.product_sub_category_id" class="form-control">
+                        <div class="col-xs-8">
+                          <select ng-model="productCtrl.product.product_sub_category_id" ng-change="productCtrl.updateProduct()" class="form-control">
                             <option ng-repeat="s in productCtrl.subCategories" value="{{s.$id}}">{{s.category_name}}</option>
-                          </select>
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <select ng-model="productCtrl.product.product_sub_category_id"
-                            ng-change="productCtrl.product.$save()" class="form-control">
-                              <option ng-repeat="s in productCtrl.subCategories" value="{{s.$id}}">{{s.category_name}}</option>
                           </select>
                         </div>
                       </div>
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Price</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
-                          <input type="text" ng-model="productCtrl.product.product_price" placeholder="Price" class="form-control">
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <input type="text" ng-model="productCtrl.product.product_price"
-                            ng-change="productCtrl.product.$save()" placeholder="Price" class="form-control">
+                        <div class="col-xs-8">
+                          <input type="text" ng-model="productCtrl.product.product_price" ng-change="productCtrl.updateProduct()"
+                          placeholder="Price" class="form-control">
                         </div>
                       </div>
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Tax Group</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
-                          <select ng-model="productCtrl.product.product_tax_group_id" class="form-control">
-                            <option ng-repeat="t in productCtrl.taxGroups" value="{{t.$id}}">{{t.group_name}}</option>
-                          </select>
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <select ng-model="productCtrl.product.product_tax_group_id" ng-change="productCtrl.updateTaxGroup()" class="form-control">
+                          <select ng-model="productCtrl.product.product_tax_group_id" ng-change="productCtrl.updateProduct()" class="form-control">
                             <option ng-repeat="t in productCtrl.taxGroups" value="{{t.$id}}">{{t.group_name}}</option>
                           </select>
                         </div>
                       </div>
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Description</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                        <div class="col-xs-8">
                           <textarea class="tinyMCE" ui-tinymce="productCtrl.tinymceOptions"
-                            ng-model="productCtrl.product.product_description"></textarea>
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <textarea class="tinyMCE" ui-tinymce="productCtrl.tinymceOptions"
-                            ng-change="productCtrl.product.$save()" ng-model="productCtrl.product.product_description"></textarea>
+                            ng-model="productCtrl.product.product_description" ng-change="productCtrl.updateProduct()"> </textarea>
                         </div>
                       </div>
                       <div class="form-group">
                         <label class="control-label col-xs-2">Specification</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
+                        <div class="col-xs-8">
                           <textarea class="tinyMCE" ui-tinymce="productCtrl.tinymceOptions"
-                            ng-model="productCtrl.product.product_specification"></textarea>
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <textarea class="tinyMCE" ui-tinymce="productCtrl.tinymceOptions"
-                            ng-change="productCtrl.product.$save()" ng-model="productCtrl.product.product_specification" ></textarea>
+                            ng-model="productCtrl.product.product_specification" ng-change="productCtrl.updateProduct()"></textarea>
                         </div>
                       </div>
                     </form>
@@ -164,104 +124,60 @@
                     <form class="form-horizontal" role="form">
                       <div class="form-group">
                         <label class="control-label col-xs-3">Stock Keeping Unit (SKU)</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
-                          <input type="text" ng-model="productCtrl.product.product_sku"
+                        <div class="col-xs-8">
+                          <input type="text" ng-model="productCtrl.product.product_sku" ng-change="productCtrl.updateProduct()"
                             placeholder="Stock Keeping Unit (SKU)" class="form-control">
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <input type="text" ng-model="productCtrl.product.product_sku"
-                            ng-change="productCtrl.product.$save()" placeholder="Stock Keeping Unit (SKU)" class="form-control">
                         </div>
                       </div>
                       <div class="form-group">
                         <label class="control-label col-xs-3">Universal Product Code (UPC)</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
-                          <input type="text" ng-model="productCtrl.product.product_upc"
+                        <div class="col-xs-8">
+                          <input type="text" ng-model="productCtrl.product.product_upc" ng-change="productCtrl.updateProduct()"
                             placeholder="Universal Product Code (UPC)" class="form-control">
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <input type="text" ng-model="productCtrl.product.product_upc"
-                            ng-change="productCtrl.product.$save()" placeholder="Universal Product Code (UPC)" class="form-control">
                         </div>
                       </div>
                       <div class="form-group">
                         <label class="control-label col-xs-3">Manufacturer Part Number (MPN)</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
-                          <input type="text" ng-model="productCtrl.product.product_mpn"
+                        <div class="col-xs-8">
+                          <input type="text" ng-model="productCtrl.product.product_mpn" ng-change="productCtrl.updateProduct()"
                             placeholder="Manufacturer Part Number (MPN)" class="form-control">
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <input type="text" ng-model="productCtrl.product.product_mpn"
-                            ng-change="productCtrl.product.$save()" placeholder="Manufacturer Part Number (MPN)" class="form-control">
                         </div>
                       </div>
                       <div class="form-group">
                         <label class="control-label col-xs-3">Dimensions</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-2">
-                          <input type="text" ng-model="productCtrl.product.product_length" placeholder="Length" class="form-control">
+                        <div class="col-xs-2">
+                          <input type="text" ng-model="productCtrl.product.product_length" ng-change="productCtrl.updateProduct()"
+                          placeholder="Length" class="form-control">
                           <span class="help-block" align="left">Length</span>
                         </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                          <input type="text" ng-model="productCtrl.product.product_length"
-                            ng-change="productCtrl.product.$save()" placeholder="Length" class="form-control">
-                          <span class="help-block" align="left">Length</span>
-                        </div>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-2">
-                          <input type="text" ng-model="productCtrl.product.product_width" placeholder="Width" class="form-control">
+                        <div class="col-xs-2">
+                          <input type="text" ng-model="productCtrl.product.product_width" ng-change="productCtrl.updateProduct()"
+                          placeholder="Width" class="form-control">
                           <span class="help-block" align="left">Width</span>
                         </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                          <input type="text" ng-model="productCtrl.product.product_width"
-                            ng-change="productCtrl.product.$save()" placeholder="Width" class="form-control">
-                          <span class="help-block" align="left">Width</span>
-                        </div>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-2">
-                          <input type="text" ng-model="productCtrl.product.product_height" placeholder="Height" class="form-control">
+                        <div class="col-xs-2">
+                          <input type="text" ng-model="productCtrl.product.product_height" ng-change="productCtrl.updateProduct()"
+                          placeholder="Height" class="form-control">
                           <span class="help-block" align="left">Height</span>
                         </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                          <input type="text" ng-model="productCtrl.product.product_height"
-                            ng-change="productCtrl.product.$save()" placeholder="Height" class="form-control">
-                          <span class="help-block" align="left">Height</span>
-                        </div>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-2">
-                          <select ng-model="productCtrl.product.product_unit_of_measure" class="form-control">
+                        <div class="col-xs-2">
+                          <select ng-model="productCtrl.product.product_unit_of_measure" ng-change="productCtrl.updateProduct()"
+                          class="form-control">
                             <option value="Centimeter">Centimeter</option>
                             <option value="Millimeter">Millimeter</option>
                             <option value="inch">Inch</option>
                           </select>
                           <span class="help-block" align="left">Unit of Measure</span>
                         </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                          <select ng-model="productCtrl.product.product_unit_of_measure"
-                            ng-change="productCtrl.product.$save()" class="form-control">
-                            <option value="Centimeter">Centimeter</option>
-                            <option value="Millimeter">Millimeter</option>
-                            <option value="Inch">Inch</option>
-                          </select>
-                          <span class="help-block" align="left">Unit of Measure</span>
-                        </div>
                       </div>
                       <div class="form-group">
                         <label class="control-label col-xs-3">Weight</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-2">
-                          <input type="text" ng-model="productCtrl.product.product_weight" placeholder="Weight" class="form-control">
+                        <div class="col-xs-2">
+                          <input type="text" ng-model="productCtrl.product.product_weight" ng-change="productCtrl.updateProduct()"
+                          placeholder="Weight" class="form-control">
                         </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-2">
-                          <input type="text" ng-model="productCtrl.product.product_weight"
-                            ng-change="productCtrl.product.$save()" placeholder="Weight" class="form-control">
-                        </div>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-6">
-                          <select ng-model="productCtrl.product.product_unit_of_weight" class="form-control">
-                            <option value="Kilogram">Kilogram</option>
-                            <option value="Gram">Gram</option>
-                            <option value="Pound">Pound</option>
-                            <option value="Ounce">Ounce</option>
-                          </select>
-                          <span class="help-block" align="left">Unit of Weight</span>
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-6">
-                          <select ng-model="productCtrl.product.product_unit_of_weight" ng-change="productCtrl.product.$save()" class="form-control">
+                        <div class="col-xs-6">
+                          <select ng-model="productCtrl.product.product_unit_of_weight" ng-change="productCtrl.updateProduct()" class="form-control">
                             <option value="Kilogram">Kilogram</option>
                             <option value="Gram">Gram</option>
                             <option value="Pound">Pound</option>
