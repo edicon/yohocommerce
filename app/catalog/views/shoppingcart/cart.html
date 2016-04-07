@@ -31,14 +31,14 @@
                     <td class="text-left">
                       <a href="" ng-click="cartCtrl.goProduct(o.product_id)">{{o.product_name}}</a>
                       <br>
-                      <small>Reward points</small>
+                      <small>Reward points: {{o.reward_points_total}}</small>
                     </td>
                     <td width="150px">
                       <div class="input-group">
                         <input type="text" ng-model="o.line_quantity" ng-change="cartCtrl.updateLine(o.$id, o.line_quantity, o.product_id)"
                           class="form-control" style="text-align: right;">
                         <span class="input-group-btn">
-                          <button class="btn btn-danger" ng-click="cartCtrl.removeLine(o.$id)" type="button"><span class="menu-icon fa fa-times"></span></button>
+                          <button class="btn btn-danger" ng-click="cartCtrl.removeLine(o.$id, o.product_id)" type="button"><span class="menu-icon fa fa-times"></span></button>
                         </span>
                       </div>
                     </td>
@@ -56,29 +56,29 @@
           </form>
 
           <div class="row">
-              <h4>Choose if you have a coupon or gift voucher you would like to use.</h4>
-
-
-                <div class="col-sm-4 col-sm-offset-8">
-                  <table class="table table-bordered">
-                    <tr>
-                      <td class="text-right"><strong>Sub Total</strong></td>
-                      <td class="text-right">{{cartCtrl.order.sub_total | currency}}</td>
-                    </tr>
-                    <tr ng-repeat="t in cartCtrl.tax">
-                      <td class="text-right"><strong>{{t.entry_description}}</strong></td>
-                      <td class="text-right">{{cartCtrl.order.tax_total | currency}}</td>
-                    </tr>
-                    <tr>
-                      <td class="text-right"><strong>Total</strong></td>
-                      <td class="text-right">{{cartCtrl.order.total | currency}}</td>
-                    </tr>
-                  </table>
-                </div>
+            <h4>Choose if you have a coupon or gift voucher you would like to use.</h4>
+            <div class="col-sm-4 col-sm-offset-8">
+              <table class="table table-bordered">
+                <tr>
+                  <td class="text-right"><strong>Sub Total</strong></td>
+                  <td class="text-right">{{cartCtrl.order.sub_total | currency}}</td>
+                </tr>
+                <tr ng-repeat="t in cartCtrl.taxes">
+                  <td class="text-right"><strong>{{t.tax_name}}</strong></td>
+                  <td class="text-right">{{t.tax_total | currency}}</td>
+                </tr>
+                <tr>
+                  <td class="text-right"><strong>Total</strong></td>
+                  <td class="text-right">{{cartCtrl.order.total | currency}}</td>
+                </tr>
+              </table>
+            </div>
           </div>
-          <div class="buttons">
-            <div class="pull-left"><a href="" class="btn btn-default">Continue Shopping</a></div>
-            <div class="pull-right"><a href="" class="btn btn-primary">Checkout</a></div>
+          <div class="row">
+            <div class="buttons">
+              <div class="pull-left"><a href="" class="btn btn-default">Continue Shopping</a></div>
+              <div class="pull-right"><a href="" class="btn btn-primary">Checkout</a></div>
+            </div>
           </div>
         </div>
       </div>

@@ -309,11 +309,16 @@ angular.module('CatalogModule', [
                   return theRef.update( {items: obj.items, sub_total: obj.sub_total} );
               },
 
+              updateHeaderTotal: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
+                  return theRef.update( {total: obj.total} );
+              },
+
               addLine: function(obj, oid) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+oid+'/lines');
                   return theRef.push( {product_id: obj.$id, product_name: obj.product_name, regular_price: obj.product_price,
                       line_quantity: obj.product_qty, special_price: obj.special_price, product_image: obj.product_image,
-                      line_total: obj.line_total} );
+                      line_total: obj.line_total, reward_points_total: obj.reward_points_total} );
               },
 
               removeLine: function(obj) {
@@ -324,8 +329,11 @@ angular.module('CatalogModule', [
               getLines: function(oid) {
                   return $firebaseArray(ref.child(tid).child(oid).child('/lines'));
               },
+              getTaxes: function(oid) {
+                  return $firebaseArray(ref.child(tid).child(oid).child('/taxes'));
+              },
 
-              getTaxes: function(tgid) {
+              getTaxRates: function(tgid) {
                   return $firebaseArray(taxRef.child(tid).child(tgid).child('/tax_entries'));
               },
 
@@ -340,7 +348,7 @@ angular.module('CatalogModule', [
 
               updateLine: function(obj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid+'/lines/'+obj.lid);
-                  return theRef.update( {line_quantity: obj.qty, line_total: obj.line_total} );
+                  return theRef.update( {line_quantity: obj.qty, line_total: obj.line_total, reward_points_total: obj.reward_points_total} );
               },
 
               all: cartorders
@@ -391,87 +399,6 @@ angular.module('CatalogModule', [
 	     }
 ])
 
-.service('CartUpdateTax', ['CartOrders',
-        function (          CartOrders) {
-      		      this.initiate = function (obj, oid) {
-
-                    var theTax = {};
-                    theTax.oid = oid;
-                    theTax.header_tax_total = 0;
-
-                    var lines = CartOrders.getLines(oid);
-                          lines.$loaded().then(function() {
-
-                                var taxRates = CartOrders.getTaxes(obj.product_tax_group_id);
-                                      taxRates.$loaded().then(function() {
-
-                                              for(var i = 0; i < taxRates.length; i++) {
-
-                                                    theTax.tax_total = 0;
-                                                    theTax.tax_name = taxRates[i].tax_name;
-
-                                                    for(var x = 0; x < lines.length; x++) {
-
-                                                          if (taxRates[i].tax_type === "Percent")
-                                                                theTax.tax_total = theTax.tax_total + (lines[x].line_total * (taxRates[i].tax_rate / 100));
-                                                          else
-                                                                theTax.tax_total = theTax.tax_total + taxRates[i].tax_rate;
-
-                                                    }
-
-                                                    theTax.header_tax_total = theTax.header_tax_total + theTax.tax_total;
-                                                    CartOrders.updateTax(theTax);
-
-                                              }
-
-                                      });
-
-                          });
-
-                };
-
-        }
-
-])
-
-.service('CartAddOrder', ['Catalog', 'CartOrders', 'Products', 'CartUpdateTax', '$cookies',
-      function (           Catalog,   CartOrders,   Products,   CartUpdateTax,   $cookies) {
-    		    this.initiate = function (pid) {
-
-                  var oid = $cookies.get('orderId');
-
-                  var theHeader = CartOrders.getOrder(oid);
-                      theHeader.$loaded().then(function() {
-                            theHeader.items = theHeader.items + 1;
-                            theHeader.oid = oid;
-
-                            var theProduct = Products.getProduct(pid);
-                                  theProduct.$loaded().then(function() {
-                                        theProduct.product_qty = 1;
-
-                                        if (theProduct.special_price === undefined) {
-                                              theProduct.special_price = null;
-                                              theProduct.line_total = theProduct.product_price;
-                                              theHeader.sub_total = theHeader.sub_total + theProduct.product_price;
-                                        } else {
-                                              theProduct.line_total = theProduct.special_price;
-                                              theHeader.sub_total = theHeader.sub_total + theProduct.special_price;
-                                        }
-
-                                        CartOrders.updateHeader(theHeader);
-                                        CartOrders.addLine(theProduct, oid);
-                                        CartUpdateTax.initiate(theProduct, oid);
-
-                                  });
-
-                      });
-
-            };
-
-      }
-
-])
-
 .service('CartUpdateHeader', ['CartOrders',
         function (             CartOrders) {
       		      this.initiate = function (oid) {
@@ -509,9 +436,105 @@ angular.module('CatalogModule', [
 
 ])
 
+.service('CartUpdateTax', ['CartOrders',
+        function (          CartOrders) {
+      		      this.initiate = function (obj, oid) {
+
+                    var theTax = {};
+                    theTax.oid = oid;
+                    theTax.header_tax_total = 0;
+
+                    var lines = CartOrders.getLines(oid);
+                          lines.$loaded().then(function() {
+
+                                var taxRates = CartOrders.getTaxRates(obj.product_tax_group_id);
+                                      taxRates.$loaded().then(function() {
+
+                                              for(var i = 0; i < taxRates.length; i++) {
+
+                                                    theTax.tax_total = 0;
+                                                    theTax.tax_name = taxRates[i].tax_name;
+
+                                                    for(var x = 0; x < lines.length; x++) {
+
+                                                          if (taxRates[i].tax_type === "Percent")
+                                                                theTax.tax_total = theTax.tax_total + (lines[x].line_total * (taxRates[i].tax_rate / 100));
+                                                          else
+                                                                theTax.tax_total = theTax.tax_total + taxRates[i].tax_rate;
+
+                                                    }
+
+                                                    theTax.header_tax_total = theTax.header_tax_total + theTax.tax_total;
+                                                    CartOrders.updateTax(theTax);
+
+                                              }
+
+                                              var theOrder = CartOrders.getOrder(oid);
+                                                    theOrder.$loaded().then(function() {
+                                                          var theHeader = {}
+                                                          theHeader.oid = oid;
+                                                          theHeader.total = theOrder.sub_total + theTax.header_tax_total;
+                                                          CartOrders.updateHeaderTotal(theHeader);
+
+                                                    });
+
+                                      });
+
+                          });
+
+                };
+
+        }
+
+])
+
+.service('CartAddOrder', ['Catalog', 'CartOrders', 'Products', 'CartUpdateTax', '$cookies',
+      function (           Catalog,   CartOrders,   Products,   CartUpdateTax,   $cookies) {
+    		    this.initiate = function (pid) {
+
+                  var storeDefaults = Catalog.storeDefaults;
+
+                  var oid = $cookies.get('orderId');
+
+                  var theHeader = CartOrders.getOrder(oid);
+                      theHeader.$loaded().then(function() {
+                            theHeader.items = theHeader.items + 1;
+                            theHeader.oid = oid;
+
+                            var theProduct = Products.getProduct(pid);
+                                  theProduct.$loaded().then(function() {
+                                        theProduct.product_qty = 1;
+
+                                        if (theProduct.special_price === undefined) {
+                                              theProduct.special_price = null;
+                                              theProduct.line_total = theProduct.product_price;
+                                              theHeader.sub_total = theHeader.sub_total + theProduct.product_price;
+                                        } else {
+                                              theProduct.line_total = theProduct.special_price;
+                                              theHeader.sub_total = theHeader.sub_total + theProduct.special_price;
+                                        }
+
+                                        theProduct.reward_points_total = theProduct.line_total * storeDefaults.store_points_per_dollar;
+
+                                        CartOrders.updateHeader(theHeader);
+                                        CartOrders.addLine(theProduct, oid);
+                                        CartUpdateTax.initiate(theProduct, oid);
+
+                                  });
+
+                      });
+
+            };
+
+      }
+
+])
+
+
+
 .service('CartUpdateLine', ['CartOrders', 'CartUpdateHeader', 'CartUpdateTax', 'Products', '$cookies',
       function (             CartOrders,   CartUpdateHeader,   CartUpdateTax,   Products,   $cookies) {
-    		      this.initiate = function (lid, qty, pid) {
+    		      this.initiate = function (lid, qty, pid, points_per_dollar) {
 
                     var oid = $cookies.get('orderId');
                     var theLine = {};
@@ -526,6 +549,8 @@ angular.module('CatalogModule', [
                                       theLine.line_total = theProduct.product_price * theLine.qty;
                                 else
                                       theLine.line_total = theProduct.special_price * theLine.qty;
+
+                                theLine.reward_points_total = theLine.line_total * points_per_dollar;
 
                                 CartOrders.updateLine(theLine);
                                 CartUpdateHeader.initiate(oid);
@@ -602,7 +627,7 @@ angular.module('CatalogModule', [
 
             catalogCtrl.updateLine = function(lid, qty, pid) {
                   if (qty > 0 )
-                        CartUpdateLine.initiate(lid, qty, pid);
+                        CartUpdateLine.initiate(lid, qty, pid, catalogCtrl.store.store_points_per_dollar);
                   if (qty === "0")
                         CartRemoveLine.initiate(lid);
 
@@ -781,17 +806,24 @@ angular.module('CatalogModule', [
 .controller('CartCtrl', ['Catalog', 'CartOrders', 'CartUpdateLine', 'CartRemoveLine', '$cookies',
         function (        Catalog,   CartOrders,   CartUpdateLine,   CartRemoveLine,   $cookies) {
                 var cartCtrl = this;
-  //              cartCtrl.store = Catalog.storeDefaults;
-                var orderId = $cookies.get('orderId');
-                cartCtrl.order = {};
+                cartCtrl.store = Catalog.storeDefaults;
+                var oid = $cookies.get('orderId');
+//                cartCtrl.order = {};
 
-                var theOrder = CartOrders.getOrder(orderId)
+                var theOrder = CartOrders.getOrder(oid)
                       theOrder.$loaded().then(function() {
                             cartCtrl.order = theOrder;
+                            cartCtrl.order.total = theOrder.sub_total + theOrder.tax_total;
 
-                            var theLines = CartOrders.getLines(orderId)
+                            var theLines = CartOrders.getLines(oid)
                                   theLines.$loaded().then(function() {
                                         cartCtrl.lines = theLines;
+
+                                        var theTaxes = CartOrders.getTaxes(oid)
+                                              theTaxes.$loaded().then(function() {
+                                                    cartCtrl.taxes = theTaxes;
+                                              });
+
                                   });
 
                       });
@@ -805,9 +837,9 @@ angular.module('CatalogModule', [
 
                 cartCtrl.updateLine = function(lid, qty, pid) {
                       if (qty > 0 )
-                            CartUpdateLine.initiate(lid, qty, pid);
+                            CartUpdateLine.initiate(lid, qty, pid, cartCtrl.store.store_points_per_dollar);
                       if (qty === "0")
-                            CartRemoveLine.initiate(lid);
+                            CartRemoveLine.initiate(lid, pid);
                 }, function(error) {
                       cartCtrl.error = error;
                 };
