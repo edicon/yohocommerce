@@ -63,8 +63,7 @@
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Status</label>
                         <div class="col-xs-8">
-                          <select ng-model="productCtrl.product.product_status" ng-change="productCtrl.
-                          " class="form-control">
+                          <select ng-model="productCtrl.product.product_status" ng-change="productCtrl.updateProduct()" class="form-control">
                             <option value="Enabled">Enabled</option>
                             <option value="Disabled">Disabled</option>
                           </select>
@@ -72,14 +71,7 @@
                       </div>
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Category</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
-                          <select ng-change="productCtrl.loadSubCategories()" ng-model="productCtrl.product.product_category_id" class="form-control">
-                            <option ng-repeat="c in productCtrl.categories" value="{{c.$id}}">{{c.category_name}}</option>
-                          </select>
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <select ng-model="productCtrl.product.product_category_id"
-                            ng-change="productCtrl.saveCategory()" class="form-control">
+                          <select ng-model="productCtrl.product.product_category_id" ng-change="productCtrl.updateProduct()" class="form-control">
                               <option ng-repeat="c in productCtrl.categories" value="{{c.$id}}">{{c.category_name}}</option>
                           </select>
                         </div>
@@ -101,13 +93,7 @@
                       </div>
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Tax Group</label>
-                        <div ng-if="productCtrl.product.pid === null" class="col-xs-8">
-                          <select ng-model="productCtrl.product.product_tax_group_id" class="form-control">
-                            <option ng-repeat="t in productCtrl.taxGroups" value="{{t.$id}}">{{t.group_name}}</option>
-                          </select>
-                        </div>
-                        <div ng-if="productCtrl.product.pid !== null" class="col-xs-8">
-                          <select ng-model="productCtrl.product.product_tax_group_id" ng-change="productCtrl.updateTaxGroup()" class="form-control">
+                          <select ng-model="productCtrl.product.product_tax_group_id" ng-change="productCtrl.updateProduct()" class="form-control">
                             <option ng-repeat="t in productCtrl.taxGroups" value="{{t.$id}}">{{t.group_name}}</option>
                           </select>
                         </div>
