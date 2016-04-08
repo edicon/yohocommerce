@@ -466,8 +466,8 @@ angular.module('SystemModule', [
 
               addTaxGroup: function(theObj) {
                   var theRef = new Firebase(FirebaseUrl+'tax_groups/'+tid+'/'+theObj.gid+'/tax_entries/');
-                  return theRef.push({ entry_description: theObj.entry_description, entry_rate: theObj.entry_rate,
-                      entry_type: theObj.entry_type, entry_based_on: theObj.entry_based_on});
+                  return theRef.push({ tax_description: theObj.tax_description, tax_name: theObj.tax_name,
+                      tax_rate: theObj.tax_rate, tax_type: theObj.tax_type, tax_based_on: theObj.tax_based_on});
               },
 
               getTaxGroup: function(gid) {
@@ -780,8 +780,13 @@ angular.module('SystemModule', [
             };
 
             storeCtrl.updateStore = function() {
+<<<<<<< HEAD
                 if (storeCtrl.sid != null)
                     storeCtrl.store.$save();
+=======
+                  if (storeCtrl.store != null)
+                      storeCtrl.store.$save();
+>>>>>>> master
             }, function(error) {
                   storeCtrl.error = error;
             };
@@ -1044,6 +1049,7 @@ angular.module('SystemModule', [
             localizationCtrl.return_reason = {};
 
             localizationCtrl.addTax = function() {
+                  localizationCtrl.tax.tax_rate = Number(localizationCtrl.tax.tax_rate);
                   Taxes.addTax(localizationCtrl.tax);
                   localizationCtrl.tax.tax_name = null;
                   localizationCtrl.tax.tax_rate = null;
@@ -1079,7 +1085,7 @@ angular.module('SystemModule', [
 
             localizationCtrl.updateTaxRate = function(name, rate, type) {
                   localizationCtrl.tax_group.group_label = name+' - '+rate+' '+type;
-                  localizationCtrl.tax_group.group_tax_rate = rate;
+                  localizationCtrl.tax_group.group_tax_rate = Number(rate);
                   localizationCtrl.tax_group.group_tax_rate_type = type;
             }, function(error) {
                   localizationCtrl.error = error;
@@ -1183,7 +1189,7 @@ angular.module('SystemModule', [
 
             localizationCtrl.addLengthUnit = function() {
                   LengthUnits.addLengthUnit(localizationCtrl.length_unit);
-                  localizationCtrl.length_unit.unit_title = null;
+                  localizationCtrl.length_unit.unit_name = null;
                   localizationCtrl.length_unit.unit_abbreviation = null;
             }, function(error) {
                   localizationCtrl.error = error;
@@ -1200,7 +1206,7 @@ angular.module('SystemModule', [
                   enableCellEditOnFocus: true,
                   data: LengthUnits.all,
                   columnDefs: [
-                        { name:'unitTitle', field: 'unit_title', enableHiding: false },
+                        { name:'unitName', field: 'unit_name', enableHiding: false },
                         { name:'unitAbbreviation', field: 'unit_abbreviation', enableHiding: false },
                         { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeLengthUnit.html',
                           width: 35, enableCellEdit: false, enableColumnMenu: false }
@@ -1209,7 +1215,7 @@ angular.module('SystemModule', [
 
             localizationCtrl.addWeightUnit = function() {
                   WeightUnits.addWeightUnit(localizationCtrl.weight_unit);
-                  localizationCtrl.weight_unit.unit_title = null;
+                  localizationCtrl.weight_unit.unit_name = null;
                   localizationCtrl.weight_unit.unit_abbreviation = null;
             }, function(error) {
                   localizationCtrl.error = error;
@@ -1226,7 +1232,7 @@ angular.module('SystemModule', [
                   enableCellEditOnFocus: true,
                   data: WeightUnits.all,
                   columnDefs: [
-                        { name:'unitTitle', field: 'unit_title', enableHiding: false },
+                        { name:'unitName', field: 'unit_name', enableHiding: false },
                         { name:'unitAbbreviation', field: 'unit_abbreviation', enableHiding: false },
                         { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeWeightUnit.html',
                           width: 35, enableCellEdit: false, enableColumnMenu: false }
@@ -1294,23 +1300,24 @@ angular.module('SystemModule', [
 
             taxgroupCtrl.addTaxGroup = function() {
                   TaxGroup.addTaxGroup(taxgroupCtrl.tax_group);
-                  taxgroupCtrl.tax_group.entry_description = null;
-                  taxgroupCtrl.tax_group.entry_rate = null;
-                  taxgroupCtrl.tax_group.entry_based_on = null;
+                  taxgroupCtrl.tax_group.tax_description = null;
+                  taxgroupCtrl.tax_group.tax_rate = null;
+                  taxgroupCtrl.tax_group.tax_based_on = null;
             }, function(error) {
                   taxgroupCtrl.error = error;
             };
 
             taxgroupCtrl.updateTaxRate = function(name, rate, type) {
-                  taxgroupCtrl.tax_group.entry_rate = rate;
-                  taxgroupCtrl.tax_group.entry_type = type;
-                  taxgroupCtrl.tax_group.entry_description = name + ' - ' + rate + ' ' + type;
+                  taxgroupCtrl.tax_group.tax_name = name;
+                  taxgroupCtrl.tax_group.tax_rate = rate / 100;
+                  taxgroupCtrl.tax_group.tax_type = type;
+                  taxgroupCtrl.tax_group.tax_description = name + ' - ' + rate + ' ' + type;
             }, function(error) {
                   taxgroupCtrl.error = error;
             };
 
             taxgroupCtrl.updateGroupBasedOn = function(type) {
-                  taxgroupCtrl.tax_group.entry_based_on = type;
+                  taxgroupCtrl.tax_group.tax_based_on = type;
             }, function(error) {
                   taxgroupCtrl.error = error;
             };
@@ -1328,8 +1335,8 @@ angular.module('SystemModule', [
                   enableSorting: true,
                   enableCellEditOnFocus: true,
                   columnDefs: [
-                        { name:'taxDescription', field: 'entry_description', width: '30%', enableHiding: false },
-                        { name:'basedOn', field: 'entry_based_on', enableHiding: false },
+                        { name:'taxDescription', field: 'tax_description', width: '30%', enableHiding: false },
+                        { name:'basedOn', field: 'tax_based_on', enableHiding: false },
                         { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeTaxGroup.html',
                           width: 35, enableCellEdit: false, enableColumnMenu: false }
                   ]
