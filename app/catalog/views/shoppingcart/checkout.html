@@ -3,36 +3,102 @@
     <div class="col-sm-12">
       <ul class="breadcrumb">
         <li><a href="#" ui-sref="catalog.home"><i class="menu-icon fa fa-home"></i></a></li>
-        <li><a href="#/cart" ui-sref="catalog.login">Shopping Cart</a></li>
+        <li><a href="#/cart" ui-sref="catalog.cart">Shopping Cart</a></li>
+        <li><a href="#/cart" ui-sref="catalog.cart">Checkout</a></li>
       </ul>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-sm-6">
-      <div class="well">
-        <h2>Shopping Cart</h2>
-        <p><strong>Register Account</strong></p>
-        <p>By creating an account you will be able to shop faster, be up to date on an order's status, and keep track of the orders you have previously made.</p>
-        <a href="/register" ui-sref="catalog.register" class="btn btn-primary">Continue</a>
-      </div>
-    </div>
-    <div class="col-sm-6">
-      <div class="well">
-        <h2>Returning Customer</h2>
-        <p><strong>I am a returning customer</strong></p>
-        <form ng-submit="authCtrl.accountLogin()">
-          <p ng-show="authCtrl.error" class="text-danger">{{ loginCtrl.error.message }}</p>
-          <div class="form-group">
-            <label class="control-label">E-Mail Address</label>
-            <input type="email" placeholder="Email" class="form-control" ng-model="authCtrl.user.email" >
+      <h2>Checkout</h2>
+      <div class="row">
+        <div ng-if="cartCtrl.order.items == 0">
+          <h4>Your shopping cart is empty.</h4>
+        </div>
+        <div ng-if="cartCtrl.order.items > 0">
+          <form>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <td class="text-center">Image</td>
+                    <td class="text-left">Product</td>
+                    <td class="text-right">Quantity</td>
+                    <td class="text-right">Unit Price</td>
+                    <td class="text-right">Total</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="o in cartCtrl.lines">
+                    <td class="text-center">
+                      <a href="" ng-click="cartCtrl.goProduct(o.product_id)"><img ng-src="{{o.product_image}}" width="35px" height="35px"></a>
+                    </td>
+                    <td class="text-left">
+                      <a href="" ng-click="cartCtrl.goProduct(o.product_id)">{{o.product_name}}</a>
+                      <br>
+                      <small>Reward points: {{o.reward_points_total}}</small>
+                    </td>
+                    <td width="150px">
+                      <div class="input-group">
+                        <input type="text" ng-model="o.line_quantity" ng-change="cartCtrl.updateLine(o.$id, o.line_quantity, o.product_id)"
+                          class="form-control" style="text-align: right;">
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger" ng-click="cartCtrl.removeLine(o.$id, o.product_tax_group_id)" type="button"><span class="menu-icon fa fa-times"></span></button>
+                        </span>
+                      </div>
+                    </td>
+                    <td ng-if="o.special_price" class="text-right">
+                      {{o.special_price | currency}}
+                    </td>
+                    <td ng-if="o.special_price == null" class="text-right">
+                      {{o.regular_price | currency}}
+                    </td>
+                    <td class="text-right">{{o.line_total | currency}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </form>
+
+          <div class="row">
+            <h4>Choose if you have a coupon or gift voucher you would like to use.</h4>
+
+            <uib-accordion>
+                <uib-accordion-group>
+                  <uib-accordion-heading>
+                    Use Coupon Code <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                  </uib-accordion-heading>
+                  This is just some content to illustrate fancy headings.
+                </uib-accordion-group>
+                <uib-accordion-group>
+                  <uib-accordion-heading>
+                    Use Gift Voucher <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                  </uib-accordion-heading>
+                  This is just some content to illustrate fancy headings.
+                </uib-accordion-group>
+              </uib-accordion>
+
+
+            <div class="col-sm-4 col-sm-offset-8">
+              <table class="table table-bordered">
+                <tr>
+                  <td class="text-right"><strong>Sub Total</strong></td>
+                  <td class="text-right">{{cartCtrl.order.sub_total | currency}}</td>
+                </tr>
+                <tr ng-repeat="t in cartCtrl.taxes">
+                  <td class="text-right"><strong>{{t.tax_name}}</strong></td>
+                  <td class="text-right">{{t.tax_total | currency}}</td>
+                </tr>
+                <tr>
+                  <td class="text-right"><strong>Total</strong></td>
+                  <td class="text-right">{{cartCtrl.order.total | currency}}</td>
+                </tr>
+              </table>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="control-label">Password</label>
-            <input type="password" placeholder="Password" class="form-control" ng-model="authCtrl.user.password">
-            <a href="#">Forgot Password</a>
+          <div class="row">
+            <div class="buttons">
+              <div class="pull-left"><a href="" class="btn btn-default">Continue Shopping</a></div>
+              <div class="pull-right"><a href="" class="btn btn-primary">Checkout</a></div>
+            </div>
           </div>
-          <input class="btn btn-primary" type="submit" value="Login">
-        </form>
+        </div>
       </div>
     </div>
   </div>

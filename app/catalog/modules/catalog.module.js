@@ -132,7 +132,7 @@ angular.module('CatalogModule', [
                         templateUrl: 'catalog/views/common/header.html'
                     },
                     "main@catalog": {
-                        controller: 'CheckoutCtrl as checkoutCtrl',
+                        controller: 'CartCtrl as cartCtrl',
                         templateUrl: 'catalog/views/shoppingcart/checkout.html'
                     },
                     "footer@catalog": {
