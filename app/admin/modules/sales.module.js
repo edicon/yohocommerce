@@ -671,6 +671,13 @@ angular.module('SalesModule', [
               ]
           };
 
+          customerCtrl.updateCustomer = function() {
+            if (customerCtrl.cid != null)
+                customerCtrl.customer.$save();
+          }, function(error) {
+                storeCtrl.error = error;
+          };
+
           customerCtrl.saveCustomerStatus = function() {
                 customerCtrl.getStatus();
                 customerCtrl.customer.$save();

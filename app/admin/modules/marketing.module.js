@@ -274,6 +274,13 @@ angular.module('MarketingModule', [
                     AlertService.addError(error.message);
               };
 
+              affiliateCtrl.updateAffiliate = function() {
+                if (affiliateCtrl.aid != null)
+                    affiliateCtrl.affiliate.$save();
+              }, function(error) {
+                    storeCtrl.error = error;
+              };
+
               affiliateCtrl.addTransaction = function() {
                     affiliateCtrl.transaction.aid = affiliateCtrl.aid;
                     Transactions.addTransaction(affiliateCtrl.transaction);
@@ -296,15 +303,15 @@ angular.module('MarketingModule', [
 
               affiliateCtrl.next = function() {
 
-                    if (affiliateCtrl.count > 0) {
-                          key = affiliateCtrl.affiliateIndex;
+                  if (affiliateCtrl.count > 0) {
+                      var key = affiliateCtrl.affiliateIndex;
 
-                            if (key < affiliateCtrl.count - 1) {
-                                  key = affiliateCtrl.affiliateIndex + 1;
-                                  var aid = Affiliate.getKey(key);
-                                  affiliateCtrl.loadAffiliate(aid);
-                            }
-                    }
+                  if (key < affiliateCtrl.count - 1) {
+                      key = affiliateCtrl.affiliateIndex + 1;
+                      var aid = Affiliate.getKey(key);
+                      affiliateCtrl.loadAffiliate(aid);
+                      }
+                  }
 
               }, function(error) {
                     affiliateCtrl.error = error;
