@@ -38,7 +38,7 @@
                         <input type="text" ng-model="o.line_quantity" ng-change="cartCtrl.updateLine(o.$id, o.line_quantity, o.product_id)"
                           class="form-control" style="text-align: right;">
                         <span class="input-group-btn">
-                          <button class="btn btn-danger" ng-click="cartCtrl.removeLine(o.$id, o.product_id)" type="button"><span class="menu-icon fa fa-times"></span></button>
+                          <button class="btn btn-danger" ng-click="cartCtrl.removeLine(o.$id, o.product_tax_group_id)" type="button"><span class="menu-icon fa fa-times"></span></button>
                         </span>
                       </div>
                     </td>
@@ -57,6 +57,23 @@
 
           <div class="row">
             <h4>Choose if you have a coupon or gift voucher you would like to use.</h4>
+
+            <uib-accordion>
+                <uib-accordion-group>
+                  <uib-accordion-heading>
+                    Use Coupon Code <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                  </uib-accordion-heading>
+                  This is just some content to illustrate fancy headings.
+                </uib-accordion-group>
+                <uib-accordion-group>
+                  <uib-accordion-heading>
+                    Use Gift Voucher <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                  </uib-accordion-heading>
+                  This is just some content to illustrate fancy headings.
+                </uib-accordion-group>
+              </uib-accordion>
+
+
             <div class="col-sm-4 col-sm-offset-8">
               <table class="table table-bordered">
                 <tr>
