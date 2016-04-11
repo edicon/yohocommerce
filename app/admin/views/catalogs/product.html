@@ -56,8 +56,7 @@
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Name</label>
                         <div class="col-xs-8">
-                          <input type="text" ng-model="productCtrl.product.product_name" ng-change="productCtrl.updateProduct()"
-                          placeholder="Product Name" class="form-control">
+                          <input type="text" ng-model="productCtrl.product.product_name" ng-change="productCtrl.updateProduct()" placeholder="Product Name" class="form-control">
                         </div>
                       </div>
                       <div class="form-group required">
@@ -71,8 +70,9 @@
                       </div>
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Category</label>
+                        <div class="col-xs-8">
                           <select ng-model="productCtrl.product.product_category_id" ng-change="productCtrl.updateProduct()" class="form-control">
-                              <option ng-repeat="c in productCtrl.categories" value="{{c.$id}}">{{c.category_name}}</option>
+                            <option ng-repeat="c in productCtrl.categories" value="{{c.$id}}">{{c.category_name}}</option>
                           </select>
                         </div>
                       </div>
@@ -87,12 +87,12 @@
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Price</label>
                         <div class="col-xs-8">
-                          <input type="text" ng-model="productCtrl.product.product_price" ng-change="productCtrl.updateProduct()"
-                          placeholder="Price" class="form-control">
+                          <input type="text" ng-model="productCtrl.product.product_price" ng-change="productCtrl.updateProduct()" placeholder="Price" class="form-control">
                         </div>
                       </div>
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Tax Group</label>
+                        <div class="col-xs-8">
                           <select ng-model="productCtrl.product.product_tax_group_id" ng-change="productCtrl.updateProduct()" class="form-control">
                             <option ng-repeat="t in productCtrl.taxGroups" value="{{t.$id}}">{{t.group_name}}</option>
                           </select>
@@ -101,8 +101,8 @@
                       <div class="form-group required">
                         <label class="control-label col-xs-2">Description</label>
                         <div class="col-xs-8">
-                          <textarea class="tinyMCE" ui-tinymce="productCtrl.tinymceOptions"
-                            ng-model="productCtrl.product.product_description" ng-change="productCtrl.updateProduct()"> </textarea>
+                          <textarea class="tinyMCE" ui-tinymce="productCtrl.tinymceOptions" ng-model="productCtrl.product.product_description"
+                            ng-change="productCtrl.updateProduct()"> </textarea>
                         </div>
                       </div>
                       <div class="form-group">
@@ -147,17 +147,17 @@
                         <label class="control-label col-xs-3">Dimensions</label>
                         <div class="col-xs-2">
                           <input type="text" ng-model="productCtrl.product.product_length" ng-change="productCtrl.updateProduct()"
-                          placeholder="Length" class="form-control">
+                            placeholder="Length" class="form-control">
                           <span class="help-block" align="left">Length</span>
                         </div>
                         <div class="col-xs-2">
                           <input type="text" ng-model="productCtrl.product.product_width" ng-change="productCtrl.updateProduct()"
-                          placeholder="Width" class="form-control">
+                            placeholder="Width" class="form-control">
                           <span class="help-block" align="left">Width</span>
                         </div>
                         <div class="col-xs-2">
                           <input type="text" ng-model="productCtrl.product.product_height" ng-change="productCtrl.updateProduct()"
-                          placeholder="Height" class="form-control">
+                            placeholder="Height" class="form-control">
                           <span class="help-block" align="left">Height</span>
                         </div>
                         <div class="col-xs-2">
@@ -174,7 +174,7 @@
                         <label class="control-label col-xs-3">Weight</label>
                         <div class="col-xs-2">
                           <input type="text" ng-model="productCtrl.product.product_weight" ng-change="productCtrl.updateProduct()"
-                          placeholder="Weight" class="form-control">
+                            placeholder="Weight" class="form-control">
                         </div>
                         <div class="col-xs-6">
                           <select ng-model="productCtrl.product.product_unit_of_weight" ng-change="productCtrl.updateProduct()" class="form-control">
@@ -225,8 +225,7 @@
                           min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
                       </div>
                       <div ng-if="productCtrl.product.pid !== null" class="col-xs-1 inline-btn">
-                        <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Discount"
-                          ng-click="productCtrl.addDiscount()">
+                        <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Discount" ng-click="productCtrl.addDiscount()">
                           <i class="fa fa-plus"></i>
                         </button>
                       </div>
@@ -240,6 +239,7 @@
                 </div>
               </div>
             </div>
+
             <div role="tabpanel" class="tab-pane" id="prodSpecial">
               <div class="row">
                 <div class="col-xs-12"><br>
@@ -274,8 +274,7 @@
                           min-date="minDate" max-date="maxDate" datepicker-options="dateOptions" ng-required="true" close-text="Close">
                       </div>
                       <div ng-if="productCtrl.product.pid !== null" class="col-xs-1 inline-btn">
-                        <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Special Price"
-                          ng-click="productCtrl.addSpecial()">
+                        <button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Special Price" ng-click="productCtrl.addSpecial()">
                           <i class="fa fa-plus"></i>
                         </button>
                       </div>
@@ -301,8 +300,7 @@
                                 <td style="text-align:right;">{{productCtrl.product.special_start_date}}</td>
                                 <td style="text-align:right;">{{productCtrl.product.special_end_date}}</td>
                                 <td style="text-align:right;">
-                                  <button type="button" class="btn btn-xs btn-danger" uib-tooltip-placement="top" uib-tooltip="Delete Special Pricing"
-                                    ng-click="productCtrl.removeSpecial()">
+                                  <button type="button" class="btn btn-xs btn-danger" uib-tooltip-placement="top" uib-tooltip="Delete Special Pricing" ng-click="productCtrl.removeSpecial()">
                                     <i class="fa fa-minus"></i>
                                   </button>
                                 </td>
