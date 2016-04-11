@@ -59,19 +59,21 @@
             <h4>Choose if you have a coupon or gift voucher you would like to use.</h4>
 
             <uib-accordion>
-                <uib-accordion-group>
-                  <uib-accordion-heading>
-                    Use Coupon Code <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-                  </uib-accordion-heading>
-                  This is just some content to illustrate fancy headings.
-                </uib-accordion-group>
-                <uib-accordion-group>
-                  <uib-accordion-heading>
-                    Use Gift Voucher <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-                  </uib-accordion-heading>
-                  This is just some content to illustrate fancy headings.
-                </uib-accordion-group>
-              </uib-accordion>
+              <uib-accordion-group is-open="status.open">
+                <uib-accordion-heading>
+                  Use Coupon Code <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                </uib-accordion-heading>
+                This is just some content to illustrate fancy headings.
+              </uib-accordion-group>
+            </uib-accordion>
+            <uib-accordion>
+             <uib-accordion-group is-open="status.open">
+                <uib-accordion-heading>
+                  Use Gift Voucher <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                </uib-accordion-heading>
+                This is just some content to illustrate fancy headings.
+              </uib-accordion-group>
+            </uib-accordion>
 
 
             <div class="col-sm-4 col-sm-offset-8">
