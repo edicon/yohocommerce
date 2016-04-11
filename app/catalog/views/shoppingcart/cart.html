@@ -63,7 +63,12 @@
                 <uib-accordion-heading>
                   Use Coupon Code <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
                 </uib-accordion-heading>
-                This is just some content to illustrate fancy headings.
+                <div class="input-group input-group-sm">
+                  <input type="text" ng-model="cartCtrl.order.coupon_code" class="form-control" placeholder="Enter Coupon Code">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" ng-click="cartCtrl.updateCoupon()" type="button"><span class="menu-icon fa fa-check"></span></button>
+                  </span>
+                </div>
               </uib-accordion-group>
             </uib-accordion>
             <uib-accordion>
@@ -71,7 +76,12 @@
                 <uib-accordion-heading>
                   Use Gift Voucher <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
                 </uib-accordion-heading>
-                This is just some content to illustrate fancy headings.
+                <div class="input-group input-group-sm">
+                  <input type="text" ng-model="cartCtrl.order.gift_voucher_code" class="form-control" placeholder="Enter Gift Voucher">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" ng-click="cartCtrl.updateGiftVoucher()" type="button"><span class="menu-icon fa fa-check"></span></button>
+                  </span>
+                </div>
               </uib-accordion-group>
             </uib-accordion>
 
