@@ -1,4 +1,30 @@
 	<div class="container-fluid">
+		<div class="col-xs-12">
+
+			<form class="form-horizontal">
+				<div class="form-group">
+					<div class="col-sm-4">
+						<div class="input-group input-group-sm">
+							<span class="input-group-addon">Shipping Name</span>
+							<input type="text" ng-model="localizationCtrl.shipping_option.shipping_name" class="form-control">
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="input-group input-group-sm">
+							<span class="input-group-addon">Shipping Cost</span>
+							<input type="text" ng-model="localizationCtrl.shipping_option.shipping_cost" class="form-control">
+						</div>
+					</div>
+					<div class="col-sm-4" align="right">
+						<div class="input-group input-group-sm">
+							<button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Shipping" ng-click="extensionsCtrl.addShippingOption()">
+								<i class="fa fa-plus"></i>
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
+
 		<div class="panel panel-default">
 	    <div class="panel-heading">
 	      <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> Shipping List</h3>
@@ -8,3 +34,4 @@
 	    </div>
 	  </div>
 	</div>
+</div>
