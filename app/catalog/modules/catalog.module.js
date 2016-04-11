@@ -329,6 +329,7 @@ angular.module('CatalogModule', [
               getLines: function(oid) {
                   return $firebaseArray(ref.child(tid).child(oid).child('/lines'));
               },
+
               getTaxes: function(oid) {
                   return $firebaseArray(ref.child(tid).child(oid).child('/taxes'));
               },
@@ -348,6 +349,16 @@ angular.module('CatalogModule', [
               updateLine: function(obj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid+'/lines/'+obj.lid);
                   return theRef.update( {line_quantity: obj.qty, line_total: obj.line_total, reward_points_total: obj.reward_points_total} );
+              },
+
+              updateCoupon: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
+                  return theRef.update( {coupon_code: obj.coupon_code} );
+              },
+
+              updateGiftVoucher: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
+                  return theRef.update( {gift_voucher_code: obj.gift_voucher_code} );
               },
 
               all: cartorders
@@ -805,7 +816,6 @@ angular.module('CatalogModule', [
                 var cartCtrl = this;
                 cartCtrl.store = Catalog.storeDefaults;
                 var oid = $cookies.get('orderId');
-//                cartCtrl.order = {};
 
                 var theOrder = CartOrders.getOrder(oid)
                       theOrder.$loaded().then(function() {
@@ -829,7 +839,7 @@ angular.module('CatalogModule', [
                 cartCtrl.removeLine = function(lid, tgid) {
                       CartRemoveLine.initiate(lid, tgid);
                 }, function(error) {
-                      catalogCtrl.error = error;
+                      cartCtrl.error = error;
                 };
 
                 cartCtrl.updateLine = function(lid, qty, pid) {
@@ -837,6 +847,24 @@ angular.module('CatalogModule', [
                             CartUpdateLine.initiate(lid, qty, pid, cartCtrl.store.store_points_per_dollar);
                       if (qty === "0")
                             CartRemoveLine.initiate(lid, pid);
+                }, function(error) {
+                      cartCtrl.error = error;
+                };
+
+                cartCtrl.updateCoupon = function() {
+                      var obj = {};
+                      obj.oid = oid;
+                      obj.coupon_code = cartCtrl.order.coupon_code
+                      CartOrders.updateCoupon(obj);
+                }, function(error) {
+                      cartCtrl.error = error;
+                };
+
+                cartCtrl.updateGiftVoucher = function() {
+                      var obj = {};
+                      obj.oid = oid;
+                      obj.gift_voucher_code = cartCtrl.order.gift_voucher_code
+                      CartOrders.updateGiftVoucher(obj);
                 }, function(error) {
                       cartCtrl.error = error;
                 };
