@@ -18,188 +18,188 @@ angular.module('CatalogModule', [
 .config (       ['$stateProvider', '$urlRouterProvider',
     function (    $stateProvider,   $urlRouterProvider) {
 
-        $urlRouterProvider.otherwise('/');
+          $urlRouterProvider.otherwise('/');
 
-        $stateProvider
-            .state('catalog', {
-                url: '/',
-                abstract: true,
-                views: {
-                    "": {
-                        templateUrl: 'catalog/views/catalog.html'
-                    }
-                }
-            })
-            .state('catalog.home', {
-                url: '',
-                views: {
-                    "header@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/header.html'
-                    },
-                    "carousel@catalog": {
-                        controller: 'CarouselCtrl as carouselCtrl',
-                        templateUrl: 'catalog/views/common/carousel.html'
-                    },
-                    "featured@catalog": {
-                        controller: 'CatalogFeaturedCtrl as catalogFeaturedCtrl',
-                        templateUrl: 'catalog/views/products/featured.html'
-                    },
-                    "footer@catalog": {
-                        templateUrl: 'catalog/views/common/footer.html'
-                    }
-                }
-            })
-            .state('catalog.category', {
-                url: 'category',
-                params: {
-                  cid: null,
-                },
-                views: {
-                    "header@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/header.html'
-                    },
-                    "main@catalog": {
-                        controller: 'CatalogCategoryCtrl as catalogCategoryCtrl',
-                        templateUrl: 'catalog/views/products/category.html'
-                    },
-                    "footer@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/footer.html'
-                    }
-                }
-            })
-            .state('catalog.subcategory', {
-                url: 'subcategory',
-                params: {
-                  subCid: null,
-                },
-                views: {
-                    "header@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/header.html'
-                    },
-                    "main@catalog": {
-                        controller: 'CatalogSubCategoryCtrl as catalogSubCategoryCtrl',
-                        templateUrl: 'catalog/views/products/subcategory.html'
-                    },
-                    "footer@catalog": {
-                        templateUrl: 'catalog/views/common/footer.html'
-                    }
-                }
-            })
-            .state('catalog.product', {
-                url: 'product',
-                params: {
-                  pid: null,
-                },
-                views: {
-                    "header@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/header.html'
-                    },
-                    "main@catalog": {
-                        controller: 'CatalogProductCtrl as catalogProductCtrl',
-                        templateUrl: 'catalog/views/products/product.html'
-                    },
-                    "footer@catalog": {
-                        templateUrl: 'catalog/views/common/footer.html'
-                    }
-                }
-            })
-            .state('catalog.cart', {
-                url: 'cart',
-                views: {
-                    "header@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/header.html'
-                    },
-                    "main@catalog": {
-                        controller: 'CartCtrl as cartCtrl',
-                        templateUrl: 'catalog/views/shoppingcart/cart.html'
-                    },
-                    "footer@catalog": {
-                        templateUrl: 'catalog/views/common/footer.html'
-                    }
-                }
-            })
-            .state('catalog.checkout', {
-                url: 'checkout',
-                views: {
-                    "header@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/header.html'
-                    },
-                    "main@catalog": {
-                        controller: 'CartCtrl as cartCtrl',
-                        templateUrl: 'catalog/views/shoppingcart/checkout.html'
-                    },
-                    "footer@catalog": {
-                        templateUrl: 'catalog/views/common/footer.html'
-                    }
-                }
-            })
-            .state('catalog.contact', {
-                url: 'contact',
-                views: {
-                    "header@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/header.html'
-                    },
-                    "main@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/contact.html'
-                    },
-                    "footer@catalog": {
-                        templateUrl: 'catalog/views/common/footer.html'
-                    }
-                }
-            })
-            .state('catalog.login', {
-                url: 'login',
-                views: {
-                    "header@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/header.html'
-                    },
-                    "main@catalog": {
-                        controller: 'AuthCtrl as authCtrl',
-                        templateUrl: 'catalog/views/account/login.html'
-                    },
-                    "footer@catalog": {
-                        templateUrl: 'catalog/views/common/footer.html'
-                    }
-                }
-            })
-            .state('catalog.register', {
-                url: 'register',
-                views: {
-                    "header@catalog": {
-                        controller: 'CatalogCtrl as catalogCtrl',
-                        templateUrl: 'catalog/views/common/header.html'
-                    },
-                    "main@catalog": {
-                        controller: 'RegisterCtrl as registerCtrl',
-                        templateUrl: 'catalog/views/account/register.html'
-                    },
-                    "footer@catalog": {
-                        templateUrl: 'catalog/views/common/footer.html'
-                    }
-                }
-            })
-            .state('adminlogin', {
-                url: '/adminlogin',
-                controller: 'AuthCtrl as authCtrl',
-                templateUrl: 'catalog/views/admin/adminlogin.html'
-            })
-            .state('registertenant', {
-                url: '/registertenant',
-                controller: 'AuthCtrl as authCtrl',
-                templateUrl: 'catalog/views/admin/registertenant.html'
-            })
+          $stateProvider
+              .state('catalog', {
+                  url: '/',
+                  abstract: true,
+                  views: {
+                      "": {
+                          templateUrl: 'catalog/views/catalog.html'
+                      }
+                  }
+              })
+              .state('catalog.home', {
+                  url: '',
+                  views: {
+                      "header@catalog": {
+                          controller: 'CatalogCtrl as catalogCtrl',
+                          templateUrl: 'catalog/views/common/header.html'
+                      },
+                      "carousel@catalog": {
+                          controller: 'CarouselCtrl as carouselCtrl',
+                          templateUrl: 'catalog/views/common/carousel.html'
+                      },
+                      "featured@catalog": {
+                          controller: 'CatalogFeaturedCtrl as catalogFeaturedCtrl',
+                          templateUrl: 'catalog/views/products/featured.html'
+                      },
+                      "footer@catalog": {
+                          templateUrl: 'catalog/views/common/footer.html'
+                      }
+                  }
+              })
+              .state('catalog.category', {
+                  url: 'category',
+                  params: {
+                    cid: null,
+                  },
+                  views: {
+                      "header@catalog": {
+                          controller: 'CatalogCtrl as catalogCtrl',
+                          templateUrl: 'catalog/views/common/header.html'
+                      },
+                      "main@catalog": {
+                          controller: 'CatalogCategoryCtrl as catalogCategoryCtrl',
+                          templateUrl: 'catalog/views/products/category.html'
+                      },
+                      "footer@catalog": {
+                          controller: 'CatalogCtrl as catalogCtrl',
+                          templateUrl: 'catalog/views/common/footer.html'
+                      }
+                  }
+              })
+              .state('catalog.subcategory', {
+                  url: 'subcategory',
+                  params: {
+                    subCid: null,
+                  },
+                  views: {
+                      "header@catalog": {
+                          controller: 'CatalogCtrl as catalogCtrl',
+                          templateUrl: 'catalog/views/common/header.html'
+                      },
+                      "main@catalog": {
+                          controller: 'CatalogSubCategoryCtrl as catalogSubCategoryCtrl',
+                          templateUrl: 'catalog/views/products/subcategory.html'
+                      },
+                      "footer@catalog": {
+                          templateUrl: 'catalog/views/common/footer.html'
+                      }
+                  }
+              })
+              .state('catalog.product', {
+                  url: 'product',
+                  params: {
+                    pid: null,
+                  },
+                  views: {
+                      "header@catalog": {
+                          controller: 'CatalogCtrl as catalogCtrl',
+                          templateUrl: 'catalog/views/common/header.html'
+                      },
+                      "main@catalog": {
+                          controller: 'CatalogProductCtrl as catalogProductCtrl',
+                          templateUrl: 'catalog/views/products/product.html'
+                      },
+                      "footer@catalog": {
+                          templateUrl: 'catalog/views/common/footer.html'
+                      }
+                  }
+              })
+              .state('catalog.cart', {
+                  url: 'cart',
+                  views: {
+                      "header@catalog": {
+                          controller: 'CatalogCtrl as catalogCtrl',
+                          templateUrl: 'catalog/views/common/header.html'
+                      },
+                      "main@catalog": {
+                          controller: 'CartCtrl as cartCtrl',
+                          templateUrl: 'catalog/views/shoppingcart/cart.html'
+                      },
+                      "footer@catalog": {
+                          templateUrl: 'catalog/views/common/footer.html'
+                      }
+                  }
+              })
+              .state('catalog.checkout', {
+                  url: 'checkout',
+                  views: {
+                      "header@catalog": {
+                          controller: 'CatalogCtrl as catalogCtrl',
+                          templateUrl: 'catalog/views/common/header.html'
+                      },
+                      "main@catalog": {
+                          controller: 'CartCtrl as cartCtrl',
+                          templateUrl: 'catalog/views/shoppingcart/checkout.html'
+                      },
+                      "footer@catalog": {
+                          templateUrl: 'catalog/views/common/footer.html'
+                      }
+                  }
+              })
+              .state('catalog.contact', {
+                  url: 'contact',
+                  views: {
+                      "header@catalog": {
+                          controller: 'CatalogCtrl as catalogCtrl',
+                          templateUrl: 'catalog/views/common/header.html'
+                      },
+                      "main@catalog": {
+                          controller: 'CatalogCtrl as catalogCtrl',
+                          templateUrl: 'catalog/views/common/contact.html'
+                      },
+                      "footer@catalog": {
+                          templateUrl: 'catalog/views/common/footer.html'
+                      }
+                  }
+              })
+              .state('catalog.login', {
+                  url: 'login',
+                  views: {
+                      "header@catalog": {
+                          controller: 'CatalogCtrl as catalogCtrl',
+                          templateUrl: 'catalog/views/common/header.html'
+                      },
+                      "main@catalog": {
+                          controller: 'AuthCtrl as authCtrl',
+                          templateUrl: 'catalog/views/account/login.html'
+                      },
+                      "footer@catalog": {
+                          templateUrl: 'catalog/views/common/footer.html'
+                      }
+                  }
+              })
+              .state('catalog.register', {
+                  url: 'register',
+                  views: {
+                      "header@catalog": {
+                          controller: 'CatalogCtrl as catalogCtrl',
+                          templateUrl: 'catalog/views/common/header.html'
+                      },
+                      "main@catalog": {
+                          controller: 'RegisterCtrl as registerCtrl',
+                          templateUrl: 'catalog/views/account/register.html'
+                      },
+                      "footer@catalog": {
+                          templateUrl: 'catalog/views/common/footer.html'
+                      }
+                  }
+              })
+              .state('adminlogin', {
+                  url: '/adminlogin',
+                  controller: 'AuthCtrl as authCtrl',
+                  templateUrl: 'catalog/views/admin/adminlogin.html'
+              })
+              .state('registertenant', {
+                  url: '/registertenant',
+                  controller: 'AuthCtrl as authCtrl',
+                  templateUrl: 'catalog/views/admin/registertenant.html'
+              })
 
-      }
+        }
 ])
 
 .factory('Catalog', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid', 'sid',
@@ -827,7 +827,6 @@ angular.module('CatalogModule', [
 
 
                 cartCtrl.removeLine = function(lid, tgid) {
-                  console.log(tgid)
                       CartRemoveLine.initiate(lid, tgid);
                 }, function(error) {
                       catalogCtrl.error = error;

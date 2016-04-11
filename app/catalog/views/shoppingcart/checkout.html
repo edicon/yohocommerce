@@ -8,97 +8,180 @@
       </ul>
       <h2>Checkout</h2>
       <div class="row">
-        <div ng-if="cartCtrl.order.items == 0">
-          <h4>Your shopping cart is empty.</h4>
+        <div class="buttons">
+          <div class="pull-left"><a href="#" ui-sref="catalog.home" class="btn btn-default">Register Account</a></div>
+          <div class="pull-left"><a href="#" ui-sref="catalog.home" class="btn btn-primary">Guest Checkout</a></div>
+          <div class="pull-right"><a href="/checkout" ui-sref="catalog.checkout" class="btn btn-primary">Login</a></div>
         </div>
-        <div ng-if="cartCtrl.order.items > 0">
-          <form>
-            <div class="table-responsive">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <td class="text-center">Image</td>
-                    <td class="text-left">Product</td>
-                    <td class="text-right">Quantity</td>
-                    <td class="text-right">Unit Price</td>
-                    <td class="text-right">Total</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-repeat="o in cartCtrl.lines">
-                    <td class="text-center">
-                      <a href="" ng-click="cartCtrl.goProduct(o.product_id)"><img ng-src="{{o.product_image}}" width="35px" height="35px"></a>
-                    </td>
-                    <td class="text-left">
-                      <a href="" ng-click="cartCtrl.goProduct(o.product_id)">{{o.product_name}}</a>
-                      <br>
-                      <small>Reward points: {{o.reward_points_total}}</small>
-                    </td>
-                    <td width="150px">
-                      <div class="input-group">
-                        <input type="text" ng-model="o.line_quantity" ng-change="cartCtrl.updateLine(o.$id, o.line_quantity, o.product_id)"
-                          class="form-control" style="text-align: right;">
-                        <span class="input-group-btn">
-                          <button class="btn btn-danger" ng-click="cartCtrl.removeLine(o.$id, o.product_tax_group_id)" type="button"><span class="menu-icon fa fa-times"></span></button>
-                        </span>
+      </div><br>
+      <div class="row">
+
+          <div class="col-sm-4">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Your Personal Details</h3>
+              </div>
+              <div class="panel-body">
+                <form class="form-horizontal">
+                  <fieldset>
+                    <div class="form-group required">
+                      <label class="col-sm-5 control-label">First Name</label>
+                      <div class="col-sm-7">
+                        <input type="text" name="firstName" ng-model="registerCtrl.customer.customer_first_name" placeholder="First Name" class="form-control" required>
                       </div>
-                    </td>
-                    <td ng-if="o.special_price" class="text-right">
-                      {{o.special_price | currency}}
-                    </td>
-                    <td ng-if="o.special_price == null" class="text-right">
-                      {{o.regular_price | currency}}
-                    </td>
-                    <td class="text-right">{{o.line_total | currency}}</td>
-                  </tr>
-                </tbody>
-              </table>
+                    </div>
+                    <div class="form-group required">
+                      <label class="col-sm-5 control-label">Last Name</label>
+                      <div class="col-sm-7">
+                        <input type="text" name="lastName" ng-model="registerCtrl.customer.customer_last_name" placeholder="Last Name" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="form-group required">
+                      <label class="col-sm-5 control-label">E-Mail</label>
+                      <div class="col-sm-7">
+                        <input type="email" name="email" ng-model="registerCtrl.customer.customer_email" placeholder="Customer E-Mail" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="form-group required">
+                      <label class="col-sm-5 control-label">Confirm E-Mail</label>
+                      <div class="col-sm-7">
+                        <input type="email" name="email" ng-model="registerCtrl.customer.customer_email" placeholder="Customer E-Mail" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-5 control-label">Phone Number</label>
+                      <div class="col-sm-7">
+                        <input type="text" name="phone" ng-model="registerCtrl.customer.customer_phone" placeholder="Phone Number" class="form-control" required>
+                      </div>
+                    </div>
+                  </fieldset>
+                </form>
+              </div>
             </div>
-          </form>
-
-          <div class="row">
-            <h4>Choose if you have a coupon or gift voucher you would like to use.</h4>
-
-            <uib-accordion>
-                <uib-accordion-group>
-                  <uib-accordion-heading>
-                    Use Coupon Code <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-                  </uib-accordion-heading>
-                  This is just some content to illustrate fancy headings.
-                </uib-accordion-group>
-                <uib-accordion-group>
-                  <uib-accordion-heading>
-                    Use Gift Voucher <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-                  </uib-accordion-heading>
-                  This is just some content to illustrate fancy headings.
-                </uib-accordion-group>
-              </uib-accordion>
-
-
-            <div class="col-sm-4 col-sm-offset-8">
-              <table class="table table-bordered">
-                <tr>
-                  <td class="text-right"><strong>Sub Total</strong></td>
-                  <td class="text-right">{{cartCtrl.order.sub_total | currency}}</td>
-                </tr>
-                <tr ng-repeat="t in cartCtrl.taxes">
-                  <td class="text-right"><strong>{{t.tax_name}}</strong></td>
-                  <td class="text-right">{{t.tax_total | currency}}</td>
-                </tr>
-                <tr>
-                  <td class="text-right"><strong>Total</strong></td>
-                  <td class="text-right">{{cartCtrl.order.total | currency}}</td>
-                </tr>
-              </table>
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">Your Address</h3>
+              </div>
+              <div class="panel-body">
+                <form class="form-horizontal">
+                  <fieldset>
+                    <div class="form-group required">
+                      <label class="col-sm-5 control-label">Address</label>
+                      <div class="col-sm-7">
+                        <input type="text" name="address" ng-model="registerCtrl.customer.customer_address1" placeholder="Street Address" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="form-group required">
+                      <label class="col-sm-5 control-label">City</label>
+                      <div class="col-sm-7">
+                        <input type="text" name="city" ng-model="registerCtrl.customer.customer_city" placeholder="City" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="form-group required">
+                      <label class="col-sm-5 control-label">Province / State</label>
+                      <div class="col-sm-7">
+                        <input type="text" name="province" ng-model="registerCtrl.customer.customer_province" placeholder="Province / State" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="form-group required">
+                      <label class="col-sm-5 control-label">Postal / ZIP Code</label>
+                      <div class="col-sm-7">
+                        <input type="text" name="postal" ng-model="registerCtrl.customer.customer_postal" placeholder="Postal / ZIP Code" class="form-control" required>
+                      </div>
+                    </div>
+                    <div class="form-group required">
+                      <label class="col-sm-5 control-label">Country</label>
+                      <div class="col-sm-7">
+                        <ui-select ng-model="registerCtrl.customer.customer_country" theme="bootstrap" ng-disabled="disabled">
+                          <ui-select-match placeholder="Search countries">{{$select.selected.name}}</ui-select-match>
+                          <ui-select-choices repeat="country in countries | filter: $select.search">
+                            <span ng-bind-html="country.name | highlight: $select.search"></span>
+                            <small ng-bind-html="country.code | highlight: $select.search"></small>
+                          </ui-select-choices>
+                        </ui-select>
+                      </div>
+                    </div>
+                  </fieldset>
+                </form>
+              </div>
             </div>
           </div>
-          <div class="row">
-            <div class="buttons">
-              <div class="pull-left"><a href="" class="btn btn-default">Continue Shopping</a></div>
-              <div class="pull-right"><a href="" class="btn btn-primary">Checkout</a></div>
+          <div class="col-sm-8">
+            <div class="row">
+              <div class="col-sm-6">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">Shipping Method</h3>
+                  </div>
+                  <div class="panel-body">
+                    Please select the preferred shipping method.
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">Payment Method</h3>
+                  </div>
+                  <div class="panel-body">
+                    Please select the preferred payment method.
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">Shopping Cart</h3>
+                </div>
+                <div class="panel-body">
+                  <div ng-if="catalogCtrl.orderTotal.items > 0" id="cart" class="btn-group btn-block">
+                    <button type="button" ng-click="catalogCtrl.getOrder()" data-toggle="dropdown" class="btn btn-inverse btn-block dropdown-toggle">
+                      <i class="fa fa-shopping-cart"></i> {{catalogCtrl.orderTotal.items}} Item(s) - {{catalogCtrl.orderTotal.sub_total | currency}}
+                    </button>
+                    <ul class="dropdown-menu pull-right">
+                      <li>
+                        <table class="table table-striped">
+                          <tr ng-repeat="o in catalogCtrl.order">
+                            <td>
+                              <a href="" ng-click="catalogCtrl.goProduct(o.product_id)"><img ng-src="{{o.product_image}}" width="35px" height="35px"></a>
+                            </td>
+                            <td class="text-left"><a href="" ng-click="catalogCtrl.goProduct(o.product_id)">{{o.product_name}}</a>
+                            <td width="70px">
+                              <input type="text" ng-model="o.line_quantity" ng-change="catalogCtrl.updateLine(o.$id, o.line_quantity, o.product_id)"
+                                class="form-control" style="text-align: right;">
+                            </td>
+                            <td ng-if="o.special_price" class="text-right">
+                              <s>{{o.regular_price | currency}}</s>&nbsp;{{o.special_price | currency}}
+                            </td>
+                            <td ng-if="o.special_price == null" class="text-right">
+                              {{o.regular_price | currency}}
+                            </td>
+                            <td class="text-center"><button type="button" ng-click="catalogCtrl.removeLine(o.$id, o.product_tax_group_id)" class="btn btn-danger btn-xs"><i class="fa fa-times"></i></button></td>
+                          </tr>
+                        </table>
+                      </li>
+                      <li>
+                        <div>
+                          <table class="table table-bordered">
+                            <tr>
+                              <td class="text-right"><strong>Sub Total</strong></td>
+                              <td class="text-right">{{catalogCtrl.orderTotal.sub_total | currency}}</td>
+                            </tr>
+                          </table>
+                          <p class="text-right">
+                              <a href="#/cart" ui-sref="catalog.cart"><strong><i class="fa fa-shopping-cart"></i> View Cart</strong></a>
+                              &nbsp;&nbsp;&nbsp;<a href="#/checkout" ui-sref="catalog.checkout"><strong><i class="fa fa-share"></i> checkout</strong></a>
+                          </p>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+
       </div>
     </div>
   </div>
