@@ -597,6 +597,33 @@ angular.module('SystemModule', [
 
 ])
 
+.factory('ShippingOptions', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'shipping_options');
+          var shippingoptions = $firebaseArray(ref.child(tid));
+
+          var shippingoption = {
+
+              addShippingOption: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'shipping_options/'+tid);
+                  return theRef.push(theObj);
+              },
+
+              removeShippingOption: function(theId) {
+                  var theRef = new Firebase(FirebaseUrl+'shipping_options/'+tid+'/'+theId);
+                  return theRef.remove();
+              },
+
+              all: shippingoptions,
+
+          };
+
+          return shippingoption;
+
+      }
+
+])
+
 .factory('LengthUnits', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'length_units');
@@ -1031,8 +1058,8 @@ angular.module('SystemModule', [
 
 ])
 
-.controller('LocalizationCtrl', ['Taxes', 'TaxGroups', 'ReturnStatuses', 'ReturnActions', 'ReturnReasons', 'OrderStatuses', 'LengthUnits', 'WeightUnits', '$state', '$scope', '$stateParams',
-      function (                  Taxes,   TaxGroups,   ReturnStatuses,   ReturnActions,   ReturnReasons,   OrderStatuses,   LengthUnits,   WeightUnits,   $state,   $scope,   $stateParams) {
+.controller('LocalizationCtrl', ['Taxes', 'TaxGroups', 'ReturnStatuses', 'ReturnActions', 'ReturnReasons', 'OrderStatuses', 'LengthUnits', 'WeightUnits', 'ShippingOptions', '$state', '$scope', '$stateParams',
+      function (                  Taxes,   TaxGroups,   ReturnStatuses,   ReturnActions,   ReturnReasons,   OrderStatuses,   LengthUnits,   WeightUnits,   ShippingOptions,   $state,   $scope,   $stateParams) {
             var localizationCtrl = this;
             localizationCtrl.tax = {};
             localizationCtrl.tax.tax_type = 'Percent';
@@ -1178,6 +1205,32 @@ angular.module('SystemModule', [
                   columnDefs: [
                         { name:'OrderStatusName', field: 'status_name', enableHiding: false },
                         { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeOrderStatus.html',
+                          width: 35, enableCellEdit: false, enableColumnMenu: false }
+                  ]
+            };
+
+            localizationCtrl.addShippingOption = function() {
+                  ShippingOptions.addShippingOption(localizationCtrl.shipping_option);
+                  localizationCtrl.shipping_option.shipping_name = null;
+                  localizationCtrl.shipping_option.shipping_cost = null;
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
+
+            localizationCtrl.removeShippingOption = function(row) {
+                  ShippingOptions.removeShippingOption(row.entity.$id);
+            }, function(error) {
+                  localizationCtrl.error = error;
+            };
+
+            localizationCtrl.gridShippingOpts = {
+                  enableSorting: true,
+                  enableCellEditOnFocus: true,
+                  data: ShippingOptions.all,
+                  columnDefs: [
+                        { name:'ShippingOptionName', field: 'shipping_name', enableHiding: false },
+                        { name:'ShippingOptionCost', field: 'shipping_cost', type: 'number', cellClass: 'grid-align-right', cellFilter: 'currency',enableHiding: false },
+                        { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeShippingOption.html',
                           width: 35, enableCellEdit: false, enableColumnMenu: false }
                   ]
             };
