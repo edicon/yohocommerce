@@ -305,16 +305,16 @@
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Default Length Units</label>
                       <div class="col-sm-9">
-                        <select ng-model="storeCtrl.store.store_default_length" ng-change="storeCtrl.updateStore()" class="form-control">
-                          <option ng-repeat="w in storeCtrl.LengthUnits" value="{{w.unit_title}}">{{w.unit_title}}</option>
+                        <select ng-model="storeCtrl.store.store_default_length_id" ng-change="storeCtrl.updateStore()" class="form-control">
+                          <option ng-repeat="w in storeCtrl.LengthUnits" value="{{w.$id}}">{{w.unit_name}}</option>
                         </select>
                       </div>
                     </div>
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Default Weight Units</label>
                       <div class="col-sm-9">
-                        <select ng-model="storeCtrl.store.store_default_weight" ng-change="storeCtrl.updateStore()" class="form-control">
-                          <option ng-repeat="w in storeCtrl.WeightUnits" value="{{w.unit_title}}">{{w.unit_title}}</option>
+                        <select ng-model="storeCtrl.store.store_default_weight_id" ng-change="storeCtrl.updateStore()" class="form-control">
+                          <option ng-repeat="w in storeCtrl.WeightUnits" value="{{w.$id}}">{{w.unit_name}}</option>
                         </select>
                       </div>
                     </div>
@@ -348,8 +348,8 @@
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Default Tax Group</label>
                       <div class="col-sm-9">
-                        <select ng-model="storeCtrl.store.store_default_tax_group" ng-change="storeCtrl.updateStore()" class="form-control">
-                          <option ng-repeat="t in storeCtrl.TaxGroups" value="{{t.group_name}}">{{t.group_name}}</option>
+                        <select ng-model="storeCtrl.store.store_default_tax_id" ng-change="storeCtrl.updateStore()" class="form-control">
+                          <option ng-repeat="t in storeCtrl.TaxGroups" value="{{t.$id}}">{{t.group_name}}</option>
                         </select>
                       </div>
                     </div>
@@ -366,16 +366,16 @@
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Processing Order Status</label>
                       <div class="col-sm-9">
-                        <select ng-model="storeCtrl.store.store_default_processing_status" ng-change="storeCtrl.updateStore()" class="form-control">
-                          <option ng-repeat="o in storeCtrl.OrderStatuses" value="{{o.status_name}}">{{o.status_name}}</option>
+                        <select ng-model="storeCtrl.store.store_default_processing_id" ng-change="storeCtrl.updateStore()" class="form-control">
+                          <option ng-repeat="o in storeCtrl.OrderStatuses" value="{{o.$id}}">{{o.status_name}}</option>
                         </select>
                       </div>
                     </div>
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Completed Order Status</label>
                       <div class="col-sm-9">
-                        <select ng-model="storeCtrl.store.store_default_completed_status" ng-change="storeCtrl.updateStore()" class="form-control">
-                          <option ng-repeat="o in storeCtrl.OrderStatuses" value="{{o.status_name}}">{{o.status_name}}</option>
+                        <select ng-model="storeCtrl.store.store_default_completed_id" ng-change="storeCtrl.updateStore()" class="form-control">
+                          <option ng-repeat="o in storeCtrl.OrderStatuses" value="{{o.$id}}">{{o.status_name}}</option>
                         </select>
                       </div>
                     </div>
@@ -385,8 +385,8 @@
                     <div class="form-group required">
                       <label class="col-sm-2 control-label" align="right">Return Status</label>
                       <div class="col-sm-9">
-                        <select ng-model="storeCtrl.store.store_default_return_status" ng-change="storeCtrl.updateStore" class="form-control">
-                          <option ng-repeat="r in storeCtrl.ReturnStatuses" value="{{r.status_name}}">{{r.status_name}}</option>
+                        <select ng-model="storeCtrl.store.store_default_return_id" ng-change="storeCtrl.updateStore()" class="form-control">
+                          <option ng-repeat="r in storeCtrl.ReturnStatuses" value="{{r.$id}}">{{r.status_name}}</option>
                         </select>
                       </div>
                     </div>
