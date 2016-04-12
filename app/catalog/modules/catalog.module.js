@@ -595,6 +595,7 @@ angular.module('CatalogModule', [
       function (             Catalog,   CartOrders,   Products,   CartUpdateLine,   CartRemoveLine,   $scope,   $state,   $cookies) {
             var catalogCtrl = this;
             $scope.product = {};
+            $scope.products = Products.all;
             catalogCtrl.categories = Catalog.all;
             catalogCtrl.store = Catalog.storeDefaults;
             catalogCtrl.subPulldowns = Catalog.pulldown;
