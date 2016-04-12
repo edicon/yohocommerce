@@ -75,6 +75,17 @@ var app = angular.module('app', [
 
 ])*/
 
+.factory('Messages', function (){
+
+            var messages = {
+                  send_email_success: 'Reset Password E-Mail Sent',
+                  save_password_success: 'New Password Saved',
+            };
+
+            return messages;
+      }
+)
+
 .factory('AlertService', ['$rootScope',
       function (           $rootScope) {
 
@@ -87,7 +98,6 @@ var app = angular.module('app', [
             'Last Name is required']);
 
           */
-
 
         	 var visible = false;
           	var service = {

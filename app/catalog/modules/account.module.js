@@ -228,11 +228,12 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', '$state', 'profile', '$scope',
-      function (             Auth,   Customer,   AlertService,   $state,   profile,   $scope) {
+.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', 'Messages', '$state', 'profile', '$scope',
+      function (             Auth,   Customer,   AlertService,   Messages,   $state,   profile,   $scope) {
 
           var accountCtrl = this;
           accountCtrl.profile = profile;
+          accountCtrl.messages = Messages;
 
           if (accountCtrl.profile.type === 'Customer') {
               accountCtrl.authInfo = Auth.$getAuth();
@@ -250,7 +251,7 @@ angular.module('AccountModule', [
               Auth.$resetPassword({
                   email: accountCtrl.customer.customer_email
                   }).then(function() {
-                      AlertService.addSuccess('Password Reset E-Mail Sent');
+                      AlertService.addSuccess(accountCtrl.messages.send_email_success);
                       $state.go('catalog.home');
                   }).catch(function(error) {
                       console.error("Error: ", error);
@@ -263,7 +264,7 @@ angular.module('AccountModule', [
                 oldPassword: accountCtrl.customer.customer_password,
                 newPassword: accountCtrl.customer.customer_new_password
                 }).then(function() {
-                    AlertService.addSuccess('New Password Saved');
+                    AlertService.addSuccess(accountCtrl.messages.save_password_success);
                     accountCtrl.customer.customer_password = null;
                     accountCtrl.customer.customer_new_password = null;
                     accountCtrl.customer.confirm_new_password = null;
