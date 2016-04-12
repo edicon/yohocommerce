@@ -1031,8 +1031,8 @@ angular.module('SystemModule', [
 
 ])
 
-.controller('LocalizationCtrl', ['Taxes', 'TaxGroups', 'ReturnStatuses', 'ReturnActions', 'ReturnReasons', 'OrderStatuses', 'LengthUnits', 'WeightUnits', '$state', '$scope', '$stateParams',
-      function (                  Taxes,   TaxGroups,   ReturnStatuses,   ReturnActions,   ReturnReasons,   OrderStatuses,   LengthUnits,   WeightUnits,   $state,   $scope,   $stateParams) {
+.controller('LocalizationCtrl', ['Taxes', 'TaxGroups', 'ReturnStatuses', 'ReturnActions', 'ReturnReasons', 'OrderStatuses', 'LengthUnits', 'WeightUnits', 'ShippingOptions', '$state', '$scope', '$stateParams',
+      function (                  Taxes,   TaxGroups,   ReturnStatuses,   ReturnActions,   ReturnReasons,   OrderStatuses,   LengthUnits,   WeightUnits,   ShippingOptions,   $state,   $scope,   $stateParams) {
             var localizationCtrl = this;
             localizationCtrl.tax = {};
             localizationCtrl.tax.tax_type = 'Percent';

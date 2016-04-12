@@ -101,8 +101,35 @@ angular.module('ExtensionsModule', [
 
 ])
 
-.controller('ExtensionsCtrl', ['$state', '$scope', '$stateParams',
-      function (                $state,   $scope,   $stateParams) {
+.factory('ShippingOptions', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'shipping_options');
+          var shippingoptions = $firebaseArray(ref.child(tid));
+
+          var shippingoption = {
+
+              addShippingOption: function(theObj) {
+                  var theRef = new Firebase(FirebaseUrl+'shipping_options/'+tid);
+                  return theRef.push(theObj);
+              },
+
+              removeShippingOption: function(theId) {
+                  var theRef = new Firebase(FirebaseUrl+'shipping_options/'+tid+'/'+theId);
+                  return theRef.remove();
+              },
+
+              all: shippingoptions,
+
+          };
+
+          return shippingoption;
+
+      }
+
+])
+
+.controller('ExtensionsCtrl', ['ShippingOptions', '$state', '$scope', '$stateParams',
+      function (                ShippingOptions,   $state,   $scope,   $stateParams) {
           var extensionsCtrl = this;
 
           extensionsCtrl.gridModules = {
@@ -121,21 +148,32 @@ angular.module('ExtensionsModule', [
               ]
           };
 
-          extensionsCtrl.gridShipping = {
-              showGridFooter: true,
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              enableFiltering: true,
-          //    data: Shipping.all,
-              columnDefs: [
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/editShipper.html',
-                    width: 35, enableColumnMenu: false, headerTooltip: 'Edit', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-                  { name:'shippingMethod', field: 'shipping_name', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '73%' },
-                  { name:'shippingStatus', field: 'shipping_status', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '20%' },
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/installShipper.html',
-                    width: 35, enableColumnMenu: false, headerTooltip: 'Install', enableCellEdit: false, enableCellEdit: false, enableFiltering: false }
+          extensionsCtrl.addShippingOption = function() {
+                ShippingOptions.addShippingOption(extensionsCtrl.shipping_option);
+                extensionsCtrl.shipping_option.shipping_name = null;
+                extensionsCtrl.shipping_option.shipping_cost = null;
+          }, function(error) {
+                extensionsCtrl.error = error;
+          };
 
-              ]
+          extensionsCtrl.removeShippingOption = function(row) {
+                ShippingOptions.removeShippingOption(row.entity.$id);
+          }, function(error) {
+                extensionsCtrl.error = error;
+          };
+
+          extensionsCtrl.gridShipping = {
+                enableSorting: true,
+                enableCellEditOnFocus: true,
+                data: ShippingOptions.all,
+                columnDefs: [
+                      { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/editShipper.html',
+                        width: 35, enableColumnMenu: false, headerTooltip: 'Edit', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
+                      { name:'ShippingMethod', field: 'shipping_name', enableHiding: false },
+                      { name:'ShippingCost', field: 'shipping_cost', type: 'number', cellClass: 'grid-align-right', cellFilter: 'currency',enableHiding: false },
+                      { name: ' ', field: '$id', cellTemplate:'admin/views/extensions/gridTemplates/removeShippingOption.html',
+                        width: 35, enableCellEdit: false, enableColumnMenu: false }
+                ]
           };
 
           extensionsCtrl.gridPayment = {
