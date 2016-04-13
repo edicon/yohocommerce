@@ -51,6 +51,21 @@ angular.module('ExtensionsModule', [
                     }
                 }
             })
+            .state('admin.extensions.aws-s3', {
+                url: '/aws-s3',
+                views: {
+                    "header@admin": {
+                        templateUrl: 'admin/views/extensions/aws-s3.header.html'
+                    },
+                    "main@admin": {
+                        templateUrl: 'admin/views/extensions/extensions.html'
+                    },
+                    "list@admin.extensions.aws-s3": {
+                        controller: 'ModulesCtrl as modulesCtrl',
+                        templateUrl: 'admin/views/extensions/aws-s3.html'
+                    }
+                }
+            })
             .state('admin.extensions.shipping', {
                 url: '/shipping',
                 views: {
@@ -101,20 +116,58 @@ angular.module('ExtensionsModule', [
 
 ])
 
+.factory('Modules', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (      $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'modules');
+          var modules = $firebaseArray(ref.child(tid));
+
+          var module = {
+
+              addModule: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'modules/'+tid);
+                  return theRef.push(obj);
+              },
+
+              getModule: function(id) {
+                var theRef = new Firebase(FirebaseUrl+'modules/'+tid+'/'+id);
+                return $firebaseObject(theRef);
+              },
+
+              removeModule: function(id) {
+                  var theRef = new Firebase(FirebaseUrl+'modules/'+tid+'/'+id);
+                  return theRef.remove();
+              },
+
+              updateS3: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'modules/'+tid+'/'+obj.mid+'/parameters/');
+                  return theRef.update( {s3_url: obj.s3_url, access_key_id: obj.access_key_id, acl: obj.acl
+                      success_redirect_url: obj.success_redirect_url, policy_key: obj.policy_key, signature_key: obj.signature_key} );
+              },
+
+              all: modules,
+
+          };
+
+          return module;
+
+      }
+
+])
+
 .factory('ShippingOptions', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (              $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'shipping_options');
           var shippingoptions = $firebaseArray(ref.child(tid));
 
           var shippingoption = {
 
-              addShippingOption: function(theObj) {
+              addShippingOption: function(obj) {
                   var theRef = new Firebase(FirebaseUrl+'shipping_options/'+tid);
-                  return theRef.push(theObj);
+                  return theRef.push(obj);
               },
 
-              removeShippingOption: function(theId) {
-                  var theRef = new Firebase(FirebaseUrl+'shipping_options/'+tid+'/'+theId);
+              removeShippingOption: function(id) {
+                  var theRef = new Firebase(FirebaseUrl+'shipping_options/'+tid+'/'+id);
                   return theRef.remove();
               },
 
@@ -128,8 +181,8 @@ angular.module('ExtensionsModule', [
 
 ])
 
-.controller('ExtensionsCtrl', ['ShippingOptions', '$state', '$scope', '$stateParams',
-      function (                ShippingOptions,   $state,   $scope,   $stateParams) {
+.controller('ExtensionsCtrl', ['ShippingOptions', 'Modules', '$state', '$scope', '$stateParams',
+      function (                ShippingOptions,   Modules,   $state,   $scope,   $stateParams) {
           var extensionsCtrl = this;
 
           extensionsCtrl.gridModules = {
@@ -137,15 +190,36 @@ angular.module('ExtensionsModule', [
               enableSorting: true,
               enableCellEditOnFocus: true,
               enableFiltering: true,
-          //    data: Modules.all,
+              data: Modules.all,
               columnDefs: [
                   { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/editModule.html',
                     width: 35, enableColumnMenu: false, headerTooltip: 'Edit', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-                  { name:'moduleName', field: 'module_name', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '50%' },
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/installModule.html',
-                    width: 35, enableColumnMenu: false, headerTooltip: 'Install', enableCellEdit: false, enableCellEdit: false, enableFiltering: false }
-
+                  { name:'moduleName', field: 'module_name', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '30%' },
+                  { name:'moduleTemplate', field: 'module_template', enableHiding: false, enableFiltering: false, enableCellEdit: false },
+                  { name: ' ', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/removeModule.html',
+                    width: 35, enableColumnMenu: false, headerTooltip: 'Delete', enableCellEdit: false, enableCellEdit: false, enableFiltering: false }
               ]
+          };
+
+          extensionsCtrl.removeModule = function(row) {
+                Modules.removeModule(row.entity.$id);
+          }, function(error) {
+                extensionsCtrl.error = error;
+          };
+
+          extensionsCtrl.addModule = function() {
+                Modules.addModule(extensionsCtrl.module);
+                extensionsCtrl.module_name = null;
+                extensionsCtrl.module_template = null;
+          }, function(error) {
+                extensionsCtrl.error = error;
+          };
+
+          extensionsCtrl.editModule = function(row) {
+                var theModule = Modules.getModule(row.entity.$id);
+                    theModule.$loaded().then(function() {
+                          $state.go('admin.extensions.' + theModule.module_template);
+                    });
           };
 
           extensionsCtrl.addShippingOption = function() {
@@ -208,6 +282,20 @@ angular.module('ExtensionsModule', [
                     width: 35, enableColumnMenu: false, headerTooltip: 'Install', enableCellEdit: false, enableCellEdit: false, enableFiltering: false }
 
               ]
+          };
+
+      }
+
+])
+
+.controller('ModulesCtrl', ['Modules', '$state', '$scope', '$stateParams',
+      function (             Modules,   $state,   $scope,   $stateParams) {
+          var modulesCtrl = this;
+
+          modulesCtrl.updateLine = function() {
+                Modules.updateS3(catalogCtrl.s3);
+          }, function(error) {
+                catalogCtrl.error = error;
           };
 
       }
