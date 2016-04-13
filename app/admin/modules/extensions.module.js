@@ -46,7 +46,7 @@ angular.module('ExtensionsModule', [
                         templateUrl: 'admin/views/extensions/extensions.html'
                     },
                     "list@admin.extensions.aws-s3": {
-                        controller: 'ModulesCtrl as modulesCtrl',
+                        controller: 'ExtensionCtrl as extensionCtrl',
                         templateUrl: 'admin/views/extensions/aws-s3.html'
                     }
                 }
@@ -69,8 +69,8 @@ angular.module('ExtensionsModule', [
               },
 
               getExtension: function(id) {
-                var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/'+id);
-                return $firebaseObject(theRef);
+                  var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/'+id);
+                  return $firebaseObject(theRef);
               },
 
               removeExtension: function(id) {
@@ -78,10 +78,16 @@ angular.module('ExtensionsModule', [
                   return theRef.remove();
               },
 
+              getS3: function() {
+                  var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/aws-s3/');
+                  return $firebaseObject(theRef);
+              },
+
               updateS3: function(obj) {
-                  var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/'+obj.mid+'/parameters/');
-                  return theRef.update( {s3_url: obj.s3_url, access_key_id: obj.access_key_id, acl: obj.acl,
-                      success_redirect_url: obj.success_redirect_url, policy_key: obj.policy_key, signature_key: obj.signature_key} );
+                  var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/aws-s3/');
+                  return theRef.update(obj);
+  //                return theRef.update( {s3_url: obj.s3_url, access_key_id: obj.access_key_id, acl: obj.acl,
+  //                    success_redirect_url: obj.success_redirect_url, policy_key: obj.policy_key, signature_key: obj.signature_key} );
               },
 
               all: extensions
@@ -94,52 +100,71 @@ angular.module('ExtensionsModule', [
 
 ])
 
-.controller('ExtensionsCtrl', ['Extensions', '$state', '$scope', '$stateParams',
-      function (                Extensions,   $state,   $scope,   $stateParams) {
-          var extensionsCtrl = this;
+.controller('ExtensionsCtrl', ['Extensions', '$state', '$scope',
+      function (                Extensions,   $state,   $scope) {
+            var extensionsCtrl = this;
 
-          extensionsCtrl.gridExtensions = {
-              showGridFooter: true,
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              enableFiltering: true,
-              data: Extensions.all,
-              columnDefs: [
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/editExtension.html',
-                    width: 35, enableColumnMenu: false, headerTooltip: 'Edit', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-                  { name:'extensionName', field: 'extension_name', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '30%' },
-                  { name:'extensionTemplate', field: 'extension_template', enableHiding: false, enableFiltering: false, enableCellEdit: false },
-                  { name: ' ', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/removeExtension.html',
-                    width: 35, enableColumnMenu: false, headerTooltip: 'Delete', enableCellEdit: false, enableCellEdit: false, enableFiltering: false }
-              ]
-          };
+            extensionsCtrl.gridExtensions = {
+                showGridFooter: true,
+                enableSorting: true,
+                enableCellEditOnFocus: true,
+                enableFiltering: true,
+                data: Extensions.all,
+                columnDefs: [
+                    { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/editExtension.html',
+                      width: 35, enableColumnMenu: false, headerTooltip: 'Edit', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
+                    { name:'extensionName', field: 'extension_name', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '30%' },
+                    { name:'extensionTemplate', field: 'extension_template', enableHiding: false, enableFiltering: false, enableCellEdit: false },
+                    { name: ' ', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/removeExtension.html',
+                      width: 35, enableColumnMenu: false, headerTooltip: 'Delete', enableCellEdit: false, enableCellEdit: false, enableFiltering: false }
+                ]
+            };
 
-          extensionsCtrl.removeExtension = function(row) {
-                ExtensionsCtrl.removeExtension(row.entity.$id);
-          }, function(error) {
-                extensionsCtrl.error = error;
-          };
+            extensionsCtrl.removeExtension = function(row) {
+                  ExtensionsCtrl.removeExtension(row.entity.$id);
+            }, function(error) {
+                  extensionsCtrl.error = error;
+            };
 
-          extensionsCtrl.addExtension = function() {
-                Extensions.addExtension(extensionsCtrl.extension);
-                extensionsCtrl.extension_name = null;
-                extensionsCtrl.extension_template = null;
-          }, function(error) {
-                extensionsCtrl.error = error;
-          };
+            extensionsCtrl.addExtension = function() {
+                  Extensions.addExtension(extensionsCtrl.extension);
+                  extensionsCtrl.extension_name = null;
+                  extensionsCtrl.extension_template = null;
+            }, function(error) {
+                  extensionsCtrl.error = error;
+            };
 
-          extensionsCtrl.editExtension = function(row) {
-                var theExtension = Modules.getExtension(row.entity.$id);
-                    theExtension.$loaded().then(function() {
-                          $state.go('admin.extensions.' + theExtension.extension_template);
-                    });
-          };
+            extensionsCtrl.editExtension = function(row) {
+                  var theExtension = Extensions.getExtension(row.entity.$id);
+                      theExtension.$loaded().then(function() {
+                            $state.go('admin.extensions.' + theExtension.extension_template);
+                      });
+            };
 
-          extensionsCtrl.updateExtension = function() {
-                Extensions.updateS3(extensionsCtrl.s3);
-          }, function(error) {
-                extensionsCtrl.error = error;
-          };
+            extensionsCtrl.updateExtension = function() {
+                  Extensions.updateS3(extensionsCtrl.s3);
+            }, function(error) {
+                  extensionsCtrl.error = error;
+            };
+
+      }
+
+])
+
+.controller('ExtensionCtrl', ['Extensions',
+      function (               Extensions) {
+            var extensionCtrl = this;
+
+            var s3 = Extensions.getS3();
+                s3.$loaded().then(function() {
+                    extensionCtrl.s3 = s3;
+                });
+
+            extensionCtrl.updateS3 = function() {
+                  Extensions.updateS3(extensionCtrl.s3);
+            }, function(error) {
+                  extensionCtrl.error = error;
+            };
 
       }
 

@@ -787,9 +787,9 @@ angular.module('CatalogsModule', [
                     productCtrl.product.pid = null;
               }
 
-              productCtrl.featuredProducts = function() {
-                    $state.go('admin.catalogs.products', {'tabEntity': 1});
-              };
+    //          productCtrl.featuredProducts = function() {
+    //                $state.go('admin.catalogs.products', {'tabEntity': 1});
+    //          };
 
               productCtrl.gridDiscount = {
                     enableRowHeaderSelection: false,
