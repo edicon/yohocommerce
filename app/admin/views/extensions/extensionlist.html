@@ -5,20 +5,20 @@
 				<div class="form-group">
 					<div class="col-sm-4">
 						<div class="input-group input-group-sm">
-							<span class="input-group-addon">Module Name</span>
-		          <input type="text" ng-model="extensionsCtrl.module.module_name" placeholder="Enter Module Name" class="form-control">
+							<span class="input-group-addon">Extension Name</span>
+		          <input type="text" ng-model="extensionsCtrl.extension.extension_name" placeholder="Enter Extension Name" class="form-control">
 						</div>
 					</div>
 					<div class="col-sm-4">
 						<div class="input-group input-group-sm">
-							<span class="input-group-addon">Module Template</span>
-							<input type="text" ng-model="extensionsCtrl.module.module_template" placeholder="Enter Template Name" class="form-control">
+							<span class="input-group-addon">Extension Template</span>
+							<input type="text" ng-model="extensionsCtrl.extension.extension_template" placeholder="Enter Template Name" class="form-control">
 							<span class="input-group-addon">.html</span>
 						</div>
 					</div>
 					<div class="col-sm-4" align="right">
 						<div class="input-group input-group-sm">
-							<button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Module" ng-click="extensionsCtrl.addModule()">
+							<button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Extension" ng-click="extensionsCtrl.addExtension()">
 								<i class="fa fa-plus"></i>
 							</button>
 						</div>
@@ -27,11 +27,11 @@
 			</form>
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h4 class="panel-title"><span class="menu-icon fa fa-cubes"></span> Modules</h4>
+          <h4 class="panel-title"><span class="menu-icon fa fa-puzzle-piece"></span> Extensions</h4>
         </div>
         <div class="panel-body">
           <div class="row">
-            <div ui-grid="extensionsCtrl.gridModules" class="grid" ui-grid-edit ui-grid-cellNav></div>
+            <div ui-grid="extensionsCtrl.gridExtensions" class="grid" ui-grid-edit ui-grid-cellNav></div>
           </div>
         </div>
       </div>

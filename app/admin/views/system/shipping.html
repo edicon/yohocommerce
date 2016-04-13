@@ -5,18 +5,18 @@
 					<div class="col-sm-4">
 						<div class="input-group input-group-sm">
 							<span class="input-group-addon">Shipping Name</span>
-							<input type="text" ng-model="localizationCtrl.shipping_option.shipping_name" class="form-control">
+							<input type="text" ng-model="shippingCtrl.shipping.shipping_name" class="form-control">
 						</div>
 					</div>
 					<div class="col-sm-4">
 						<div class="input-group input-group-sm">
 							<span class="input-group-addon">Shipping Cost</span>
-							<input type="text" ng-model="localizationCtrl.shipping_option.shipping_cost" class="form-control">
+							<input type="text" ng-model="shippingCtrl.shipping.shipping_cost" class="form-control">
 						</div>
 					</div>
 					<div class="col-sm-4" align="right">
 						<div class="input-group input-group-sm">
-							<button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Shipping" ng-click="extensionsCtrl.addShippingOption()">
+							<button type="button" class="btn btn-sm btn-primary" uib-tooltip-placement="top" uib-tooltip="Add Shipping" ng-click="shippingCtrl.addShipping()">
 								<i class="fa fa-plus"></i>
 							</button>
 						</div>
@@ -25,10 +25,10 @@
 			</form>
 		<div class="panel panel-default">
 	    <div class="panel-heading">
-	      <h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> Shipping List</h3>
+	      <h3 class="panel-title"><span class="menu-icon fa fa-truck"></span> Shipping</h3>
 	    </div>
 	    <div class="panel-body">
-	      <div ui-grid="extensionsCtrl.gridShipping" class="grid" ui-grid-edit ui-grid-cellNav></div>
+	      <div ui-grid="shippingCtrl.gridShipping" class="grid" ui-grid-edit ui-grid-cellNav></div>
 	    </div>
 	  </div>
 	</div>

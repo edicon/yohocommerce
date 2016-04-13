@@ -133,6 +133,21 @@ angular.module('SystemModule', [
                 }
             }
         })
+        .state('admin.system.shipping', {
+            url: '/shipping',
+            views: {
+                "header@admin": {
+                    templateUrl: 'admin/views/system/shipping.header.html'
+                },
+                "main@admin": {
+                    templateUrl: 'admin/views/system/system.html'
+                },
+                "list@admin.system.shipping": {
+                    controller: 'ShippingCtrl as shippingCtrl',
+                    templateUrl: 'admin/views/system/shipping.html'
+                }
+            }
+        })
         .state('admin.system.stores', {
             url: '/stores',
             params: {
@@ -416,7 +431,7 @@ angular.module('SystemModule', [
                   return theRef.remove();
               },
 
-              all: taxes,
+              all: taxes
 
           };
 
@@ -447,7 +462,7 @@ angular.module('SystemModule', [
                   return $firebaseObject(ref.child(tid).child(gid));
               },
 
-              all: taxgroups,
+              all: taxgroups
 
           };
 
@@ -479,7 +494,7 @@ angular.module('SystemModule', [
                   return theRef.remove();
               },
 
-              all: taxgroups,
+              all: taxgroups
 
           };
 
@@ -506,7 +521,7 @@ angular.module('SystemModule', [
                   return theRef.remove();
               },
 
-              all: returnstatuses,
+              all: returnstatuses
 
           };
 
@@ -533,7 +548,7 @@ angular.module('SystemModule', [
                   return theRef.remove();
               },
 
-              all: returnactions,
+              all: returnactions
 
           };
 
@@ -560,7 +575,7 @@ angular.module('SystemModule', [
                   return theRef.remove();
               },
 
-              all: returnreasons,
+              all: returnreasons
 
           };
 
@@ -587,7 +602,7 @@ angular.module('SystemModule', [
                   return theRef.remove();
               },
 
-              all: orderstatuses,
+              all: orderstatuses
 
           };
 
@@ -614,7 +629,7 @@ angular.module('SystemModule', [
                   return theRef.remove();
               },
 
-              all: lengthunits,
+              all: lengthunits
 
           };
 
@@ -641,7 +656,7 @@ angular.module('SystemModule', [
                   return theRef.remove();
               },
 
-              all: weightunits,
+              all: weightunits
 
           };
 
@@ -705,6 +720,33 @@ angular.module('SystemModule', [
           }, function(error) {
               AlertService.addError(error.message);
           };
+      }
+
+])
+
+.factory('Shipping', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'shipping');
+          var shippings = $firebaseArray(ref.child(tid));
+
+          var shipping = {
+
+              addShipping: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'shipping/'+tid);
+                  return theRef.push(obj);
+              },
+
+              removeShipping: function(id) {
+                  var theRef = new Firebase(FirebaseUrl+'shipping/'+tid+'/'+id);
+                  return theRef.remove();
+              },
+
+              all: shippings
+
+          };
+
+          return shipping;
+
       }
 
 ])
@@ -1338,5 +1380,41 @@ angular.module('SystemModule', [
             };
 
       }
+
+])
+
+.controller('ShippingCtrl', ['Shipping', '$state', '$scope', '$stateParams',
+        function (            Shipping,   $state,   $scope,   $stateParams) {
+              var shippingCtrl = this;
+
+              shippingCtrl.addShipping = function() {
+                      Shipping.addShipping(shippingCtrl.shipping);
+                      shippingCtrl.shipping.shipping_name = null;
+                      shippingCtrl.shipping.shipping_cost = null;
+              }, function(error) {
+                      shippingCtrl.error = error;
+              };
+
+              shippingCtrl.removeShipping = function(row) {
+                      Shipping.removeShipping(row.entity.$id);
+              }, function(error) {
+                      shippingCtrl.error = error;
+              };
+
+              shippingCtrl.gridShipping = {
+                      enableSorting: true,
+                      enableCellEditOnFocus: true,
+                      data: Shipping.all,
+                      columnDefs: [
+                            { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/system/gridTemplates/editShipping.html',
+                              width: 35, enableColumnMenu: false, headerTooltip: 'Edit', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
+                            { name:'ShippingMethod', field: 'shipping_name', enableHiding: false },
+                            { name:'ShippingCost', field: 'shipping_cost', type: 'number', cellClass: 'grid-align-right', cellFilter: 'currency',enableHiding: false },
+                            { name: ' ', field: '$id', cellTemplate:'admin/views/system/gridTemplates/removeShipping.html',
+                              width: 35, enableCellEdit: false, enableColumnMenu: false }
+                      ]
+              };
+
+        }
 
 ])
