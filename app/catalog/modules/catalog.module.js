@@ -869,10 +869,11 @@ angular.module('CatalogModule', [
                   send email to customer */
                     if (cartCtrl.customer.customer_email == cartCtrl.customer.confirm_customer_email) {
                         $state.go('catalog.revieworder');
-                    };
 
-                } then {
-                      AlertService.addError(Messages.emails_dont_match);
+
+                    } else {
+                          AlertService.addError(Messages.emails_dont_match);
+                    };
                 };
 
         }

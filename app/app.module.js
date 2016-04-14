@@ -73,6 +73,8 @@ var app = angular.module('app', [
             var messages = {
                   send_email_success: 'Reset Password E-Mail Sent',
                   save_password_success: 'New Password Saved',
+                  passwords_dont_match: 'Passwords Do Not Match',
+                  emails_dont_match: 'E-Mails Do Not Match',
             };
 
             return messages;
