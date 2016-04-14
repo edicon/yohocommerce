@@ -140,6 +140,22 @@ angular.module('CatalogModule', [
                       }
                   }
               })
+              .state('catalog.revieworder', {
+                  url: 'revieworder',
+                  views: {
+                      "header@catalog": {
+                          controller: 'CatalogCtrl as catalogCtrl',
+                          templateUrl: 'catalog/views/common/header.html'
+                      },
+                      "main@catalog": {
+                          controller: 'CartCtrl as cartCtrl',
+                          templateUrl: 'catalog/views/shoppingcart/revieworder.html'
+                      },
+                      "footer@catalog": {
+                          templateUrl: 'catalog/views/common/footer.html'
+                      }
+                  }
+              })
               .state('catalog.contact', {
                   url: 'contact',
                   views: {
@@ -811,8 +827,8 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CartCtrl', ['Catalog', 'CartOrders', 'CartUpdateLine', 'CartRemoveLine', '$cookies',
-        function (        Catalog,   CartOrders,   CartUpdateLine,   CartRemoveLine,   $cookies) {
+.controller('CartCtrl', ['Catalog', 'CartOrders', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', '$state', '$cookies',
+        function (        Catalog,   CartOrders,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   $state,   $cookies) {
                 var cartCtrl = this;
                 cartCtrl.store = Catalog.storeDefaults;
                 var oid = $cookies.get('orderId');
@@ -869,21 +885,24 @@ angular.module('CatalogModule', [
                       cartCtrl.error = error;
                 };
 
+                cartCtrl.confirmOrder = function() {
+          /*        add customer
+                  push customer id to order
+                  send email to customer */
+                    if (cartCtrl.customer.customer_email == cartCtrl.customer.confirm_customer_email) {
+                        $state.go('catalog.revieworder');
+                    };
+
+                } then {
+                      AlertService.addError(Messages.emails_dont_match);
+                };
+
         }
 
 ])
 
-.controller('CheckoutCtrl', ['Catalog', 'CartOrders', 'Products', '$scope', '$state', '$cookies',
-      function (              Catalog,   CartOrders,   Products,   $scope,   $state,   $cookies) {
-            var catalogCtrl = this;
-
-
-      }
-
-])
-
-.controller('AuthCtrl', ['Auth', 'AlertService', 'Tenant', 'LoginHelper', 'md5', 'tid', '$state',
-      function (          Auth,   AlertService,   Tenant,   LoginHelper,   md5,   tid,   $state) {
+.controller('AuthCtrl', ['Auth', 'AlertService', 'Tenant', 'LoginHelper', 'md5', 'Messages', 'tid', '$state',
+      function (          Auth,   AlertService,   Tenant,   LoginHelper,   md5,   Messages,   tid,   $state) {
             var authCtrl = this;
             authCtrl.tenant = {};
             authCtrl.user = {};
@@ -924,7 +943,7 @@ angular.module('CatalogModule', [
                 Auth.$resetPassword({
                     email: authCtrl.user.email
                     }).then(function() {
-                        console.log("Password reset email sent successfully!");
+                        AlertService.addSuccess(Messages.send_email_success);
                         $state.go('catalog.home');
                     }).catch(function(error) {
                         console.error("Error: ", error);
