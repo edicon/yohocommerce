@@ -64,8 +64,8 @@ angular.module('ExtensionsModule', [
           var extension = {
 
               addExtension: function(obj) {
-                  var theRef = new Firebase(FirebaseUrl+'extensions/'+tid);
-                  return theRef.push(obj);
+                  var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/'+obj.extension_template);
+                  return theRef.update( {extension_name: obj.extension_name, extension_template: obj.extension_template} );
               },
 
               getExtension: function(id) {
@@ -85,9 +85,8 @@ angular.module('ExtensionsModule', [
 
               updateS3: function(obj) {
                   var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/aws-s3/');
-                  return theRef.update(obj);
-  //                return theRef.update( {s3_url: obj.s3_url, access_key_id: obj.access_key_id, acl: obj.acl,
-  //                    success_redirect_url: obj.success_redirect_url, policy_key: obj.policy_key, signature_key: obj.signature_key} );
+                  return theRef.update( {s3_url: obj.s3_url, access_key_id: obj.access_key_id, acl: obj.acl,
+                      success_redirect_url: obj.success_redirect_url, policy_key: obj.policy_key, signature_key: obj.signature_key} );
               },
 
               all: extensions
@@ -128,8 +127,8 @@ angular.module('ExtensionsModule', [
 
             extensionsCtrl.addExtension = function() {
                   Extensions.addExtension(extensionsCtrl.extension);
-                  extensionsCtrl.extension_name = null;
-                  extensionsCtrl.extension_template = null;
+                  extensionsCtrl.extension.extension_name = null;
+                  extensionsCtrl.extension.extension_template = null;
             }, function(error) {
                   extensionsCtrl.error = error;
             };

@@ -683,14 +683,14 @@ angular.module('SystemModule', [
                                         url: libraryCtrl.s3.s3_url,
                                         method: 'POST',
                                         data: {
-                                            key: file.name,
-                                            AWSAccessKeyId: libraryCtrl.s3.access_key_id,
-                                            acl: 'private',
-                                            policy: libraryCtrl.s3.policy_key,
-                                            signature: libraryCtrl.s3.signature_key,
-                                            "Content-Type": file.type != '' ? file.type : 'application/octet-stream',
-                                            filename: "",
-                                            file: file
+                                              key: file.name,
+                                              AWSAccessKeyId: libraryCtrl.s3.access_key_id,
+                                              acl: 'private',
+                                              policy: libraryCtrl.s3.policy_key,
+                                              signature: libraryCtrl.s3.signature_key,
+                                              "Content-Type": file.type != '' ? file.type : 'application/octet-stream',
+                                              filename: "",
+                                              file: file
                                         }
                                 });
 
