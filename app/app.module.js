@@ -6,6 +6,7 @@ var app = angular.module('app', [
     'ngSanitize',
     'angular-md5',
     'ui.rdash',
+    'ngFileUpload',
 
     'CatalogModule',
     'AccountModule',
@@ -22,58 +23,10 @@ var app = angular.module('app', [
 
 .constant('tid', '-K4zdSDMnu3vSyL069A1')
 .constant('FirebaseUrl', 'https://ecomengine.firebaseio.com/')
-.constant('InstanceUrl','http://ec2-54-187-192-104.us-west-2.compute.amazonaws.com/')
-.constant('AppApiKey', '7a54306df6dbc1cb4d5c627a5993e6c61f4f56e6dcb3a403cda55b2d73a1f3d7')
-
-.run(         ['$cookies', '$http', 'AppApiKey',
-    function (  $cookies,   $http,   AppApiKey) {
-//      $http.defaults.headers.common['X-Dreamfactory-API-Key'] = AppApiKey;
-  		$http.defaults.headers.common['X-DreamFactory-Session-Token'] = $cookies.session_token;
-  	}
-])
 
 .config(function(uiSelectConfig) {
     uiSelectConfig.theme = 'bootstrap';
 })
-
-/*.factory('httpInterceptor', ['$location', '$q', '$injector', 'InstanceUrl',
-    function (                $location,   $q,   $injector,   InstanceUrl) {
-
-  		    return {
-
-      			     request: function (config) {
-        				// Append instance url before every api call
-              				if (config.url.indexOf('/api/v2') > -1) {
-              				      config.url = InstanceUrl + config.url;
-              				};
-
-              				// delete x-dreamfactory-session-token header if login
-              				if (config.method.toLowerCase() === 'post' && config.url.indexOf('/api/v2/user/session') > -1) {
-              					     delete config.headers['X-DreamFactory-Session-Token'];
-              				}
-
-              				console.log(config);
-
-              				return config;
-      			     },
-
-          			responseError: function (result) {
-
-          				// If status is 401 or 403 with token blacklist error then redirect to login
-          				if (result.status === 401 || (result.status === 403 && result.data.error.message.indexOf('token') > -1)) {
-          					$location.path('/login');
-          				}
-
-          				var $mdToast = $injector.get('$mdToast');
-          				$mdToast.show($mdToast.simple().content('Error: ' + result.data.error.message));
-
-          				return $q.reject(result);
-          			}
-  		    };
-
-      }
-
-])*/
 
 .factory('AlertService', ['$rootScope',
       function (           $rootScope) {

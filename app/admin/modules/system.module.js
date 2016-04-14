@@ -666,61 +666,50 @@ angular.module('SystemModule', [
 
 ])
 
-.controller('LibraryCtrl', ['Upload', 'Tenant', 'InstanceUrl', '$timeout', '$state', '$scope', '$stateParams',
-      function (             Upload,   Tenant,   InstanceUrl,   $timeout,   $state,   $scope,   $stateParams) {
+.controller('LibraryCtrl', ['Upload', 'Extensions', '$timeout', '$scope',
+        function (           Upload,   Extensions,   $timeout,   $scope) {
+              var libraryCtrl = this;
 
-          var libraryCtrl = this;
+                  var s3 = Extensions.getS3();
+                        s3.$loaded().then(function() {
+                              libraryCtrl.s3 = s3;
+                        });
 
-      /*    $scope.uploadFiles = function(file, errFiles) {
-            $scope.f = file;
-            $scope.errFile = errFiles && errFiles[0];
-              if (file) {
-                file.upload = Upload.upload({
-                  url: 'http://ec2-54-187-192-104.us-west-2.compute.amazonaws.com/files/marketplace',
-                  data: {file: file}
-                });
+                  $scope.uploadFiles = function(files, errFiles) {
+                        $scope.files = files;
+                        $scope.errFiles = errFiles;
+                        angular.forEach(files, function(file) {
+                                file.upload = Upload.upload({
+                                        url: libraryCtrl.s3.s3_url,
+                                        method: 'POST',
+                                        data: {
+                                            key: file.name,
+                                            AWSAccessKeyId: libraryCtrl.s3.access_key_id,
+                                            acl: 'private',
+                                            policy: libraryCtrl.s3.policy_key,
+                                            signature: libraryCtrl.s3.signature_key,
+                                            "Content-Type": file.type != '' ? file.type : 'application/octet-stream',
+                                            filename: "",
+                                            file: file
+                                        }
+                                });
 
-                file.upload.then(function (response) {
-                  $timeout(function () {
-                    file.result = response.data;
-                  });
-                }, function (response) {
-                  if (response.status > 0)
-                    $scope.errorMsg = response.status + ': ' + response.data;
-                }, function (evt) {
-                    file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-              });
-            }
+                                file.upload.then(function (response) {
+                                      $timeout(function () {
+                                            file.result = response.data;
+                                      });
+                                }, function (response) {
+                                      if (response.status > 0)
+                                            $scope.errorMsg = response.status + ': ' + response.data;
+                                }, function (evt) {
+                                      file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+                                });
+
+                        });
+
+                }
+
         }
-  */
-
-          $scope.uploadFiles = function (blob) {
-
-              Upload.http({
-                  url: DreamFactoryFilesUrl,
-                  headers : {
-                      "Content-Type": "image/png",
-                      "X-File-Name": blob.name
-                  },
-                  processData: false,
-                  data: blob
-
-              }).then(function (resp) {
-                  //$rootScope.$broadcast('camera.upload');
-              }, function (resp) {
-                  //$rootScope.$broadcast('camera.upload');
-              }, function (evt) {
-                  var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                  console.log('progress: ' + progressPercentage + '% ');
-              });
-          };
-
-          libraryCtrl.saveDreamFactoryUser = function() {
-              Tenant.saveDreamFactoryUser(libraryCtrl.user);
-          }, function(error) {
-              AlertService.addError(error.message);
-          };
-      }
 
 ])
 
