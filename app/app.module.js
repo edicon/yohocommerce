@@ -6,6 +6,7 @@ var app = angular.module('app', [
     'ngSanitize',
     'angular-md5',
     'ui.rdash',
+    'ngFileUpload',
 
     'CatalogModule',
     'AccountModule',
@@ -17,20 +18,12 @@ var app = angular.module('app', [
     'MarketingModule',
     'SalesModule',
     'SystemModule',
-    'ToolsModule'
+    'ToolsModule',
+    'ReportsModule'
 ])
 
 .constant('tid', '-K4zdSDMnu3vSyL069A1')
 .constant('FirebaseUrl', 'https://ecomengine.firebaseio.com/')
-.constant('InstanceUrl','http://ec2-54-187-192-104.us-west-2.compute.amazonaws.com/')
-.constant('AppApiKey', '7a54306df6dbc1cb4d5c627a5993e6c61f4f56e6dcb3a403cda55b2d73a1f3d7')
-
-.run(         ['$cookies', '$http', 'AppApiKey',
-    function (  $cookies,   $http,   AppApiKey) {
-//      $http.defaults.headers.common['X-Dreamfactory-API-Key'] = AppApiKey;
-  		$http.defaults.headers.common['X-DreamFactory-Session-Token'] = $cookies.session_token;
-  	}
-])
 
 .config(function(uiSelectConfig) {
     uiSelectConfig.theme = 'bootstrap';

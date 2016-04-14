@@ -32,67 +32,22 @@ angular.module('ExtensionsModule', [
                     },
                     "list@admin.extensions": {
                         controller: 'ExtensionsCtrl as extensionsCtrl',
-                        templateUrl: 'admin/views/extensions/modules.html'
+                        templateUrl: 'admin/views/extensions/extensionlist.html'
                     }
                 }
             })
-            .state('admin.extensions.modules', {
-                url: '/modules',
+            .state('admin.extensions.aws-s3', {
+                url: '/aws-s3',
                 views: {
                     "header@admin": {
-                        templateUrl: 'admin/views/extensions/modules.header.html'
+                        templateUrl: 'admin/views/extensions/aws-s3.header.html'
                     },
                     "main@admin": {
                         templateUrl: 'admin/views/extensions/extensions.html'
                     },
-                    "list@admin.extensions.modules": {
-                        controller: 'ExtensionsCtrl as extensionsCtrl',
-                        templateUrl: 'admin/views/extensions/modules.html'
-                    }
-                }
-            })
-            .state('admin.extensions.shipping', {
-                url: '/shipping',
-                views: {
-                    "header@admin": {
-                        templateUrl: 'admin/views/extensions/shipping.header.html'
-                    },
-                    "main@admin": {
-                        templateUrl: 'admin/views/extensions/extensions.html'
-                    },
-                    "list@admin.extensions.shipping": {
-                        controller: 'ExtensionsCtrl as extensionsCtrl',
-                        templateUrl: 'admin/views/extensions/shipping.html'
-                    }
-                }
-            })
-            .state('admin.extensions.payment', {
-                url: '/payment',
-                views: {
-                    "header@admin": {
-                        templateUrl: 'admin/views/extensions/payment.header.html'
-                    },
-                    "main@admin": {
-                        templateUrl: 'admin/views/extensions/extensions.html'
-                    },
-                    "list@admin.extensions.payment": {
-                        controller: 'ExtensionsCtrl as extensionsCtrl',
-                        templateUrl: 'admin/views/extensions/payment.html'
-                    }
-                }
-            })
-            .state('admin.extensions.feeds', {
-                url: '/feeds',
-                views: {
-                    "header@admin": {
-                        templateUrl: 'admin/views/extensions/feeds.header.html'
-                    },
-                    "main@admin": {
-                        templateUrl: 'admin/views/extensions/extensions.html'
-                    },
-                    "list@admin.extensions.feeds": {
-                        controller: 'ExtensionsCtrl as extensionsCtrl',
-                        templateUrl: 'admin/views/extensions/feeds.html'
+                    "list@admin.extensions.aws-s3": {
+                        controller: 'ExtensionCtrl as extensionCtrl',
+                        templateUrl: 'admin/views/extensions/aws-s3.html'
                     }
                 }
             })
@@ -101,114 +56,114 @@ angular.module('ExtensionsModule', [
 
 ])
 
-.factory('ShippingOptions', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
-          var ref = new Firebase(FirebaseUrl+'shipping_options');
-          var shippingoptions = $firebaseArray(ref.child(tid));
+.factory('Extensions', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (      $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'extensions');
+          var extensions = $firebaseArray(ref.child(tid));
 
-          var shippingoption = {
+          var extension = {
 
-              addShippingOption: function(theObj) {
-                  var theRef = new Firebase(FirebaseUrl+'shipping_options/'+tid);
-                  return theRef.push(theObj);
+              addExtension: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/'+obj.extension_template);
+                  return theRef.update( {extension_name: obj.extension_name, extension_template: obj.extension_template} );
               },
 
-              removeShippingOption: function(theId) {
-                  var theRef = new Firebase(FirebaseUrl+'shipping_options/'+tid+'/'+theId);
+              getExtension: function(id) {
+                  var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/'+id);
+                  return $firebaseObject(theRef);
+              },
+
+              removeExtension: function(id) {
+                  var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/'+id);
                   return theRef.remove();
               },
 
-              all: shippingoptions,
+              getS3: function() {
+                  var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/aws-s3/');
+                  return $firebaseObject(theRef);
+              },
+
+              updateS3: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/aws-s3/');
+                  return theRef.update( {s3_url: obj.s3_url, access_key_id: obj.access_key_id, acl: obj.acl,
+                      success_redirect_url: obj.success_redirect_url, policy_key: obj.policy_key, signature_key: obj.signature_key} );
+              },
+
+              all: extensions
 
           };
 
-          return shippingoption;
+          return extension;
 
       }
 
 ])
 
-.controller('ExtensionsCtrl', ['ShippingOptions', '$state', '$scope', '$stateParams',
-      function (                ShippingOptions,   $state,   $scope,   $stateParams) {
-          var extensionsCtrl = this;
+.controller('ExtensionsCtrl', ['Extensions', '$state', '$scope',
+      function (                Extensions,   $state,   $scope) {
+            var extensionsCtrl = this;
 
-          extensionsCtrl.gridModules = {
-              showGridFooter: true,
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              enableFiltering: true,
-          //    data: Modules.all,
-              columnDefs: [
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/editModule.html',
-                    width: 35, enableColumnMenu: false, headerTooltip: 'Edit', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-                  { name:'moduleName', field: 'module_name', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '50%' },
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/installModule.html',
-                    width: 35, enableColumnMenu: false, headerTooltip: 'Install', enableCellEdit: false, enableCellEdit: false, enableFiltering: false }
-
-              ]
-          };
-
-          extensionsCtrl.addShippingOption = function() {
-                ShippingOptions.addShippingOption(extensionsCtrl.shipping_option);
-                extensionsCtrl.shipping_option.shipping_name = null;
-                extensionsCtrl.shipping_option.shipping_cost = null;
-          }, function(error) {
-                extensionsCtrl.error = error;
-          };
-
-          extensionsCtrl.removeShippingOption = function(row) {
-                ShippingOptions.removeShippingOption(row.entity.$id);
-          }, function(error) {
-                extensionsCtrl.error = error;
-          };
-
-          extensionsCtrl.gridShipping = {
+            extensionsCtrl.gridExtensions = {
+                showGridFooter: true,
                 enableSorting: true,
                 enableCellEditOnFocus: true,
-                data: ShippingOptions.all,
+                enableFiltering: true,
+                data: Extensions.all,
                 columnDefs: [
-                      { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/editShipper.html',
-                        width: 35, enableColumnMenu: false, headerTooltip: 'Edit', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-                      { name:'ShippingMethod', field: 'shipping_name', enableHiding: false },
-                      { name:'ShippingCost', field: 'shipping_cost', type: 'number', cellClass: 'grid-align-right', cellFilter: 'currency',enableHiding: false },
-                      { name: ' ', field: '$id', cellTemplate:'admin/views/extensions/gridTemplates/removeShippingOption.html',
-                        width: 35, enableCellEdit: false, enableColumnMenu: false }
+                    { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/editExtension.html',
+                      width: 35, enableColumnMenu: false, headerTooltip: 'Edit', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
+                    { name:'extensionName', field: 'extension_name', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '30%' },
+                    { name:'extensionTemplate', field: 'extension_template', enableHiding: false, enableFiltering: false, enableCellEdit: false },
+                    { name: ' ', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/removeExtension.html',
+                      width: 35, enableColumnMenu: false, headerTooltip: 'Delete', enableCellEdit: false, enableCellEdit: false, enableFiltering: false }
                 ]
-          };
+            };
 
-          extensionsCtrl.gridPayment = {
-              showGridFooter: true,
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              enableFiltering: true,
-          //    data: Payments.all,
-              columnDefs: [
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/editShipper.html',
-                    width: 35, enableColumnMenu: false, headerTooltip: 'Edit', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-                  { name:'paymentMethod', field: 'payment_name', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '73%' },
-                  { name:'paymentStatus', field: 'shipping_status', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '20%' },
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/installShipper.html',
-                    width: 35, enableColumnMenu: false, headerTooltip: 'Install', enableCellEdit: false, enableCellEdit: false, enableFiltering: false }
+            extensionsCtrl.removeExtension = function(row) {
+                  ExtensionsCtrl.removeExtension(row.entity.$id);
+            }, function(error) {
+                  extensionsCtrl.error = error;
+            };
 
-              ]
-          };
+            extensionsCtrl.addExtension = function() {
+                  Extensions.addExtension(extensionsCtrl.extension);
+                  extensionsCtrl.extension.extension_name = null;
+                  extensionsCtrl.extension.extension_template = null;
+            }, function(error) {
+                  extensionsCtrl.error = error;
+            };
 
-          extensionsCtrl.gridFeeds = {
-              showGridFooter: true,
-              enableSorting: true,
-              enableCellEditOnFocus: true,
-              enableFiltering: true,
-          //    data: Payments.all,
-              columnDefs: [
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/editFeed.html',
-                    width: 35, enableColumnMenu: false, headerTooltip: 'Edit', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-                  { name:'feedName', field: 'feed_name', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '73%' },
-                  { name:'feedStatus', field: 'feed_status', enableHiding: false, enableFiltering: false, enableCellEdit: false, width: '20%' },
-                  { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/extensions/gridTemplates/installFeed.html',
-                    width: 35, enableColumnMenu: false, headerTooltip: 'Install', enableCellEdit: false, enableCellEdit: false, enableFiltering: false }
+            extensionsCtrl.editExtension = function(row) {
+                  var theExtension = Extensions.getExtension(row.entity.$id);
+                      theExtension.$loaded().then(function() {
+                            $state.go('admin.extensions.' + theExtension.extension_template);
+                      });
+            };
 
-              ]
-          };
+            extensionsCtrl.updateExtension = function() {
+                  Extensions.updateS3(extensionsCtrl.s3);
+            }, function(error) {
+                  extensionsCtrl.error = error;
+            };
+
+      }
+
+])
+
+.controller('ExtensionCtrl', ['Extensions',
+      function (               Extensions) {
+            var extensionCtrl = this;
+
+            var s3 = Extensions.getS3();
+                s3.$loaded().then(function() {
+                    extensionCtrl.s3 = s3;
+                });
+
+            extensionCtrl.updateS3 = function() {
+                  Extensions.updateS3(extensionCtrl.s3);
+            }, function(error) {
+                  extensionCtrl.error = error;
+            };
 
       }
 

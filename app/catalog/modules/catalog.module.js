@@ -402,29 +402,6 @@ angular.module('CatalogModule', [
 
 ])
 
-.service('LoginHelper', ['$http', '$q', '$cookies', '$rootScope', 'InstanceUrl',
-      function (          $http,   $q,   $cookies,   $rootScope,   InstanceUrl) {
-    		      this.initiate = function (options) {
-    			    var deferred = $q.defer();
-
-            			$http.post(InstanceUrl+'api/v2/user/session/', options).then(function (result) {
-              				$http.defaults.headers.common['X-DreamFactory-Session-Token'] = result.data.session_token;
-              				$cookies.session_token = result.data.session_token;
-
-              				$rootScope.user = result.data;
-
-              				try {
-              				      window.localStorage.user = JSON.stringify(result.data);
-              				} catch (e) { }
-
-             		      deferred.resolve();
-            			}, deferred.reject);
-
-            			return deferred.promise;
-        		};
-	     }
-])
-
 .service('CartUpdateHeader', ['CartOrders',
         function (             CartOrders) {
       		      this.initiate = function (oid) {
@@ -611,6 +588,7 @@ angular.module('CatalogModule', [
       function (             Catalog,   CartOrders,   Products,   CartUpdateLine,   CartRemoveLine,   $scope,   $state,   $cookies) {
             var catalogCtrl = this;
             $scope.product = {};
+            $scope.products = Products.all;
             catalogCtrl.categories = Catalog.all;
             catalogCtrl.store = Catalog.storeDefaults;
             catalogCtrl.subPulldowns = Catalog.pulldown;
@@ -910,21 +888,7 @@ angular.module('CatalogModule', [
             authCtrl.adminLogin = function() {
                 Auth.$authWithPassword(authCtrl.user).then(function(auth) {
                     $state.go('admin.dashboard');
-              /*    this is to setup file storing capabilities on Dreamfactory */
-              /*    authCtrl.tenant = Tenant.getInstanceCredentials();
-                    authCtrl.tenant.$loaded().then(function() {
-                        LoginHelper.initiate({
-                            email: authCtrl.tenant.dreamfactory_email,
-                            password: authCtrl.tenant.dreamfactory_password
-                        })
 
-
-
-                    }).then(function() {
-                        $state.go('admin.dashboard');
-                    });
-
-                */
                 }, function(error) {
                     AlertService.addError(error.message);
                 });

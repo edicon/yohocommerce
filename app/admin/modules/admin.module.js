@@ -16,10 +16,8 @@ angular.module('AdminModule', [
 
 ])
 
-.config (    ['$stateProvider', '$httpProvider', '$urlRouterProvider',
-    function ( $stateProvider,   $httpProvider,   $urlRouterProvider) {
-
-      //    $httpProvider.interceptors.push('httpInterceptor');
+.config (    ['$stateProvider', '$urlRouterProvider',
+    function ( $stateProvider,   $urlRouterProvider) {
 
       $urlRouterProvider.otherwise('/admin');
 
