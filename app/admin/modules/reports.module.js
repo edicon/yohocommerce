@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('ToolsModule', [
+angular.module('ReportsModule', [
     'ngAnimate',
     'ngResource',
     'ngSanitize',
