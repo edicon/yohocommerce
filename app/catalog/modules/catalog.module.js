@@ -805,17 +805,18 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CartCtrl', ['Catalog', 'CartOrders', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', '$state', '$cookies',
-        function (        Catalog,   CartOrders,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   $state,   $cookies) {
+.controller('CartCtrl', ['Catalog', 'CartOrders', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', 'Customer', '$state', '$cookies',
+        function (        Catalog,   CartOrders,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   Customer,   $state,   $cookies) {
                 var cartCtrl = this;
                 cartCtrl.store = Catalog.storeDefaults;
                 var oid = $cookies.get('orderId');
+
 
                 var theOrder = CartOrders.getOrder(oid)
                       theOrder.$loaded().then(function() {
                             cartCtrl.order = theOrder;
                             cartCtrl.order.total = theOrder.sub_total + theOrder.tax_total;
-
+                            console.log(cartCtrl.order);
                             var theLines = CartOrders.getLines(oid)
                                   theLines.$loaded().then(function() {
                                         cartCtrl.lines = theLines;
@@ -868,7 +869,12 @@ angular.module('CatalogModule', [
                   push customer id to order
                   send email to customer */
                     if (cartCtrl.customer.customer_email == cartCtrl.customer.confirm_customer_email) {
+                        Customer.addCustomer(cartCtrl.customer).then(function() {
+                            console.log(cartCtrl.customer.$id);
+                            Customer.addOrder(cartCtrl.customer.$id, cartCtrl.order);
+                        });
                         $state.go('catalog.revieworder');
+
 
 
                     } else {
@@ -880,8 +886,8 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('AuthCtrl', ['Auth', 'AlertService', 'Tenant', 'LoginHelper', 'md5', 'Messages', 'tid', '$state',
-      function (          Auth,   AlertService,   Tenant,   LoginHelper,   md5,   Messages,   tid,   $state) {
+.controller('AuthCtrl', ['Auth', 'AlertService', 'Tenant', 'md5', 'Messages', 'tid', '$state',
+      function (          Auth,   AlertService,   Tenant,   md5,   Messages,   tid,   $state) {
             var authCtrl = this;
             authCtrl.tenant = {};
             authCtrl.user = {};

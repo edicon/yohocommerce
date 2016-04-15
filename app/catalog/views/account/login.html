@@ -21,7 +21,6 @@
         <h2>Returning Customer</h2>
         <p><strong>I am a returning customer</strong></p>
         <form ng-submit="authCtrl.accountLogin()">
-          <p ng-show="authCtrl.error" class="text-danger">{{ loginCtrl.error.message }}</p>
           <div class="form-group">
             <label class="control-label">E-Mail Address</label>
             <input type="email" placeholder="Email" class="form-control" ng-model="authCtrl.user.email" >
