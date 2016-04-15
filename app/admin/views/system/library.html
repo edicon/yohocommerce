@@ -1,31 +1,32 @@
-<div class="container-fluid" ng-controller="LibraryCtrl">
+<div class="container-fluid" ng-controller="MediaLibraryCtrl">
   <div class="col-xs-12">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title"><span class="menu-icon fa fa-picture-o"></span> Media Library</h4>
       </div>
       <div class="panel-body">
-        <div class="col-sm-2">
-          <div class="row">
-            <h4>Upload on file select</h4>
-            <button ngf-select="uploadFiles($files, $invalidFiles)" multiple accept="image/*" ngf-max-size="10MB">
-              Select Files</button>
-              <br><br>
-            files:
-            <ul>
+        <div class="col-sm-12">
+          <button class="btn btn-default btn-block" ngf-select="uploadFiles($files, $invalidFiles)" multiple accept="image/*" ngf-max-size="10MB">
+            <h4>Select File(s) for Upload</h4>
+            <ul class="list-inline">
               <li ng-repeat="f in files" style="font:smaller">{{f.name}} {{f.$errorParam}}
                 <span class="progress" ng-show="f.progress >= 0">
                   <div style="width:{{f.progress}}%" ng-bind="f.progress + '%'"></div>
                 </span>
               </li>
-              <li ng-repeat="f in errFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
-              </li>
+              <li ng-repeat="f in errFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}</li>
             </ul>
             {{errorMsg}}
-          </div>
+          </button>
         </div>
-        <div class="row">
-          images go here
+        <div class="col-sm-12">
+          <div ng-repeat="u in mediaLibraryCtrl.urls" class="col-sm-2">
+            <div class="panel-body">
+              <div><a href="" ng-click="mediaLibraryCtrl.goImage(u.$id)">
+                <img ng-src="{{u.url}}" height="100" width="100"></a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

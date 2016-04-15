@@ -77,7 +77,7 @@ angular.module('SystemModule', [
                     templateUrl: 'admin/views/system/system.html'
                 },
                 "list@admin.system.library": {
-                    controller: 'LibraryCtrl as libraryCtrl',
+                    controller: 'MediaLibraryCtrl as mediaLibraryCtrl',
                     templateUrl: 'admin/views/system/library.html'
                 }
             }
@@ -640,7 +640,7 @@ angular.module('SystemModule', [
 ])
 
 .factory('WeightUnits', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (            $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+      function (          $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'weight_units');
           var weightunits = $firebaseArray(ref.child(tid));
 
@@ -666,28 +666,64 @@ angular.module('SystemModule', [
 
 ])
 
-.controller('LibraryCtrl', ['Upload', 'Extensions', '$timeout', '$scope',
-        function (           Upload,   Extensions,   $timeout,   $scope) {
-              var libraryCtrl = this;
+.factory('MediaLibrary', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (           $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'media_library');
+          var medialibraries = $firebaseArray(ref.child(tid));
+
+          var medialibrary = {
+
+              getImages: function(id) {
+                  return $firebaseArray(ref.child(tid).child(id));
+              },
+
+              addImage: function(obj) {
+                var theRef = new Firebase(FirebaseUrl+'media_library/'+tid);
+                return theRef.push(obj);
+              },
+
+              removeImage: function(id) {
+                var theRef = new Firebase(FirebaseUrl+'media_library/'+tid+'/'+id);
+                return theRef.remove();
+              },
+
+              all: medialibraries
+
+          };
+
+          return medialibrary;
+
+      }
+
+])
+
+
+.controller('MediaLibraryCtrl', ['Upload', 'MediaLibrary', 'Extensions', '$timeout', '$scope',
+        function (                Upload,   MediaLibrary,   Extensions,   $timeout,   $scope) {
+              var mediaLibraryCtrl = this;
+              mediaLibraryCtrl.upLoadComplete = 0;
+
+              mediaLibraryCtrl.urls = MediaLibrary.all;
 
                   var s3 = Extensions.getS3();
                         s3.$loaded().then(function() {
-                              libraryCtrl.s3 = s3;
+                              mediaLibraryCtrl.s3 = s3;
                         });
 
                   $scope.uploadFiles = function(files, errFiles) {
                         $scope.files = files;
                         $scope.errFiles = errFiles;
                         angular.forEach(files, function(file) {
+                                mediaLibraryCtrl.s3.file_name = file.name;
                                 file.upload = Upload.upload({
-                                        url: libraryCtrl.s3.s3_url,
+                                        url: mediaLibraryCtrl.s3.s3_url,
                                         method: 'POST',
                                         data: {
                                               key: file.name,
-                                              AWSAccessKeyId: libraryCtrl.s3.access_key_id,
+                                              AWSAccessKeyId: mediaLibraryCtrl.s3.access_key_id,
                                               acl: 'private',
-                                              policy: libraryCtrl.s3.policy_key,
-                                              signature: libraryCtrl.s3.signature_key,
+                                              policy: mediaLibraryCtrl.s3.policy_key,
+                                              signature: mediaLibraryCtrl.s3.signature_key,
                                               "Content-Type": file.type != '' ? file.type : 'application/octet-stream',
                                               filename: "",
                                               file: file
@@ -695,6 +731,7 @@ angular.module('SystemModule', [
                                 });
 
                                 file.upload.then(function (response) {
+                                  console.log(response)
                                       $timeout(function () {
                                             file.result = response.data;
                                       });
@@ -704,6 +741,9 @@ angular.module('SystemModule', [
                                 }, function (evt) {
                                       file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
                                 });
+
+                                var theLink = mediaLibraryCtrl.s3.s3_url + mediaLibraryCtrl.s3.file_name;
+                                MediaLibrary.addImage( {url: theLink} );
 
                         });
 
@@ -1062,8 +1102,8 @@ angular.module('SystemModule', [
 
 ])
 
-.controller('LocalizationCtrl', ['Taxes', 'TaxGroups', 'ReturnStatuses', 'ReturnActions', 'ReturnReasons', 'OrderStatuses', 'LengthUnits', 'WeightUnits', 'ShippingOptions', '$state', '$scope', '$stateParams',
-      function (                  Taxes,   TaxGroups,   ReturnStatuses,   ReturnActions,   ReturnReasons,   OrderStatuses,   LengthUnits,   WeightUnits,   ShippingOptions,   $state,   $scope,   $stateParams) {
+.controller('LocalizationCtrl', ['Taxes', 'TaxGroups', 'ReturnStatuses', 'ReturnActions', 'ReturnReasons', 'OrderStatuses', 'LengthUnits', 'WeightUnits', '$state', '$scope', '$stateParams',
+      function (                  Taxes,   TaxGroups,   ReturnStatuses,   ReturnActions,   ReturnReasons,   OrderStatuses,   LengthUnits,   WeightUnits,   $state,   $scope,   $stateParams) {
             var localizationCtrl = this;
             localizationCtrl.tax = {};
             localizationCtrl.tax.tax_type = 'Percent';
