@@ -126,6 +126,9 @@ angular.module('CatalogModule', [
               })
               .state('catalog.checkout', {
                   url: 'checkout',
+                  params: {
+                    cid: null,
+                  },
                   views: {
                       "header@catalog": {
                           controller: 'CatalogCtrl as catalogCtrl',
@@ -142,6 +145,9 @@ angular.module('CatalogModule', [
               })
               .state('catalog.revieworder', {
                   url: 'revieworder',
+                  params: {
+                    cid: null,
+                  },
                   views: {
                       "header@catalog": {
                           controller: 'CatalogCtrl as catalogCtrl',
@@ -375,6 +381,11 @@ angular.module('CatalogModule', [
               updateGiftVoucher: function(obj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
                   return theRef.update( {gift_voucher_code: obj.gift_voucher_code} );
+              },
+
+              updateCustomer: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
+                  return theRef.update( {customer_id: obj.cid} );
               },
 
               all: cartorders
@@ -805,30 +816,53 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CartCtrl', ['Catalog', 'CartOrders', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', 'Customer', '$state', '$cookies',
-        function (        Catalog,   CartOrders,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   Customer,   $state,   $cookies) {
+.controller('CartCtrl', ['Auth', 'Catalog', 'CartOrders', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', 'Customer', 'Profile', '$state', '$cookies',
+        function (        Auth,   Catalog,   CartOrders,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   Customer,   Profile,   $state,   $cookies) {
                 var cartCtrl = this;
                 cartCtrl.store = Catalog.storeDefaults;
-                var oid = $cookies.get('orderId');
+                var obj = {};
+                obj.oid = $cookies.get('orderId');
 
-
-                var theOrder = CartOrders.getOrder(oid)
+                var theOrder = CartOrders.getOrder(obj.oid)
                       theOrder.$loaded().then(function() {
                             cartCtrl.order = theOrder;
                             cartCtrl.order.total = theOrder.sub_total + theOrder.tax_total;
-                            console.log(cartCtrl.order);
-                            var theLines = CartOrders.getLines(oid)
+                            var theLines = CartOrders.getLines(obj.oid)
                                   theLines.$loaded().then(function() {
                                         cartCtrl.lines = theLines;
 
-                                        var theTaxes = CartOrders.getTaxes(oid)
+                                        var theTaxes = CartOrders.getTaxes(obj.oid)
                                               theTaxes.$loaded().then(function() {
                                                     cartCtrl.taxes = theTaxes;
                                               });
 
+                                                  obj.cid = cartCtrl.order.customer_id;
+                                                  if (obj.cid != null) {
+                                                        var theCustomer = Customer.getCustomer(obj.cid);
+                                                            theCustomer.$loaded().then(function(){
+                                                                cartCtrl.customer = theCustomer;
+                                                            });
+                                                  }
+
                                   });
 
                       });
+
+              cartCtrl.accountLogin = function() {
+                      Auth.$authWithPassword(cartCtrl.user).then(function (auth) {
+
+                        var theProfile = Profile.getProfile(auth.uid);
+                            theProfile.$loaded().then(function(){
+
+                                var theCustomer = Customer.getCustomer(theProfile.cid);
+                                    theCustomer.$loaded().then(function(){
+                                        cartCtrl.customer = theCustomer;
+                                    });
+                            });
+                      }, function(error) {
+                            AlertService.addError(error.message);
+                            });
+                };
 
 
                 cartCtrl.removeLine = function(lid, tgid) {
@@ -847,8 +881,6 @@ angular.module('CatalogModule', [
                 };
 
                 cartCtrl.updateCoupon = function() {
-                      var obj = {};
-                      obj.oid = oid;
                       obj.coupon_code = cartCtrl.order.coupon_code
                       CartOrders.updateCoupon(obj);
                 }, function(error) {
@@ -856,8 +888,6 @@ angular.module('CatalogModule', [
                 };
 
                 cartCtrl.updateGiftVoucher = function() {
-                      var obj = {};
-                      obj.oid = oid;
                       obj.gift_voucher_code = cartCtrl.order.gift_voucher_code
                       CartOrders.updateGiftVoucher(obj);
                 }, function(error) {
@@ -865,17 +895,21 @@ angular.module('CatalogModule', [
                 };
 
                 cartCtrl.confirmOrder = function() {
-          /*        add customer
-                  push customer id to order
-                  send email to customer */
+          /*       send email and/or text to customer */
                     if (cartCtrl.customer.customer_email == cartCtrl.customer.confirm_customer_email) {
-                        Customer.addCustomer(cartCtrl.customer).then(function() {
-                            console.log(cartCtrl.customer.$id);
-                            Customer.addOrder(cartCtrl.customer.$id, cartCtrl.order);
-                        });
-                        $state.go('catalog.revieworder');
+                        var theCheck = Customer.getEmail(cartCtrl.customer.customer_email);
+                            theCheck.$loaded().then(function() {
+                                  if(theCheck == null) {
+                                        Customer.addCustomer(cartCtrl.customer).then(function(cid) {
+                                            cartCtrl.customer.$id = cid;
+                                        });
+                                  }
 
-
+                                  Customer.addOrder(cartCtrl.customer.$id, cartCtrl.order.$id);
+                                  obj.cid = cartCtrl.customer.$id;
+                                  CartOrders.updateCustomer(obj);
+                                  $state.go('catalog.revieworder');
+                            });
 
                     } else {
                           AlertService.addError(Messages.emails_dont_match);

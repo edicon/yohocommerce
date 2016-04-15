@@ -357,6 +357,11 @@ angular.module('SalesModule', [
                   });
               },
 
+              addOrder: function(id, orderId) {
+                  var orderRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+id+'/orders');
+                  return orderRef.update( {order_id: orderId} );
+              },
+
               getAddresses: function(cid) {
                   var addressRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+cid+'/addresses');
                   return $firebaseArray(addressRef);
@@ -394,6 +399,12 @@ angular.module('SalesModule', [
                   custRef.remove();
                   return customer.recountAddresses(theObj.cid);
               },
+
+              getEmail: function(email) {
+                  return $firebaseArray(ref.child(tid).orderByChild("customer_email").equalTo(email));
+
+              },
+
 
               getIndex: function(cid) {
                   return customers.$indexFor(cid);
