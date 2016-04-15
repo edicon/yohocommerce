@@ -228,8 +228,8 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', '$state', 'profile', '$scope',
-      function (             Auth,   Customer,   AlertService,   $state,   profile,   $scope) {
+.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', 'Messages', '$state', 'profile', '$scope',
+      function (             Auth,   Customer,   AlertService,   Messages,   $state,   profile,   $scope) {
 
           var accountCtrl = this;
           accountCtrl.profile = profile;
@@ -250,7 +250,7 @@ angular.module('AccountModule', [
               Auth.$resetPassword({
                   email: accountCtrl.customer.customer_email
                   }).then(function() {
-                      AlertService.addSuccess('Password Reset E-Mail Sent');
+                      AlertService.addSuccess(Messages.send_email_success);
                       $state.go('catalog.home');
                   }).catch(function(error) {
                       console.error("Error: ", error);
@@ -258,18 +258,23 @@ angular.module('AccountModule', [
           };
 
           accountCtrl.newPassword = function() {
-            Auth.$changePassword({
-                email: accountCtrl.customer.customer_email,
-                oldPassword: accountCtrl.customer.customer_password,
-                newPassword: accountCtrl.customer.customer_new_password
-                }).then(function() {
-                    AlertService.addSuccess('New Password Saved');
-                    accountCtrl.customer.customer_password = null;
-                    accountCtrl.customer.customer_new_password = null;
-                    accountCtrl.customer.confirm_new_password = null;
-                }).catch(function(error) {
-                    console.error("Error: ", error);
-                });
+
+              if (accountCtrl.customer.customer_new_password == accountCtrl.customer.confirm_new_password){
+                Auth.$changePassword({
+                    email: accountCtrl.customer.customer_email,
+                    oldPassword: accountCtrl.customer.customer_password,
+                    newPassword: accountCtrl.customer.customer_new_password
+                    }).then(function() {
+                        AlertService.addSuccess(Messages.save_password_success);
+                        accountCtrl.customer.customer_password = null;
+                        accountCtrl.customer.customer_new_password = null;
+                        accountCtrl.customer.confirm_new_password = null;
+                    }).catch(function(error) {
+                        console.error("Error: ", error);
+                    });
+              } else {
+                  AlertService.addError(Messages.passwords_dont_match);
+              };
           };
 
           accountCtrl.logout = function() {

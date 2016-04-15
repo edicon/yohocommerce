@@ -3,36 +3,10 @@
     <ul class="breadcrumb">
       <li><a href="#" ui-sref="catalog.home"><i class="menu-icon fa fa-home"></i></a></li>
       <li><a href="#/cart" ui-sref="catalog.cart">Shopping Cart</a></li>
-      <li><a href="#/cart" ui-sref="catalog.cart">Checkout</a></li>
+      <li><a href="#/checkout" ui-sref="catalog.checkout">Checkout</a></li>
+      <li>Review Order</li>
     </ul>
-    <h2>Checkout</h2>
-    <div class="row">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Customer Account Information</h3>
-        </div>
-        <div class="panel-body">
-          <div class="col-sm-2">
-            <div class="pull-left">
-              <label><input type="radio" ng-model="cartCtrl.order.checkout_type" name="checkout_type"> &nbsp&nbspRegister New Account</label>
-              <label><input type="radio" ng-model="cartCtrl.order.checkout_type" name="checkout_type"> &nbsp&nbspGuest Checkout</label>
-            </div>
-          </div>
-          <div class="col-sm-10">
-            <div class="pull-right">
-              <form class="form-inline" ng-submit="cartCtrl.accountLogin()">
-                <div class="form-group">
-                  <input type="email" name="email" ng-model="cartCtrl.user.email" placeholder="E-Mail" class="form-control">
-                  <input type="password" name="password" ng-model="cartCtrl.user.password" placeholder="Password" class="form-control">
-                  <input class="btn btn-primary" type="submit" value="Returning Customer Login">
-                </div>
-              </form>
-              <a ng-click="authCtrl.forgotPassword()">Forgot Password</a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <h2>Review Order</h2>
   </div>
 </div><br>
 <div class="container">
@@ -53,7 +27,7 @@
             <div class="form-group required">
               <label class="col-sm-5 control-label">Last Name</label>
               <div class="col-sm-7">
-                <input type="text" name="lastName" ng-model="cartCtrl.customer.customer_last_name" placeholder="Last Name" class="form-control" required>
+                <input type="text" name="lastName" ng-model="rcartCtrl.customer.customer_last_name" placeholder="Last Name" class="form-control" required>
               </div>
             </div>
             <div class="form-group required">
