@@ -402,9 +402,7 @@ angular.module('SalesModule', [
 
               getEmail: function(email) {
                   return $firebaseArray(ref.child(tid).orderByChild("customer_email").equalTo(email));
-
               },
-
 
               getIndex: function(cid) {
                   return customers.$indexFor(cid);
