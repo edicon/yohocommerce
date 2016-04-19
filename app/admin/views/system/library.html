@@ -6,7 +6,8 @@
       </div>
       <div class="panel-body">
         <div class="col-sm-12">
-          <button class="btn btn-default btn-block" ngf-select="uploadFiles($files, $invalidFiles)" multiple accept="image/*" ngf-max-size="10MB">
+          <button class="btn btn-default btn-block" ngf-select="uploadFiles($files, $invalidFiles)" multiple accept="image/*"
+              ngf-resize="{width: 225, height: 210, centerCrop: true}" ngf-max-size="10MB">
             <h4>Select File(s) for Upload</h4>
             <ul class="list-inline">
               <li ng-repeat="f in files" style="font:smaller">{{f.name}} {{f.$errorParam}}
@@ -19,12 +20,16 @@
             {{errorMsg}}
           </button>
         </div>
-        <div class="col-sm-12">
-          <div ng-repeat="u in mediaLibraryCtrl.urls" class="col-sm-2">
+        <div class="col-sm-12">&nbsp;</div>
+        <div ng-repeat="u in mediaLibraryCtrl.urls" class="col-md-2 col-sm-2 col-xs-4">
+          <div class="panel panel-default">
             <div class="panel-body">
-              <div><a href="" ng-click="mediaLibraryCtrl.goImage(u.$id)">
-                <img ng-src="{{u.url}}" height="100" width="100"></a>
+              <div class="thumbnail no-border">
+                <a href="#" title="{{u.file_name}}"><img ng-src="{{u.url}}" alt="{{u.file_name}}"></a>
               </div>
+            </div>
+            <div class="panel-footer" align="center">
+              <button class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button>
             </div>
           </div>
         </div>

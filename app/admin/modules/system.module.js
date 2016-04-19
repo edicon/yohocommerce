@@ -731,7 +731,6 @@ angular.module('SystemModule', [
                                 });
 
                                 file.upload.then(function (response) {
-                                  console.log(response)
                                       $timeout(function () {
                                             file.result = response.data;
                                       });
@@ -740,10 +739,14 @@ angular.module('SystemModule', [
                                             $scope.errorMsg = response.status + ': ' + response.data;
                                 }, function (evt) {
                                       file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-                                });
+                                            if (evt.type === "load") {
+                                                var theImg = {};
+                                                theImg.url = mediaLibraryCtrl.s3.s3_url + mediaLibraryCtrl.s3.file_name;
+                                                theImg.file_name = mediaLibraryCtrl.s3.file_name;
+                                                MediaLibrary.addImage(theImg);
+                                            }
 
-                                var theLink = mediaLibraryCtrl.s3.s3_url + mediaLibraryCtrl.s3.file_name;
-                                MediaLibrary.addImage( {url: theLink} );
+                                });
 
                         });
 

@@ -85,8 +85,8 @@ angular.module('ExtensionsModule', [
 
               updateS3: function(obj) {
                   var theRef = new Firebase(FirebaseUrl+'extensions/'+tid+'/aws-s3/');
-                  return theRef.update( {s3_url: obj.s3_url, access_key_id: obj.access_key_id, acl: obj.acl,
-                      success_redirect_url: obj.success_redirect_url, policy_key: obj.policy_key, signature_key: obj.signature_key} );
+                  return theRef.update( {s3_url: obj.s3_url, access_key_id: obj.access_key_id,
+                      policy_key: obj.policy_key, signature_key: obj.signature_key} );
               },
 
               all: extensions
