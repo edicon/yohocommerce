@@ -740,8 +740,10 @@ angular.module('SystemModule', [
                                 }, function (evt) {
                                       file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
                                             if (evt.type === "load") {
-                                                var theLink = mediaLibraryCtrl.s3.s3_url + mediaLibraryCtrl.s3.file_name;
-                                                MediaLibrary.addImage( {url: theLink} );
+                                                var theImg = {};
+                                                theImg.url = mediaLibraryCtrl.s3.s3_url + mediaLibraryCtrl.s3.file_name;
+                                                theImg.file_name = mediaLibraryCtrl.s3.file_name;
+                                                MediaLibrary.addImage(theImg);
                                             }
 
                                 });
