@@ -949,7 +949,7 @@ angular.module('CatalogModule', [
                           cartCtrl.addOrderToCustomer(cartCtrl.customer.$id, cartCtrl.order.$id);
 
                     } else if (cartCtrl.checkout_type == "newRegister") {
-                          if (cartCtrl.customer.customer_email == cartCtrl.customer.confirm_customer_email) {
+                          if (cartCtrl.customer.customer_email == cartCtrl.confirm_customer_email) {
                               if (cartCtrl.customer.customer_password == cartCtrl.confirm_customer_password) {
                                   cartCtrl.createUser(cartCtrl.customer);
                                   cartCtrl.addOrderToCustomer(cartCtrl.customer.$id, cartCtrl.order.$id);
@@ -964,17 +964,16 @@ angular.module('CatalogModule', [
                           if (cartCtrl.customer.customer_email == cartCtrl.confirm_customer_email) {
                               var theCheck = Customer.getEmail(cartCtrl.customer.customer_email);
                               theCheck.$loaded().then(function() {
-                                  console.log(theCheck);
                                   if(theCheck == null) {
                                       Customer.addCustomer(cartCtrl.customer).then(function(cid) {
                                       cartCtrl.customer.$id = cid;
                                       });
                                   };
-                                cartCtrl.customer = theCheck;
-                                console.log(cartCtrl.customer.$id);  
+                                cartCtrl.customer = theCheck[0];
                                 cartCtrl.addOrderToCustomer(cartCtrl.customer.$id, cartCtrl.order.$id);
                               });
                           } else {
+
                               AlertService.addError(Messages.emails_dont_match);
                           };
                     };

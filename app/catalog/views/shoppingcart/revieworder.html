@@ -10,232 +10,182 @@
   </div>
 </div><br>
 <div class="container">
-  <form name="checkoutForm" class="form-horizontal" ng-submit="cartCtrl.confirmOrder()">
-    <div class="col-sm-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Your Personal Details</h3>
-        </div>
-        <div class="panel-body">
-          <fieldset>
-            <div class="form-group required">
-              <label class="col-sm-5 control-label">First Name</label>
-              <div class="col-sm-7">
-                <input type="text" name="firstName" ng-model="cartCtrl.customer.customer_first_name" placeholder="First Name" class="form-control" required>
-              </div>
-            </div>
-            <div class="form-group required">
-              <label class="col-sm-5 control-label">Last Name</label>
-              <div class="col-sm-7">
-                <input type="text" name="lastName" ng-model="rcartCtrl.customer.customer_last_name" placeholder="Last Name" class="form-control" required>
-              </div>
-            </div>
-            <div class="form-group required">
-              <label class="col-sm-5 control-label">E-Mail</label>
-              <div class="col-sm-7">
-                <input type="email" name="email" ng-model="cartCtrl.customer.customer_email" placeholder="Customer E-Mail" class="form-control" required>
-              </div>
-            </div>
-            <div class="form-group required">
-              <label class="col-sm-5 control-label">Confirm E-Mail</label>
-              <div class="col-sm-7">
-                <input type="email" name="email" ng-model="cartCtrl.customer.confirm_customer_email" placeholder="Customer E-Mail" class="form-control" required>
-              </div>
-            </div>
-            <div class="form-group required">
-              <label class="col-sm-5 control-label">Phone Number</label>
-              <div class="col-sm-7">
-                <input type="text" name="phone" ng-model="cartCtrl.customer.customer_phone" placeholder="Phone Number" class="form-control" required>
-              </div>
-            </div>
-          </fieldset>
-        </div>
+  <div class="col-sm-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Your Personal Details</h3>
       </div>
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Your Address</h3>
+      <div class="panel-body">
+        <fieldset>
+          <div>
+            <label class="col-sm-3 col-sm-offset-1 control-label">Name:</label>
+            <div class="col-sm-7">
+              <p>{{cartCtrl.customer.customer_first_name}} {{cartCtrl.customer.customer_last_name}}</p>
+            </div>
+          </div>
+          <div>
+            <label class="col-sm-3 col-sm-offset-1 control-label">E-Mail:</label>
+            <div class="col-sm-7">
+              <p>{{cartCtrl.customer.customer_email}}</p>
+            </div>
+          </div>
+          <div>
+            <label class="col-sm-3 col-sm-offset-1 control-label">Phone:</label>
+            <div class="col-sm-7">
+              <p>{{cartCtrl.customer.customer_phone}}</p>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Your Address</h3>
+      </div>
+      <div class="panel-body">
+        <fieldset>
+          <div class="col-sm-12 col-sm-offset-4">
+            <p>{{cartCtrl.customer.customer_address1}}</p>
+            <p>{{cartCtrl.customer.customer_city}}, {{cartCtrl.customer.customer_province}}</p>
+            <p>{{cartCtrl.customer.customer_postal}} {{cartCtrl.customer.customer_country}}</p>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Shipping Method</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          Please select the preferred shipping method.
+        </div><br>
+        <div class="row">
+          <div class="col-sm-8">
+            <label><input type="radio" ng-model="cartCtrl.order.shipping_type" name="shipping_type"> &nbsp&nbsp Flat Rate</label>
+          </div>
+          <div class="col-sm-4">
+            <div class="pull-right">$10.00</div>
+          </div>
         </div>
-        <div class="panel-body">
-          <fieldset>
-            <div class="form-group required">
-              <label class="col-sm-5 control-label">Address</label>
-              <div class="col-sm-7">
-                <input type="text" name="address" ng-model="cartCtrl.customer.customer_address1" placeholder="Street Address" class="form-control" required>
-              </div>
-            </div>
-            <div class="form-group required">
-              <label class="col-sm-5 control-label">City</label>
-              <div class="col-sm-7">
-                <input type="text" name="city" ng-model="cartCtrl.customer.customer_city" placeholder="City" class="form-control" required>
-              </div>
-            </div>
-            <div class="form-group required">
-              <label class="col-sm-5 control-label">Province / State</label>
-              <div class="col-sm-7">
-                <input type="text" name="province" ng-model="cartCtrl.customer.customer_province" placeholder="Province / State" class="form-control" required>
-              </div>
-            </div>
-            <div class="form-group required">
-              <label class="col-sm-5 control-label">Postal / ZIP Code</label>
-              <div class="col-sm-7">
-                <input type="text" name="postal" ng-model="cartCtrl.customer.customer_postal" placeholder="Postal / ZIP Code" class="form-control" required>
-              </div>
-            </div>
-            <div class="form-group required">
-              <label class="col-sm-5 control-label">Country</label>
-              <div class="col-sm-7">
-                <input type="text" name="postal" ng-model="cartCtrl.customer.customer_country" placeholder="Country" class="form-control" required>
-              </div>
-            </div>
-          </fieldset>
+        <div class="row">
+          <div class="col-sm-8">
+            <label><input type="radio" ng-model="cartCtrl.order.shipping_type" name="shipping_type"> &nbsp&nbsp Cash on Delivery</label>
+          </div>
+          <div class="col-sm-4">
+            <div class="pull-right">TBD</div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-sm-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Shipping Method</h3>
+  </div>
+  <div class="col-sm-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Payment Method</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          Please select the preferred payment method.
+        </div><br>
+        <div class="row">
+          <div class="col-sm-8">
+            <label><input type="radio" ng-model="cartCtrl.order.shipping_type" name="payment_type"> &nbsp&nbsp PayPal</label>
+          </div>
+          <div class="col-sm-4">
+            <div class="pull-right">paypal logo</div>
+          </div>
         </div>
-        <div class="panel-body">
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-8">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Shopping Cart</h3>
+      </div>
+      <div class="panel-body">
+        <div ng-if="cartCtrl.order.items > 0">
+          <div class="table-responsive">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <td class="text-center">Image</td>
+                  <td class="text-left">Product</td>
+                  <td class="text-right">Quantity</td>
+                  <td class="text-right">Unit Price</td>
+                  <td class="text-right">Total</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="o in cartCtrl.lines">
+                  <td class="text-center">
+                    <a href="" ng-click="cartCtrl.goProduct(o.product_id)"><img ng-src="{{o.product_image}}" width="35px" height="35px"></a>
+                  </td>
+                  <td class="text-left">
+                    <a href="" ng-click="cartCtrl.goProduct(o.product_id)">{{o.product_name}}</a><br>
+                    <small>Reward points: {{o.reward_points_total}}</small>
+                  </td>
+                  <td width="150px" class="text-right">
+                    {{o.line_quantity}}
+                  </td>
+                  <td ng-if="o.special_price" class="text-right">
+                    {{o.special_price | currency}}
+                  </td>
+                  <td ng-if="o.special_price == null" class="text-right">
+                    {{o.regular_price | currency}}
+                  </td>
+                  <td class="text-right">{{o.line_total | currency}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <div class="row">
-            Please select the preferred shipping method.
+            <div class="col-sm-8 col-sm-offset-2">
+              <label class="control-label">Use Coupon Code</label>
+              <div class="input-group input-group-sm">
+                <input type="text" ng-model="cartCtrl.order.coupon_code" class="form-control" placeholder="Enter Coupon Code">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" ng-click="cartCtrl.updateCoupon()" type="button"><span class="menu-icon fa fa-check"></span></button>
+                </span>
+              </div>
+            </div>
           </div><br>
           <div class="row">
-            <div class="col-sm-8">
-              <label><input type="radio" ng-model="cartCtrl.order.shipping_type" name="shipping_type"> &nbsp&nbsp Flat Rate</label>
+            <div class="col-sm-8 col-sm-offset-2">
+              <label class="control-label">Use Gift Voucher</label>
+              <div class="input-group input-group-sm">
+                <input type="text" ng-model="cartCtrl.order.gift_voucher_code" class="form-control" placeholder="Enter Gift Voucher">
+                <span class="input-group-btn">
+                  <button class="btn btn-primary" ng-click="cartCtrl.updateGiftVoucher()" type="button"><span class="menu-icon fa fa-check"></span></button>
+                </span>
+              </div>
             </div>
-            <div class="col-sm-4">
-              <div class="pull-right">$10.00</div>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-sm-8">
-              <label><input type="radio" ng-model="cartCtrl.order.shipping_type" name="shipping_type"> &nbsp&nbsp Cash on Delivery</label>
-            </div>
-            <div class="col-sm-4">
-              <div class="pull-right">TBD</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Payment Method</h3>
-        </div>
-        <div class="panel-body">
-          <div class="row">
-            Please select the preferred payment method.
           </div><br>
-          <div class="row">
-            <div class="col-sm-8">
-              <label><input type="radio" ng-model="cartCtrl.order.shipping_type" name="payment_type"> &nbsp&nbsp PayPal</label>
-            </div>
-            <div class="col-sm-4">
-              <div class="pull-right">paypal logo</div>
-            </div>
-          </div>
+          <div class="col-sm-4 col-sm-offset-4">
+            <table class="table">
+              <tr>
+                <td class="text-right"><strong>Sub Total</strong></td>
+                <td class="text-right">{{cartCtrl.order.sub_total | currency}}</td>
+              </tr>
+              <tr ng-repeat="t in cartCtrl.taxes">
+                <td class="text-right"><strong>{{t.tax_name}}</strong></td>
+                <td class="text-right">{{t.tax_total | currency}}</td>
+              </tr>
+              <tr>
+                <td class="text-right"><strong>Cash on Delivery</strong></td>
+                <td class="text-right">TBD</td>
+              </tr>
+              <tr>
+                <td class="text-right"><strong>Total</strong></td>
+                <td class="text-right">{{cartCtrl.order.total | currency}}</td>
+              </tr>
+            </table>
+          </div><br>
         </div>
       </div>
     </div>
-    <div class="col-sm-8">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">Shopping Cart</h3>
-        </div>
-        <div class="panel-body">
-          <div ng-if="cartCtrl.order.items > 0">
-            <div class="table-responsive">
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <td class="text-center">Image</td>
-                    <td class="text-left">Product</td>
-                    <td class="text-right">Quantity</td>
-                    <td class="text-right">Unit Price</td>
-                    <td class="text-right">Total</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr ng-repeat="o in cartCtrl.lines">
-                    <td class="text-center">
-                      <a href="" ng-click="cartCtrl.goProduct(o.product_id)"><img ng-src="{{o.product_image}}" width="35px" height="35px"></a>
-                    </td>
-                    <td class="text-left">
-                      <a href="" ng-click="cartCtrl.goProduct(o.product_id)">{{o.product_name}}</a><br>
-                      <small>Reward points: {{o.reward_points_total}}</small>
-                    </td>
-                    <td width="150px">
-                      <div class="input-group">
-                        <input type="text" ng-model="o.line_quantity" ng-change="cartCtrl.updateLine(o.$id, o.line_quantity, o.product_id)"
-                        class="form-control" style="text-align: right;">
-                        <span class="input-group-btn">
-                          <button class="btn btn-danger" ng-click="cartCtrl.removeLine(o.$id, o.product_tax_group_id)" type="button"><span class="menu-icon fa fa-times"></span></button>
-                        </span>
-                      </div>
-                    </td>
-                    <td ng-if="o.special_price" class="text-right">
-                      {{o.special_price | currency}}
-                    </td>
-                    <td ng-if="o.special_price == null" class="text-right">
-                      {{o.regular_price | currency}}
-                    </td>
-                    <td class="text-right">{{o.line_total | currency}}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="row">
-              <div class="col-sm-8 col-sm-offset-2">
-                <label class="control-label">Use Coupon Code</label>
-                <div class="input-group input-group-sm">
-                  <input type="text" ng-model="cartCtrl.order.coupon_code" class="form-control" placeholder="Enter Coupon Code">
-                  <span class="input-group-btn">
-                    <button class="btn btn-primary" ng-click="cartCtrl.updateCoupon()" type="button"><span class="menu-icon fa fa-check"></span></button>
-                  </span>
-                </div>
-              </div>
-            </div><br>
-            <div class="row">
-              <div class="col-sm-8 col-sm-offset-2">
-                <label class="control-label">Use Gift Voucher</label>
-                <div class="input-group input-group-sm">
-                  <input type="text" ng-model="cartCtrl.order.gift_voucher_code" class="form-control" placeholder="Enter Gift Voucher">
-                  <span class="input-group-btn">
-                    <button class="btn btn-primary" ng-click="cartCtrl.updateGiftVoucher()" type="button"><span class="menu-icon fa fa-check"></span></button>
-                  </span>
-                </div>
-              </div>
-            </div><br>
-            <div class="col-sm-4 col-sm-offset-4">
-              <table class="table">
-                <tr>
-                  <td class="text-right"><strong>Sub Total</strong></td>
-                  <td class="text-right">{{cartCtrl.order.sub_total | currency}}</td>
-                </tr>
-                <tr ng-repeat="t in cartCtrl.taxes">
-                  <td class="text-right"><strong>{{t.tax_name}}</strong></td>
-                  <td class="text-right">{{t.tax_total | currency}}</td>
-                </tr>
-                <tr>
-                  <td class="text-right"><strong>Cash on Delivery</strong></td>
-                  <td class="text-right">TBD</td>
-                </tr>
-                <tr>
-                  <td class="text-right"><strong>Total</strong></td>
-                  <td class="text-right">{{cartCtrl.order.total | currency}}</td>
-                </tr>
-              </table>
-            </div><br>
-            <div class="row">
-              <div class="col-sm-6 col-sm-offset-5">
-                <input type="submit" value="Confirm Order" class="btn btn-primary">
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </form>
+  </div>
 </div>
