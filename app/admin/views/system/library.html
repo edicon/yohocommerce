@@ -19,13 +19,15 @@
             {{errorMsg}}
           </button>
         </div>
-        <div class="col-sm-12">
-          <div ng-repeat="u in mediaLibraryCtrl.urls" class="col-sm-2">
-            <div class="panel-body">
-              <div><a href="" ng-click="mediaLibraryCtrl.goImage(u.$id)">
-                <img ng-src="{{u.url}}" height="100" width="100"></a>
+        <div class="col-sm-12">&nbsp;</div>
+        <div ng-repeat="u in mediaLibraryCtrl.urls" class="col-md-2 col-sm-2 col-xs-4">
+          <div class="panel panel-default">
+            <div class="panel-body" style="height:180px">
+              <div class="thumbnail no-border">
+                <img ng-src="{{u.url}}">
               </div>
             </div>
+            <div class="panel-footer"><button class="btn btn-xs btn-danger btn-block">delete</button></div>
           </div>
         </div>
       </div>
