@@ -359,7 +359,7 @@ angular.module('SalesModule', [
 
               addOrder: function(id, orderId) {
                   var orderRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+id+'/orders');
-                  return orderRef.update( {order_id: orderId} );
+                  return orderRef.push( {order_id: orderId} );
               },
 
               getAddresses: function(cid) {
@@ -402,9 +402,7 @@ angular.module('SalesModule', [
 
               getEmail: function(email) {
                   return $firebaseArray(ref.child(tid).orderByChild("customer_email").equalTo(email));
-
               },
-
 
               getIndex: function(cid) {
                   return customers.$indexFor(cid);
@@ -914,6 +912,19 @@ angular.module('SalesModule', [
 .controller('OrdersCtrl', ['Orders', '$state', '$scope', '$stateParams',
       function (            Orders,   $state,   $scope,   $stateParams) {
           var ordersCtrl = this;
+
+          ordersCtrl.gridOrders = {
+                enableSorting: true,
+                enableCellEditOnFocus: true,
+                enableFiltering: true,
+                data: Orders.all,
+                columnDefs: [
+                      { name:'dateAdded', field: 'create_date', cellFilter: 'date',  width: '35%', enableHiding: false, enableFiltering: true },
+                      { name:'customerCode', field: 'customer_id', enableHiding: false, enableFiltering: false },
+                      { name:'orderTotal', field: 'total', width: '15%', enableHiding: false, enableFiltering: false,
+                          cellClass: 'grid-align-right', cellFilter:'currency' }
+                ]
+          };
 
       }
 

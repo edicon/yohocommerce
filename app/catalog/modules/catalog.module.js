@@ -816,12 +816,16 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CartCtrl', ['Auth', 'Catalog', 'CartOrders', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', 'Customer', 'Profile', '$state', '$cookies',
-        function (        Auth,   Catalog,   CartOrders,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   Customer,   Profile,   $state,   $cookies) {
+.controller('CartCtrl', ['Auth', 'Catalog', 'CartOrders', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', 'Customer', 'md5', 'tid', 'Profile', '$state', '$cookies',
+        function (        Auth,   Catalog,   CartOrders,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   Customer,   md5,   tid,   Profile,   $state,   $cookies) {
                 var cartCtrl = this;
                 cartCtrl.store = Catalog.storeDefaults;
                 var obj = {};
                 obj.oid = $cookies.get('orderId');
+                cartCtrl.status = null;
+                cartCtrl.checkout_type = null;
+                var newRegister = "newRegister";
+                var existing = "existing";
 
                 var theOrder = CartOrders.getOrder(obj.oid)
                       theOrder.$loaded().then(function() {
@@ -853,12 +857,13 @@ angular.module('CatalogModule', [
 
                         var theProfile = Profile.getProfile(auth.uid);
                             theProfile.$loaded().then(function(){
-
                                 var theCustomer = Customer.getCustomer(theProfile.cid);
                                     theCustomer.$loaded().then(function(){
                                         cartCtrl.customer = theCustomer;
                                     });
                             });
+                            cartCtrl.status = existing;
+
                       }, function(error) {
                             AlertService.addError(error.message);
                             });
@@ -869,6 +874,16 @@ angular.module('CatalogModule', [
                       CartRemoveLine.initiate(lid, tgid);
                 }, function(error) {
                       cartCtrl.error = error;
+                };
+
+                cartCtrl.CheckoutTypeRegister = function() {
+                    cartCtrl.checkout_type = newRegister;
+                    console.log(cartCtrl.checkout_type);
+                };
+
+                cartCtrl.CheckoutTypeGuest = function() {
+                    cartCtrl.checkout_type = null;
+                    console.log(cartCtrl.checkout_type);
                 };
 
                 cartCtrl.updateLine = function(lid, qty, pid) {
@@ -894,25 +909,73 @@ angular.module('CatalogModule', [
                       cartCtrl.error = error;
                 };
 
+                cartCtrl.addOrderToCustomer = function(cid, oid) {
+                  Customer.addOrder(cid, oid);
+                  obj.cid = cid;
+                  CartOrders.updateCustomer(obj);
+                  $state.go('catalog.revieworder');
+                };
+
+                cartCtrl.createUser = function(obj) {
+                    cartCtrl.user.email = cartCtrl.customer.customer_email;
+                    cartCtrl.user.password = cartCtrl.customer.customer_password;
+                    Auth.$createUser(cartCtrl.user).then(function(user) {
+                        cartCtrl.uid = user.uid;
+                        Customer.addCustomer(obj).then(function(cid){
+                            cartCtrl.customer.$id = cid;
+                            Profile.getProfile(cartCtrl.uid);
+                            cartCtrl.profile.$loaded().then(function() {
+                                cartCtrl.profile.emailHash = md5.createHash(registerCtrl.customer.customer_email);
+                                cartCtrl.profile.first_name = cartCtrl.customer.customer_first_name;
+                                cartCtrl.profile.last_name = cartCtrl.customer.customer_last_name;
+                                cartCtrl.profile.email = cartCtrl.customer.customer_email;
+                                cartCtrl.profile.type = 'Customer';
+                                cartCtrl.profile.status = 'Enabled';
+                                cartCtrl.profile.cid = cartCtrl.customeer.$id;
+                                cartCtrl.profile.tid = tid;
+                                cartCtrl.profile.$save();
+                            });
+                        });
+
+
+                    }, function(error) {
+                        AlertService.addError(error.message);
+                    });
+                };
+
                 cartCtrl.confirmOrder = function() {
           /*       send email and/or text to customer */
-                    if (cartCtrl.customer.customer_email == cartCtrl.customer.confirm_customer_email) {
-                        var theCheck = Customer.getEmail(cartCtrl.customer.customer_email);
-                            theCheck.$loaded().then(function() {
-                                  if(theCheck == null) {
-                                        Customer.addCustomer(cartCtrl.customer).then(function(cid) {
-                                            cartCtrl.customer.$id = cid;
-                                        });
-                                  }
+                    if (cartCtrl.status == "existing") {
+                          cartCtrl.addOrderToCustomer(cartCtrl.customer.$id, cartCtrl.order.$id);
 
-                                  Customer.addOrder(cartCtrl.customer.$id, cartCtrl.order.$id);
-                                  obj.cid = cartCtrl.customer.$id;
-                                  CartOrders.updateCustomer(obj);
-                                  $state.go('catalog.revieworder');
-                            });
+                    } else if (cartCtrl.checkout_type == "newRegister") {
+                          if (cartCtrl.customer.customer_email == cartCtrl.confirm_customer_email) {
+                              if (cartCtrl.customer.customer_password == cartCtrl.confirm_customer_password) {
+                                  cartCtrl.createUser(cartCtrl.customer);
+                                  cartCtrl.addOrderToCustomer(cartCtrl.customer.$id, cartCtrl.order.$id);
+                              } else {
+                                  AlertService.addError(Messages.passwords_dont_match);
+                              };
+                          } else {
+                              AlertService.addError(Messages.emails_dont_match);
+                          };
 
                     } else {
-                          AlertService.addError(Messages.emails_dont_match);
+                          if (cartCtrl.customer.customer_email == cartCtrl.confirm_customer_email) {
+                              var theCheck = Customer.getEmail(cartCtrl.customer.customer_email);
+                              theCheck.$loaded().then(function() {
+                                  if(theCheck == null) {
+                                      Customer.addCustomer(cartCtrl.customer).then(function(cid) {
+                                      cartCtrl.customer.$id = cid;
+                                      });
+                                  };
+                                cartCtrl.customer = theCheck[0];
+                                cartCtrl.addOrderToCustomer(cartCtrl.customer.$id, cartCtrl.order.$id);
+                              });
+                          } else {
+
+                              AlertService.addError(Messages.emails_dont_match);
+                          };
                     };
                 };
 
