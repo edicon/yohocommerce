@@ -374,8 +374,8 @@ angular.module('CatalogModule', [
               },
 
               updateCoupon: function(obj) {
-                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
-                  return theRef.update( {coupon_code: obj.coupon_code} );
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid+'/coupons/'+obj.coupon_id);
+                  return theRef.update( {coupon_discount: obj.coupon_discount, coupon_type: obj.coupon_type} );
               },
 
               updateGiftVoucher: function(obj) {
@@ -816,16 +816,14 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CartCtrl', ['Auth', 'Catalog', 'CartOrders', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', 'Customer', 'md5', 'tid', 'Profile', '$state', '$cookies',
-        function (        Auth,   Catalog,   CartOrders,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   Customer,   md5,   tid,   Profile,   $state,   $cookies) {
+.controller('CartCtrl', ['Auth', 'Catalog', 'CartOrders', 'Coupons', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', 'Customer', 'md5', 'tid', 'Profile', '$state', '$cookies',
+        function (        Auth,   Catalog,   CartOrders,   Coupons,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   Customer,   md5,   tid,   Profile,   $state,   $cookies) {
                 var cartCtrl = this;
                 cartCtrl.store = Catalog.storeDefaults;
                 var obj = {};
                 obj.oid = $cookies.get('orderId');
                 cartCtrl.status = null;
                 cartCtrl.checkout_type = null;
-                var newRegister = "newRegister";
-                var existing = "existing";
 
                 var theOrder = CartOrders.getOrder(obj.oid)
                       theOrder.$loaded().then(function() {
@@ -862,7 +860,7 @@ angular.module('CatalogModule', [
                                         cartCtrl.customer = theCustomer;
                                     });
                             });
-                            cartCtrl.status = existing;
+                            cartCtrl.status = "existing";
 
                       }, function(error) {
                             AlertService.addError(error.message);
@@ -877,13 +875,11 @@ angular.module('CatalogModule', [
                 };
 
                 cartCtrl.CheckoutTypeRegister = function() {
-                    cartCtrl.checkout_type = newRegister;
-                    console.log(cartCtrl.checkout_type);
+                    cartCtrl.checkout_type = "newRegister";
                 };
 
                 cartCtrl.CheckoutTypeGuest = function() {
                     cartCtrl.checkout_type = null;
-                    console.log(cartCtrl.checkout_type);
                 };
 
                 cartCtrl.updateLine = function(lid, qty, pid) {
@@ -895,11 +891,21 @@ angular.module('CatalogModule', [
                       cartCtrl.error = error;
                 };
 
+
                 cartCtrl.updateCoupon = function() {
-                      obj.coupon_code = cartCtrl.order.coupon_code
-                      CartOrders.updateCoupon(obj);
-                }, function(error) {
-                      cartCtrl.error = error;
+                      var theCoupon = Coupons.getCoupon(cartCtrl.order.coupon_code);
+                      if (theCoupon != undefined) {
+                          theCoupon.$loaded().then(function() {
+                              obj.coupon_id = theCoupon.$id;
+                              obj.coupon_discount = theCoupon.coupon_discount;
+                              obj.coupon_type = theCoupon.coupon_type;
+                              CartOrders.updateCoupon(obj);
+                              console.log(obj);
+                          });
+                      } else {
+                          AlertService.addError(Messages.invalid_coupon_code);
+                          cartCtrl.order.coupon_code = null;
+                      };
                 };
 
                 cartCtrl.updateGiftVoucher = function() {

@@ -75,6 +75,7 @@ var app = angular.module('app', [
                   save_password_success: 'New Password Saved',
                   passwords_dont_match: 'Passwords Do Not Match',
                   emails_dont_match: 'E-Mails Do Not Match',
+                  invalid_coupon_code: 'Coupon Code is Invalid',
             };
 
             return messages;

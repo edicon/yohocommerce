@@ -159,6 +159,17 @@ angular.module('MarketingModule', [
 
           var coupon = {
 
+              getCoupon: function(id) {
+                  var theRef = new Firebase(FirebaseUrl+'coupons/'+tid+'/'+id);
+                  var idExists = "";
+                  theRef.once("value", function(snapshot){
+                      idExists = snapshot.exists();
+                  });
+                  if (idExists === true)
+                        return $firebaseObject(ref.child(tid).child(id));
+
+              },
+
               addCoupon: function(theObj) {
                   var theRef = new Firebase(FirebaseUrl+'coupons/'+tid);
                   return theRef.push(theObj);
