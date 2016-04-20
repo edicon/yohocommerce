@@ -21,7 +21,7 @@
           </button>
         </div>
         <div class="col-sm-12">&nbsp;</div>
-        <div ng-repeat="u in mediaLibraryCtrl.urls" class="col-md-2 col-sm-2 col-xs-4">
+<!--        <div ng-repeat="u in mediaLibraryCtrl.urls" class="col-md-2 col-sm-2 col-xs-4">
           <div class="panel panel-default">
             <div class="panel-body">
               <div class="thumbnail no-border">
@@ -30,6 +30,18 @@
             </div>
             <div class="panel-footer" align="center">
               <button class="btn btn-xs btn-danger"><i class="fa fa-trash"></i> Delete</button>
+            </div>
+          </div>
+        </div>-->
+
+        <div ng-repeat="u in mediaLibraryCtrl.urls" class="col-xs-2">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <p><a href="#" title="{{u.file_name}}"><img ng-src="{{u.url}}" class="img-responsive" alt="{{u.file_name}}"></a></p>
+                  <button type="button" class="btn btn-xs btn-danger" ng-click="">
+                    <i class="fa fa-trash"></i> Delete
+                  </button>
+              </div>
             </div>
           </div>
         </div>

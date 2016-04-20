@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" ng-controller="ProductCtrl">
   <div class="col-xs-12">
     <form class="form-horizontal">
       <div class="form-group">
@@ -346,10 +346,9 @@
               <div class="container">
                 <div class="row"><br>
                   <div class="col-xs-12">
-                    <span class="file-input btn btn-primary btn-block btn-file">
-                      <h5><i class="fa fa-floppy-o"></i> Click or Drag to Add New Thumbnail</h5>
-                      <input type="file" ng-thumbnail-select="productCtrl.onFileSelect($files)">
-                    </span>
+                    <button type="button" class="btn btn-xs btn-primary btn-block" ng-click="productCtrl.openLibrary()">
+                      <h6><i class="fa fa-floppy-o"></i> Click or Drag to Add New Thumbnail</h6>
+                    </button>
                   </div>
                 </div><br>
               </div>

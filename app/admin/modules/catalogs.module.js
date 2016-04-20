@@ -704,8 +704,8 @@ angular.module('CatalogsModule', [
     }
 })
 
-.controller('ProductCtrl', ['Product', 'Products', 'SubCategories', 'Categories', 'CustomerGroups', 'TaxGroups', '$filter', '$state', '$scope', '$stateParams', 'FileReader',
-      function (             Product,   Products,   SubCategories,   Categories,   CustomerGroups,   TaxGroups,   $filter,   $state,   $scope,   $stateParams,   FileReader) {
+.controller('ProductCtrl', ['Product', 'Products', 'SubCategories', 'Categories', 'CustomerGroups', 'TaxGroups', '$uibModal', '$filter', '$state', '$scope', '$stateParams',
+      function (             Product,   Products,   SubCategories,   Categories,   CustomerGroups,   TaxGroups,   $uibModal,   $filter,   $state,   $scope,   $stateParams) {
               var productCtrl = this;
               productCtrl.product = {};
               productCtrl.imageEntity =[];
@@ -721,6 +721,26 @@ angular.module('CatalogsModule', [
                   skin: 'light',
                   height: 250
               };
+
+              productCtrl.openLibrary = function () {
+
+              var modalInstance = $uibModal.open({
+                templateUrl: 'admin/views/common/imageLibrary.html',
+                controller: 'ModalInstanceCtrl',
+                size: 'lg',
+                resolve: {
+                  items: function () {
+                    return $scope.items;
+                  }
+                }
+              });
+
+              modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+              }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+              });
+            };
 
               productCtrl.getSubCategories = function(cid) {
                     var subCategories = SubCategories.getSubCategories(cid);
@@ -1003,28 +1023,21 @@ angular.module('CatalogsModule', [
 
 ])
 
-.directive("ngBannerSelect",function() {
-    return {
-        link: function($scope,el) {
-            el.bind("change", function(e) {
-              $scope.file = (e.srcElement || e.target).files[0];
-              $scope.getBanner();
-            })
-        }
-    }
-})
+.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) {
 
-.directive("ngThumbnailSelect",function() {
-    return {
-        link: function($scope,el) {
-            el.bind("change", function(e) {
-              $scope.file = (e.srcElement || e.target).files[0];
-              $scope.getThumbnail();
-            })
-        }
-    }
-})
+  $scope.items = items;
+  $scope.selected = {
+    item: $scope.items[0]
+  };
 
+  $scope.ok = function () {
+    $uibModalInstance.close($scope.selected.item);
+  };
+
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+})
 
 .controller('ProductsCtrl', ['Products', 'Categories', '$state', '$scope', '$stateParams', 'uiGridConstants',
       function (              Products,   Categories,   $state,   $scope,   $stateParams,   uiGridConstants) {
