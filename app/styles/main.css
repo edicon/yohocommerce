@@ -161,7 +161,14 @@ legend {
     margin: 0 auto;
 }
 
-
 .no-border {
     border: 0;
+}
+
+.modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body{
+    height: 250px;
+    overflow-y: auto;
 }

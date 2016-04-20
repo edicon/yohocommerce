@@ -336,14 +336,14 @@ angular.module('CatalogsModule', [
                     return $firebaseObject(ref.child(tid).child(cid)).$remove();
                 },
 
-                addSubCount: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'categories/'+tid+'/'+theObj.category_id);
-                    return theRef.update({sub_count: theObj.priority});
+                addSubCount: function(obj) {
+                    var theRef = new Firebase(FirebaseUrl+'categories/'+tid+'/'+obj.category_id);
+                    return theRef.update({sub_count: obj.priority});
                 },
 
-                addCategoryImage: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'categories/'+tid+'/'+theObj.cid);
-                    return theRef.update({category_banner_image: theObj.imageSrc});
+                addCategoryImage: function(obj) {
+                    var theRef = new Firebase(FirebaseUrl+'categories/'+tid+'/'+obj.cid);
+                    return theRef.update({category_banner_image: obj.imageSrc});
                 },
 
                 removeCategoryImage: function(cid) {
@@ -368,25 +368,25 @@ angular.module('CatalogsModule', [
 
             var product = {
 
-                addProduct: function(theObj) {
-                    return product.all.$add(theObj).then(function(theRef) {
+                addProduct: function(obj) {
+                    return product.all.$add(obj).then(function(theRef) {
                         return theRef.key();
                     });
                 },
 
-                updateTaxGroup: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid);
-                    return theRef.update( {product_tax_group_id: theObj.gid, product_tax_group_name: theObj.name} );
+                updateTaxGroup: function(obj) {
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+obj.pid);
+                    return theRef.update( {product_tax_group_id: obj.gid, product_tax_group_name: obj.name} );
                 },
 
-                addProductImage: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid);
-                    return theRef.update( {product_image: theObj.imageSrc} );
+                updateProductImage: function(obj) {
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+obj.pid);
+                    return theRef.update( {product_image: obj.url} );
                 },
 
-                addThumbnailImage: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid+'/thumbnails');
-                    return theRef.push( {thumbnail_image: theObj.imageSrc} );
+                addThumbnail: function(obj) {
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+obj.pid+'/thumbnails');
+                    return theRef.push( {thumbnail_image: obj.url} );
                 },
 
                 getProduct: function(pid) {
@@ -398,15 +398,15 @@ angular.module('CatalogsModule', [
                     return $firebaseArray(theRef);
                 },
 
-                addDiscount: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid+'/discounts');
-                    return theRef.push({ discount_customer_group_name: theObj.discount_customer_group_name, discount_customer_group_id: theObj.discount_customer_group_id,
-                        discount_product_quantity: theObj.discount_product_quantity, discount_regular_price: theObj.discount_regular_price, discount_price: theObj.discount_price,
-                        discount_start_date: theObj.discount_start_date, discount_end_date: theObj.discount_end_date });
+                addDiscount: function(obj) {
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+obj.pid+'/discounts');
+                    return theRef.push({ discount_customer_group_name: obj.discount_customer_group_name, discount_customer_group_id: obj.discount_customer_group_id,
+                        discount_product_quantity: obj.discount_product_quantity, discount_regular_price: obj.discount_regular_price, discount_price: obj.discount_price,
+                        discount_start_date: obj.discount_start_date, discount_end_date: obj.discount_end_date });
                 },
 
-                removeDiscount: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid+'/discounts/'+theObj.discountId);
+                removeDiscount: function(obj) {
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+obj.pid+'/discounts/'+obj.discountId);
                     return theRef.remove();
                 },
 
@@ -415,16 +415,16 @@ angular.module('CatalogsModule', [
                     return $firebaseArray(theRef);
                 },
 
-                addSpecial: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid);
-                    theRef.update( {special_customer_group_name: theObj.special_customer_group_name, special_customer_group_id: theObj.special_customer_group_id,
-                        special_product_quantity: theObj.special_product_quantity, special_price: theObj.special_price, special_start_date: theObj.special_start_date,
-                        special_end_date: theObj.special_end_date, special_date_added: Firebase.ServerValue.TIMESTAMP} );
+                addSpecial: function(obj) {
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+obj.pid);
+                    theRef.update( {special_customer_group_name: obj.special_customer_group_name, special_customer_group_id: obj.special_customer_group_id,
+                        special_product_quantity: obj.special_product_quantity, special_price: obj.special_price, special_start_date: obj.special_start_date,
+                        special_end_date: obj.special_end_date, special_date_added: Firebase.ServerValue.TIMESTAMP} );
 
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid+'/specials');
-                    return theRef.push( {special_customer_group_name: theObj.special_customer_group_name, special_customer_group_id: theObj.special_customer_group_id,
-                        special_product_quantity: theObj.special_product_quantity, special_regular_price: theObj.special_regular_price, special_price: theObj.special_price,
-                        special_start_date: theObj.special_start_date, special_end_date: theObj.special_end_date, special_date_added: Firebase.ServerValue.TIMESTAMP} );
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+obj.pid+'/specials');
+                    return theRef.push( {special_customer_group_name: obj.special_customer_group_name, special_customer_group_id: obj.special_customer_group_id,
+                        special_product_quantity: obj.special_product_quantity, special_regular_price: obj.special_regular_price, special_price: obj.special_price,
+                        special_start_date: obj.special_start_date, special_end_date: obj.special_end_date, special_date_added: Firebase.ServerValue.TIMESTAMP} );
                 },
 
                 removeSpecial: function(pid) {
@@ -446,8 +446,8 @@ angular.module('CatalogsModule', [
                     return $firebaseArray(theRef);
                 },
 
-                removeProduct: function(theObj) {
-                    return $firebaseObject(ref.child(tid).child(theObj.$id)).$remove();
+                removeProduct: function(obj) {
+                    return $firebaseObject(ref.child(tid).child(obj.$id)).$remove();
                 },
 
                 removeProductImage: function(pid) {
@@ -455,8 +455,8 @@ angular.module('CatalogsModule', [
                     return theRef.remove();
                 },
 
-                removeThumbnailImage: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid+'/thumbnails/'+theObj.$id);
+                removeThumbnailImage: function(obj) {
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+obj.pid+'/thumbnails/'+obj.$id);
                     return theRef.remove();
                 },
 
@@ -495,9 +495,9 @@ angular.module('CatalogsModule', [
                     return $firebaseObject(ref.child(tid).child(pid)).$remove();
                 },
 
-                addFeaturedProduct: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.$id);
-                    return theRef.update({product_featured: true, product_featured_order: theObj.order});
+                addFeaturedProduct: function(obj) {
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+obj.$id);
+                    return theRef.update({product_featured: true, product_featured_order: obj.order});
                 },
 
                 recountFeaturedProduct: function() {
@@ -512,17 +512,17 @@ angular.module('CatalogsModule', [
                     });
                 },
 
-                removeFeaturedProduct: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.$id);
+                removeFeaturedProduct: function(obj) {
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+obj.$id);
                     theRef.update({ product_featured: null, product_featured_order: null });
                     return product.recountFeaturedProduct();
                 },
 
-                saveProduct: function(theObj) {
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+theObj.pid);
-                    return theRef.update({ product_name: theObj.product_name, product_price: theObj.product_price,
-                        product_category: theObj.product_category, product_status_id: theObj.product_status_id,
-                        product_status: theObj.product_status });
+                saveProduct: function(obj) {
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+obj.pid);
+                    return theRef.update({ product_name: obj.product_name, product_price: obj.product_price,
+                        product_category: obj.product_category, product_status_id: obj.product_status_id,
+                        product_status: obj.product_status });
                 },
 
                 all: products,
@@ -544,9 +544,9 @@ angular.module('CatalogsModule', [
 
             var subCategory = {
 
-                  addSubCategory: function(theObj) {
+                  addSubCategory: function(obj) {
                       var theRef = $firebaseArray(ref.child(tid));
-                      return theRef.$add({$priority: theObj.priority, category_id: theObj.category_id, category_name: theObj.category_name });
+                      return theRef.$add({$priority: obj.priority, category_id: obj.category_id, category_name: obj.category_name });
                   },
 
                   getSubCategories: function(cid) {
@@ -557,13 +557,13 @@ angular.module('CatalogsModule', [
                       return $firebaseObject(ref.child(tid).child(sid));
                   },
 
-                  removeSubCategory: function(theObj) {
-                      return $firebaseObject(ref.child(tid).child(theObj.$id)).$remove();
+                  removeSubCategory: function(obj) {
+                      return $firebaseObject(ref.child(tid).child(obj.$id)).$remove();
                   },
 
-                  addSubCategoryImage: function(theObj) {
-                      var theRef = new Firebase(FirebaseUrl+'sub_categories/'+tid+'/'+theObj.subCid);
-                      return theRef.update({category_banner_image: theObj.imageSrc});
+                  addSubCategoryImage: function(obj) {
+                      var theRef = new Firebase(FirebaseUrl+'sub_categories/'+tid+'/'+obj.subCid);
+                      return theRef.update({category_banner_image: obj.imageSrc});
                   },
 
                   removeCategoryImage: function(sid) {
@@ -704,8 +704,8 @@ angular.module('CatalogsModule', [
     }
 })
 
-.controller('ProductCtrl', ['Product', 'Products', 'SubCategories', 'Categories', 'CustomerGroups', 'TaxGroups', '$uibModal', '$filter', '$state', '$scope', '$stateParams',
-      function (             Product,   Products,   SubCategories,   Categories,   CustomerGroups,   TaxGroups,   $uibModal,   $filter,   $state,   $scope,   $stateParams) {
+.controller('ProductCtrl', ['Product', 'Products', 'SubCategories', 'Categories', 'CustomerGroups', 'TaxGroups', 'MediaLibrary', '$filter', '$state', '$scope', '$stateParams',
+      function (             Product,   Products,   SubCategories,   Categories,   CustomerGroups,   TaxGroups,   MediaLibrary,   $filter,   $state,   $scope,   $stateParams) {
               var productCtrl = this;
               productCtrl.product = {};
               productCtrl.imageEntity =[];
@@ -713,6 +713,7 @@ angular.module('CatalogsModule', [
               productCtrl.customerGroups = CustomerGroups.all;
               productCtrl.taxGroups = TaxGroups.all;
               productCtrl.totalCount = Products.all.length;
+              productCtrl.urls = MediaLibrary.all;
 
               productCtrl.tinymceOptions = {
                   menubar:false,
@@ -721,26 +722,6 @@ angular.module('CatalogsModule', [
                   skin: 'light',
                   height: 250
               };
-
-              productCtrl.openLibrary = function () {
-
-              var modalInstance = $uibModal.open({
-                templateUrl: 'admin/views/common/imageLibrary.html',
-                controller: 'ModalInstanceCtrl',
-                size: 'lg',
-                resolve: {
-                  items: function () {
-                    return $scope.items;
-                  }
-                }
-              });
-
-              modalInstance.result.then(function (selectedItem) {
-                $scope.selected = selectedItem;
-              }, function () {
-                $log.info('Modal dismissed at: ' + new Date());
-              });
-            };
 
               productCtrl.getSubCategories = function(cid) {
                     var subCategories = SubCategories.getSubCategories(cid);
@@ -913,20 +894,18 @@ angular.module('CatalogsModule', [
                         productCtrl.product.product_status_id = 2;
               };
 
-              $scope.getBanner = function () {
-                    FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
-                          productCtrl.imageEntity.imageSrc = result;
-                          productCtrl.imageEntity.pid = productCtrl.pid;
-                          Product.addProductImage(productCtrl.imageEntity);
-                    });
+              productCtrl.updateProductImage = function (url) {
+                    var obj = {};
+                    obj.pid = productCtrl.pid;
+                    obj.url = url;
+                    Product.updateProductImage(obj);
               };
 
-              $scope.getThumbnail = function () {
-                    FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
-                          productCtrl.imageEntity.imageSrc = result;
-                          productCtrl.imageEntity.pid = productCtrl.pid;
-                          Product.addThumbnailImage(productCtrl.imageEntity);
-                    });
+              productCtrl.addThumbnail = function (url) {
+                    var obj = {};
+                    obj.pid = productCtrl.pid;
+                    obj.url = url;
+                    Product.addThumbnail(obj);
               };
 
               productCtrl.addProduct = function() {
@@ -944,13 +923,13 @@ angular.module('CatalogsModule', [
               };
 
               productCtrl.updateTaxGroup = function() {
-                    var theObj = {};
+                    var obj = {};
                     var theGroup = TaxGroups.getTaxGroup(productCtrl.product.product_tax_group_id);
                           theGroup.$loaded().then(function() {
-                                theObj.pid = productCtrl.pid;
-                                theObj.gid = theGroup.$id;
-                                theObj.name = theGroup.group_name;
-                                Product.updateTaxGroup(theObj);
+                                obj.pid = productCtrl.pid;
+                                obj.gid = theGroup.$id;
+                                obj.name = theGroup.group_name;
+                                Product.updateTaxGroup(obj);
                           });
               }, function(error) {
                     productCtrl.error = error;
@@ -1022,22 +1001,6 @@ angular.module('CatalogsModule', [
         }
 
 ])
-
-.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) {
-
-  $scope.items = items;
-  $scope.selected = {
-    item: $scope.items[0]
-  };
-
-  $scope.ok = function () {
-    $uibModalInstance.close($scope.selected.item);
-  };
-
-  $scope.cancel = function () {
-    $uibModalInstance.dismiss('cancel');
-  };
-})
 
 .controller('ProductsCtrl', ['Products', 'Categories', '$state', '$scope', '$stateParams', 'uiGridConstants',
       function (              Products,   Categories,   $state,   $scope,   $stateParams,   uiGridConstants) {
