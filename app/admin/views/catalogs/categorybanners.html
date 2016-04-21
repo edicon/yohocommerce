@@ -12,10 +12,9 @@
               <div ui-grid="categoriesCtrl.catagoryListGridOpts" ui-grid-selection class="grid"></div>
             </div>
             <div class="col-sm-3">
-              <span class="file-input btn btn-primary btn-block btn-file">
-                <h5><i class="fa fa-floppy-o"></i> Click or Drag Image</h5>
-                <input type="file" ng-category-banner-select="categoriesCtrl.onFileSelect($files)">
-              </span>
+              <button type="button" class="btn btn-xs btn-primary btn-block" data-toggle="modal" data-target="#catagoryImageModal">
+                <h6><i class="fa fa-floppy-o"></i> Click to Add New Banner Image</h6>
+              </button>
               <span ng-if="categoriesCtrl.category.category_banner_image != null"><br>
                 <div class="row" align="center">
                   <img class="img-thumbnail" ng-src="{{categoriesCtrl.category.category_banner_image}}">
@@ -30,6 +29,30 @@
                 <label class="control-label">Description</label><br>
                 <textarea class="tinyMCE" ui-tinymce="categoriesCtrl.tinymceOptions" ng-change="categoriesCtrl.category.$save()"
                   ng-model="categoriesCtrl.category.category_description"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="catagoryImageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="myModalLabel">Media Library</h4>
+                </div>
+                <div class="modal-body">
+                  <div ng-repeat="u in categoriesCtrl.urls" class="col-xs-2">
+                    <div class="panel panel-default">
+                      <div class="panel-body">
+                        <button type="button" ng-click="categoriesCtrl.updateCategoryImage(u.url)" class="btn btn-xs btn-default no-border" data-dismiss="modal">
+                          <img ng-src="{{u.url}}" class="img-responsive" alt="{{u.file_name}}">
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
               </div>
             </div>
           </div>
