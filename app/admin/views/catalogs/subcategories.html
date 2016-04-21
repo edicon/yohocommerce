@@ -2,7 +2,16 @@
   <div class="col-xs-12">
     <form class="form-horizontal">
       <div class="form-group">
-        <div class="col-xs-12">
+        <div class="col-xs-4">
+          <div class="input-group input-group-sm">
+            <span class="input-group-addon">New Sub-Category</span>
+            <input type="text" ng-model="subCategoriesCtrl.subCategoryName" class="form-control" placeholder="Enter New Sub-Category">
+            <span class="input-group-btn">
+              <button class="btn btn-primary" ng-click="subCategoriesCtrl.addSubCategory()" type="button"><span class="menu-icon fa fa-plus"></span></button>
+            </span>
+          </div>
+        </div>
+        <div class="col-xs-8">
           <a type="button" class="btn btn-sm btn-default detail-btn pull-right" tooltip-placement="top" uib-tooltip="Cancel"
             href="#/categories" ui-sref="admin.catalogs.categories"><i class="fa fa-reply"></i>
           </a>
@@ -23,62 +32,11 @@
     </form>
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><i class="menu-icon fa fa-sitemap"></i> Sub-Categories ({{subCategoriesCtrl.subCount}}) - {{subCategoriesCtrl.categoryName}}</h3>
+        <h3 class="panel-title"><i class="menu-icon fa fa-sitemap"></i> Sub-Categories for {{subCategoriesCtrl.category_name}} Category</h3>
       </div>
       <div class="panel-body">
         <div class="row">
-          <ul class="nav nav-tabs" role="tablist">
-            <li role="presentation" class="active"><a href="#subCats" role="tab" data-toggle="tab"><i class="menu-icon fa fa-sitemap"></i> Sub-Categories ({{subCategoriesCtrl.subCount}})</a></li>
-            <li role="presentation"><a href="#subBanners" role="tab" data-toggle="tab"><i class="menu-icon fa fa-flag-checkered"></i> Sub-Categories Banners ({{subCategoriesCtrl.subCount}})</a></li>
-          </ul>
-          <div class="tab-content">
-            <div role="tabpanel" class="tab-pane active" id="subCats">
-              <div class="row"><br>
-                <div class="col-xs-4">
-                  <div class="input-group input-group-sm">
-                    <input type="text" ng-model="subCategoriesCtrl.subCategoryName" class="form-control" placeholder="Enter New Sub-Category">
-                    <span class="input-group-btn">
-                      <button class="btn btn-primary" ng-click="subCategoriesCtrl.addSubCategory()" type="button"><span class="menu-icon fa fa-plus"></span></button>
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <div class="row"><br>
-                <div ui-grid="subCategoriesCtrl.subCategoriesGridOpts" ui-grid-edit ui-grid-cellNav></div>
-              </div>
-            </div>
-            <div role="tabpanel" class="tab-pane" id="subBanners">
-              <div class="row"><br>
-                <div class="col-xs-3">
-                  <h5>{{subCategoriesCtrl.categoryName}} Category</h5>
-                  <div ui-grid="subCategoriesCtrl.subCategoriesGridListOpts" ui-grid-selection class="grid"></div>
-                </div>
-                <div class="col-xs-3"><br><br>
-                  <span class="file-input btn btn-primary btn-block btn-file">
-                    <h5><i class="fa fa-floppy-o"></i> Click or Drag Image</h5>
-                    <input type="file" ng-sub-category-banner-select="subCategoriesCtrl.onFileSelect($files)">
-                  </span>
-                  <span ng-if="subCategoriesCtrl.subCategory.category_banner_image != null"><br>
-                    <div class="row" align="center">
-                      <div class="image">
-                        <img class="img-thumbnail" ng-src="{{subCategoriesCtrl.subCategory.category_banner_image}}">
-                      </div>
-                    </div><br>
-                    <button type="button" class="btn btn-block btn-danger"
-                      ng-click="subCategoriesCtrl.removeSubCategoryImage(subCategoriesCtrl.subCategory.$id)">
-                      <h5><i class="fa fa-trash"></i> Delete Category Banner Image</h5>
-                    </button>
-                  </span>
-                </div>
-                <div class="col-xs-6">
-                  <label class="control-label">Description</label><br>
-                  <textarea class="tinyMCE" ui-tinymce="subCategoriesCtrl.tinymceOptions" ng-change="subCategoriesCtrl.subCategory.$save()"
-                    ng-model="subCategoriesCtrl.subCategory.category_description">
-                  </textarea>
-                </div>
-              </div>
-            </div>
-          </div>
+          <div ui-grid="subCategoriesCtrl.subCategoriesGrid" ui-grid-edit ui-grid-cellNav></div>
         </div>
       </div>
     </div>

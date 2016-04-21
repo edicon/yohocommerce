@@ -327,10 +327,9 @@
             <div role="tabpanel" class="tab-pane" id="prodBannerImage">
               <div class="row"><br>
                 <div class="col-xs-6 col-xs-offset-3">
-                  <span class="file-input btn btn-primary btn-block btn-file">
-                    <h5><i class="fa fa-floppy-o"></i> Click to Select an Image</h5>
-                    <input type="file" ng-banner-select="productCtrl.onFileSelect($files)">
-                  </span>
+                  <button type="button" class="btn btn-xs btn-primary btn-block" data-toggle="modal" data-target="#productImageModal">
+                    <h6><i class="fa fa-floppy-o"></i> Click to Add New Banner Image</h6>
+                  </button>
                   <span ng-if="productCtrl.product.product_image != undefined"><br>
                     <div class="row" align="center">
                       <img ng-src="{{productCtrl.product.product_image}}">
@@ -341,12 +340,36 @@
                   </span>
                 </div>
               </div>
+              <div class="modal fade" id="productImageModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">Media Library</h4>
+                    </div>
+                    <div class="modal-body">
+                      <div ng-repeat="u in productCtrl.urls" class="col-xs-2">
+                        <div class="panel panel-default">
+                          <div class="panel-body">
+                            <button type="button" ng-click="productCtrl.updateProductImage(u.url)" class="btn btn-xs btn-default no-border" data-dismiss="modal">
+                              <img ng-src="{{u.url}}" class="img-responsive" alt="{{u.file_name}}">
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div role="tabpanel" class="tab-pane" id="prodThumbnails">
               <div class="container">
                 <div class="row"><br>
                   <div class="col-xs-12">
-                    <button type="button" class="btn btn-xs btn-primary btn-block" ng-click="productCtrl.openLibrary()">
+                    <button type="button" class="btn btn-xs btn-primary btn-block" data-toggle="modal" data-target="#thumbnailModal">
                       <h6><i class="fa fa-floppy-o"></i> Click or Drag to Add New Thumbnail</h6>
                     </button>
                   </div>
@@ -363,6 +386,30 @@
                           </button>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal fade" id="thumbnailModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">Media Library</h4>
+                    </div>
+                    <div class="modal-body">
+                      <div ng-repeat="u in productCtrl.urls" class="col-xs-2">
+                        <div class="panel panel-default">
+                          <div class="panel-body">
+                            <button type="button" ng-click="productCtrl.addThumbnail(u.url)" class="btn btn-xs btn-default no-border" data-dismiss="modal">
+                              <img ng-src="{{u.url}}" class="img-responsive" alt="{{u.file_name}}">
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                   </div>
                 </div>
