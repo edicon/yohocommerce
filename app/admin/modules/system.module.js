@@ -666,6 +666,33 @@ angular.module('SystemModule', [
 
 ])
 
+.factory('Shipping', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'shipping');
+          var shippings = $firebaseArray(ref.child(tid));
+
+          var shipping = {
+
+              addShipping: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'shipping/'+tid);
+                  return theRef.push(obj);
+              },
+
+              removeShipping: function(id) {
+                  var theRef = new Firebase(FirebaseUrl+'shipping/'+tid+'/'+id);
+                  return theRef.remove();
+              },
+
+              all: shippings
+
+          };
+
+          return shipping;
+
+      }
+
+])
+
 .factory('MediaLibrary', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (           $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'media_library');
@@ -678,6 +705,7 @@ angular.module('SystemModule', [
               },
 
               addImage: function(obj) {
+                console.log(obj)
                 var theRef = new Firebase(FirebaseUrl+'media_library/'+tid);
                 return theRef.push(obj);
               },
@@ -698,12 +726,14 @@ angular.module('SystemModule', [
 ])
 
 
-.controller('MediaLibraryCtrl', ['Upload', 'MediaLibrary', 'Extensions', '$timeout', '$scope',
-        function (                Upload,   MediaLibrary,   Extensions,   $timeout,   $scope) {
-              var mediaLibraryCtrl = this;
-              mediaLibraryCtrl.upLoadComplete = 0;
+.controller('MediaLibraryCtrl', ['Upload', 'MediaLibrary', 'Extensions', 'Categories', '$timeout', '$scope',
+        function (                Upload,   MediaLibrary,   Extensions,   Categories,   $timeout,   $scope) {
+                  var mediaLibraryCtrl = this;
+                  mediaLibraryCtrl.upLoadComplete = 0;
+                  mediaLibraryCtrl.category_id = null;
 
-              mediaLibraryCtrl.urls = MediaLibrary.all;
+                  mediaLibraryCtrl.urls = MediaLibrary.all;
+                  mediaLibraryCtrl.categories = Categories.all;
 
                   var s3 = Extensions.getS3();
                         s3.$loaded().then(function() {
@@ -739,18 +769,12 @@ angular.module('SystemModule', [
                                             $scope.errorMsg = response.status + ': ' + response.data;
                                 }, function (evt) {
                                       file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
-  /*                                          if (evt.type === "load") {
-                                                var theImg = {};
-                                                theImg.url = mediaLibraryCtrl.s3.s3_url + mediaLibraryCtrl.s3.file_name;
-                                                theImg.file_name = mediaLibraryCtrl.s3.file_name;
-                                                MediaLibrary.addImage(theImg);
-                                            }
-*/
                                 });
 
                                 var theImg = {};
                                 theImg.url = mediaLibraryCtrl.s3.s3_url + mediaLibraryCtrl.s3.file_name;
                                 theImg.file_name = mediaLibraryCtrl.s3.file_name;
+                                theImg.category_id = $scope.$parent.mediaLibraryCtrl.category_id;
                                 MediaLibrary.addImage(theImg);
 
                         });
@@ -758,33 +782,6 @@ angular.module('SystemModule', [
                 }
 
         }
-
-])
-
-.factory('Shipping', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
-          var ref = new Firebase(FirebaseUrl+'shipping');
-          var shippings = $firebaseArray(ref.child(tid));
-
-          var shipping = {
-
-              addShipping: function(obj) {
-                  var theRef = new Firebase(FirebaseUrl+'shipping/'+tid);
-                  return theRef.push(obj);
-              },
-
-              removeShipping: function(id) {
-                  var theRef = new Firebase(FirebaseUrl+'shipping/'+tid+'/'+id);
-                  return theRef.remove();
-              },
-
-              all: shippings
-
-          };
-
-          return shipping;
-
-      }
 
 ])
 

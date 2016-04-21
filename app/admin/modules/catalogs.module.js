@@ -281,49 +281,7 @@ angular.module('CatalogsModule', [
                     }
                 }
           })
-/*          .state('categoryList', {
-                url: '/categoryList',
-                controller: 'CategoriesCtrl as categoriesCtrl',
-                resolve: {
-                    auth: function($state, Wow, Auth){
-                        return Auth.$requireAuth().catch(function(){
-                            $state.go('home');
-                        });
-                    },
-                    profile: function(Auth){
-                        return Auth.$requireAuth();
-                    }
-                }
-          })
-          .state('subCats', {
-                url: '/subCats',
-                controller: 'SubCategoriesCtrl as subCategoriesCtrl',
-                resolve: {
-                    auth: function($state, Wow, Auth){
-                        return Auth.$requireAuth().catch(function(){
-                            $state.go('home');
-                        });
-                    },
-                    profile: function(Auth){
-                        return Auth.$requireAuth();
-                    }
-                }
-          })
-          .state('subBanners', {
-                url: '/subBanners',
-                controller: 'SubCategoriesCtrl as subCategoriesCtrl',
-                resolve: {
-                    auth: function($state, Wow, Auth) {
-                        return Auth.$requireAuth().catch(function(){
-                            $state.go('home');
-                        });
-                    },
-                    profile: function(Auth){
-                        return Auth.$requireAuth();
-                    }
-                }
-          })
-*/
+
       }
 
 ])
@@ -604,7 +562,6 @@ angular.module('CatalogsModule', [
 
 ])
 
-
 .controller('CategoriesCtrl', ['Categories', 'MediaLibrary', '$state', '$scope', '$stateParams',
         function (              Categories,   MediaLibrary,   $state,   $scope,   $stateParams) {
               var categoriesCtrl = this;
@@ -742,7 +699,6 @@ angular.module('CatalogsModule', [
               if ($stateParams.rowEntity === null) {
                       $state.go('admin.catalogs.categories');
               } else {
-                      console.log($stateParams.rowEntity)
                       subCategoriesCtrl.category_name = $stateParams.rowEntity.category_name;
                       subCategoriesCtrl.cid = $stateParams.rowEntity.$id;
                       subCategoriesCtrl.loadSubCategories(subCategoriesCtrl.cid);
@@ -873,7 +829,6 @@ angular.module('CatalogsModule', [
               };
 
               if ($stateParams.rowEntity != null) {
-                console.log($stateParams.rowEntity)
                     subCategoryCtrl.categoryName = $stateParams.rowEntity.categoryName;
                     var subCategory = SubCategories.getSubCategory($stateParams.rowEntity.$id);
                           subCategory.$loaded().then(function() {
