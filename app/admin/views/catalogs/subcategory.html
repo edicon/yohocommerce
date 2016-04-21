@@ -4,14 +4,15 @@
       <div class="form-group">
         <div class="col-xs-12">
           <a type="button" class="btn btn-sm btn-default detail-btn pull-right" tooltip-placement="top" uib-tooltip="Cancel"
-            href="#/subcategories" ui-sref="admin.catalogs.subcategories"><i class="fa fa-reply"></i>
+            href="#/subcategories" ui-sref="admin.catalogs.subcategories" ng-click="subCategoryCtrl.cancelSubCategory(subCategoryCtrl.subCategory.category_id)">
+            <i class="fa fa-reply"></i>
           </a>
         </div>
       </div>
     </form>
     <div class="panel panel-default">
       <div class="panel-heading">
-        <h3 class="panel-title"><i class="menu-icon fa fa-sitemap"></i> {{subCategoryCtrl.categoryName}} Sub-Category</h3>
+        <h3 class="panel-title"><i class="menu-icon fa fa-sitemap"></i> {{subCategoryCtrl.subCategory.category_name}} Sub-Category for {{subCategoryCtrl.categoryName}} Category</h3>
       </div>
       <div class="panel-body">
         <div role="tabpanel" class="tab-pane" id="subBanners">
@@ -51,7 +52,7 @@
                 <div ng-repeat="u in subCategoryCtrl.urls" class="col-xs-2">
                   <div class="panel panel-default">
                     <div class="panel-body">
-                      <button type="button" ng-click="categoryCtrl.updateSubCategoryImage(u.url)" class="btn btn-xs btn-default no-border" data-dismiss="modal">
+                      <button type="button" ng-click="subCategoryCtrl.updateSubCategoryImage(u.url)" class="btn btn-xs btn-default no-border" data-dismiss="modal">
                         <img ng-src="{{u.url}}" class="img-responsive" alt="{{u.file_name}}">
                       </button>
                     </div>

@@ -163,7 +163,7 @@ angular.module('CatalogsModule', [
                         templateUrl: 'admin/views/catalogs/catalogs.html'
                     },
                     "list@admin.catalogs.subcategory": {
-                        controller: 'SubCategoriesCtrl as subCategoryCtrl',
+                        controller: 'SubCategoryCtrl as subCategoryCtrl',
                         templateUrl: 'admin/views/catalogs/subcategory.html'
                     }
                 }
@@ -588,8 +588,8 @@ angular.module('CatalogsModule', [
                       return theRef.update({category_banner_image: obj.url});
                   },
 
-                  removeCategoryImage: function(sid) {
-                      var theRef = new Firebase(FirebaseUrl+'aub_categories/'+tid+'/'+sid);
+                  removeSubCategoryImage: function(cid) {
+                      var theRef = new Firebase(FirebaseUrl+'sub_categories/'+tid+'/'+cid);
                       return theRef.update({category_banner_image: null});
                   },
 
@@ -639,7 +639,7 @@ angular.module('CatalogsModule', [
                     data: Categories.all,
                     columnDefs: [
                           { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/catalogs/gridTemplates/editSubCategories.html',
-                            width: 34, enableColumnMenu: false, enableCellEdit: false, headerTooltip: 'Add Sub-categories' },
+                            width: 34, enableColumnMenu: false, enableCellEdit: false, headerTooltip: 'Edit Sub-categories' },
                           { name:'categoryName', field: 'category_name', width: '70%', enableHiding: false },
                           { name:'menuOrder', field: '$priority', enableHiding: false },
                           { name:'subCount', field: 'sub_count', visible: false },
@@ -715,6 +715,203 @@ angular.module('CatalogsModule', [
         }
 
 ])
+
+.controller('SubCategoriesCtrl', ['SubCategories', 'Categories', '$state', '$scope', '$stateParams', 'uiGridConstants',
+        function (                 SubCategories,   Categories,   $state,   $scope,   $stateParams,   uiGridConstants) {
+              var subCategoriesCtrl = this;
+
+              subCategoriesCtrl.loadSubCategories = function() {
+                  var subCategories = SubCategories.getSubCategories(subCategoriesCtrl.cid);
+                        subCategories.$loaded().then(function() {
+                              subCategoriesCtrl.subCategoriesGrid.data = subCategories;
+                              subCategoriesCtrl.subCategoriesIndex = Categories.getIndex(subCategoriesCtrl.cid);
+                        });
+              };
+
+              subCategoriesCtrl.loadCategory = function(cid) {
+                  var category = Categories.getCategory(cid);
+                        category.$loaded().then(function() {
+                              subCategoriesCtrl.categoryName = category.category_name;
+                              subCategoriesCtrl.subCount = category.sub_count;
+                              subCategoriesCtrl.cid = category.$id;
+                              subCategoriesCtrl.loadSubCategories();
+                        });
+              };
+
+              if ($stateParams.rowEntity === null) {
+                      $state.go('admin.catalogs.categories');
+              } else {
+                      console.log($stateParams.rowEntity)
+                      subCategoriesCtrl.category_name = $stateParams.rowEntity.category_name;
+                      subCategoriesCtrl.cid = $stateParams.rowEntity.$id;
+                      subCategoriesCtrl.loadSubCategories(subCategoriesCtrl.cid);
+              }
+
+              subCategoriesCtrl.subCategoriesGrid = {
+                    enableSorting: true,
+                    enableCellEditOnFocus: true,
+                    columnDefs: [
+                          { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/catalogs/gridTemplates/editSubCategory.html',
+                            width: 34, enableColumnMenu: false, enableCellEdit: false, headerTooltip: 'Edit Sub-Category Banner' },
+                          { name:'categoryName', displayName: 'Sub-Category Name', field: 'category_name', width: '70%', enableHiding: false },
+                          { name:'navigationOrder', field: '$priority', enableHiding: false,
+                                sort: {
+                                  direction: uiGridConstants.ASC,
+                                  priority: 0,
+                                }
+                          },
+                          { name: ' ', field: '$id', cellTemplate:'admin/views/catalogs/gridTemplates/removeSubCategory.html',
+                                width: 32, enableColumnMenu: false }
+                    ]
+              };
+
+              subCategoriesCtrl.subCategoriesGrid.onRegisterApi = function(subCategoriesGridApi) {
+                    $scope.subCategoriesGridApi = subCategoriesGridApi;
+                          subCategoriesGridApi.edit.on.afterCellEdit($scope, function(rowEntity, newValue, oldValue) {
+
+                                if (newValue != oldValue) {
+                                      var currentSubCategory = SubCategories.getSubCategory(rowEntity.$id);
+                                          currentSubCategory.$loaded().then(function() {
+                                                currentSubCategory.category_name = rowEntity.category_name;
+                                                currentSubCategory.$priority = rowEntity.$priority;
+                                                currentSubCategory.$save();
+                                          });
+                                }
+
+                      }, function(error) {
+                            subCategoriesCtrl.error = error;
+                      });
+              };
+
+              subCategoriesCtrl.addSubCategory = function() {
+                    var entity = {
+                        category_id: subCategoriesCtrl.cid,
+                        category_name: subCategoriesCtrl.subCategoryName
+                    };
+                    var currentCategory = SubCategories.getSubCategories(subCategoriesCtrl.cid);
+                          currentCategory.$loaded().then(function() {
+                                var currentLength = currentCategory.length;
+                                entity.priority = currentLength + 1;
+                                      SubCategories.addSubCategory(entity).then(function() {
+                                            Categories.addSubCount(entity);
+                                                subCategoriesCtrl.subCategoryName = null;
+                                      });
+                          });
+
+              }, function(error) {
+                    subCategoriesCtrl.error = error;
+              };
+
+              subCategoriesCtrl.editSubCategory = function(row) {
+                    row.entity.categoryName = subCategoriesCtrl.category_name;
+                    $state.go('admin.catalogs.subcategory', {'rowEntity': row.entity});
+              };
+
+              subCategoriesCtrl.removeSubCategory = function(row) {
+                    SubCategories.removeSubCategory(row.entity);
+              }, function(error) {
+                    subCategoriesCtrl.error = error;
+              };
+
+              subCategoriesCtrl.next = function() {
+                    var key = subCategoriesCtrl.subCategoriesIndex + 1;
+
+                    if (key != subCategoriesCtrl.totalCount) {
+                          subCategoriesCtrl.cid = Categories.getKey(key);
+                          subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
+                    }
+
+              }, function(error) {
+                    subCategoriesCtrl.error = error;
+              };
+
+              subCategoriesCtrl.back = function() {
+                    var key = subCategoriesCtrl.subCategoriesIndex - 1;
+
+                    if (key < 0) key = 0
+                          subCategoriesCtrl.cid = Categories.getKey(key);
+
+                    subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
+
+              }, function(error) {
+                    subCategoriesCtrl.error = error;
+              };
+
+              subCategoriesCtrl.first = function() {
+                    var key = 0;
+                    subCategoriesCtrl.cid = Categories.getKey(0);
+                    subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
+              }, function(error) {
+                    subCategoriesCtrl.error = error;
+              };
+
+              subCategoriesCtrl.last = function() {
+                    var key = subCategoriesCtrl.count - 1;
+                    subCategoriesCtrl.cid = Categories.getKey(key);
+                    subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
+
+              }, function(error) {
+                    subCategoriesCtrl.error = error;
+              };
+
+        }
+
+])
+
+.controller('SubCategoryCtrl', ['SubCategories', 'MediaLibrary', '$state', '$scope', '$stateParams',
+      function (                 SubCategories,   MediaLibrary,   $state,   $scope,   $stateParams) {
+              var subCategoryCtrl = this;
+              subCategoryCtrl.urls = MediaLibrary.all;
+
+              subCategoryCtrl.tinymceOptions = {
+                    menubar:false,
+                    statusbar: false,
+                    theme: "modern",
+                    skin: 'light',
+                    height: 350
+              };
+
+              if ($stateParams.rowEntity != null) {
+                console.log($stateParams.rowEntity)
+                    subCategoryCtrl.categoryName = $stateParams.rowEntity.categoryName;
+                    var subCategory = SubCategories.getSubCategory($stateParams.rowEntity.$id);
+                          subCategory.$loaded().then(function() {
+                                subCategoryCtrl.subCategory = subCategory;
+                                subCategoryCtrl.cid = subCategory.$id;
+                          });
+              } else {
+                    $state.go('admin.catalogs.categories');
+              }
+
+              subCategoryCtrl.cancelSubCategory = function(cid) {
+                    var obj = {};
+                    obj.$id = cid;
+                    obj.category_name = subCategoryCtrl.categoryName;
+                    $state.go('admin.catalogs.subcategories', {'rowEntity': obj});
+              }
+
+              subCategoryCtrl.removeSubCategoryImage = function(cid) {
+                    SubCategories.removeSubCategoryImage(cid);
+              }, function(error) {
+                    subCategoryCtrl.error = error;
+              };
+
+              subCategoryCtrl.updateSubCategoryImage = function (url) {
+                    var obj = {};
+                    obj.cid = subCategoryCtrl.cid;
+                    obj.url = url;
+                    SubCategories.updateSubCategoryImage(obj);
+              };
+
+              subCategoryCtrl.removeSubCategoryImage = function(cid) {
+                    SubCategories.removeSubCategoryImage(cid);
+              }, function(error) {
+                    subCategoryCtrl.error = error;
+              };
+
+      }
+])
+
 
 .controller('ProductCtrl', ['Product', 'Products', 'SubCategories', 'Categories', 'CustomerGroups', 'TaxGroups', 'MediaLibrary', '$filter', '$state', '$scope', '$stateParams',
       function (             Product,   Products,   SubCategories,   Categories,   CustomerGroups,   TaxGroups,   MediaLibrary,   $filter,   $state,   $scope,   $stateParams) {
@@ -1182,184 +1379,3 @@ angular.module('CatalogsModule', [
         }
     };
 })
-
-.controller('SubCategoriesCtrl', ['SubCategories', 'Categories', '$state', '$scope', '$stateParams', 'uiGridConstants',
-        function (                 SubCategories,   Categories,   $state,   $scope,   $stateParams,   uiGridConstants) {
-              var subCategoriesCtrl = this;
-
-              subCategoriesCtrl.loadSubCategories = function() {
-                  var subCategories = SubCategories.getSubCategories(subCategoriesCtrl.cid);
-                        subCategories.$loaded().then(function() {
-                              subCategoriesCtrl.subCategoriesGrid.data = subCategories;
-                              subCategoriesCtrl.subCategoriesIndex = Categories.getIndex(subCategoriesCtrl.cid);
-                        });
-              };
-
-              subCategoriesCtrl.loadCategory = function(cid) {
-                  var category = Categories.getCategory(cid);
-                        category.$loaded().then(function() {
-                              subCategoriesCtrl.categoryName = category.category_name;
-                              subCategoriesCtrl.subCount = category.sub_count;
-                              subCategoriesCtrl.cid = category.$id;
-                              subCategoriesCtrl.loadSubCategories();
-                        });
-              };
-
-              if ($stateParams.rowEntity === null) {
-                    $state.go('admin.catalogs.categories');
-              } else {
-                    subCategoriesCtrl.categoryName = $stateParams.rowEntity.category_name;
-                    subCategoriesCtrl.subCount = $stateParams.rowEntity.sub_count;
-                    subCategoriesCtrl.cid = $stateParams.rowEntity.$id;
-                    subCategoriesCtrl.loadSubCategories(subCategoriesCtrl.cid);
-              }
-
-              subCategoriesCtrl.subCategoriesGrid = {
-                    enableSorting: true,
-                    enableCellEditOnFocus: true,
-                    columnDefs: [
-                          { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/catalogs/gridTemplates/editSubCategory.html',
-                            width: 34, enableColumnMenu: false, enableCellEdit: false, headerTooltip: 'Edit Sub-Category Banner' },
-                          { name:'categoryName', displayName: 'Sub-Category Name', field: 'category_name', width: '70%', enableHiding: false },
-                          { name:'navigationOrder', field: '$priority', enableHiding: false,
-                                sort: {
-                                  direction: uiGridConstants.ASC,
-                                  priority: 0,
-                                }
-                          },
-                          { name: ' ', field: '$id', cellTemplate:'admin/views/catalogs/gridTemplates/removeSubCategory.html',
-                                width: 32, enableColumnMenu: false }
-                    ]
-              };
-
-              subCategoriesCtrl.subCategoriesGrid.onRegisterApi = function(subCategoriesGridApi) {
-                    $scope.subCategoriesGridApi = subCategoriesGridApi;
-                          subCategoriesGridApi.edit.on.afterCellEdit($scope, function(rowEntity, newValue, oldValue) {
-
-                                if (newValue != oldValue) {
-                                      var currentSubCategory = SubCategories.getSubCategory(rowEntity.$id);
-                                          currentSubCategory.$loaded().then(function() {
-                                                currentSubCategory.category_name = rowEntity.category_name;
-                                                currentSubCategory.$priority = rowEntity.$priority;
-                                                currentSubCategory.$save();
-                                          });
-                                }
-
-                      }, function(error) {
-                            subCategoriesCtrl.error = error;
-                      });
-              };
-
-              subCategoriesCtrl.addSubCategory = function() {
-                    var entity = {
-                        category_id: subCategoriesCtrl.cid,
-                        category_name: subCategoriesCtrl.subCategoryName
-                    };
-                    var currentCategory = SubCategories.getSubCategories(subCategoriesCtrl.cid);
-                          currentCategory.$loaded().then(function() {
-                                var currentLength = currentCategory.length;
-                                entity.priority = currentLength + 1;
-                                      SubCategories.addSubCategory(entity).then(function() {
-                                            Categories.addSubCount(entity);
-                                                subCategoriesCtrl.subCategoryName = null;
-                                      });
-                          });
-
-              }, function(error) {
-                    subCategoriesCtrl.error = error;
-              };
-
-              subCategoriesCtrl.editSubCategory = function(row) {
-                    $state.go('admin.catalogs.subcategory', {'rowEntity': row.entity});
-              };
-
-              subCategoriesCtrl.removeSubCategory = function(row) {
-                    SubCategories.removeSubCategory(row.entity);
-              }, function(error) {
-                    subCategoriesCtrl.error = error;
-              };
-
-              subCategoriesCtrl.next = function() {
-                    var key = subCategoriesCtrl.subCategoriesIndex + 1;
-
-                    if (key != subCategoriesCtrl.totalCount) {
-                          subCategoriesCtrl.cid = Categories.getKey(key);
-                          subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
-                    }
-
-              }, function(error) {
-                    subCategoriesCtrl.error = error;
-              };
-
-              subCategoriesCtrl.back = function() {
-                    var key = subCategoriesCtrl.subCategoriesIndex - 1;
-
-                    if (key < 0) key = 0
-                          subCategoriesCtrl.cid = Categories.getKey(key);
-
-                    subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
-
-              }, function(error) {
-                    subCategoriesCtrl.error = error;
-              };
-
-              subCategoriesCtrl.first = function() {
-                    var key = 0;
-                    subCategoriesCtrl.cid = Categories.getKey(0);
-                    subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
-              }, function(error) {
-                    subCategoriesCtrl.error = error;
-              };
-
-              subCategoriesCtrl.last = function() {
-                    var key = subCategoriesCtrl.count - 1;
-                    subCategoriesCtrl.cid = Categories.getKey(key);
-                    subCategoriesCtrl.loadCategory(subCategoriesCtrl.cid);
-
-              }, function(error) {
-                    subCategoriesCtrl.error = error;
-              };
-
-        }
-
-])
-
-.controller('SubCategoryCtrl', ['SubCategories', 'Categories', 'MediaLibrary', '$state', '$scope', '$stateParams',
-      function (                 SubCategories,   Categories,   MediaLibrary,   $state,   $scope,   $stateParams) {
-            var subCategoryCtrl = this;
-
-            subCategoryCtrl.tinymceOptions = {
-                  menubar:false,
-                  statusbar: false,
-                  theme: "modern",
-                  skin: 'light',
-                  height: 350
-            };
-
-
-            var subCategory = SubCategories.getSubCategory($stateParams.rowEntity.$id);
-                  subCategory.$loaded().then(function() {
-                        subCategoryCtrl.subCategory = subCategory;
-                  });
-
-            subCategoryCtrl.removeSubCategoryImage = function(cid) {
-                  SubCategories.removeSubCategoryImage(cid);
-            }, function(error) {
-                  subCategoryCtrl.error = error;
-            };
-
-            subCategoryCtrl.updateSubCategoryImage = function () {
-                  var obj = {};
-                  obj.cid = subCategoriesCtrl.cid;
-                  obj.url = url;
-                  Categories.updateSubCategoryImage(obj);
-            };
-
-            subCategoryCtrl.removeSubCategoryImage = function(subCid) {
-                  SubCategories.removeSubCategoryImage(subCid);
-            }, function(error) {
-                  subCategoryCtrl.error = error;
-            };
-
-      }
-])
