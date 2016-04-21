@@ -9,7 +9,8 @@
 						<a href="" ui-sref="admin.dashboard">Home</a> /
 						<a href="#/catalogs" ui-sref="admin.catalogs">Catalogs</a> /
 						<a href="#/categories" ui-sref="admin.catalogs.categories">Categories</a> /
-            <a href="#/subcategories" ui-sref="admin.catalogs.subcategories">Sub-Categories</a> / Sub-Category
+            <a href="#/subcategories" ui-sref="admin.catalogs.subcategories"
+							ng-click="subCategoryCtrl.cancelSubCategory(subCategoryCtrl.subCategory.category_id)">Sub-Categories</a> / Sub-Category
 					</div>
         </div>
 			</div>

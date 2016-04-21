@@ -157,6 +157,7 @@ angular.module('CatalogsModule', [
                 },
                 views: {
                     "header@admin": {
+                        controller: 'SubCategoryCtrl as subCategoryCtrl',
                         templateUrl: 'admin/views/catalogs/subcategory.header.html'
                     },
                     "main@admin": {
