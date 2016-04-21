@@ -489,7 +489,11 @@ angular.module('SalesModule', [
 
               getCustomerGiftCard: function(theObj) {
                   return $firebaseArray(ref.child(tid).orderByChild("customer_email").equalTo(theObj.customer_email));
+              },
 
+              updateGiftCard: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'giftcards/'+tid+'/'+obj.$id);
+                  return theRef.update( {giftcard_status: obj.giftcard_status } );
               },
 
               getGiftCard: function(gid) {

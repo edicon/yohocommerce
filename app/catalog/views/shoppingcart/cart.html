@@ -58,33 +58,44 @@
           <div class="row">
             <h4>Choose if you have a coupon or gift voucher you would like to use.</h4>
 
-            <uib-accordion>
-              <uib-accordion-group is-open="status.open">
-                <uib-accordion-heading>
-                  Use Coupon Code <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-                </uib-accordion-heading>
-                <div class="input-group input-group-sm">
-                  <input type="text" ng-model="cartCtrl.order.coupon_code" class="form-control" placeholder="Enter Coupon Code">
-                  <span class="input-group-btn">
-                    <button class="btn btn-primary" ng-click="cartCtrl.updateCoupon()" type="button"><span class="menu-icon fa fa-check"></span></button>
-                  </span>
-                </div>
-              </uib-accordion-group>
-            </uib-accordion>
-            <uib-accordion>
-             <uib-accordion-group is-open="status.open">
-                <uib-accordion-heading>
-                  Use Gift Cards <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
-                </uib-accordion-heading>
-                <div class="input-group input-group-sm">
-                  <input type="text" ng-model="cartCtrl.order.gift_voucher_code" class="form-control" placeholder="Enter Gift Voucher">
-                  <span class="input-group-btn">
-                    <button class="btn btn-primary" ng-click="cartCtrl.updateGiftVoucher()" type="button"><span class="menu-icon fa fa-check"></span></button>
-                  </span>
-                </div>
-              </uib-accordion-group>
-            </uib-accordion>
-
+            <div ng-if="cartCtrl.order.coupon_id === undefined">
+              <uib-accordion>
+                <uib-accordion-group is-open="status.open">
+                  <uib-accordion-heading>
+                    Use Coupon Code <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                  </uib-accordion-heading>
+                  <div class="input-group input-group-sm">
+                    <input type="text" ng-model="cartCtrl.order.coupon_code" class="form-control" placeholder="Enter Coupon Code">
+                    <span class="input-group-btn">
+                      <button class="btn btn-primary" ng-click="cartCtrl.updateCoupon()" type="button"><span class="menu-icon fa fa-check"></span></button>
+                    </span>
+                  </div>
+                </uib-accordion-group>
+              </uib-accordion>
+            </div>
+            <div ng-if="cartCtrl.order.coupon_id !== undefined">
+              <row>
+                <h4>Coupon Entered: {{cartCtrl.order.coupon_id}}</h4>
+              </row>
+            </div>
+            <div ng-if="cartCtrl.order.giftcard_id === undefined">
+              <uib-accordion>
+               <uib-accordion-group is-open="status.open">
+                  <uib-accordion-heading>
+                    Use Gift Cards <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                  </uib-accordion-heading>
+                  <div class="input-group input-group-sm">
+                    <input type="text" ng-model="cartCtrl.order.giftcard_code" class="form-control" placeholder="Enter Gift Card">
+                    <span class="input-group-btn">
+                      <button class="btn btn-primary" ng-click="cartCtrl.updateGiftCard()" type="button"><span class="menu-icon fa fa-check"></span></button>
+                    </span>
+                  </div>
+                </uib-accordion-group>
+              </uib-accordion>
+            </div>
+            <div ng-if="cartCtrl.order.giftcard_id !== undefined">
+                <h4>Gift Card Entered: {{cartCtrl.order.giftcard_id}}</h4>
+            </div>
 
             <div class="col-sm-4 col-sm-offset-8">
               <table class="table table-bordered">
@@ -95,6 +106,14 @@
                 <tr ng-repeat="t in cartCtrl.taxes">
                   <td class="text-right"><strong>{{t.tax_name}}</strong></td>
                   <td class="text-right">{{t.tax_total | currency}}</td>
+                </tr>
+                <tr ng-if="cartCtrl.order.coupon_discount !== 0">
+                  <td class="text-right"><strong>Coupon Discount</strong></td>
+                  <td class="text-right">{{cartCtrl.order.coupon_discount | currency}}</td>
+                </tr>
+                <tr ng-if="cartCtrl.order.giftcard_discount !== 0">
+                  <td class="text-right"><strong>Gift Card Discount</strong></td>
+                  <td class="text-right">{{cartCtrl.order.giftcard_discount | currency}}</td>
                 </tr>
                 <tr>
                   <td class="text-right"><strong>Total</strong></td>
