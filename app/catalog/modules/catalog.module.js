@@ -375,12 +375,12 @@ angular.module('CatalogModule', [
 
               updateCoupon: function(obj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
-                  return theRef.update( {coupon_code: obj.coupon_code} );
+                  return theRef.update( {coupon_id: obj.coupon_id, coupon_discount: obj.coupon_discount} );
               },
 
-              updateGiftVoucher: function(obj) {
+              updateGiftCard: function(obj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
-                  return theRef.update( {gift_voucher_code: obj.gift_voucher_code} );
+                  return theRef.update( {giftcard_id: obj.giftcard_id, giftcard_discount: obj.giftcard_discount} );
               },
 
               updateCustomer: function(obj) {
@@ -816,21 +816,23 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CartCtrl', ['Auth', 'Catalog', 'CartOrders', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', 'Customer', 'md5', 'tid', 'Profile', '$state', '$cookies',
-        function (        Auth,   Catalog,   CartOrders,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   Customer,   md5,   tid,   Profile,   $state,   $cookies) {
+.controller('CartCtrl', ['Auth', 'Catalog', 'CartOrders', 'Coupons', 'GiftCards', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', 'Customer', 'md5', 'tid', 'Profile', '$state', '$cookies',
+        function (        Auth,   Catalog,   CartOrders,   Coupons,   GiftCards,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   Customer,   md5,   tid,   Profile,   $state,   $cookies) {
                 var cartCtrl = this;
                 cartCtrl.store = Catalog.storeDefaults;
                 var obj = {};
                 obj.oid = $cookies.get('orderId');
                 cartCtrl.status = null;
                 cartCtrl.checkout_type = null;
-                var newRegister = "newRegister";
-                var existing = "existing";
 
                 var theOrder = CartOrders.getOrder(obj.oid)
                       theOrder.$loaded().then(function() {
                             cartCtrl.order = theOrder;
-                            cartCtrl.order.total = theOrder.sub_total + theOrder.tax_total;
+                            if (theOrder.coupon_discount === undefined)
+                                theOrder.coupon_discount = 0;
+                            if (theOrder.giftcard_discount === undefined)
+                                theOrder.giftcard_discount = 0;
+                            cartCtrl.order.total = (theOrder.sub_total + theOrder.tax_total) - (theOrder.coupon_discount + theOrder.giftcard_discount);
                             var theLines = CartOrders.getLines(obj.oid)
                                   theLines.$loaded().then(function() {
                                         cartCtrl.lines = theLines;
@@ -862,7 +864,7 @@ angular.module('CatalogModule', [
                                         cartCtrl.customer = theCustomer;
                                     });
                             });
-                            cartCtrl.status = existing;
+                            cartCtrl.status = "existing";
 
                       }, function(error) {
                             AlertService.addError(error.message);
@@ -877,13 +879,11 @@ angular.module('CatalogModule', [
                 };
 
                 cartCtrl.CheckoutTypeRegister = function() {
-                    cartCtrl.checkout_type = newRegister;
-                    console.log(cartCtrl.checkout_type);
+                    cartCtrl.checkout_type = "newRegister";
                 };
 
                 cartCtrl.CheckoutTypeGuest = function() {
                     cartCtrl.checkout_type = null;
-                    console.log(cartCtrl.checkout_type);
                 };
 
                 cartCtrl.updateLine = function(lid, qty, pid) {
@@ -895,19 +895,55 @@ angular.module('CatalogModule', [
                       cartCtrl.error = error;
                 };
 
-                cartCtrl.updateCoupon = function() {
-                      obj.coupon_code = cartCtrl.order.coupon_code
-                      CartOrders.updateCoupon(obj);
-                }, function(error) {
-                      cartCtrl.error = error;
+                cartCtrl.couponType = function(obj) {
+                    if (obj.coupon_type == "Percent") {
+                          obj.coupon_discount = (obj.coupon_discount/100) * cartCtrl.order.sub_total;
+                    };
                 };
 
-                cartCtrl.updateGiftVoucher = function() {
-                      obj.gift_voucher_code = cartCtrl.order.gift_voucher_code
-                      CartOrders.updateGiftVoucher(obj);
-                }, function(error) {
-                      cartCtrl.error = error;
+
+                cartCtrl.updateCoupon = function() {
+                      var theCoupon = Coupons.getCoupon(cartCtrl.order.coupon_code);
+                          theCoupon.$loaded().then(function() {
+                              if (theCoupon.coupon_name !== undefined) {
+                                  theCoupon.$loaded().then(function() {
+                                      cartCtrl.couponType(theCoupon);
+                                      obj.coupon_id = theCoupon.$id;
+                                      obj.coupon_discount = Number(theCoupon.coupon_discount);
+                                      obj.total = cartCtrl.order.total - theCoupon.coupon_discount;
+                                      CartOrders.updateCoupon(obj);
+                                      CartOrders.updateHeaderTotal(obj);
+                                  });
+                              } else {
+                                  AlertService.addError(Messages.invalid_coupon_code);
+                                  cartCtrl.order.coupon_code = null;
+                              };
+                          });
+
+
                 };
+
+                cartCtrl.updateGiftCard = function() {
+                  var theGiftcard = GiftCards.getGiftCard(cartCtrl.order.giftcard_code);
+                      theGiftcard.$loaded().then(function() {
+                          if (theGiftcard.giftcard_amount !== undefined) {
+                              theGiftcard.$loaded().then(function() {
+                                  obj.giftcard_id = theGiftcard.$id;
+                                  obj.giftcard_discount = Number(theGiftcard.giftcard_amount);
+                                  obj.total = cartCtrl.order.total - theGiftcard.giftcard_amount;
+                                  theGiftcard.giftcard_status = "Claimed";
+                                  GiftCards.updateGiftCard(theGiftcard);
+                                  CartOrders.updateGiftCard(obj);
+                                  CartOrders.updateHeaderTotal(obj);
+                              });
+                          } else {
+                              AlertService.addError(Messages.invalid_giftcard_code);
+                              cartCtrl.order.giftcard_code = null;
+                          };
+                      });
+
+
+            };
 
                 cartCtrl.addOrderToCustomer = function(cid, oid) {
                   Customer.addOrder(cid, oid);

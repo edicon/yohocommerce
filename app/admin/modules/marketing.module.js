@@ -159,6 +159,10 @@ angular.module('MarketingModule', [
 
           var coupon = {
 
+              getCoupon: function(id) {
+                  return $firebaseObject(ref.child(tid).child(id));
+              },
+
               addCoupon: function(theObj) {
                   var theRef = new Firebase(FirebaseUrl+'coupons/'+tid);
                   return theRef.push(theObj);
