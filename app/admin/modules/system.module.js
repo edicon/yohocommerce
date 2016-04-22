@@ -785,8 +785,8 @@ angular.module('SystemModule', [
 
 ])
 
-.controller('StoreCtrl', ['Store', 'Stores',  'Banner', 'Countries', 'LengthUnits', 'WeightUnits', 'TaxGroups', 'OrderStatuses', 'ReturnStatuses', 'FileReader', 'AlertService', '$state', '$scope', '$stateParams', '$http',
-      function (           Store,   Stores,    Banner,   Countries,   LengthUnits,   WeightUnits,   TaxGroups,   OrderStatuses,   ReturnStatuses,   FileReader,   AlertService,   $state,   $scope,   $stateParams,   $http) {
+.controller('StoreCtrl', ['Store', 'Stores',  'Banner', 'Countries', 'LengthUnits', 'WeightUnits', 'TaxGroups', 'OrderStatuses', 'ReturnStatuses', 'AlertService', '$state', '$scope', '$stateParams', '$http',
+      function (           Store,   Stores,    Banner,   Countries,   LengthUnits,   WeightUnits,   TaxGroups,   OrderStatuses,   ReturnStatuses,   AlertService,   $state,   $scope,   $stateParams,   $http) {
             var storeCtrl = this;
             storeCtrl.store = {};
             $scope.countries = Countries.all;
@@ -929,7 +929,7 @@ angular.module('SystemModule', [
                   bannerCtrl.error = error;
             };
 
-            $scope.getFile = function () {
+/*            $scope.getFile = function () {
                   FileReader.readAsDataURL($scope.file, $scope).then(function(result) {
                         imageEntity.imageSrc = result;
                         imageEntity.bid = bannerCtrl.bid;
@@ -939,7 +939,7 @@ angular.module('SystemModule', [
                         });
                   });
             };
-
+*/
       }
 
 ])
