@@ -13,7 +13,6 @@ angular.module('CatalogsModule', [
   'ui.grid.edit',
   'ui.grid.cellNav',
   'ui.grid.selection',
-  'filereader',
   'ui.tinymce',
   'ui.select',
   'ui.grid.rowEdit',
