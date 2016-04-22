@@ -20,7 +20,7 @@
       <div class="panel-body">
         <div class="col-sm-12">
           <button class="btn btn-default btn-block" ngf-select="uploadFiles($files, $invalidFiles)" multiple accept="image/*"
-              ngf-resize="{width: 225, height: 210}" ngf-max-size="10MB">
+              ngf-resize="{width: 225, height: 210, centerCrop: true}" ngf-max-size="10MB">
             <h4>Select File(s) for Upload</h4>
             <ul class="list-inline">
               <li ng-repeat="f in files" style="font:smaller">{{f.name}} {{f.$errorParam}}
