@@ -731,6 +731,7 @@ angular.module('SystemModule', [
                   var mediaLibraryCtrl = this;
                   mediaLibraryCtrl.upLoadComplete = 0;
                   mediaLibraryCtrl.category_id = null;
+                  mediaLibraryCtrl.category_name = null;
 
                   mediaLibraryCtrl.urls = MediaLibrary.all;
                   mediaLibraryCtrl.categories = Categories.all;
@@ -739,6 +740,14 @@ angular.module('SystemModule', [
                         s3.$loaded().then(function() {
                               mediaLibraryCtrl.s3 = s3;
                         });
+
+                  mediaLibraryCtrl.selectCategory = function(cid, category_name) {
+                        mediaLibraryCtrl.category_id = cid;
+                        mediaLibraryCtrl.category_name = category_name;
+                  }, function(error) {
+                        AlertService.addError(error.message);
+                  };
+
 
                   $scope.uploadFiles = function(files, errFiles) {
                         $scope.files = files;
