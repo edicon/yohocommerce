@@ -80,6 +80,7 @@ angular.module('AdminModule', [
           var adminCtrl = this;
           var mobileView = 992;
           adminCtrl.profile = profile;
+          console.log($scope)
 
           if (adminCtrl.profile.type === "customer")
               $state.go('account.dashboard');
