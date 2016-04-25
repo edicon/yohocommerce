@@ -50,7 +50,7 @@ angular.module('AdminModule', [
               views: {
                   "main@admin": {
                       controller: 'DashboardCtrl as dashboardCtrl',
-                      templateUrl: 'admin/views/dashboard/admin.dashboard.html'
+                      templateUrl: 'admin/views/dashboard/dashboard.html'
                   }
               }
           })

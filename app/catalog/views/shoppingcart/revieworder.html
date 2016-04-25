@@ -142,28 +142,6 @@
               </tbody>
             </table>
           </div>
-          <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">
-              <label class="control-label">Use Coupon Code</label>
-              <div class="input-group input-group-sm">
-                <input type="text" ng-model="cartCtrl.order.coupon_code" class="form-control" placeholder="Enter Coupon Code">
-                <span class="input-group-btn">
-                  <button class="btn btn-primary" ng-click="cartCtrl.updateCoupon()" type="button"><span class="menu-icon fa fa-check"></span></button>
-                </span>
-              </div>
-            </div>
-          </div><br>
-          <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">
-              <label class="control-label">Use Gift Voucher</label>
-              <div class="input-group input-group-sm">
-                <input type="text" ng-model="cartCtrl.order.gift_voucher_code" class="form-control" placeholder="Enter Gift Voucher">
-                <span class="input-group-btn">
-                  <button class="btn btn-primary" ng-click="cartCtrl.updateGiftVoucher()" type="button"><span class="menu-icon fa fa-check"></span></button>
-                </span>
-              </div>
-            </div>
-          </div><br>
           <div class="col-sm-4 col-sm-offset-4">
             <table class="table">
               <tr>
@@ -174,6 +152,14 @@
                 <td class="text-right"><strong>{{t.tax_name}}</strong></td>
                 <td class="text-right">{{t.tax_total | currency}}</td>
               </tr>
+              <tr ng-if="cartCtrl.order.coupon_discount !== 0">
+                <td class="text-right"><strong>Coupon Discount</strong></td>
+                <td class="text-right">{{cartCtrl.order.coupon_discount | currency}}</td>
+              </tr>
+              <tr ng-if="cartCtrl.order.giftcard_discount !== 0">
+                <td class="text-right"><strong>Gift Card Discount</strong></td>
+                <td class="text-right">{{cartCtrl.order.giftcard_discount | currency}}</td>
+              </tr>              
               <tr>
                 <td class="text-right"><strong>Cash on Delivery</strong></td>
                 <td class="text-right">TBD</td>

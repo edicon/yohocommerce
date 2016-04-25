@@ -13,48 +13,116 @@
 </div>
 <div class="row">
 	<div class="col-lg-3 col-md-6 col-xs-12">
-		<rd-widget>
-			<rd-widget-body>
-				<div class="widget-icon green pull-left">
-					<i class="fa fa-users"></i>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-3">
+						<div class="pull-left">
+							<span class="fa-stack fa-3x">
+  							<i class="fa fa-circle fa-stack-2x icon-background-g"></i>
+								<i class="fa fa-shopping-cart fa-stack-1x"></i>
+							</span>
+						</div>
+					</div>
+					<div class="col-xs-9 text-right">
+						<h3>{{dashboardCtrl.theOrders.count}}</h3>
+						<h5>Total Orders</h5>
+					</div>
 				</div>
-				<div class="title">80</div>
-				<div class="comment">Total Orders</div>
-			</rd-widget-body>
-		</rd-widget>
+			</div>
+			<div class="panel-body">
+				<a href="#/admin/reports/salesorders" ui-sref="admin.reports.salesorders">
+					<span class="pull-left">View Orders</span>
+					<span class="pull-right">
+						<i class="fa fa-chevron-circle-right"></i>
+					</span>
+				</a>
+			</div>
+		</div>
 	</div>
 	<div class="col-lg-3 col-md-6 col-xs-12">
-		<rd-widget>
-			<rd-widget-body>
-				<div class="widget-icon red pull-left">
-					<i class="fa fa-tasks"></i>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-3">
+						<div class="pull-left">
+							<span class="fa-stack fa-3x">
+  							<i class="fa fa-circle fa-stack-2x icon-background-r"></i>
+								<i class="fa fa-cube fa-stack-1x"></i>
+							</span>
+						</div>
+					</div>
+					<div class="col-xs-9 text-right">
+						<h3>{{dashboardCtrl.theProducts.count}}</h3>
+						<h5>Products</h5>
+					</div>
 				</div>
-				<div class="title">16</div>
-				<div class="comment">Total Sales</div>
-			</rd-widget-body>
-		</rd-widget>
+			</div>
+			<div class="panel-body">
+				<a href="#/admin/reports/salesorders" ui-sref="admin.reports.salesorders">
+					<span class="pull-left">View Customers</span>
+					<span class="pull-right">
+						<i class="fa fa-chevron-circle-right"></i>
+					</span>
+				</a>
+			</div>
+		</div>
 	</div>
 	<div class="col-lg-3 col-md-6 col-xs-12">
-		<rd-widget>
-			<rd-widget-body>
-				<div class="widget-icon orange pull-left">
-					<i class="fa fa-sitemap"></i>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-3">
+						<div class="pull-left">
+							<span class="fa-stack fa-3x">
+  							<i class="fa fa-circle fa-stack-2x icon-background-y"></i>
+								<i class="fa fa-users fa-stack-1x"></i>
+							</span>
+						</div>
+					</div>
+					<div class="col-xs-9 text-right">
+						<h3>{{dashboardCtrl.theCustomers.count}}</h3>
+						<h5>Customers</h5>
+					</div>
 				</div>
-				<div class="title">225</div>
-				<div class="comment">Total Customers</div>
-			</rd-widget-body>
-		</rd-widget>
+			</div>
+			<div class="panel-body">
+				<a href="#/admin/reports/salesorders" ui-sref="admin.reports.salesorders">
+					<span class="pull-left">View Customers</span>
+					<span class="pull-right">
+						<i class="fa fa-chevron-circle-right"></i>
+					</span>
+				</a>
+			</div>
+		</div>
 	</div>
 	<div class="col-lg-3 col-md-6 col-xs-12">
-		<rd-widget>
-			<rd-widget-body>
-				<div class="widget-icon blue pull-left">
-					<i class="fa fa-support"></i>
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-3">
+						<div class="pull-left">
+							<span class="fa-stack fa-3x">
+  							<i class="fa fa-circle fa-stack-2x icon-background-b"></i>
+								<i class="fa fa-wifi fa-stack-1x"></i>
+							</span>
+						</div>
+					</div>
+					<div class="col-xs-9 text-right">
+						<h3>10</h3>
+						<h5>People Online</h5>
+					</div>
 				</div>
-				<div class="title">62</div>
-				<div class="comment">People Online</div>
-			</rd-widget-body>
-		</rd-widget>
+			</div>
+			<div class="panel-body">
+				<a href="#/admin/reports/salesorders" ui-sref="admin.reports.salesorders">
+					<span class="pull-left">View Activity</span>
+					<span class="pull-right">
+						<i class="fa fa-chevron-circle-right"></i>
+					</span>
+				</a>
+			</div>
+		</div>
 	</div>
 </div>
 

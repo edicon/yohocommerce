@@ -505,6 +505,10 @@ angular.module('CatalogsModule', [
                         product_status: obj.product_status });
                 },
 
+                getProductsCount: function() {
+                    return products;
+                },
+
                 all: products,
 
                 allFeatured: featuredProducts
