@@ -705,14 +705,13 @@ angular.module('SystemModule', [
               },
 
               addImage: function(obj) {
-                console.log(obj)
-                var theRef = new Firebase(FirebaseUrl+'media_library/'+tid);
-                return theRef.push(obj);
+                  var theRef = new Firebase(FirebaseUrl+'media_library/'+tid);
+                  return theRef.push(obj);
               },
 
               removeImage: function(id) {
-                var theRef = new Firebase(FirebaseUrl+'media_library/'+tid+'/'+id);
-                return theRef.remove();
+                  var theRef = new Firebase(FirebaseUrl+'media_library/'+tid+'/'+id);
+                  return theRef.remove();
               },
 
               all: medialibraries
@@ -730,6 +729,8 @@ angular.module('SystemModule', [
         function (                Upload,   MediaLibrary,   Extensions,   Categories,   $timeout,   $scope) {
                   var mediaLibraryCtrl = this;
                   mediaLibraryCtrl.upLoadComplete = 0;
+                  mediaLibraryCtrl.filter_category_id = null;
+                  mediaLibraryCtrl.filter_category_name = null;
                   mediaLibraryCtrl.category_id = null;
                   mediaLibraryCtrl.category_name = null;
 
@@ -740,6 +741,13 @@ angular.module('SystemModule', [
                         s3.$loaded().then(function() {
                               mediaLibraryCtrl.s3 = s3;
                         });
+
+                  mediaLibraryCtrl.filterCategory = function(cid, category_name) {
+                        mediaLibraryCtrl.filter_category_id = cid;
+                        mediaLibraryCtrl.filter_category_name = category_name;
+                  }, function(error) {
+                        AlertService.addError(error.message);
+                  };
 
                   mediaLibraryCtrl.selectCategory = function(cid, category_name) {
                         mediaLibraryCtrl.category_id = cid;

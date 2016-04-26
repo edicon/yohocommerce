@@ -1,37 +1,43 @@
 <div class="container-fluid" ng-controller="MediaLibraryCtrl">
-  <div class="col-xs-12">
+  <div class="col-xs-5">
     <form class="form-horizontal">
-      <div class="form-group">
-        <div class="col-sm-4">
-          <div class="input-group input-group-sm">
-            <span class="input-group-addon">Media Category</span>
-            <select ng-model="mediaLibraryCtrl.category_id" class="form-control">
-              <option value=null selected></option>
-              <option ng-repeat="c in mediaLibraryCtrl.categories" value="{{c.$id}}">{{c.category_name}}</option>
-            </select>
-          </div>
+      <div class="input-group">
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">Filter on Category <span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            <li ng-repeat="c in mediaLibraryCtrl.categories"><a href="#/library" ui-sref="admin.system.library" ng-click="mediaLibraryCtrl.filterCategory(c.$id, c.category_name)">{{c.category_name}}</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#/library" ui-sref="admin.system.library" ng-click="mediaLibraryCtrl.filter.Category(1, 'Front Page Banner')">Front Page Banner</a></li>
+          </ul>
         </div>
+        <input type="text" ng-model="mediaLibraryCtrl.filter_category_name" class="form-control" readonly>
       </div>
     </form>
-
+  </div>
+  <div class="col-sm-12">&nbsp;</div>
+  <div class="col-xs-12">
     <div class="panel panel-default">
       <div class="panel-heading">
         <h4 class="panel-title"><span class="menu-icon fa fa-picture-o"></span> Media Library</h4>
       </div>
       <div class="panel-body">
+        <div class="col-sm-5">
+          <div class="input-group">
+            <div class="input-group-btn">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">Select Category for Media Upload <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li ng-repeat="c in mediaLibraryCtrl.categories"><a href="#/library" ui-sref="admin.system.library" ng-click="mediaLibraryCtrl.selectCategory(c.$id, c.category_name)">{{c.category_name}}</a></li>
+                <li role="separator" class="divider"></li>
+                <li><a href="#/library" ui-sref="admin.system.library" ng-click="mediaLibraryCtrl.selectCategory(1, 'Front Page Banner')">Front Page Banner</a></li>
+              </ul>
+            </div>
+            <input type="text" ng-model="mediaLibraryCtrl.category_name" class="form-control" readonly>
+          </div>
+        </div>
+        <div class="col-sm-12">&nbsp;</div>
         <div class="col-sm-12">
-          <div class="btn-group">
-            <button type="button" class="btn btn-sm btn-default">Select Category for Media Upload</button>
-            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <span class="caret"></span>
-              <span class="sr-only">Toggle Dropdown</span>
-            </button>
-            <ul class="dropdown-menu">
-              <li ng-repeat="c in mediaLibraryCtrl.categories"><a href="#/library" ui-sref="admin.system.library" ng-click="mediaLibraryCtrl.selectCategory(c.$id, c.category_name)">{{c.category_name}}</a></li>
-              <li role="separator" class="divider"></li>
-              <li><a href="#/library" ui-sref="admin.system.library" ng-click="mediaLibraryCtrl.selectCategory(1, 'front_page_banner')">Front Page Banner</a></li>
-            </ul>
-          </div><br><br>
           <div ng-if="mediaLibraryCtrl.category_name === 'front_page_banner'">
             <button class="btn btn-default btn-block" ngf-select="uploadFiles($files, $invalidFiles)" multiple accept="image/*"
               ngf-resize="{width: 800, height: 305, centerCrop: true}" ngf-max-size="10MB">
@@ -50,7 +56,7 @@
           <div ng-if="mediaLibraryCtrl.category_name != 'front_page_banner'">
             <button class="btn btn-default btn-block" ngf-select="uploadFiles($files, $invalidFiles)" multiple accept="image/*"
                 ngf-resize="{width: 225, height: 210, centerCrop: true}" ngf-max-size="10MB">
-              <h4>Select {{mediaLibraryCtrl.category_name}} Image(s) for Upload</h4>
+              <h4>Select <u>{{mediaLibraryCtrl.category_name}}</u> Category Image(s) for Upload</h4>
               <ul class="list-inline">
                 <li ng-repeat="f in files" style="font:smaller">{{f.name}} {{f.$errorParam}}
                   <span class="progress" ng-show="f.progress >= 0">
@@ -67,6 +73,7 @@
         <div ng-repeat="u in mediaLibraryCtrl.urls" class="col-xs-2">
           <div class="panel panel-default">
             <div class="panel-body">
+              <p align="center"><small>{{u.file_name | limitTo: 15}}<span ng-if="u.file_name.length > 15">...</span></small></p>
               <p><a href="#" title="{{u.file_name}}"><img ng-src="{{u.url}}" class="img-responsive" alt="{{u.file_name}}"></a></p>
               <button type="button" class="btn btn-xs btn-danger btn-block" ng-click=""><i class="fa fa-trash"></i> Delete</button>
             </div>
