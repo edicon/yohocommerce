@@ -38,12 +38,33 @@ angular.module('DashboardModule', [
                 dashboardCtrl.theProducts.count = theProducts.length;
             });
 
+        dashboardCtrl.gridOrders = {
+              enableSorting: false,
+              enableColumnMenus: false,
+              enableCellEditOnFocus: false,
+              enableFiltering: false,
+              enableHiding: false,
+              data: Orders.all,
+              columnDefs: [
+                    { name:'dateAdded', field: 'create_date', sort: { direction: 'desc' }, cellFilter: 'date',  width: '22%' },
+                    { name:'orderCode', field: '$id' },
+                    { name:'orderTotal', field: 'total', width: '20%',
+                        cellClass: 'grid-align-right', cellFilter:'currency' }
+              ]
+        };
 
-
-
-
-
-
-
+        dashboardCtrl.gridActivity = {
+              enableSorting: false,
+              enableColumnMenus: false,
+              enableCellEditOnFocus: false,
+              enableFiltering: false,
+              enableHiding: false,
+            //  data: Orders.all,
+              columnDefs: [
+                    { name:'activity', field: 'activity', width: '20%' },
+                    { name:'username', field: '$id' },
+                    { name:'role', field: 'type', width: '20%' },
+              ]
+        };
 
 }]);
