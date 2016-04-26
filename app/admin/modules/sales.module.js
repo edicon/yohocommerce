@@ -470,6 +470,10 @@ angular.module('SalesModule', [
                   return theRef.update({ customer_status_id: theObj.customer_status_id, customer_status: theObj.customer_status });
               },
 
+              getCustomersCount: function() {
+                  return customers;
+              },
+
               all: customers
 
           };
@@ -527,6 +531,11 @@ angular.module('SalesModule', [
 
               getOrder: function(oid) {
                   return $firebaseObject(ref.child(tid).child(oid));
+
+              },
+
+              getOrdersCount: function() {
+                  return orders;
               },
 
               all: orders

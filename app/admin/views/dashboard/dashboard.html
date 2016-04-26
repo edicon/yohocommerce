@@ -1,0 +1,145 @@
+<div id="content-wrapper">
+	<div class="page-content">
+		<div class="row header">
+			<div class="col-xs-12">
+				<span ng-include="'admin/views/common/topbar.html'"></span>
+				<div class="meta">
+				  <div class="page">Dashboard</div>
+				  <div class="breadcrumb-links">Home / Dashboard</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-3 col-md-6 col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-3">
+						<div class="pull-left">
+							<span class="fa-stack fa-3x">
+  							<i class="fa fa-circle fa-stack-2x icon-background-g"></i>
+								<i class="fa fa-shopping-cart fa-stack-1x"></i>
+							</span>
+						</div>
+					</div>
+					<div class="col-xs-9 text-right">
+						<h3>{{dashboardCtrl.theOrders.count}}</h3>
+						<h5>Total Orders</h5>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<a href="#/admin/reports/salesorders" ui-sref="admin.reports.salesorders">
+					<span class="pull-left">View Orders</span>
+					<span class="pull-right">
+						<i class="fa fa-chevron-circle-right"></i>
+					</span>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3 col-md-6 col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-3">
+						<div class="pull-left">
+							<span class="fa-stack fa-3x">
+  							<i class="fa fa-circle fa-stack-2x icon-background-r"></i>
+								<i class="fa fa-cube fa-stack-1x"></i>
+							</span>
+						</div>
+					</div>
+					<div class="col-xs-9 text-right">
+						<h3>{{dashboardCtrl.theProducts.count}}</h3>
+						<h5>Products</h5>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<a href="#/admin/reports/productsviewed" ui-sref="admin.reports.productsviewed">
+					<span class="pull-left">View Products</span>
+					<span class="pull-right">
+						<i class="fa fa-chevron-circle-right"></i>
+					</span>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3 col-md-6 col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-3">
+						<div class="pull-left">
+							<span class="fa-stack fa-3x">
+  							<i class="fa fa-circle fa-stack-2x icon-background-y"></i>
+								<i class="fa fa-users fa-stack-1x"></i>
+							</span>
+						</div>
+					</div>
+					<div class="col-xs-9 text-right">
+						<h3>{{dashboardCtrl.theCustomers.count}}</h3>
+						<h5>Customers</h5>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<a href="#/admin/reports/customersonline" ui-sref="admin.reports.customersonline">
+					<span class="pull-left">View Customers</span>
+					<span class="pull-right">
+						<i class="fa fa-chevron-circle-right"></i>
+					</span>
+				</a>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-3 col-md-6 col-xs-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<div class="row">
+					<div class="col-xs-3">
+						<div class="pull-left">
+							<span class="fa-stack fa-3x">
+  							<i class="fa fa-circle fa-stack-2x icon-background-b"></i>
+								<i class="fa fa-wifi fa-stack-1x"></i>
+							</span>
+						</div>
+					</div>
+					<div class="col-xs-9 text-right">
+						<h3>10</h3>
+						<h5>People Online</h5>
+					</div>
+				</div>
+			</div>
+			<div class="panel-body">
+				<a>
+					<span class="pull-left">View Activity</span>
+					<span class="pull-right">
+						<i class="fa fa-chevron-circle-right"></i>
+					</span>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title"><span class="menu-icon fa fa-shopping-cart"></span> Recent Orders</h3>
+			</div>
+		</div>
+		<div ui-grid=dashboardCtrl.gridOrders class="grid-200"></div>
+	</div>
+	<div class="col-lg-6">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h3 class="panel-title"><span class="menu-icon fa fa-list-ul"></span> Recent Activity</h3>
+			</div>
+		</div>
+		<div ui-grid=dashboardCtrl.gridActivity class="grid-200"></div>
+	</div>
+</div>
