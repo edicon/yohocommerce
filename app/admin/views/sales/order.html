@@ -1,19 +1,50 @@
-<div class="row">
-  <div class="col-xs-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Order</h3>
+<div class="container-fluid">
+  <div class="row">
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="col-sm-12">
+          <a type="button" class="btn btn-sm btn-default detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Cancel" href="#/orders" ui-sref="admin.sales.orders">
+            <i class="fa fa-reply"></i>
+          </a>
+          <button type="button" class="btn btn-sm btn-primary detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Save" href="#/orders" ui-sref="admin.sales.orders" ng-click="orderCtrl.saveOrder()">
+            <i class="fa fa-floppy-o"></i>
+          </button>
+        </div>
       </div>
-      <div class="panel-body">
-        <div class="row">
-					<uib-tabset>
-						<uib-tab heading="General"></uib-tab>
-						<uib-tab heading="Meta Data"></uib-tab>
-						<uib-tab heading="Store Settings"></uib-tab>
-						<uib-tab heading="Localization"></uib-tab>
-					</uib-tabset>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+    </form>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title"><span class="menu-icon fa fa-shopping-cart"></span> Order Detail</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-sm-5">
+
+
+
+                  <div class="pull-left">
+                    <label>Order ID: </label>
+                    <p>{{orderCtrl.order.$id}}</p>
+                    <label>Customer Detail:</label><br>
+                    <p>{{orderCtrl.customer.customer_first_name}} {{orderCtrl.customer.customer_last_name}}</p>
+                    <p>{{orderCtrl.customer.customer_address1}}</p>
+                    <p>{{orderCtrl.customer.customer_city}} {{orderCtrl.customer.customer_province}}</p>
+                    <p>{{orderCtrl.customer.customer_country}} {{orderCtrl.customer.customer_postal}}</p>
+                  </div>
+
+        </div>
+        <div class="col-sm-7">
+          <div class="pull-right">
+            <label class="align-right">Date Added: {{orderCtrl.order.create_date}}</label><br>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div ui-grid="orderCtrl.gridLines" class="grid-150" ui-grid-edit ui-grid-cellNav></div>
+      </div>
+    </div>
+  </div>
 </div>

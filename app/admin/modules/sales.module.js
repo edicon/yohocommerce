@@ -134,6 +134,9 @@ angular.module('SalesModule', [
             })
             .state('admin.sales.order', {
                 url: '/order',
+                params: {
+                  rowEntity: null,
+                },
                 views: {
                     "header@admin": {
                         templateUrl: 'admin/views/sales/order.header.html'
@@ -143,7 +146,7 @@ angular.module('SalesModule', [
                     },
                     "list@admin.sales.order": {
                         controller: 'OrderCtrl as orderCtrl',
-                        templateUrl: 'admin/views/sales/orders.html'
+                        templateUrl: 'admin/views/sales/order.html'
                     }
                 }
             })
@@ -532,6 +535,11 @@ angular.module('SalesModule', [
               getOrder: function(oid) {
                   return $firebaseObject(ref.child(tid).child(oid));
 
+              },
+
+              getLines: function(oid) {
+                  var linesRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+oid+'/lines');
+                  return $firebaseArray(linesRef);
               },
 
               getOrdersCount: function() {
@@ -926,18 +934,79 @@ angular.module('SalesModule', [
       function (            Orders,   $state,   $scope,   $stateParams) {
           var ordersCtrl = this;
 
+          ordersCtrl.editOrder = function(row) {
+                $state.go('admin.sales.order', {'rowEntity': row.entity});
+          };
+
           ordersCtrl.gridOrders = {
                 enableSorting: true,
                 enableCellEditOnFocus: true,
                 enableFiltering: true,
                 data: Orders.all,
                 columnDefs: [
+                      { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/sales/gridTemplates/editOrder.html',
+                      width: 35, enableColumnMenu: false, headerTooltip: 'Edit Affiliate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
                       { name:'dateAdded', field: 'create_date', cellFilter: 'date',  width: '35%', enableHiding: false, enableFiltering: true },
                       { name:'customerCode', field: 'customer_id', enableHiding: false, enableFiltering: false },
                       { name:'orderTotal', field: 'total', width: '15%', enableHiding: false, enableFiltering: false,
                           cellClass: 'grid-align-right', cellFilter:'currency' }
                 ]
           };
+
+      }
+
+])
+
+.controller('OrderCtrl', ['Orders', 'Customers', '$state', '$scope', '$stateParams',
+      function (           Orders,   Customers,   $state,   $scope,   $stateParams) {
+          var orderCtrl = this;
+
+          orderCtrl.loadOrder = function(id) {
+                var theOrder = Orders.getOrder(id);
+                    theOrder.$loaded().then(function() {
+                          orderCtrl.order = theOrder;
+                          orderCtrl.order.create_date = new Date(orderCtrl.order.create_date);
+                          console.log(orderCtrl.order.create_date);
+
+                          var theCustomer = Customers.getCustomer(orderCtrl.order.customer_id);
+                              theCustomer.$loaded().then(function() {
+                                    orderCtrl.customer = theCustomer;
+                                    orderCtrl.customer.full_name = orderCtrl.customer.customer_first_name + ' ' + orderCtrl.customer.customer_last_name;
+                              });
+
+                              var theLines = Orders.getLines(orderCtrl.order.$id);
+                                  theLines.$loaded().then(function(){
+                                      orderCtrl.gridLines.data = theLines;
+                                  });
+                    });
+
+          };
+
+          orderCtrl.saveOrder = function(id) {
+                var theOrder = Orders.getOrder(id);
+                    theOrder.$loaded().then(function() {
+                          orderCtrl.order = theOrder;
+                    });
+          };
+
+          if ($stateParams.rowEntity != undefined) {
+                orderCtrl.loadOrder($stateParams.rowEntity.$id);
+                orderCtrl.oid = $stateParams.rowEntity.$id;
+          };
+
+          orderCtrl.gridLines = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              enableFiltering: true,
+              columnDefs: [
+                  { name:'productName', field: 'product_name', enableHiding: false, enableFiltering: false },
+                  { name:'quantity', field: 'line_quantity', width: '10%', enableHiding: false, enableFiltering: false,
+                  cellClass: 'grid-align-right' },
+                  { name:'sub-total', field: 'line_total', width: '15%', enableHiding: false, enableFiltering: false,
+                  cellClass: 'grid-align-right' },
+              ]
+          };
+
 
       }
 
