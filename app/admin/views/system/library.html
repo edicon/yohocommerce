@@ -70,12 +70,14 @@
           </div>
         </div>
         <div class="col-sm-12">&nbsp;</div>
-        <div ng-repeat="u in mediaLibraryCtrl.urls" class="col-xs-2">
-          <div class="panel panel-default">
-            <div class="panel-body">
-              <p align="center"><small>{{u.file_name | limitTo: 15}}<span ng-if="u.file_name.length > 15">...</span></small></p>
-              <p><a href="#" title="{{u.file_name}}"><img ng-src="{{u.url}}" class="img-responsive" alt="{{u.file_name}}"></a></p>
-              <button type="button" class="btn btn-xs btn-danger btn-block" ng-click=""><i class="fa fa-trash"></i> Delete</button>
+        <div class="row">
+          <div ng-repeat="u in mediaLibraryCtrl.urls" class="col-xs-2">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <p align="center"><small>{{u.file_name | limitTo: 15}}<span ng-if="u.file_name.length > 15">...</span></small></p>
+                <p><a href="#" title="{{u.file_name}}"><img ng-src="{{u.url}}" class="img-thumbnail img-responsive" alt="{{u.file_name}}"></a></p>
+                <button type="button" class="btn btn-xs btn-danger btn-block" ng-click=""><i class="fa fa-trash"></i> Delete</button>
+              </div>
             </div>
           </div>
         </div>
