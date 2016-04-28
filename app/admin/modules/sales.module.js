@@ -957,8 +957,8 @@ angular.module('SalesModule', [
 
 ])
 
-.controller('OrderCtrl', ['Orders', 'Customers', '$state', '$scope', '$stateParams',
-      function (           Orders,   Customers,   $state,   $scope,   $stateParams) {
+.controller('OrderCtrl', ['Orders', 'Customers', 'CartOrders', '$state', '$scope', '$stateParams',
+      function (           Orders,   Customers,   CartOrders,   $state,   $scope,   $stateParams) {
           var orderCtrl = this;
 
           orderCtrl.loadOrder = function(id) {
@@ -966,7 +966,6 @@ angular.module('SalesModule', [
                     theOrder.$loaded().then(function() {
                           orderCtrl.order = theOrder;
                           orderCtrl.order.create_date = new Date(orderCtrl.order.create_date);
-                          console.log(orderCtrl.order.create_date);
 
                           var theCustomer = Customers.getCustomer(orderCtrl.order.customer_id);
                               theCustomer.$loaded().then(function() {
@@ -978,6 +977,11 @@ angular.module('SalesModule', [
                                   theLines.$loaded().then(function(){
                                       orderCtrl.gridLines.data = theLines;
                                   });
+
+                                  var theTaxes = CartOrders.getTaxes(orderCtrl.order.$id);
+                                        theTaxes.$loaded().then(function() {
+                                              orderCtrl.taxes = theTaxes;
+                                        });
                     });
 
           };
@@ -996,10 +1000,13 @@ angular.module('SalesModule', [
 
           orderCtrl.gridLines = {
               enableSorting: true,
+              enableColumnMenus: false,
               enableCellEditOnFocus: true,
               enableFiltering: true,
               columnDefs: [
                   { name:'productName', field: 'product_name', enableHiding: false, enableFiltering: false },
+                  { name:'price', field: 'regular_price', width: '10%', enableHiding: false, enableFiltering: false,
+                  cellClass: 'grid-align-right' },
                   { name:'quantity', field: 'line_quantity', width: '10%', enableHiding: false, enableFiltering: false,
                   cellClass: 'grid-align-right' },
                   { name:'sub-total', field: 'line_total', width: '15%', enableHiding: false, enableFiltering: false,
