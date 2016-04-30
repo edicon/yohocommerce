@@ -23,7 +23,7 @@
             <p>{{orderCtrl.order.$id}}</p>
             <label>Customer:</label><br>
             <p>{{orderCtrl.customer.customer_first_name}} {{orderCtrl.customer.customer_last_name}}<br>
-            {{orderCtrl.customer.customer_email}<br>
+            {{orderCtrl.customer.customer_email}}<br>
             {{orderCtrl.customer.customer_address1}}<br>
             {{orderCtrl.customer.customer_city}}, {{orderCtrl.customer.customer_province}}<br>
             {{orderCtrl.customer.customer_country}} {{orderCtrl.customer.customer_postal}}</p>
@@ -59,11 +59,11 @@
               <td class="text-right"><strong>{{t.tax_name}}</strong></td>
               <td class="text-left">{{t.tax_total | currency}}</td>
             </tr>
-            <tr ng-if="orderCtrl.order.coupon_discount !== undefined">
+            <tr ng-if="orderCtrl.order.coupon_discount !== 0">
               <td class="text-right"><strong>Coupon Discount</strong></td>
               <td class="text-left">{{orderCtrl.order.coupon_discount | currency}}</td>
             </tr>
-            <tr ng-if="orderCtrl.order.giftcard_discount !== undefined">
+            <tr ng-if="orderCtrl.order.giftcard_discount !== 0">
               <td class="text-right"><strong>Gift Card Discount</strong></td>
               <td class="text-left">{{orderCtrl.order.giftcard_discount | currency}}</td>
             </tr>

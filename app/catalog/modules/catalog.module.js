@@ -842,13 +842,13 @@ angular.module('CatalogModule', [
                                                     cartCtrl.taxes = theTaxes;
                                               });
 
-                                                  obj.cid = cartCtrl.order.customer_id;
-                                                  if (obj.cid != null) {
-                                                        var theCustomer = Customer.getCustomer(obj.cid);
-                                                            theCustomer.$loaded().then(function(){
-                                                                cartCtrl.customer = theCustomer;
-                                                            });
-                                                  }
+                                        obj.cid = cartCtrl.order.customer_id;
+                                        if (obj.cid != null) {
+                                              var theCustomer = Customer.getCustomer(obj.cid);
+                                                  theCustomer.$loaded().then(function(){
+                                                      cartCtrl.customer = theCustomer;
+                                                  });
+                                        }
 
                                   });
 
@@ -900,7 +900,6 @@ angular.module('CatalogModule', [
                           obj.coupon_discount = (obj.coupon_discount/100) * cartCtrl.order.sub_total;
                     };
                 };
-
 
                 cartCtrl.updateCoupon = function() {
                       var theCoupon = Coupons.getCoupon(cartCtrl.order.coupon_code);

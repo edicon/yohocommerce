@@ -966,6 +966,11 @@ angular.module('SalesModule', [
                     theOrder.$loaded().then(function() {
                           orderCtrl.order = theOrder;
                           orderCtrl.order.create_date = new Date(orderCtrl.order.create_date);
+                          if (theOrder.coupon_discount === undefined)
+                              theOrder.coupon_discount = 0;
+                          if (theOrder.giftcard_discount === undefined)
+                              theOrder.giftcard_discount = 0;
+                          orderCtrl.order.total = (theOrder.sub_total + theOrder.tax_total) - (theOrder.coupon_discount + theOrder.giftcard_discount);
 
                           var theCustomer = Customers.getCustomer(orderCtrl.order.customer_id);
                               theCustomer.$loaded().then(function() {
