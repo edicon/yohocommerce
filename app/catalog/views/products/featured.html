@@ -15,7 +15,7 @@
           </div>
           <div class="caption">
             <p><h4><a href="" ng-click="catalogFeaturedCtrl.goProduct(p.$id)">{{p.product_name}}</h4></a></p>
-            <p ng-bind-html="p.product_description | limitTo: 150"></p>
+            <p ng-bind-html="p.product_description | limitTo: 150"><span ng-if="p.product_description > 150">...</span></p>
             <span ng-if="p.special_price"><p>
               <strong>{{p.special_price | currency}}</strong> &nbsp;&nbsp;<s>{{p.product_price | currency}}</s></p>
             </span>
