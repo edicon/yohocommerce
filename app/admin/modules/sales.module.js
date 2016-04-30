@@ -546,6 +546,10 @@ angular.module('SalesModule', [
                   return orders;
               },
 
+              removeOrder: function(id) {
+                  return $firebaseObject(ref.child(tid).child(id)).$remove();
+              },
+
               all: orders
 
           };
@@ -938,6 +942,10 @@ angular.module('SalesModule', [
                 $state.go('admin.sales.order', {'rowEntity': row.entity});
           };
 
+          ordersCtrl.removeOrder = function(row) {
+                Orders.removeOrder(row.entity.$id);
+          };
+
           ordersCtrl.gridOrders = {
                 enableSorting: true,
                 enableCellEditOnFocus: true,
@@ -945,11 +953,15 @@ angular.module('SalesModule', [
                 data: Orders.all,
                 columnDefs: [
                       { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/sales/gridTemplates/editOrder.html',
-                      width: 35, enableColumnMenu: false, headerTooltip: 'Edit Affiliate', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-                      { name:'dateAdded', field: 'create_date', cellFilter: 'date',  width: '35%', enableHiding: false, enableFiltering: true },
-                      { name:'customerCode', field: 'customer_id', enableHiding: false, enableFiltering: false },
+                      width: 35, enableColumnMenu: false, headerTooltip: 'Edit Order', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
+                      { name:'orderNumber', field: '$id',  width: '35%', enableHiding: false, enableFiltering: true },
+                      { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: false },
+                      { name:'customerPhone', field: 'customer_phone', enableHiding: false, enableFiltering: false },
+                      { name:'customerE-Mail', field: 'customer_email', enableHiding: false, enableFiltering: false },
                       { name:'orderTotal', field: 'total', width: '15%', enableHiding: false, enableFiltering: false,
-                          cellClass: 'grid-align-right', cellFilter:'currency' }
+                          cellClass: 'grid-align-right', cellFilter:'currency' },
+                      { name: ' ', field: '$id', cellTemplate:'admin/views/sales/gridTemplates/removeOrder.html',
+                          width: 35, enableCellEdit: false, enableFiltering: false, enableColumnMenu: false },
                 ]
           };
 
