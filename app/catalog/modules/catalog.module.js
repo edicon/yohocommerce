@@ -385,7 +385,7 @@ angular.module('CatalogModule', [
 
               updateCustomer: function(obj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
-                  return theRef.update( {customer_id: obj.cid} );
+                  return theRef.update( {customer_id: obj.cid, customer_name: obj.customer_name, customer_email: obj.customer_email, customer_phone: obj.customer_phone} );
               },
 
               all: cartorders
@@ -865,6 +865,7 @@ angular.module('CatalogModule', [
                                     });
                             });
                             cartCtrl.status = "existing";
+                            console.log(cartCtrl.status);
 
                       }, function(error) {
                             AlertService.addError(error.message);
@@ -947,6 +948,9 @@ angular.module('CatalogModule', [
                 cartCtrl.addOrderToCustomer = function(cid, oid) {
                   Customer.addOrder(cid, oid);
                   obj.cid = cid;
+                  obj.customer_name = cartCtrl.customer.customer_first_name + cartCtrl.customer.customer_last_name;
+                  obj.customer_email = cartCtrl.customer.customer_email;
+                  obj.customer_phone = cartCtrl.customer.customer_phone;
                   CartOrders.updateCustomer(obj);
                   $state.go('catalog.revieworder');
                 };
