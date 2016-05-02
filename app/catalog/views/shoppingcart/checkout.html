@@ -17,7 +17,7 @@
               <label><input type="radio" ng-model="cartCtrl.checkout_type" name="checkout_type" ng-click="cartCtrl.CheckoutTypeRegister()"> &nbsp&nbspRegister New Account</label>
               <label><input type="radio" ng-model="cartCtrl.checkout_type" name="checkout_type" ng-click="cartCtrl.CheckoutTypeGuest()"> &nbsp&nbspGuest Checkout</label>
             </div>
-            <div ng-if="cartCtrl.status === existing" class="pull-left">
+            <div ng-if="cartCtrl.status !== null" class="pull-left">
               <h4> Hello {{cartCtrl.customer.customer_first_name}} {{cartCtrl.customer.customer_last_name}}</h4>
             </div>
           </div>
@@ -245,9 +245,9 @@
               <div ng-if="cartCtrl.order.giftcard_id === undefined" class="col-sm-8 col-sm-offset-2">
                 <label class="control-label">Use Gift Voucher</label>
                 <div class="input-group input-group-sm">
-                  <input type="text" ng-model="cartCtrl.order.gift_voucher_code" class="form-control" placeholder="Enter Gift Voucher">
+                  <input type="text" ng-model="cartCtrl.order.giftcard_code" class="form-control" placeholder="Enter Gift Voucher">
                   <span class="input-group-btn">
-                    <button class="btn btn-primary" ng-click="cartCtrl.updateGiftVoucher()" type="button"><span class="menu-icon fa fa-check"></span></button>
+                    <button class="btn btn-primary" ng-click="cartCtrl.updateGiftCard()" type="button"><span class="menu-icon fa fa-check"></span></button>
                   </span>
                 </div>
               </div>
