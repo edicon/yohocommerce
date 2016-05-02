@@ -421,6 +421,12 @@ angular.module('CatalogsModule', [
                     return products.$keyAt(key);
                 },
 
+                addView: function(pid) {
+                    var view = Firebase.ServerValue.TIMESTAMP;
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+pid+'/views');
+                    return theRef.push ({view_date: Firebase.ServerValue.TIMESTAMP});
+                },
+
                 getProductThumbnails: function(pid) {
                     var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+pid+'/thumbnails');
                     return $firebaseArray(theRef);
