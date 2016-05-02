@@ -948,7 +948,7 @@ angular.module('CatalogModule', [
                 cartCtrl.addOrderToCustomer = function(cid, oid) {
                   Customer.addOrder(cid, oid);
                   obj.cid = cid;
-                  obj.customer_name = cartCtrl.customer.customer_first_name + cartCtrl.customer.customer_last_name;
+                  obj.customer_name = cartCtrl.customer.customer_first_name + ' ' + cartCtrl.customer.customer_last_name;
                   obj.customer_email = cartCtrl.customer.customer_email;
                   obj.customer_phone = cartCtrl.customer.customer_phone;
                   CartOrders.updateCustomer(obj);
