@@ -223,8 +223,8 @@ angular.module('ReportsModule', [
 
 ])
 
-.controller('ReportsCtrl', ['Orders', '$state', '$scope', '$stateParams',
-        function (           Orders,   $state,   $scope,   $stateParams) {
+.controller('ReportsCtrl', ['Orders', 'Product', '$state', '$scope', '$stateParams',
+        function (           Orders,   Product,   $state,   $scope,   $stateParams) {
               var reportsCtrl = this;
 
               reportsCtrl.gridOrders = {
@@ -294,15 +294,27 @@ angular.module('ReportsModule', [
                     ]
               };
 
+              reportsCtrl.getViews = function(obj) {
+                    var views = obj.views;
+                    if (views == undefined) {
+                        views = 0;
+                        return views;
+                    } else {
+                        views = Object.keys(views).length;
+                        return views;
+                    };
+              };
+
               reportsCtrl.gridViewed = {
                     enableSorting: true,
                     enableCellEditOnFocus: false,
                     enableFiltering: true,
-            //        data: Orders.all,
+                    data: Product.all,
                     columnDefs: [
                           { name:'productName', field: 'product_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
-                          { name:'views', field: 'view_count', enableHiding: false, enableFiltering: true, width: '15%', enableCellEdit: false },
-                          { name:'percent', field: 'view_percent', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
+                          { name:'views', field: 'reportsCtrl.getViews()', cellTemplate : '<div class="ui-grid-cell-contents"> {{grid.appScope.reportsCtrl.getViews(row.entity)}} </div>',
+                           cellClass: 'grid-align-right', enableHiding: false, enableFiltering: true, width: '15%', enableCellEdit: false },
+        //                  { name:'percent', field: 'view_percent', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
                     ]
               };
 

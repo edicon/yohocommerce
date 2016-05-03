@@ -422,7 +422,6 @@ angular.module('CatalogsModule', [
                 },
 
                 addView: function(pid) {
-                    var view = Firebase.ServerValue.TIMESTAMP;
                     var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+pid+'/views');
                     return theRef.push ({view_date: Firebase.ServerValue.TIMESTAMP});
                 },
