@@ -407,6 +407,11 @@ angular.module('SalesModule', [
                   return $firebaseArray(ref.child(tid).orderByChild("customer_email").equalTo(email));
               },
 
+              addLog: function(id) {
+                  var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+id+'/logs');
+                  return custRef.push({ login_date: Firebase.ServerValue.TIMESTAMP });
+              },
+
               getIndex: function(cid) {
                   return customers.$indexFor(cid);
               },

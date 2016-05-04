@@ -16,8 +16,34 @@ angular.module('DashboardModule', [
 
 ])
 
-.controller('DashboardCtrl', ['Orders', 'Customers', 'Products', 'tid', '$scope', '$state',
-    function(                  Orders,   Customers,   Products,   tid,   $scope,   $state) {
+.factory('Log', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+        var ref = new Firebase(FirebaseUrl+'logs');
+        var logs = $firebaseArray(ref.child(tid).orderByPriority());
+
+        var log = {
+
+              getOnlineCount: function() {
+                  return $firebaseObject(ref.child(tid).orderByChild("peopleOnline"));
+              },
+
+              updateOnlineCount: function(count) {
+                  var theRef = new Firebase(FirebaseUrl+'logs/'+tid);
+                  return theRef.update( {peopleOnline: count });
+              },
+
+              all: logs
+
+        };
+
+        return log;
+
+      }
+
+])
+
+.controller('DashboardCtrl', ['Orders', 'Customers', 'Products', 'Log', 'tid', '$scope', '$state',
+    function(                  Orders,   Customers,   Products,   Log,   tid,   $scope,   $state) {
         var dashboardCtrl = this;
 
         var theOrders = Orders.getOrdersCount();
@@ -37,6 +63,13 @@ angular.module('DashboardModule', [
                 dashboardCtrl.theProducts = theProducts;
                 dashboardCtrl.theProducts.count = theProducts.length;
             });
+
+        var customersOnline = Log.getOnlineCount();
+            customersOnline.$loaded().then(function(){
+            dashboardCtrl.onlineCount = customersOnline.peopleOnline;
+        });
+
+
 
         dashboardCtrl.gridOrders = {
               enableSorting: false,
