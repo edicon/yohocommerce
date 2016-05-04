@@ -23,19 +23,13 @@ angular.module('DashboardModule', [
 
         var log = {
 
-              addLog: function(id) {
-                  return log.all.$add({customer_online: id}).then(function(theRef) {
-                      return theRef.key();
-                  });
-              },
-
               getOnlineCount: function() {
-                  return logs;
+                  return $firebaseObject(ref.child(tid).orderByChild("peopleOnline"));
               },
 
-              removeLog: function(id){
-                    return $firebaseObject(ref.child(tid).child(id)).$remove();
-
+              updateOnlineCount: function(count) {
+                  var theRef = new Firebase(FirebaseUrl+'logs/'+tid);
+                  return theRef.update( {peopleOnline: count });
               },
 
               all: logs
@@ -72,9 +66,10 @@ angular.module('DashboardModule', [
 
         var customersOnline = Log.getOnlineCount();
             customersOnline.$loaded().then(function(){
-                dashboardCtrl.onlineCount = customersOnline.length;
+            dashboardCtrl.onlineCount = customersOnline.peopleOnline;
+        });
 
-            });
+
 
         dashboardCtrl.gridOrders = {
               enableSorting: false,

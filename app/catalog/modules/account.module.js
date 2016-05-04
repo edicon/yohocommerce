@@ -232,7 +232,6 @@ angular.module('AccountModule', [
       function (             Auth,   Customer,   AlertService,   Messages,   Log,   $state,   profile,   $scope) {
 
           var accountCtrl = this;
-          var logId = {};
           accountCtrl.profile = profile;
 
           if (accountCtrl.profile.type === 'Customer') {
@@ -246,8 +245,10 @@ angular.module('AccountModule', [
               theCustomer.$loaded().then(function() {
                   accountCtrl.customer = theCustomer;
                   Customer.addLog(theCustomer.$id);
-                  Log.addLog(theCustomer.$id).then(function(id) {
-                    logId = id;
+                  var theCount = Log.getOnlineCount();
+                      theCount.$loaded().then(function(){
+                      theCount = theCount.peopleOnline + 1;
+                      Log.updateOnlineCount(theCount);
                   });
           });
 
@@ -282,7 +283,11 @@ angular.module('AccountModule', [
           };
 
           accountCtrl.logout = function() {
-              Log.removeLog(logId);
+              var theCount = Log.getOnlineCount();
+                  theCount.$loaded().then(function(){
+                  theCount = theCount.peopleOnline - 1;
+                  Log.updateOnlineCount(theCount);
+              });
               Auth.$unauth();
               $state.go('catalog.home');
           };
