@@ -16,8 +16,40 @@ angular.module('DashboardModule', [
 
 ])
 
-.controller('DashboardCtrl', ['Orders', 'Customers', 'Products', 'tid', '$scope', '$state',
-    function(                  Orders,   Customers,   Products,   tid,   $scope,   $state) {
+.factory('Log', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+        var ref = new Firebase(FirebaseUrl+'logs');
+        var logs = $firebaseArray(ref.child(tid).orderByPriority());
+
+        var log = {
+
+              addLog: function(id) {
+                  return log.all.$add({customer_online: id}).then(function(theRef) {
+                      return theRef.key();
+                  });
+              },
+
+              getOnlineCount: function() {
+                  return logs;
+              },
+
+              removeLog: function(id){
+                    return $firebaseObject(ref.child(tid).child(id)).$remove();
+
+              },
+
+              all: logs
+
+        };
+
+        return log;
+
+      }
+
+])
+
+.controller('DashboardCtrl', ['Orders', 'Customers', 'Products', 'Log', 'tid', '$scope', '$state',
+    function(                  Orders,   Customers,   Products,   Log,   tid,   $scope,   $state) {
         var dashboardCtrl = this;
 
         var theOrders = Orders.getOrdersCount();
@@ -36,6 +68,12 @@ angular.module('DashboardModule', [
             theProducts.$loaded().then(function() {
                 dashboardCtrl.theProducts = theProducts;
                 dashboardCtrl.theProducts.count = theProducts.length;
+            });
+
+        var customersOnline = Log.getOnlineCount();
+            customersOnline.$loaded().then(function(){
+                dashboardCtrl.onlineCount = customersOnline.length;
+
             });
 
         dashboardCtrl.gridOrders = {

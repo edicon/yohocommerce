@@ -228,10 +228,11 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', 'Messages', '$state', 'profile', '$scope',
-      function (             Auth,   Customer,   AlertService,   Messages,   $state,   profile,   $scope) {
+.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', 'Messages', 'Log', '$state', 'profile', '$scope',
+      function (             Auth,   Customer,   AlertService,   Messages,   Log,   $state,   profile,   $scope) {
 
           var accountCtrl = this;
+          var logId = {};
           accountCtrl.profile = profile;
 
           if (accountCtrl.profile.type === 'Customer') {
@@ -244,6 +245,10 @@ angular.module('AccountModule', [
           var theCustomer = Customer.getCustomer(accountCtrl.profile.cid);
               theCustomer.$loaded().then(function() {
                   accountCtrl.customer = theCustomer;
+                  Customer.addLog(theCustomer.$id);
+                  Log.addLog(theCustomer.$id).then(function(id) {
+                    logId = id;
+                  });
           });
 
           accountCtrl.forgotPassword = function() {
@@ -258,7 +263,6 @@ angular.module('AccountModule', [
           };
 
           accountCtrl.newPassword = function() {
-
               if (accountCtrl.customer.customer_new_password == accountCtrl.customer.confirm_new_password){
                 Auth.$changePassword({
                     email: accountCtrl.customer.customer_email,
@@ -278,6 +282,7 @@ angular.module('AccountModule', [
           };
 
           accountCtrl.logout = function() {
+              Log.removeLog(logId);
               Auth.$unauth();
               $state.go('catalog.home');
           };
