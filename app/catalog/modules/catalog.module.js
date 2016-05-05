@@ -1022,8 +1022,8 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('AuthCtrl', ['Auth', 'AlertService', 'Tenant', 'Customer', 'Log', 'md5', 'Messages', 'tid', '$state',
-      function (          Auth,   AlertService,   Tenant,   Customer,   Log,   md5,   Messages,   tid,   $state) {
+.controller('AuthCtrl', ['Auth', 'AlertService', 'Tenant', 'Customer', 'md5', 'Messages', 'tid', '$state',
+      function (          Auth,   AlertService,   Tenant,   Customer,   md5,   Messages,   tid,   $state) {
             var authCtrl = this;
             authCtrl.tenant = {};
             authCtrl.user = {};
@@ -1039,16 +1039,6 @@ angular.module('CatalogModule', [
             authCtrl.accountLogin = function() {
                 Auth.$authWithPassword(authCtrl.user).then(function (auth) {
                     $state.go('account.detail');
-
-/*
-                    Customer.addLog(theCustomer.$id);
-                    var theCount = Log.getOnlineCount();
-                        theCount.$loaded().then(function(){
-                        theCount = theCount.peopleOnline + 1;
-                        Log.updateOnlineCount(theCount);
-                    });
-                    $state.go('account.detail');
-*/
                 }, function(error) {
                     AlertService.addError(error.message);
                 });

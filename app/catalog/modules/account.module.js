@@ -224,28 +224,37 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', 'Log', '$state', 'profile',
-      function (             Auth,   Customer,   AlertService,   Log,   $state,   profile) {
-          var accountCtrl = this;
-          accountCtrl.profile = profile;
+.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', 'UsersOnlineLog', '$state', 'profile',
+    function (               Auth,   Customer,   AlertService,   UsersOnlineLog,   $state,   profile) {
+        var accountCtrl = this;
+            accountCtrl.profile = profile;
 
-          var theCustomer = Customer.getCustomer(accountCtrl.profile.cid);
-              theCustomer.$loaded().then(function() {
-                  accountCtrl.customer = theCustomer;
-                  Customer.addLog(theCustomer.$id);
-                  var theCount = Log.getOnlineCount();
-                      theCount.$loaded().then(function(){
-                      theCount = theCount.peopleOnline + 1;
-                      Log.updateOnlineCount(theCount);
-                  });
-          });
+            var theCustomer = Customer.getCustomer(accountCtrl.profile.cid);
+                theCustomer.$loaded().then(function() {
+                    accountCtrl.customer = theCustomer;
+                    Customer.addLog(theCustomer.$id);
+                    var theCount = UsersOnlineLog.getOnlineCount();
+                        theCount.$loaded().then(function() {
+                            if (theCount.$value == null)
+                                theCount.current_count = 0;
+
+                            theCount.current_count = theCount.current_count + 1;
+                            UsersOnlineLog.updateOnlineCount(theCount.current_count);
+                        });
+                });
 
           accountCtrl.logout = function() {
-              var theCount = Log.getOnlineCount();
-                  theCount.$loaded().then(function(){
-                  theCount = theCount.peopleOnline - 1;
-                  Log.updateOnlineCount(theCount);
-              });
+              var theCount = UsersOnlineLog.getOnlineCount();
+                  theCount.$loaded().then(function() {
+                      console.log(theCount)
+                      if (theCount.$value == null)
+                            theCount.current_count = 0;
+                      else
+                            theCount.current_count = theCount.current_count - 1;
+
+                      if (theCount.current_count < 0) theCount.current_count = 0;
+                      UsersOnlineLog.updateOnlineCount(theCount.current_count);
+                  });
               Auth.$unauth();
               $state.go('catalog.home');
           };

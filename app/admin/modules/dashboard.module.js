@@ -16,23 +16,19 @@ angular.module('DashboardModule', [
 
 ])
 
-.factory('Log', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-    function (    $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
-        var ref = new Firebase(FirebaseUrl+'logs');
-        var logs = $firebaseArray(ref.child(tid).orderByPriority());
+.factory('UsersOnlineLog', ['$firebaseObject', 'FirebaseUrl', 'tid',
+    function (               $firebaseObject,   FirebaseUrl,   tid) {
+        var ref = new Firebase(FirebaseUrl+'logs/'+tid+'/current_users_online');
 
         var log = {
 
               getOnlineCount: function() {
-                  return $firebaseObject(ref.child(tid).orderByChild("peopleOnline"));
+                  return $firebaseObject(ref);
               },
 
               updateOnlineCount: function(count) {
-                  var theRef = new Firebase(FirebaseUrl+'logs/'+tid);
-                  return theRef.update({ peopleOnline: count });
+                  return ref.update({ current_count: count });
               },
-
-              all: logs
 
         };
 
@@ -42,8 +38,8 @@ angular.module('DashboardModule', [
 
 ])
 
-.controller('DashboardCtrl', ['Orders', 'Customers', 'Products', 'Log', 'tid', '$scope', '$state',
-    function(                  Orders,   Customers,   Products,   Log,   tid,   $scope,   $state) {
+.controller('DashboardCtrl', ['Orders', 'Customers', 'Products', 'UsersOnlineLog', 'tid', '$scope', '$state',
+    function(                  Orders,   Customers,   Products,   UsersOnlineLog,   tid,   $scope,   $state) {
         var dashboardCtrl = this;
 
         var theOrders = Orders.getOrdersCount();
@@ -64,7 +60,7 @@ angular.module('DashboardModule', [
                 dashboardCtrl.theProducts.count = theProducts.length;
             });
 
-        var customersOnline = Log.getOnlineCount();
+        var customersOnline = UsersOnlineLog.getOnlineCount();
             customersOnline.$loaded().then(function(){
             dashboardCtrl.onlineCount = customersOnline.peopleOnline;
         });
