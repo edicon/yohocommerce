@@ -263,9 +263,16 @@
                   <fieldset>
                     <legend>Checkout Defaults</legend>
                     <div class="form-group">
-                      <label class="col-sm-3 control-label" align="right">Invoice Prefix</label>
+                      <label class="col-sm-3 control-label" align="right">Order Prefix</label>
                       <div class="col-sm-8">
-                        <input type="text" ng-model="storeCtrl.store.store_default_invoice_prefix" ng-change="storeCtrl.updateStore()"
+                        <input type="text" ng-model="storeCtrl.store.store_default_order_prefix" ng-change="storeCtrl.updateStore()"
+                          placeholder="Enter Invoice Prefix" class="form-control">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" align="right">Order Starting Number</label>
+                      <div class="col-sm-8">
+                        <input type="text" ng-model="storeCtrl.store.store_default_order_number" ng-change="storeCtrl.updateStore()"
                           placeholder="Enter Invoice Prefix" class="form-control">
                       </div>
                     </div>

@@ -959,7 +959,7 @@ angular.module('SalesModule', [
                 columnDefs: [
                       { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/sales/gridTemplates/editOrder.html',
                       width: 35, enableColumnMenu: false, headerTooltip: 'Edit Order', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-                      { name:'orderNumber', field: '$id',  width: '35%', enableHiding: false, enableFiltering: true },
+                      { name:'orderID', field: 'order_id',  width: '20%', enableHiding: false, enableFiltering: true },
                       { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: false },
                       { name:'customerPhone', field: 'customer_phone', enableHiding: false, enableFiltering: false },
                       { name:'customerE-Mail', field: 'customer_email', enableHiding: false, enableFiltering: false },
