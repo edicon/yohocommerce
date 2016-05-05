@@ -76,7 +76,7 @@ angular.module('DashboardModule', [
               data: Orders.all,
               columnDefs: [
                     { name:'dateAdded', field: 'create_date', sort: { direction: 'desc' }, cellFilter: 'date',  width: '22%' },
-                    { name:'orderCode', field: '$id' },
+                    { name:'orderID', field: 'order_id' },
                     { name:'orderTotal', field: 'total', width: '20%',
                         cellClass: 'grid-align-right', cellFilter:'currency' }
               ]
