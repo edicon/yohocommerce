@@ -340,6 +340,12 @@ angular.module('SystemModule', [
                   });
               },
 
+              updateOrderCount: function(obj, store) {
+                  var theRef = new Firebase(FirebaseUrl+'stores/'+tid+'/'+store.$id)
+                  return theRef.update({ store_current_order_number: obj.current_order_number });
+
+              },
+
               getIndex: function(sid) {
                   return stores.$indexFor(sid);
               },

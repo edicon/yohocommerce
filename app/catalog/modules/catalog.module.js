@@ -388,6 +388,11 @@ angular.module('CatalogModule', [
                   return theRef.update( {customer_id: obj.cid, customer_name: obj.customer_name, customer_email: obj.customer_email, customer_phone: obj.customer_phone} );
               },
 
+              updateOrderID: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
+                  return theRef.update( {order_id: obj.order_id} );
+              },
+
               all: cartorders
 
           };
@@ -816,10 +821,11 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('CartCtrl', ['Auth', 'Catalog', 'CartOrders', 'Coupons', 'GiftCards', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', 'Customer', 'md5', 'tid', 'Profile', '$state', '$cookies',
-        function (        Auth,   Catalog,   CartOrders,   Coupons,   GiftCards,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   Customer,   md5,   tid,   Profile,   $state,   $cookies) {
+.controller('CartCtrl', ['Auth', 'Catalog', 'CartOrders', 'Coupons', 'GiftCards', 'CartUpdateLine', 'Messages', 'AlertService', 'CartRemoveLine', 'Customer', 'Store', 'md5', 'tid', 'Profile', '$state', '$cookies',
+        function (        Auth,   Catalog,   CartOrders,   Coupons,   GiftCards,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   Customer,   Store,   md5,   tid,   Profile,   $state,   $cookies) {
                 var cartCtrl = this;
                 cartCtrl.store = Catalog.storeDefaults;
+                console.log(cartCtrl.store);
                 var obj = {};
                 obj.oid = $cookies.get('orderId');
                 cartCtrl.status = null;
@@ -951,7 +957,11 @@ angular.module('CatalogModule', [
                   obj.customer_name = cartCtrl.customer.customer_first_name + ' ' + cartCtrl.customer.customer_last_name;
                   obj.customer_email = cartCtrl.customer.customer_email;
                   obj.customer_phone = cartCtrl.customer.customer_phone;
+                  obj.current_order_number = cartCtrl.store.store_current_order_number + 1;
+                  obj.order_id = cartCtrl.store.store_default_order_prefix + '-' + obj.current_order_number;
                   CartOrders.updateCustomer(obj);
+                  CartOrders.updateOrderID(obj);
+                  Store.updateOrderCount(obj, cartCtrl.store);
                   $state.go('catalog.revieworder');
                 };
 
