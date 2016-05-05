@@ -38,9 +38,14 @@ angular.module('AdminModule', [
                           $state.go('catalog.home');
                       });
                   },
-                  profile: function(Profile, Auth){
+                  profile: function($state, Profile, Auth){
                       return Auth.$requireAuth().then(function(auth){
-                          return Profile.getProfile(auth.uid).$loaded();
+                          return Profile.getProfile(auth.uid).$loaded().then(function(response) {
+                              if (response.type === 'Customer')
+                                  $state.go('catalog.home');
+                              else
+                                  return response;
+                          });
                       });
                   }
               }
@@ -80,10 +85,6 @@ angular.module('AdminModule', [
           var adminCtrl = this;
           var mobileView = 992;
           adminCtrl.profile = profile;
-          console.log($scope)
-
-          if (adminCtrl.profile.type === "customer")
-              $state.go('account.dashboard');
 
           $scope.showChilds = function(item){
               item.active = !item.active;
