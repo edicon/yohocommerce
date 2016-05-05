@@ -243,20 +243,21 @@ angular.module('AccountModule', [
                         });
                 });
 
-          accountCtrl.logout = function() {
-              var theCount = UsersOnlineLog.getOnlineCount();
-                  theCount.$loaded().then(function() {
-                      console.log(theCount)
-                      if (theCount.$value == null)
+            accountCtrl.logout = function() {
+                var theCount = UsersOnlineLog.getOnlineCount();
+                    theCount.$loaded().then(function() {
+                        if (theCount.$value == null)
                             theCount.current_count = 0;
-                      else
+                        else
                             theCount.current_count = theCount.current_count - 1;
 
-                      if (theCount.current_count < 0) theCount.current_count = 0;
-                      UsersOnlineLog.updateOnlineCount(theCount.current_count);
+                        if (theCount.current_count < 0)
+                            theCount.current_count = 0;
+
+                        UsersOnlineLog.updateOnlineCount(theCount.current_count);
                   });
-              Auth.$unauth();
-              $state.go('catalog.home');
+                  Auth.$unauth();
+                  $state.go('catalog.home');
           };
 
       }
