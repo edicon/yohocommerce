@@ -18,7 +18,7 @@ angular.module('DashboardModule', [
 
 .factory('UsersOnlineLog', ['$firebaseObject', 'FirebaseUrl', 'tid',
     function (               $firebaseObject,   FirebaseUrl,   tid) {
-        var ref = new Firebase(FirebaseUrl+'logs/'+tid+'/current_users_online');
+        var ref = new Firebase(FirebaseUrl+'logs/'+tid+'/current_customers_online');
 
         var log = {
 
@@ -61,8 +61,8 @@ angular.module('DashboardModule', [
             });
 
         var customersOnline = UsersOnlineLog.getOnlineCount();
-            customersOnline.$loaded().then(function(){
-            dashboardCtrl.onlineCount = customersOnline.peopleOnline;
+            customersOnline.$loaded().then(function() {
+            dashboardCtrl.onlineCount = customersOnline.current_count;
         });
 
 
