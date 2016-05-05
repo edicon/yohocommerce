@@ -17,7 +17,7 @@ angular.module('DashboardModule', [
 ])
 
 .factory('Log', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+    function (    $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
         var ref = new Firebase(FirebaseUrl+'logs');
         var logs = $firebaseArray(ref.child(tid).orderByPriority());
 
@@ -29,7 +29,7 @@ angular.module('DashboardModule', [
 
               updateOnlineCount: function(count) {
                   var theRef = new Firebase(FirebaseUrl+'logs/'+tid);
-                  return theRef.update( {peopleOnline: count });
+                  return theRef.update({ peopleOnline: count });
               },
 
               all: logs
@@ -38,7 +38,7 @@ angular.module('DashboardModule', [
 
         return log;
 
-      }
+    }
 
 ])
 

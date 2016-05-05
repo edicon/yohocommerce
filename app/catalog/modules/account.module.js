@@ -29,14 +29,19 @@ angular.module('AccountModule', [
                     }
                 },
                 resolve: {
-                    auth: function($state, Auth){
-                        return Auth.$requireAuth().catch(function(){
+                    auth: function($state, Auth) {
+                        return Auth.$requireAuth().catch(function() {
                             $state.go('catalog.home');
                         });
                     },
-                    profile: function(Profile, Auth){
-                        return Auth.$requireAuth().then(function(auth){
-                            return Profile.getProfile(auth.uid).$loaded();
+                    profile: function($state, Profile, Auth) {
+                        return Auth.$requireAuth().then(function(auth) {
+                            return Profile.getProfile(auth.uid).$loaded().then(function(response) {
+                                if (response.type != 'Customer')
+                                    $state.go('catalog.home');
+                                else
+                                    return response;
+                            });
                         });
                     }
                 }
@@ -49,7 +54,6 @@ angular.module('AccountModule', [
                       templateUrl: 'catalog/views/common/header.html'
                   },
                   "accountNav@account": {
-                      controller: 'AccountCtrl as accountCtrl',
                       templateUrl: 'catalog/views/account/accountnav.html'
                   },
                   "accountDetail@account": {
@@ -63,14 +67,13 @@ angular.module('AccountModule', [
               }
           })
           .state('account.address', {
-              url: 'accountaddress',
+              url: '/address',
               views: {
                   "accountHeader@account": {
                       controller: 'CatalogCtrl as catalogCtrl',
                       templateUrl: 'catalog/views/common/header.html'
                   },
                   "accountNav@account": {
-                      controller: 'AccountCtrl as accountCtrl',
                       templateUrl: 'catalog/views/account/accountnav.html'
                   },
                   "accountDetail@account": {
@@ -84,14 +87,13 @@ angular.module('AccountModule', [
               }
           })
           .state('account.orders', {
-              url: 'orders',
+              url: '/orders',
               views: {
                   "accountHeader@account": {
                       controller: 'CatalogCtrl as catalogCtrl',
                       templateUrl: 'catalog/views/common/header.html'
                   },
                   "accountNav@account": {
-                      controller: 'AccountCtrl as accountCtrl',
                       templateUrl: 'catalog/views/account/accountnav.html'
                   },
                   "accountDetail@account": {
@@ -105,14 +107,13 @@ angular.module('AccountModule', [
               }
           })
           .state('account.transactions', {
-              url: 'security',
+              url: '/transactions',
               views: {
                   "accountHeader@account": {
                       controller: 'CatalogCtrl as catalogCtrl',
                       templateUrl: 'catalog/views/common/header.html'
                   },
                   "accountNav@account": {
-                      controller: 'AccountCtrl as accountCtrl',
                       templateUrl: 'catalog/views/account/accountnav.html'
                   },
                   "accountDetail@account": {
@@ -126,14 +127,13 @@ angular.module('AccountModule', [
               }
           })
           .state('account.rewardpoints', {
-              url: 'security',
+              url: '/rewardpoints',
               views: {
                   "accountHeader@account": {
                       controller: 'CatalogCtrl as catalogCtrl',
                       templateUrl: 'catalog/views/common/header.html'
                   },
                   "accountNav@account": {
-                      controller: 'AccountCtrl as accountCtrl',
                       templateUrl: 'catalog/views/account/accountnav.html'
                   },
                   "accountDetail@account": {
@@ -147,14 +147,13 @@ angular.module('AccountModule', [
             }
           })
           .state('account.giftcard', {
-              url: 'giftcard',
+              url: '/giftcard',
               views: {
                   "accountHeader@account": {
                       controller: 'CatalogCtrl as catalogCtrl',
                       templateUrl: 'catalog/views/common/header.html'
                   },
                   "accountNav@account": {
-                      controller: 'AccountCtrl as accountCtrl',
                       templateUrl: 'catalog/views/account/accountnav.html'
                   },
                   "accountDetail@account": {
@@ -168,18 +167,17 @@ angular.module('AccountModule', [
               }
           })
           .state('account.password', {
-              url: 'password',
+              url: '/password',
               views: {
                   "accountHeader@account": {
                       controller: 'CatalogCtrl as catalogCtrl',
                       templateUrl: 'catalog/views/common/header.html'
                   },
                   "accountNav@account": {
-                      controller: 'AccountCtrl as accountCtrl',
                       templateUrl: 'catalog/views/account/accountnav.html'
                   },
                   "accountDetail@account": {
-                      controller: 'AccountCtrl as accountCtrl',
+                      controller: 'AccountPasswordCtrl as accountPasswordCtrl',
                       templateUrl: 'catalog/views/account/password.html'
                   },
                   "accountFooter@account": {
@@ -218,9 +216,7 @@ angular.module('AccountModule', [
 
               getGiftCard: function(theObj) {
                   return $firebaseArray(ref.child(tid).orderByChild("customer_email").equalTo(theObj.email));
-
               },
-
           };
 
           return giftcard;
@@ -228,18 +224,10 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', 'Messages', 'Log', '$state', 'profile', '$scope',
-      function (             Auth,   Customer,   AlertService,   Messages,   Log,   $state,   profile,   $scope) {
-
+.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', 'Log', '$state', 'profile',
+      function (             Auth,   Customer,   AlertService,   Log,   $state,   profile) {
           var accountCtrl = this;
           accountCtrl.profile = profile;
-
-          if (accountCtrl.profile.type === 'Customer') {
-              accountCtrl.authInfo = Auth.$getAuth();
-//              console.log($scope)
-           } else {
-              $state.go('catalog.home');
-          }
 
           var theCustomer = Customer.getCustomer(accountCtrl.profile.cid);
               theCustomer.$loaded().then(function() {
@@ -251,36 +239,6 @@ angular.module('AccountModule', [
                       Log.updateOnlineCount(theCount);
                   });
           });
-
-          accountCtrl.forgotPassword = function() {
-              Auth.$resetPassword({
-                  email: accountCtrl.customer.customer_email
-                  }).then(function() {
-                      AlertService.addSuccess(Messages.send_email_success);
-                      $state.go('catalog.home');
-                  }).catch(function(error) {
-                      console.error("Error: ", error);
-                  });
-          };
-
-          accountCtrl.newPassword = function() {
-              if (accountCtrl.customer.customer_new_password == accountCtrl.customer.confirm_new_password){
-                Auth.$changePassword({
-                    email: accountCtrl.customer.customer_email,
-                    oldPassword: accountCtrl.customer.customer_password,
-                    newPassword: accountCtrl.customer.customer_new_password
-                    }).then(function() {
-                        AlertService.addSuccess(Messages.save_password_success);
-                        accountCtrl.customer.customer_password = null;
-                        accountCtrl.customer.customer_new_password = null;
-                        accountCtrl.customer.confirm_new_password = null;
-                    }).catch(function(error) {
-                        console.error("Error: ", error);
-                    });
-              } else {
-                  AlertService.addError(Messages.passwords_dont_match);
-              };
-          };
 
           accountCtrl.logout = function() {
               var theCount = Log.getOnlineCount();
@@ -320,10 +278,7 @@ angular.module('AccountModule', [
 
           var theGiftCard = GiftCard.getGiftCard(profile);
               theGiftCard.$loaded().then(function() {
-
                 accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
-
-
           });
 
           accountGiftCardCtrl.gridGiftCards = {
@@ -339,6 +294,50 @@ angular.module('AccountModule', [
               ]
           };
 
+      }
+
+])
+
+.controller('AccountPasswordCtrl', ['Auth', 'Customer', 'AlertService', 'tid', 'profile',
+      function (                     Auth,   Customer,   AlertService,   tid,   profile) {
+          var accountPasswordCtrl = this;
+          accountPasswordCtrl.profile = profile;
+
+          var theCustomer = Customer.getCustomer(accountPasswordCtrl.profile.cid);
+              theCustomer.$loaded().then(function() {
+                  accountPasswordCtrl.customer = theCustomer;
+          });
+
+
+          accountPasswordCtrl.forgotPassword = function() {
+              Auth.$resetPassword({
+                  email: accountPasswordCtrl.customer.customer_email
+                  }).then(function() {
+                      AlertService.addSuccess(Messages.send_email_success);
+                      $state.go('catalog.home');
+                  }).catch(function(error) {
+                      console.error("Error: ", error);
+                  });
+          };
+
+          accountPasswordCtrl.newPassword = function() {
+              if (accountPasswordCtrl.customer.customer_new_password == accountPasswordCtrl.customer.confirm_new_password){
+                Auth.$changePassword({
+                    email: accountPasswordCtrl.customer.customer_email,
+                    oldPassword: accountPasswordCtrl.customer.customer_password,
+                    newPassword: accountPasswordCtrl.customer.customer_new_password
+                    }).then(function() {
+                        AlertService.addSuccess(Messages.save_password_success);
+                        accountPasswordCtrl.customer.customer_password = null;
+                        accountPasswordCtrl.customer.customer_new_password = null;
+                        accountPasswordCtrl.customer.confirm_new_password = null;
+                    }).catch(function(error) {
+                        console.error("Error: ", error);
+                    });
+              } else {
+                  AlertService.addError(Messages.passwords_dont_match);
+              };
+          };
       }
 
 ])
