@@ -764,6 +764,7 @@ angular.module('CatalogModule', [
                 var product = Product.getProduct(pid);
                     product.$loaded().then(function() {
                       catalogProductCtrl.product = product;
+                      Product.addView(pid);
                 });
                 var thumbnails = Product.getProductThumbnails(pid);
                     thumbnails.$loaded().then(function() {
