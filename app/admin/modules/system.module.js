@@ -340,9 +340,9 @@ angular.module('SystemModule', [
                   });
               },
 
-              updateOrderCount: function(obj, store) {
-                  var theRef = new Firebase(FirebaseUrl+'stores/'+tid+'/'+store.$id)
-                  return theRef.update({ store_current_order_number: obj.current_order_number });
+              updateOrderCount: function(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'stores/'+tid+'/'+obj.$id)
+                  return theRef.update({ store_current_order_number: obj.store_current_order_number });
 
               },
 
@@ -871,6 +871,7 @@ angular.module('SystemModule', [
             };
 
             storeCtrl.addStore = function() {
+                  storeCtrl.store.store_current_order_number = storeCtrl.store.store_default_order_number;
                   Store.addStore(storeCtrl.store).then(function(sid) {
                         storeCtrl.loadStore(sid)
                   });
@@ -880,6 +881,7 @@ angular.module('SystemModule', [
 
             storeCtrl.updateStore = function() {
                   if (storeCtrl.store != null)
+                      storeCtrl.store.store_current_order_number = storeCtrl.store.store_default_order_number;
                       storeCtrl.store.$save();
             }, function(error) {
                   storeCtrl.error = error;
