@@ -117,7 +117,7 @@ angular.module('AccountModule', [
                       templateUrl: 'catalog/views/account/accountnav.html'
                   },
                   "accountDetail@account": {
-                      controller: 'AccountCtrl as accountCtrl',
+                      controller: 'AccountTransactionsCtrl as accountTransactionsCtrl',
                       templateUrl: 'catalog/views/account/transactions.html'
                   },
                   "accountFooter@account": {
@@ -137,7 +137,7 @@ angular.module('AccountModule', [
                       templateUrl: 'catalog/views/account/accountnav.html'
                   },
                   "accountDetail@account": {
-                      controller: 'AccountCtrl as accountCtrl',
+                      controller: 'AccountRewardPointsCtrl as accountRewardPointsCtrl',
                       templateUrl: 'catalog/views/account/rewardpoints.html'
                   },
                   "accountFooter@account": {
@@ -277,6 +277,46 @@ angular.module('AccountModule', [
                   accountAddressCtrl.customer = theCustomer;
                   $scope.country.selected = accountAddressCtrl.customer.customer_country;
               });
+
+      }
+
+])
+
+.controller('AccountTransactionsCtrl', ['Account',  'Orders', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
+      function (                         Account,    Orders,   AlertService,   Customer,   tid,   $scope,   profile) {
+          var accountTransactionsCtrl = this;
+
+          var theTransaction = Orders.getCustomerOrder(profile.cid);
+              theTransaction.$loaded().then(function(){
+                  accountTransactionsCtrl.gridTransactions.data = theTransaction;
+          });
+
+          accountTransactionsCtrl.gridTransactions = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              enableFiltering: true,
+              columnDefs: [
+                  { name:'orderDate', field: 'create_date', width:'15%', enableHiding: false, enableFiltering: false, cellFilter:'date:"longDate"' },
+                  { name:'orderID', field: 'order_id', enableHiding: false, enableFiltering: false },
+                  { name:'orderTotal', field: 'total', width:'15%', cellClass:'grid-align-right', enableHiding: false, enableFiltering: false },
+              ]
+          };
+
+      }
+
+])
+
+.controller('AccountRewardPointsCtrl', ['Auth', 'Customer', 'AlertService', 'UsersOnlineLog', '$state', 'profile',
+    function (                           Auth,   Customer,   AlertService,   UsersOnlineLog,   $state,   profile) {
+        var accountRewardPointsCtrl = this;
+
+            var theCustomer = Customer.getCustomer(profile.cid);
+                theCustomer.$loaded().then(function() {
+                    accountRewardPointsCtrl.customer = theCustomer;
+                    if (accountRewardPointsCtrl.customer.reward_points == undefined) {
+                        accountRewardPointsCtrl.customer.reward_points = 0;
+                      };
+                });
 
       }
 
