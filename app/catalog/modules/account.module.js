@@ -308,8 +308,8 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountPasswordCtrl', ['Auth', 'Customer', 'AlertService', 'tid', 'profile',
-      function (                     Auth,   Customer,   AlertService,   tid,   profile) {
+.controller('AccountPasswordCtrl', ['Auth', 'Customer', 'AlertService', 'Messages', 'tid', 'profile',
+      function (                     Auth,   Customer,   AlertService,   Messages,   tid,   profile) {
           var accountPasswordCtrl = this;
           accountPasswordCtrl.profile = profile;
 

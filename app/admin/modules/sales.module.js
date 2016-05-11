@@ -407,6 +407,10 @@ angular.module('SalesModule', [
                   return $firebaseArray(ref.child(tid).orderByChild("customer_email").equalTo(email));
               },
 
+              getLogs: function(cid) {
+                  return $firebaseArray(ref.child(tid).child(cid).child("logs").orderByPriority());
+              },
+
               addLog: function(id) {
                   var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+id+'/logs');
                   return custRef.push({ login_date: Firebase.ServerValue.TIMESTAMP });
@@ -542,6 +546,10 @@ angular.module('SalesModule', [
 
               },
 
+              getCustomerOrder: function(id) {
+                  return $firebaseArray(ref.child(tid).orderByChild("customer_id").equalTo(id));
+              },
+
               getLines: function(oid) {
                   var linesRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+oid+'/lines');
                   return $firebaseArray(linesRef);
@@ -586,8 +594,8 @@ angular.module('SalesModule', [
 
 ])
 
-.controller('CustomerCtrl', ['Customer', 'GiftCards', 'Customers', 'CustomerGroups', '$state', '$scope', '$stateParams',
-      function (              Customer,   GiftCards,   Customers,   CustomerGroups,   $state,   $scope,   $stateParams) {
+.controller('CustomerCtrl', ['Auth', 'Customer', 'GiftCards', 'Orders', 'Customers', 'CustomerGroups', 'AlertService', 'Messages', '$state', '$scope', '$stateParams',
+      function (              Auth,   Customer,   GiftCards,   Orders,   Customers,   CustomerGroups,   AlertService,   Messages,   $state,   $scope,   $stateParams) {
           var customerCtrl = this;
           customerCtrl.customer = {};
           customerCtrl.groups = CustomerGroups.all;
@@ -609,7 +617,14 @@ angular.module('SalesModule', [
                   theAddresses.$loaded().then(function() {
                       customerCtrl.addresses = theAddresses;
                   });
-
+              var theLog = Customer.getLogs(cid);
+                  theLog.$loaded().then(function() {
+                  customerCtrl.gridHistory.data = theLog;
+                  });
+              var theTransaction = Orders.getCustomerOrder(cid);
+                  theTransaction.$loaded().then(function(){
+                      customerCtrl.gridTransactions.data = theTransaction;
+                  });
           };
 
           if ($stateParams.rowEntity != undefined) {
@@ -623,7 +638,6 @@ angular.module('SalesModule', [
           };
 
           customerCtrl.getStatus = function() {
-
               if (customerCtrl.customer.customer_status === "1") {
                     customerCtrl.customer.customer_status_id = 1;
               } else {
@@ -708,6 +722,37 @@ angular.module('SalesModule', [
                   { name:'status', field: 'giftcard_status', width: '25%', enableHiding: false, enableFiltering: true,
                   cellClass: 'grid-align-right' },
               ]
+          };
+
+          customerCtrl.gridHistory = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              enableFiltering: true,
+              columnDefs: [
+                  { name:'loginDate', field: 'login_date', width:'50%', enableHiding: false, enableFiltering: false, cellFilter:'date:"longDate"' },
+                  { name:'loginTime', field: 'login_date', width:'50%', enableHiding: false, enableFiltering: false, cellFilter:'date:"shortTime"' },
+              ]
+          };
+
+          customerCtrl.gridTransactions = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              enableFiltering: true,
+              columnDefs: [
+                  { name:'orderDate', field: 'create_date', width:'15%', enableHiding: false, enableFiltering: false, cellFilter:'date:"longDate"' },
+                  { name:'orderID', field: 'order_id', enableHiding: false, enableFiltering: false },
+                  { name:'orderTotal', field: 'total', width:'15%', cellClass:'grid-align-right', enableHiding: false, enableFiltering: false },
+              ]
+          };
+
+          customerCtrl.forgotPassword = function() {
+              Auth.$resetPassword({
+                  email: customerCtrl.customer.customer_email
+                  }).then(function() {
+                      AlertService.addSuccess(Messages.send_email_success);
+                  }).catch(function(error) {
+                      console.error("Error: ", error);
+                  });
           };
 
           customerCtrl.updateCustomer = function() {
