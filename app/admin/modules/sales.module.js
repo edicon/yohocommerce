@@ -546,6 +546,10 @@ angular.module('SalesModule', [
 
               },
 
+              getCustomerOrder: function(id) {
+                  return $firebaseArray(ref.child(tid).orderByChild("customer_id").equalTo(id));
+              },
+
               getLines: function(oid) {
                   var linesRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+oid+'/lines');
                   return $firebaseArray(linesRef);
@@ -590,8 +594,8 @@ angular.module('SalesModule', [
 
 ])
 
-.controller('CustomerCtrl', ['Customer', 'GiftCards', 'Customers', 'CustomerGroups', '$state', '$scope', '$stateParams',
-      function (              Customer,   GiftCards,   Customers,   CustomerGroups,   $state,   $scope,   $stateParams) {
+.controller('CustomerCtrl', ['Auth', 'Customer', 'GiftCards', 'Orders', 'Customers', 'CustomerGroups', 'AlertService', 'Messages', '$state', '$scope', '$stateParams',
+      function (              Auth,   Customer,   GiftCards,   Orders,   Customers,   CustomerGroups,   AlertService,   Messages,   $state,   $scope,   $stateParams) {
           var customerCtrl = this;
           customerCtrl.customer = {};
           customerCtrl.groups = CustomerGroups.all;
@@ -617,7 +621,10 @@ angular.module('SalesModule', [
                   theLog.$loaded().then(function() {
                   customerCtrl.gridHistory.data = theLog;
                   });
-
+              var theTransaction = Orders.getCustomerOrder(cid);
+                  theTransaction.$loaded().then(function(){
+                      customerCtrl.gridTransactions.data = theTransaction;
+                  });
           };
 
           if ($stateParams.rowEntity != undefined) {
@@ -725,6 +732,27 @@ angular.module('SalesModule', [
                   { name:'loginDate', field: 'login_date', width:'50%', enableHiding: false, enableFiltering: false, cellFilter:'date:"longDate"' },
                   { name:'loginTime', field: 'login_date', width:'50%', enableHiding: false, enableFiltering: false, cellFilter:'date:"shortTime"' },
               ]
+          };
+
+          customerCtrl.gridTransactions = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              enableFiltering: true,
+              columnDefs: [
+                  { name:'orderDate', field: 'create_date', width:'15%', enableHiding: false, enableFiltering: false, cellFilter:'date:"longDate"' },
+                  { name:'orderID', field: 'order_id', enableHiding: false, enableFiltering: false },
+                  { name:'orderTotal', field: 'total', width:'15%', cellClass:'grid-align-right', enableHiding: false, enableFiltering: false },
+              ]
+          };
+
+          customerCtrl.forgotPassword = function() {
+              Auth.$resetPassword({
+                  email: customerCtrl.customer.customer_email
+                  }).then(function() {
+                      AlertService.addSuccess(Messages.send_email_success);
+                  }).catch(function(error) {
+                      console.error("Error: ", error);
+                  });
           };
 
           customerCtrl.updateCustomer = function() {
