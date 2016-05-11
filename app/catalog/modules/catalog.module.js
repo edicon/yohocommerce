@@ -764,6 +764,7 @@ angular.module('CatalogModule', [
                 var product = Product.getProduct(pid);
                     product.$loaded().then(function() {
                       catalogProductCtrl.product = product;
+                      Product.addView(pid);
                 });
                 var thumbnails = Product.getProductThumbnails(pid);
                     thumbnails.$loaded().then(function() {
@@ -825,7 +826,6 @@ angular.module('CatalogModule', [
         function (        Auth,   Catalog,   CartOrders,   Coupons,   GiftCards,   CartUpdateLine,   Messages,   AlertService,   CartRemoveLine,   Customer,   Store,   md5,   tid,   Profile,   $state,   $cookies) {
                 var cartCtrl = this;
                 cartCtrl.store = Catalog.storeDefaults;
-                console.log(cartCtrl.store);
                 var obj = {};
                 obj.oid = $cookies.get('orderId');
                 cartCtrl.status = null;
@@ -871,7 +871,6 @@ angular.module('CatalogModule', [
                                     });
                             });
                             cartCtrl.status = "existing";
-                            console.log(cartCtrl.status);
 
                       }, function(error) {
                             AlertService.addError(error.message);
@@ -957,11 +956,11 @@ angular.module('CatalogModule', [
                   obj.customer_name = cartCtrl.customer.customer_first_name + ' ' + cartCtrl.customer.customer_last_name;
                   obj.customer_email = cartCtrl.customer.customer_email;
                   obj.customer_phone = cartCtrl.customer.customer_phone;
-                  obj.current_order_number = cartCtrl.store.store_current_order_number + 1;
-                  obj.order_id = cartCtrl.store.store_default_order_prefix + '-' + obj.current_order_number;
+                  obj.order_id = cartCtrl.store.store_default_order_prefix + '-' + cartCtrl.store.store_current_order_number;
                   CartOrders.updateCustomer(obj);
                   CartOrders.updateOrderID(obj);
-                  Store.updateOrderCount(obj, cartCtrl.store);
+                  cartCtrl.store.store_current_order_number = cartCtrl.store.store_current_order_number + 1;
+                  Store.updateOrderCount(cartCtrl.store);
                   $state.go('catalog.revieworder');
                 };
 
