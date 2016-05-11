@@ -312,11 +312,7 @@
               </uib-tab-heading>
               <div class="row">
                 <div class="col-xs-12"><br>
-                  <div class="container">
-                    <form class="form-horizontal" role="form">
-                      history
-                    </form>
-                  </div>
+                  <div ui-grid="customerCtrl.gridHistory" class="grid-500" ui-grid-edit ui-grid-cellNav></div>
                 </div>
               </div>
             </uib-tab>
@@ -326,11 +322,7 @@
               </uib-tab-heading>
               <div class="row">
                 <div class="col-xs-12"><br>
-                  <div class="container">
-                    <form class="form-horizontal" role="form">
-                      transactions
-                    </form>
-                  </div>
+                  <div ui-grid="customerCtrl.gridTransactions" class="grid-500" ui-grid-edit ui-grid-cellNav></div>
                 </div>
               </div>
             </uib-tab>
@@ -340,9 +332,14 @@
               </uib-tab-heading>
               <div class="row">
                 <div class="col-xs-12"><br>
-                  <div class="container">
+                  <div class="container-fluid top-space-15">
                     <form class="form-horizontal" role="form">
-                      reward points
+                      <div class="form-group">
+                        <label class="control-label col-xs-4">Total Reward Points</label>
+                        <div class="col-xs-6">
+                          <input type="text" ng-model="customerCtrl.customer.reward_points" class="form-control" readonly>
+                        </div>
+                      </div>
                     </form>
                   </div>
                 </div>
@@ -354,9 +351,21 @@
               </uib-tab-heading>
               <div class="row">
                 <div class="col-xs-12"><br>
-                  <div class="container">
+                  <div class="container-fluid top-space-15">
                     <form class="form-horizontal" role="form">
-                      security
+                      <div class="form-group">
+                        <label class="col-xs-4 control-label">Customer E-Mail</label>
+                        <div class="col-xs-6">
+                            <input type="email" name="email" ng-model="customerCtrl.customer.customer_email" placeholder="Customer E-Mail" class="form-control" readonly>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <div class="col-xs-10">
+                            <div class="pull-right">
+                                <a class="btn btn-primary" ng-click="customerCtrl.forgotPassword()">Reset Password</a>
+                            </div>
+                        </div>
+                      </div>
                     </form>
                   </div>
                 </div>
