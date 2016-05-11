@@ -407,6 +407,10 @@ angular.module('SalesModule', [
                   return $firebaseArray(ref.child(tid).orderByChild("customer_email").equalTo(email));
               },
 
+              getLogs: function(cid) {
+                  return $firebaseArray(ref.child(tid).child(cid).child("logs").orderByPriority());
+              },
+
               addLog: function(id) {
                   var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+id+'/logs');
                   return custRef.push({ login_date: Firebase.ServerValue.TIMESTAMP });
@@ -609,6 +613,10 @@ angular.module('SalesModule', [
                   theAddresses.$loaded().then(function() {
                       customerCtrl.addresses = theAddresses;
                   });
+              var theLog = Customer.getLogs(cid);
+                  theLog.$loaded().then(function() {
+                  customerCtrl.gridHistory.data = theLog;
+                  });
 
           };
 
@@ -623,7 +631,6 @@ angular.module('SalesModule', [
           };
 
           customerCtrl.getStatus = function() {
-
               if (customerCtrl.customer.customer_status === "1") {
                     customerCtrl.customer.customer_status_id = 1;
               } else {
@@ -707,6 +714,16 @@ angular.module('SalesModule', [
                   cellClass: 'grid-align-right', cellFilter:'currency' },
                   { name:'status', field: 'giftcard_status', width: '25%', enableHiding: false, enableFiltering: true,
                   cellClass: 'grid-align-right' },
+              ]
+          };
+
+          customerCtrl.gridHistory = {
+              enableSorting: true,
+              enableCellEditOnFocus: true,
+              enableFiltering: true,
+              columnDefs: [
+                  { name:'loginDate', field: 'login_date', width:'50%', enableHiding: false, enableFiltering: false, cellFilter:'date:"longDate"' },
+                  { name:'loginTime', field: 'login_date', width:'50%', enableHiding: false, enableFiltering: false, cellFilter:'date:"shortTime"' },
               ]
           };
 
