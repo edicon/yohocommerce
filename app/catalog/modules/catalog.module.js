@@ -383,6 +383,11 @@ angular.module('CatalogModule', [
                   return theRef.update( {giftcard_id: obj.giftcard_id, giftcard_discount: obj.giftcard_discount} );
               },
 
+              updateRewardPoints(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
+                  return theRef.update( {reward_points_used: obj.reward_points_used, reward_points_discount: obj.reward_points_discount} );
+              },
+
               updateCustomer: function(obj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
                   return theRef.update( {customer_id: obj.cid, customer_name: obj.customer_name, customer_email: obj.customer_email, customer_phone: obj.customer_phone} );
@@ -838,7 +843,9 @@ angular.module('CatalogModule', [
                                 theOrder.coupon_discount = 0;
                             if (theOrder.giftcard_discount === undefined)
                                 theOrder.giftcard_discount = 0;
-                            cartCtrl.order.total = (theOrder.sub_total + theOrder.tax_total) - (theOrder.coupon_discount + theOrder.giftcard_discount);
+                            if (theOrder.reward_points_discount === undefined)
+                                theOrder.reward_points_discount = 0;
+                            cartCtrl.order.total = (theOrder.sub_total + theOrder.tax_total) - (theOrder.coupon_discount + theOrder.giftcard_discount + theOrder.reward_points_discount);
                             var theLines = CartOrders.getLines(obj.oid)
                                   theLines.$loaded().then(function() {
                                         cartCtrl.lines = theLines;
@@ -854,10 +861,8 @@ angular.module('CatalogModule', [
                                                   theCustomer.$loaded().then(function(){
                                                       cartCtrl.customer = theCustomer;
                                                   });
-                                        }
-
-                                  });
-
+                                        };
+                                });
                       });
 
               cartCtrl.accountLogin = function() {
@@ -908,58 +913,69 @@ angular.module('CatalogModule', [
                 };
 
                 cartCtrl.updateCoupon = function() {
-                      var theCoupon = Coupons.getCoupon(cartCtrl.order.coupon_code);
-                          theCoupon.$loaded().then(function() {
-                              if (theCoupon.coupon_name !== undefined) {
-                                  theCoupon.$loaded().then(function() {
-                                      cartCtrl.couponType(theCoupon);
-                                      obj.coupon_id = theCoupon.$id;
-                                      obj.coupon_discount = Number(theCoupon.coupon_discount);
-                                      obj.total = cartCtrl.order.total - theCoupon.coupon_discount;
-                                      CartOrders.updateCoupon(obj);
-                                      CartOrders.updateHeaderTotal(obj);
-                                  });
-                              } else {
-                                  AlertService.addError(Messages.invalid_coupon_code);
-                                  cartCtrl.order.coupon_code = null;
-                              };
-                          });
-
-
+                    var theCoupon = Coupons.getCoupon(cartCtrl.order.coupon_code);
+                        theCoupon.$loaded().then(function() {
+                            if (theCoupon.coupon_name !== undefined) {
+                                theCoupon.$loaded().then(function() {
+                                    cartCtrl.couponType(theCoupon);
+                                    obj.coupon_id = theCoupon.$id;
+                                    obj.coupon_discount = Number(theCoupon.coupon_discount);
+                                    obj.total = cartCtrl.order.total - theCoupon.coupon_discount;
+                                    CartOrders.updateCoupon(obj);
+                                    CartOrders.updateHeaderTotal(obj);
+                                });
+                            } else {
+                                AlertService.addError(Messages.invalid_coupon_code);
+                                cartCtrl.order.coupon_code = null;
+                            };
+                        });
                 };
 
                 cartCtrl.updateGiftCard = function() {
-                  var theGiftcard = GiftCards.getGiftCard(cartCtrl.order.giftcard_code);
-                      theGiftcard.$loaded().then(function() {
-                          if (theGiftcard.giftcard_amount !== undefined) {
-                              theGiftcard.$loaded().then(function() {
-                                  obj.giftcard_id = theGiftcard.$id;
-                                  obj.giftcard_discount = Number(theGiftcard.giftcard_amount);
-                                  obj.total = cartCtrl.order.total - theGiftcard.giftcard_amount;
-                                  theGiftcard.giftcard_status = "Claimed";
-                                  GiftCards.updateGiftCard(theGiftcard);
-                                  CartOrders.updateGiftCard(obj);
-                                  CartOrders.updateHeaderTotal(obj);
-                              });
-                          } else {
-                              AlertService.addError(Messages.invalid_giftcard_code);
-                              cartCtrl.order.giftcard_code = null;
-                          };
-                      });
+                    var theGiftcard = GiftCards.getGiftCard(cartCtrl.order.giftcard_code);
+                        theGiftcard.$loaded().then(function() {
+                            if (theGiftcard.giftcard_amount !== undefined) {
+                                theGiftcard.$loaded().then(function() {
+                                    obj.giftcard_id = theGiftcard.$id;
+                                    obj.giftcard_discount = Number(theGiftcard.giftcard_amount);
+                                    obj.total = cartCtrl.order.total - theGiftcard.giftcard_amount;
+                                    theGiftcard.giftcard_status = "Claimed";
+                                    GiftCards.updateGiftCard(theGiftcard);
+                                    CartOrders.updateGiftCard(obj);
+                                    CartOrders.updateHeaderTotal(obj);
+                                });
+                            } else {
+                                AlertService.addError(Messages.invalid_giftcard_code);
+                                cartCtrl.order.giftcard_code = null;
+                            };
+                        });
+                };
 
-
-            };
+                cartCtrl.updateRewardPoints = function() {
+                    if (cartCtrl.order.reward_points_used > cartCtrl.customer.reward_points) {
+                        AlertService.addError(Messages.invalid_points);
+                        cartCtrl.order.reward_points_used = null;
+                    } else {
+                        obj.reward_points_discount = cartCtrl.order.reward_points_used * 0.01;
+                        obj.total = cartCtrl.order.total - obj.reward_points_discount;
+                        obj.reward_points_used = cartCtrl.order.reward_points_used;
+                        CartOrders.updateRewardPoints(obj);
+                        CartOrders.updateHeaderTotal(obj);
+                    };
+                };
 
                 cartCtrl.addOrderToCustomer = function(cid, oid) {
-                  Customer.addOrder(cid, oid);
                   obj.cid = cid;
                   obj.customer_name = cartCtrl.customer.customer_first_name + ' ' + cartCtrl.customer.customer_last_name;
                   obj.customer_email = cartCtrl.customer.customer_email;
                   obj.customer_phone = cartCtrl.customer.customer_phone;
                   obj.order_id = cartCtrl.store.store_default_order_prefix + '-' + cartCtrl.store.store_current_order_number;
+                  cartCtrl.store.store_current_order_number = cartCtrl.store.store_current_order_number + 1;
+                  cartCtrl.customer.reward_points = (cartCtrl.customer.reward_points + cartCtrl.order.sub_total) - cartCtrl.order.reward_points_used;
                   CartOrders.updateCustomer(obj);
                   CartOrders.updateOrderID(obj);
-                  cartCtrl.store.store_current_order_number = cartCtrl.store.store_current_order_number + 1;
+                  Customer.addOrder(cid, oid, cartCtrl.order);
+                  Customer.updateRewards(cartCtrl.customer);
                   Store.updateOrderCount(cartCtrl.store);
                   $state.go('catalog.revieworder');
                 };
@@ -999,6 +1015,7 @@ angular.module('CatalogModule', [
                     } else if (cartCtrl.checkout_type == "newRegister") {
                           if (cartCtrl.customer.customer_email == cartCtrl.confirm_customer_email) {
                               if (cartCtrl.customer.customer_password == cartCtrl.confirm_customer_password) {
+                                  cartCtrl.customer.reward_points = 0;
                                   cartCtrl.createUser(cartCtrl.customer);
                                   cartCtrl.addOrderToCustomer(cartCtrl.customer.$id, cartCtrl.order.$id);
                               } else {
@@ -1013,6 +1030,7 @@ angular.module('CatalogModule', [
                               var theCheck = Customer.getEmail(cartCtrl.customer.customer_email);
                               theCheck.$loaded().then(function() {
                                   if(theCheck == null) {
+                                      cartCtrl.customer.reward_points = 0;
                                       Customer.addCustomer(cartCtrl.customer).then(function(cid) {
                                       cartCtrl.customer.$id = cid;
                                       });
@@ -1021,7 +1039,6 @@ angular.module('CatalogModule', [
                                 cartCtrl.addOrderToCustomer(cartCtrl.customer.$id, cartCtrl.order.$id);
                               });
                           } else {
-
                               AlertService.addError(Messages.emails_dont_match);
                           };
                     };
@@ -1087,6 +1104,7 @@ angular.module('CatalogModule', [
                 registerCtrl.customer.customer_status_id = 1;
                 registerCtrl.customer.customer_status = "1";
                 registerCtrl.customer.customer_address_count = 0;
+                registerCtrl.customer.reward_points = 0;
                 registerCtrl.customer.customer_country = registerCtrl.customer.customer_country.name;
                 Customer.addCustomer(registerCtrl.customer).then(function(custId) {
                     registerCtrl.cid = custId;

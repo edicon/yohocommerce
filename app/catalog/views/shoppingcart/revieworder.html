@@ -143,6 +143,11 @@
             </table>
           </div>
           <div class="row">
+            <div ng-if="cartCtrl.order.reward_points_used !== undefined" class="col-sm-8 col-sm-offset-3">
+                <h4>Reward Points Used: {{cartCtrl.order.reward_points_used}}</h4>
+            </div>
+          </div><br>
+          <div class="row">
             <div ng-if="cartCtrl.order.coupon_id !== undefined" class="col-sm-8 col-sm-offset-3">
                 <h4>Coupon Entered: {{cartCtrl.order.coupon_id}}</h4>
             </div>
@@ -169,6 +174,10 @@
               <tr ng-if="cartCtrl.order.giftcard_discount !== 0">
                 <td class="text-right"><strong>Gift Card Discount</strong></td>
                 <td class="text-right">{{cartCtrl.order.giftcard_discount | currency}}</td>
+              </tr>
+              <tr ng-if="cartCtrl.order.reward_points_discount !== 0">
+                <td class="text-right"><strong>Reward Points Discount</strong></td>
+                <td class="text-right">{{cartCtrl.order.reward_points_discount | currency}}</td>
               </tr>
               <tr>
                 <td class="text-right"><strong>Cash on Delivery</strong></td>
