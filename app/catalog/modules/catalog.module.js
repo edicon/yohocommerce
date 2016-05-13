@@ -906,42 +906,42 @@ angular.module('CatalogModule', [
                 };
 
                 cartCtrl.updateCoupon = function() {
-                      var theCoupon = Coupons.getCoupon(cartCtrl.order.coupon_code);
-                          theCoupon.$loaded().then(function() {
-                              if (theCoupon.coupon_name !== undefined) {
-                                  theCoupon.$loaded().then(function() {
-                                      cartCtrl.couponType(theCoupon);
-                                      obj.coupon_id = theCoupon.$id;
-                                      obj.coupon_discount = Number(theCoupon.coupon_discount);
-                                      obj.total = cartCtrl.order.total - theCoupon.coupon_discount;
-                                      CartOrders.updateCoupon(obj);
-                                      CartOrders.updateHeaderTotal(obj);
-                                  });
-                              } else {
-                                  AlertService.addError(Messages.invalid_coupon_code);
-                                  cartCtrl.order.coupon_code = null;
-                              };
-                          });
+                    var theCoupon = Coupons.getCoupon(cartCtrl.order.coupon_code);
+                        theCoupon.$loaded().then(function() {
+                            if (theCoupon.coupon_name !== undefined) {
+                                theCoupon.$loaded().then(function() {
+                                    cartCtrl.couponType(theCoupon);
+                                    obj.coupon_id = theCoupon.$id;
+                                    obj.coupon_discount = Number(theCoupon.coupon_discount);
+                                    obj.total = cartCtrl.order.total - theCoupon.coupon_discount;
+                                    CartOrders.updateCoupon(obj);
+                                    CartOrders.updateHeaderTotal(obj);
+                                });
+                            } else {
+                                AlertService.addError(Messages.invalid_coupon_code);
+                                cartCtrl.order.coupon_code = null;
+                            };
+                        });
                 };
 
                 cartCtrl.updateGiftCard = function() {
-                  var theGiftcard = GiftCards.getGiftCard(cartCtrl.order.giftcard_code);
-                      theGiftcard.$loaded().then(function() {
-                          if (theGiftcard.giftcard_amount !== undefined) {
-                              theGiftcard.$loaded().then(function() {
-                                  obj.giftcard_id = theGiftcard.$id;
-                                  obj.giftcard_discount = Number(theGiftcard.giftcard_amount);
-                                  obj.total = cartCtrl.order.total - theGiftcard.giftcard_amount;
-                                  theGiftcard.giftcard_status = "Claimed";
-                                  GiftCards.updateGiftCard(theGiftcard);
-                                  CartOrders.updateGiftCard(obj);
-                                  CartOrders.updateHeaderTotal(obj);
-                              });
-                          } else {
-                              AlertService.addError(Messages.invalid_giftcard_code);
-                              cartCtrl.order.giftcard_code = null;
-                          };
-                      });
+                    var theGiftcard = GiftCards.getGiftCard(cartCtrl.order.giftcard_code);
+                        theGiftcard.$loaded().then(function() {
+                            if (theGiftcard.giftcard_amount !== undefined) {
+                                theGiftcard.$loaded().then(function() {
+                                    obj.giftcard_id = theGiftcard.$id;
+                                    obj.giftcard_discount = Number(theGiftcard.giftcard_amount);
+                                    obj.total = cartCtrl.order.total - theGiftcard.giftcard_amount;
+                                    theGiftcard.giftcard_status = "Claimed";
+                                    GiftCards.updateGiftCard(theGiftcard);
+                                    CartOrders.updateGiftCard(obj);
+                                    CartOrders.updateHeaderTotal(obj);
+                                });
+                            } else {
+                                AlertService.addError(Messages.invalid_giftcard_code);
+                                cartCtrl.order.giftcard_code = null;
+                            };
+                        });
                 };
 
                 cartCtrl.addOrderToCustomer = function(cid, oid) {
