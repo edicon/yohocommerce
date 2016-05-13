@@ -854,10 +854,8 @@ angular.module('CatalogModule', [
                                                   theCustomer.$loaded().then(function(){
                                                       cartCtrl.customer = theCustomer;
                                                   });
-                                        }
-
-                                  });
-
+                                        };
+                                });
                       });
 
               cartCtrl.accountLogin = function() {
@@ -924,8 +922,6 @@ angular.module('CatalogModule', [
                                   cartCtrl.order.coupon_code = null;
                               };
                           });
-
-
                 };
 
                 cartCtrl.updateGiftCard = function() {
@@ -946,20 +942,21 @@ angular.module('CatalogModule', [
                               cartCtrl.order.giftcard_code = null;
                           };
                       });
-
-
-            };
+                };
 
                 cartCtrl.addOrderToCustomer = function(cid, oid) {
-                  Customer.addOrder(cid, oid);
+
                   obj.cid = cid;
                   obj.customer_name = cartCtrl.customer.customer_first_name + ' ' + cartCtrl.customer.customer_last_name;
                   obj.customer_email = cartCtrl.customer.customer_email;
                   obj.customer_phone = cartCtrl.customer.customer_phone;
                   obj.order_id = cartCtrl.store.store_default_order_prefix + '-' + cartCtrl.store.store_current_order_number;
+                  cartCtrl.store.store_current_order_number = cartCtrl.store.store_current_order_number + 1;
+                  cartCtrl.customer.reward_points = cartCtrl.customer.reward_points + cartCtrl.order.sub_total;
                   CartOrders.updateCustomer(obj);
                   CartOrders.updateOrderID(obj);
-                  cartCtrl.store.store_current_order_number = cartCtrl.store.store_current_order_number + 1;
+                  Customer.addOrder(cid, oid, cartCtrl.order);
+                  Customer.updateRewards(cartCtrl.customer);
                   Store.updateOrderCount(cartCtrl.store);
                   $state.go('catalog.revieworder');
                 };
@@ -1087,6 +1084,7 @@ angular.module('CatalogModule', [
                 registerCtrl.customer.customer_status_id = 1;
                 registerCtrl.customer.customer_status = "1";
                 registerCtrl.customer.customer_address_count = 0;
+                registerCtrl.customer.reward_points = 0;
                 registerCtrl.customer.customer_country = registerCtrl.customer.customer_country.name;
                 Customer.addCustomer(registerCtrl.customer).then(function(custId) {
                     registerCtrl.cid = custId;

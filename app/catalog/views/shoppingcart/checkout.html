@@ -228,6 +228,18 @@
               </table>
             </div>
             <div class="row">
+              <div ng-if="cartCtrl.status !== null" class="col-sm-8 col-sm-offset-2">
+                <h4>Reward Points Available: {{cartCtrl.customer.reward_points}}</h4>
+                <label class="control-label">Use Reward Points</label>
+                <div class="input-group input-group-sm">
+                  <input type="text" ng-model="cartCtrl.order.reward_points_used" class="form-control" placeholder="Enter Reward Points to Use">
+                  <span class="input-group-btn">
+                    <button class="btn btn-primary" ng-click="cartCtrl.updateRewardPoints()" type="button"><span class="menu-icon fa fa-check"></span></button>
+                  </span>
+                </div>
+              </div>
+            </div><br>
+            <div class="row">
               <div ng-if="cartCtrl.order.coupon_id === undefined" class="col-sm-8 col-sm-offset-2">
                 <label class="control-label">Use Coupon Code</label>
                 <div class="input-group input-group-sm">
