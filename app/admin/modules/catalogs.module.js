@@ -1154,6 +1154,7 @@ angular.module('CatalogsModule', [
               };
 
               productCtrl.removeThumbnailImage = function($id) {
+                    productCtrl.imageEntity = {};
                     productCtrl.imageEntity.$id = $id;
                     productCtrl.imageEntity.pid = productCtrl.pid;
                     Product.removeThumbnailImage(productCtrl.imageEntity);
