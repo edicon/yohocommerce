@@ -306,24 +306,20 @@
                 </div>
               </div>
             </uib-tab>
-            <uib-tab>
+            <uib-tab select="tabShown = !tabShown" deselect="tabShown = !tabShown">
               <uib-tab-heading>
                 <i class="menu-icon fa fa-history"></i> History
               </uib-tab-heading>
-              <div class="row">
-                <div class="col-xs-12"><br>
-                  <div ui-grid="customerCtrl.gridHistory" class="grid-500" ui-grid-edit ui-grid-cellNav></div>
-                </div>
+              <div class="row"><br>
+                <div ui-grid="customerCtrl.gridHistory" class="grid-500" ui-grid-auto-resize ui-grid-edit ui-grid-cellNav></div>
               </div>
             </uib-tab>
-            <uib-tab>
+            <uib-tab select="tabShown = !tabShown" deselect="tabShown = !tabShown">
               <uib-tab-heading>
                 <i class="menu-icon fa fa-indent"></i> Transactions
               </uib-tab-heading>
-              <div class="row">
-                <div class="col-xs-12"><br>
-                  <div ui-grid="customerCtrl.gridTransactions" class="grid-500" ui-grid-edit ui-grid-cellNav></div>
-                </div>
+              <div class="row"><br>
+                <div ng-if="tabShown" ui-grid="customerCtrl.gridTransactions" class="grid-500" ui-grid-auto-resize ui-grid-edit ui-grid-cellNav></div>
               </div>
             </uib-tab>
             <uib-tab>
