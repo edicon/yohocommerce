@@ -360,9 +360,14 @@ angular.module('SalesModule', [
                   });
               },
 
-              addOrder: function(id, orderId) {
+              addOrder: function(id, orderId, obj) {
                   var orderRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+id+'/orders');
                   return orderRef.push( {order_id: orderId} );
+              },
+
+              updateRewards: function(theObj) {
+                  var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.$id);
+                  return custRef.update( {reward_points: theObj.reward_points} );
               },
 
               getAddresses: function(cid) {
@@ -652,6 +657,7 @@ angular.module('SalesModule', [
                           customerCtrl.customer.customer_address_count = 0;
                           customerCtrl.customer.customer_group_name = group.group_name;
                           customerCtrl.customer.customer_full_name = customerCtrl.customer.customer_first_name + ' ' + customerCtrl.customer.customer_last_name;
+                          customerCtrl.customer.reward_points = 0;
                           Customer.addCustomer(customerCtrl.customer).then(function(cid) {
                             customerCtrl.loadCustomer(cid);
                           });

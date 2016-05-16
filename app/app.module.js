@@ -77,6 +77,7 @@ var app = angular.module('app', [
                   emails_dont_match: 'E-Mails Do Not Match',
                   invalid_coupon_code: 'Coupon Code is Invalid',
                   invalid_giftcard_code: 'Gift Card Code is Invalid',
+                  invalid_points: 'Insufficient Reward Points Available',
             };
 
             return messages;
