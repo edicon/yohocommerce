@@ -360,7 +360,7 @@ angular.module('SalesModule', [
                   });
               },
 
-              addOrder: function(id, orderId, obj) {
+              addOrder: function(id, orderId) {
                   var orderRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+id+'/orders');
                   return orderRef.push( {order_id: orderId} );
               },
