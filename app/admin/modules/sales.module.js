@@ -848,11 +848,7 @@ angular.module('SalesModule', [
                        enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '25%' },
                       { name:'email', field: 'customer_email', enableHiding: false, width: '20%', enableCellEdit: false },
                       { name:'customerGroup', field: 'customer_group_name', enableHiding: false, width: '15%', enableCellEdit: false },
-                      { name: 'customer_status_id', displayName: 'Status', editableCellTemplate: 'ui-grid/dropdownEditor', width: '15%',
-                            cellFilter: 'mapStatus', editDropdownValueLabel: 'status', enableFiltering: false, editDropdownOptionsArray: [
-                              { id: 1, status: 'Enabled' },
-                              { id: 2, status: 'Disabled' }
-                            ]},
+                      { name: 'customerStatus', field: 'customer_status', enableHiding: false, width: '15%', enableCellEdit: false },
                       { name:'dateAdded', field: 'customer_date_added', type: 'date', enableHiding: false, cellClass: 'grid-align-right',
                             enableCellEdit: false, cellFilter: 'date' },
                       { name: ' ', field: '$id', cellTemplate:'admin/views/sales/gridTemplates/removeCustomer.html',
