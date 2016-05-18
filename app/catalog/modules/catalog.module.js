@@ -867,16 +867,19 @@ angular.module('CatalogModule', [
 
               cartCtrl.accountLogin = function() {
                       Auth.$authWithPassword(cartCtrl.user).then(function (auth) {
-
                         var theProfile = Profile.getProfile(auth.uid);
                             theProfile.$loaded().then(function(){
                                 var theCustomer = Customer.getCustomer(theProfile.cid);
                                     theCustomer.$loaded().then(function(){
-                                        cartCtrl.customer = theCustomer;
+                                        if (theCustomer.customer_status == "Disabled"){
+                                            AlertService.addError(Messages.login_disabled);
+                                            cartCtrl.user = null;
+                                        } else {
+                                            cartCtrl.customer = theCustomer;
+                                            cartCtrl.status = "existing";
+                                        };
                                     });
                             });
-                            cartCtrl.status = "existing";
-
                       }, function(error) {
                             AlertService.addError(error.message);
                             });
@@ -1048,15 +1051,23 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('AuthCtrl', ['Auth', 'AlertService', 'Tenant', 'Customer', 'md5', 'Messages', 'tid', '$state',
-      function (          Auth,   AlertService,   Tenant,   Customer,   md5,   Messages,   tid,   $state) {
+.controller('AuthCtrl', ['Auth', 'AlertService', 'Tenant', 'Profile', 'Customer', 'md5', 'Messages', 'tid', '$state',
+      function (          Auth,   AlertService,   Tenant,   Profile,   Customer,   md5,   Messages,   tid,   $state) {
             var authCtrl = this;
             authCtrl.tenant = {};
             authCtrl.user = {};
 
             authCtrl.adminLogin = function() {
                 Auth.$authWithPassword(authCtrl.user).then(function(auth) {
-                    $state.go('admin.dashboard');
+                  var theProfile = Profile.getProfile(auth.uid);
+                      theProfile.$loaded().then(function(){
+                          if (theProfile.status == "Disabled") {
+                              AlertService.addError(Messages.login_disabled);
+                              authCtrl.user = null;
+                          } else {
+                              $state.go('admin.dashboard');
+                          };
+                      });
                 }, function(error) {
                     AlertService.addError(error.message);
                 });
@@ -1064,7 +1075,18 @@ angular.module('CatalogModule', [
 
             authCtrl.accountLogin = function() {
                 Auth.$authWithPassword(authCtrl.user).then(function (auth) {
-                    $state.go('account.detail');
+                    var theProfile = Profile.getProfile(auth.uid);
+                        theProfile.$loaded().then(function(){
+                            var theCustomer = Customer.getCustomer(theProfile.cid);
+                                theCustomer.$loaded().then(function(){
+                                    if (theCustomer.customer_status == "Disabled"){
+                                        AlertService.addError(Messages.login_disabled);
+                                        authCtrl.user = null;
+                                    } else {
+                                        $state.go('account.detail');
+                                    };
+                                });
+                        });
                 }, function(error) {
                     AlertService.addError(error.message);
                 });
@@ -1094,7 +1116,18 @@ angular.module('CatalogModule', [
 
             registerCtrl.login = function() {
                 Auth.$authWithPassword(registerCtrl.user).then(function (auth) {
-                    $state.go('account.detail');
+                    var theProfile = Profile.getProfile(auth.uid);
+                        theProfile.$loaded().then(function(){
+                            var theCustomer = Customer.getCustomer(theProfile.cid);
+                                theCustomer.$loaded().then(function(){
+                                    if (theCustomer.customer_status == "Disabled"){
+                                        AlertService.addError(Messages.login_disabled);
+                                        registerCtrl.user = null;
+                                    } else {
+                                        $state.go('account.detail');
+                                    };
+                                });
+                        });
                 }, function(error) {
                     AlertService.addError(error.message);
                 });
@@ -1102,7 +1135,7 @@ angular.module('CatalogModule', [
 
             registerCtrl.addCustomer = function() {
                 registerCtrl.customer.customer_status_id = 1;
-                registerCtrl.customer.customer_status = "1";
+                registerCtrl.customer.customer_status = "Enabled";
                 registerCtrl.customer.customer_address_count = 0;
                 registerCtrl.customer.reward_points = 0;
                 registerCtrl.customer.customer_country = registerCtrl.customer.customer_country.name;
