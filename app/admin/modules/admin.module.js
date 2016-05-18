@@ -60,11 +60,18 @@ angular.module('AdminModule', [
               }
           })
 
-          .state('profile', {
+          .state('admin.profile', {
               url: '/profile',
-              controller: 'ProfileCtrl as profileCtrl',
-              templateUrl: 'admin/views/users/profile.html',
-              resolve: {
+              views: {
+                "header@admin": {
+                    templateUrl: 'admin/views/users/profile.header.html'
+                },
+                "main@admin": {
+                    controller: 'ProfileCtrl as profileCtrl',
+                    templateUrl: 'admin/views/users/profile.html'
+                  }
+              }
+    /*          resolve: {
                   auth: function($state, Wow, Auth){
                       return Auth.$requireAuth().catch(function(){
                         $state.go('home');
@@ -73,7 +80,30 @@ angular.module('AdminModule', [
                   profile: function(Auth){
                       return Auth.$requireAuth();
                   }
+              } */
+          })
+
+          .state('admin.password', {
+              url: '/profile',
+              views: {
+                "header@admin": {
+                    templateUrl: 'admin/views/users/password.header.html'
+                },
+                "main@admin": {
+                    controller: 'ProfileCtrl as profileCtrl',
+                    templateUrl: 'admin/views/users/password.html'
+                  }
               }
+    /*          resolve: {
+                  auth: function($state, Wow, Auth){
+                      return Auth.$requireAuth().catch(function(){
+                        $state.go('home');
+                      });
+                  },
+                  profile: function(Auth){
+                      return Auth.$requireAuth();
+                  }
+              } */
           })
 
       }
@@ -144,6 +174,52 @@ angular.module('AdminModule', [
           $scope.logout = function() {
               Auth.$unauth();
               $state.go('catalog.home');
+          };
+
+      }
+
+])
+
+.controller('ProfileCtrl', ['Auth', 'AlertService', 'Messages', '$scope', '$state', '$cookieStore', 'profile',
+      function (             Auth,   AlertService,   Messages,   $scope,   $state,   $cookieStore,   profile) {
+          var profileCtrl = this;
+          var mobileView = 992;
+          profileCtrl.profile = profile;
+
+          profileCtrl.updateProfile = function() {
+                profileCtrl.profile.$save();
+          }, function(error) {
+                profileCtrl.error = error;
+          };
+
+          profileCtrl.forgotPassword = function() {
+              Auth.$resetPassword({
+                  email: profileCtrl.profile.email
+                  }).then(function() {
+                      AlertService.addSuccess(Messages.send_email_success);
+                      $state.go('catalog.home');
+                  }).catch(function(error) {
+                      console.error("Error: ", error);
+                  });
+          };
+
+          profileCtrl.newPassword = function() {
+              if (profileCtrl.profile.new_password == profileCtrl.profile.confirm_new_password){
+                Auth.$changePassword({
+                    email: profileCtrl.profile.email,
+                    oldPassword: profileCtrl.profile.password,
+                    newPassword: profileCtrl.profile.new_password
+                    }).then(function() {
+                        AlertService.addSuccess(Messages.save_password_success);
+                        profileCtrl.profile.password = null;
+                        profileCtrl.profile.new_password = null;
+                        profileCtrl.profile.confirm_new_password = null;
+                    }).catch(function(error) {
+                        console.error("Error: ", error);
+                    });
+              } else {
+                  AlertService.addError(Messages.passwords_dont_match);
+              };
           };
 
       }

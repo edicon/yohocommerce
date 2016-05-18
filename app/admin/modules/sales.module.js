@@ -765,7 +765,7 @@ angular.module('SalesModule', [
             if (customerCtrl.cid != null)
                 customerCtrl.customer.$save();
           }, function(error) {
-                storeCtrl.error = error;
+                customerCtrl.error = error;
           };
 
           customerCtrl.saveCustomerStatus = function() {
