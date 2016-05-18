@@ -1,10 +1,12 @@
 <div class="user pull-right">
   <span class="item dropdown" uib-dropdown on-toggle="toggled(open)">
     <a href class="dropdown-toggle" id="simple-dropdown" uib-dropdown-toggle>
-      <img ng-src="http://www.gravatar.com/avatar/{{adminCtrl.profile.emailHash}}" class="nav-pic" />
+      <div class="circular-avatar">
+        <img ng-src="http://www.gravatar.com/avatar/{{adminCtrl.profile.emailHash}}" alt="" />
+      </div>
     </a>
     <ul class="dropdown-menu dropdown-menu-right">
-      <li class="dropdown-header">{{adminCtrl.profile.name}}</li>
+      <li class="dropdown-header"><h5>{{adminCtrl.profile.first_name}} {{adminCtrl.profile.last_name}}</h5></li>
       <li class="divider"></li>
       <li class="link">
         <a ng-href="#/profile/{{adminCtrl.profile.uid}}">Profile</a>
