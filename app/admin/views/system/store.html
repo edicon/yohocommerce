@@ -62,7 +62,7 @@
                     </div>
                   </div>
                   <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
-                    <input type="text" ng-model="storeCtrl.store.store_name" ng-change="storeCtrl.store.$save()"
+                    <input type="text" ng-model="storeCtrl.store.store_name" ng-change="storeCtrl.updateStore()"
                       placeholder="First Name" class="form-control" required>
                   </div>
                 </div>
@@ -75,7 +75,7 @@
                     </div>
                   </div>
                   <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
-                    <input type="text" ng-model="storeCtrl.store.store_url" ng-change="storeCtrl.store.$save()"
+                    <input type="text" ng-model="storeCtrl.store.store_url" ng-change="storeCtrl.updateStore()"
                       placeholder="Last Name" class="form-control">
                   </div>
                 </div>
@@ -88,7 +88,7 @@
                     </div>
                   </div>
                   <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
-                    <input type="email" ng-model="storeCtrl.store.store_email" ng-change="storeCtrl.store.$save()"
+                    <input type="email" ng-model="storeCtrl.store.store_email" ng-change="storeCtrl.updateStore()"
                       placeholder="E-mail Address" class="form-control">
                   </div>
                 </div>
@@ -101,7 +101,7 @@
                     </div>
                   </div>
                   <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
-                    <input type="text" ng-model="storeCtrl.store.store_phone" ng-change="storeCtrl.store.$save()"
+                    <input type="text" ng-model="storeCtrl.store.store_phone" ng-change="storeCtrl.updateStore()"
                       placeholder="Phone Number" class="form-control">
                   </div>
                 </div>
@@ -128,7 +128,7 @@
                     </div>
                   </div>
                   <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
-                    <input type="text" ng-model="storeCtrl.store.store_address_street" ng-change="storeCtrl.store.$save()"
+                    <input type="text" ng-model="storeCtrl.store.store_address_street" ng-change="storeCtrl.updateStore()"
                       placeholder="Street" class="form-control">
                   </div>
                 </div>
@@ -141,7 +141,7 @@
                     </div>
                   </div>
                   <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
-                    <input type="text" ng-model="storeCtrl.store.store_address_city" ng-change="storeCtrl.store.$save()"
+                    <input type="text" ng-model="storeCtrl.store.store_address_city" ng-change="storeCtrl.updateStore()"
                       placeholder="City" class="form-control">
                   </div>
                 </div>
@@ -154,7 +154,7 @@
                     </div>
                   </div>
                   <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
-                    <input type="text" ng-model="storeCtrl.store.store_address_country" ng-change="storeCtrl.store.$save()"
+                    <input type="text" ng-model="storeCtrl.store.store_address_country" ng-change="storeCtrl.updateStore()"
                       placeholder="Country" class="form-control">
                   </div>
                 </div>
@@ -167,7 +167,7 @@
                     </div>
                   </div>
                   <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
-                    <input type="text" ng-model="storeCtrl.store.store_address_region" ng-change="storeCtrl.store.$save()"
+                    <input type="text" ng-model="storeCtrl.store.store_address_region" ng-change="storeCtrl.updateStore()"
                       placeholder="Region" class="form-control">
                   </div>
                 </div>
@@ -180,7 +180,7 @@
                     </div>
                   </div>
                   <div ng-if="storeCtrl.sid !== null" class="col-sm-8">
-                    <input type="text" ng-model="storeCtrl.store.store_address_postal_code" ng-change="storeCtrl.store.$save()"
+                    <input type="text" ng-model="storeCtrl.store.store_address_postal_code" ng-change="storeCtrl.updateStore()"
                       placeholder="Postal Code / Zip" class="form-control">
                   </div>
                 </div>
@@ -272,14 +272,14 @@
                     <div class="form-group">
                       <label class="col-sm-3 control-label" align="right">Order Starting Number</label>
                       <div class="col-sm-8">
-                        <input type="text" ng-model="storeCtrl.store.store_default_order_number" ng-change="storeCtrl.updateStore()"
+                        <input type="text" ng-model="storeCtrl.store.store_default_order_number" ng-change="storeCtrl.updateStartingOrderNumber()"
                           placeholder="Enter Invoice Prefix" class="form-control">
                       </div>
                     </div>
                     <div class="form-group">
                       <label class="col-sm-3 control-label" align="right">Current Order Number</label>
                       <div class="col-sm-8">
-                        <input type="text" ng-model="storeCtrl.store.store_current_order_number" ng-change="storeCtrl.updateStore()"
+                        <input type="text" ng-model="storeCtrl.store.store_current_order_number"
                           placeholder="Enter Invoice Prefix" class="form-control" readonly>
                       </div>
                     </div>
@@ -316,14 +316,14 @@
                     <div class="form-group required">
                       <label class="col-sm-3 control-label" align="right">Product Image Height</label>
                       <div class="col-sm-8">
-                        <input type="text" ng-model="storeCtrl.store.store_image_product_height" ng-change="storeCtrl.updateStore()"
+                        <input type="text" ng-model="storeCtrl.store.store_image_store_height" ng-change="storeCtrl.updateStore()"
                           placeholder="Enter Product Image Height" class="form-control">
                       </div>
                     </div>
                     <div class="form-group required">
                       <label class="col-sm-3 control-label" align="right">Product Image Width</label>
                       <div class="col-sm-8">
-                        <input type="text" ng-model="storeCtrl.store.store_image_product_width" ng-change="storeCtrl.updateStore()"
+                        <input type="text" ng-model="storeCtrl.store.store_image_store_width" ng-change="storeCtrl.updateStore()"
                           placeholder="Enter Product Image Width" class="form-control">
                       </div>
                     </div>
