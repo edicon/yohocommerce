@@ -879,9 +879,17 @@ angular.module('SystemModule', [
                   AlertService.addError(error.message);
             };
 
+            storeCtrl.updateStartingOrderNumber = function() {
+                  if (storeCtrl.store != null){
+                      storeCtrl.store.store_current_order_number = storeCtrl.store.store_default_order_number;
+                      storeCtrl.store.$save();
+                    };
+            }, function(error) {
+                  storeCtrl.error = error;
+            };
+
             storeCtrl.updateStore = function() {
                   if (storeCtrl.store != null)
-                      storeCtrl.store.store_current_order_number = storeCtrl.store.store_default_order_number;
                       storeCtrl.store.$save();
             }, function(error) {
                   storeCtrl.error = error;

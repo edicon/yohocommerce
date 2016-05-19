@@ -436,7 +436,7 @@ angular.module('CatalogsModule', [
                 },
 
                 removeProductImage: function(pid) {
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+pid);
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+pid+'/product_image');
                     return theRef.remove();
                 },
 
