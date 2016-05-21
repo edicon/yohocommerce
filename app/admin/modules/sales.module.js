@@ -633,6 +633,7 @@ angular.module('SalesModule', [
           };
 
           if ($stateParams.rowEntity != undefined) {
+              console.log($stateParams.rowEntity)
                 customerCtrl.loadCustomer($stateParams.rowEntity.$id);
           } else {
                 customerCtrl.cid = null;
