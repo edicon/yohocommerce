@@ -1175,10 +1175,9 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('AuthCtrl', ['Auth', 'AlertService', 'Tenant', 'Profile', 'TheCustomer', 'md5', 'Messages', 'tid', '$state',
-      function (          Auth,   AlertService,   Tenant,   Profile,   TheCustomer,   md5,   Messages,   tid,   $state) {
+.controller('AuthCtrl', ['Auth', 'AlertService', 'Profile', 'TheCustomer', 'md5', 'Messages', 'tid', '$state',
+      function (          Auth,   AlertService,   Profile,   TheCustomer,   md5,   Messages,   tid,   $state) {
             var authCtrl = this;
-            authCtrl.tenant = {};
             authCtrl.user = {};
 
             authCtrl.adminLogin = function() {
