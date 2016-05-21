@@ -266,6 +266,24 @@ angular.module('CatalogModule', [
 
 ])
 
+.factory('TheBanner', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (        $firebaseArray,   $firebaseObject,   FirebaseUrl,  tid) {
+          var ref = new Firebase(FirebaseUrl+'banner_images');
+
+          var banner = {
+
+              getImages: function(bid) {
+                  return $firebaseArray(ref.child(tid).child(bid));
+              },
+
+          };
+
+          return banner;
+
+      }
+
+])
+
 .factory('TheCoupons', ['$firebaseObject', 'FirebaseUrl', 'tid',
       function (         $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'coupons');
@@ -813,8 +831,8 @@ angular.module('CatalogModule', [
 ])
 
 
-.controller('CarouselCtrl', ['Banner',
-      function (              Banner) {
+.controller('CarouselCtrl', ['TheBanner',
+      function (              TheBanner) {
           var carouselCtrl = this;
 
           carouselCtrl.myInterval = 7000;

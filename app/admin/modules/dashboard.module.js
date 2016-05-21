@@ -16,28 +16,6 @@ angular.module('DashboardModule', [
 
 ])
 
-.factory('UsersOnlineLog', ['$firebaseObject', 'FirebaseUrl', 'tid',
-    function (               $firebaseObject,   FirebaseUrl,   tid) {
-        var ref = new Firebase(FirebaseUrl+'logs/'+tid+'/current_customers_online');
-
-        var log = {
-
-              getOnlineCount: function() {
-                  return $firebaseObject(ref);
-              },
-
-              updateOnlineCount: function(count) {
-                  return ref.update({ current_count: count });
-              },
-
-        };
-
-        return log;
-
-    }
-
-])
-
 .controller('DashboardCtrl', ['Orders', 'Customers', 'Products', 'UsersOnlineLog', 'tid', '$scope', '$state',
     function(                  Orders,   Customers,   Products,   UsersOnlineLog,   tid,   $scope,   $state) {
         var dashboardCtrl = this;

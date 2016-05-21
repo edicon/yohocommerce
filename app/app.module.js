@@ -20,6 +20,7 @@ var app = angular.module('app', [
     'SystemModule',
     'ToolsModule',
     'ReportsModule'
+
 ])
 
 .constant('tid', '-K4zdSDMnu3vSyL069A1')

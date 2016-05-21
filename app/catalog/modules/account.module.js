@@ -207,6 +207,47 @@ angular.module('AccountModule', [
 
 ])
 
+.factory('UsersOnlineLog', ['$firebaseObject', 'FirebaseUrl', 'tid',
+    function (               $firebaseObject,   FirebaseUrl,   tid) {
+        var ref = new Firebase(FirebaseUrl+'logs/'+tid+'/current_customers_online');
+
+        var log = {
+
+              getOnlineCount: function() {
+                  return $firebaseObject(ref);
+              },
+
+              updateOnlineCount: function(count) {
+                  return ref.update({ current_count: count });
+              },
+
+        };
+
+        return log;
+
+    }
+
+])
+
+.factory('TheOrders', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (        $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'orders');
+          var orders = $firebaseArray(ref.child(tid).orderByPriority());
+
+          var order = {
+
+              getCustomerOrder: function(id) {
+                  return $firebaseArray(ref.child(tid).orderByChild("customer_id").equalTo(id));
+              },
+
+          };
+
+          return order;
+
+      }
+
+])
+
 .controller('AccountCtrl', ['Auth', 'TheCustomer', 'AlertService', 'UsersOnlineLog', '$state', 'profile',
     function (               Auth,   TheCustomer,   AlertService,   UsersOnlineLog,   $state,   profile) {
         var accountCtrl = this;
@@ -264,15 +305,15 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountTransactionsCtrl', ['Orders', 'AlertService', 'tid', '$scope', 'profile',
-      function (                         Orders,   AlertService,   tid,   $scope,   profile) {
+.controller('AccountTransactionsCtrl', ['TheOrders', 'AlertService', 'tid', '$scope', 'profile',
+      function (                         TheOrders,   AlertService,   tid,   $scope,   profile) {
           var accountTransactionsCtrl = this;
 
-          var theTransaction = Orders.getCustomerOrder(profile.cid);
+          var theTransaction = TheOrders.getCustomerOrder(profile.cid);
               theTransaction.$loaded().then(function(){
                   accountTransactionsCtrl.gridTransactions.data = theTransaction;
           });
-
+console.log($scope)
           accountTransactionsCtrl.gridTransactions = {
               enableSorting: true,
               enableCellEditOnFocus: true,
@@ -312,7 +353,7 @@ angular.module('AccountModule', [
               theGiftCard.$loaded().then(function() {
                 accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
           });
-
+console.log($scope)
           accountGiftCardCtrl.gridGiftCards = {
               enableSorting: true,
               enableCellEditOnFocus: true,
