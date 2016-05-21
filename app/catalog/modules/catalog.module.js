@@ -1056,7 +1056,6 @@ angular.module('CatalogModule', [
                               };
                           });
 
-
                 };
 
                 cartCtrl.updateGiftCard = function() {
@@ -1077,6 +1076,7 @@ angular.module('CatalogModule', [
                               cartCtrl.order.giftcard_code = null;
                           };
                       });
+                };
 
                 cartCtrl.updateRewardPoints = function() {
                     if (cartCtrl.order.reward_points_used > cartCtrl.customer.reward_points) {
