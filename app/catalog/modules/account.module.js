@@ -207,15 +207,15 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', 'UsersOnlineLog', '$state', 'profile',
-    function (               Auth,   Customer,   AlertService,   UsersOnlineLog,   $state,   profile) {
+.controller('AccountCtrl', ['Auth', 'TheCustomer', 'AlertService', 'UsersOnlineLog', '$state', 'profile',
+    function (               Auth,   TheCustomer,   AlertService,   UsersOnlineLog,   $state,   profile) {
         var accountCtrl = this;
             accountCtrl.profile = profile;
 
-            var theCustomer = Customer.getCustomer(accountCtrl.profile.cid);
+            var theCustomer = TheCustomer.getCustomer(accountCtrl.profile.cid);
                 theCustomer.$loaded().then(function() {
                     accountCtrl.customer = theCustomer;
-                    Customer.addLog(theCustomer.$id);
+                    TheCustomer.addLog(theCustomer.$id);
                     var theCount = UsersOnlineLog.getOnlineCount();
                         theCount.$loaded().then(function() {
                             if (theCount.$value == null)
@@ -247,14 +247,14 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountAddressCtrl', ['AlertService', 'Customer', 'tid', '$scope', 'profile',
-      function (                    AlertService,   Customer,   tid,   $scope,   profile) {
+.controller('AccountAddressCtrl', ['AlertService', 'TheCustomer', 'tid', '$scope', 'profile',
+      function (                    AlertService,   TheCustomer,   tid,   $scope,   profile) {
           var accountAddressCtrl = this;
           $scope.country = {};
           $scope.country.selected = {};
           accountAddressCtrl.profile = profile;
 
-          var theCustomer = Customer.getCustomer(accountAddressCtrl.profile.cid);
+          var theCustomer = TheCustomer.getCustomer(accountAddressCtrl.profile.cid);
               theCustomer.$loaded().then(function() {
                   accountAddressCtrl.customer = theCustomer;
                   $scope.country.selected = accountAddressCtrl.customer.customer_country;
@@ -264,8 +264,8 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountTransactionsCtrl', ['Orders', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
-      function (                         Orders,   AlertService,   Customer,   tid,   $scope,   profile) {
+.controller('AccountTransactionsCtrl', ['Orders', 'AlertService', 'tid', '$scope', 'profile',
+      function (                         Orders,   AlertService,   tid,   $scope,   profile) {
           var accountTransactionsCtrl = this;
 
           var theTransaction = Orders.getCustomerOrder(profile.cid);
@@ -288,11 +288,11 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountRewardPointsCtrl', ['Auth', 'Customer', 'AlertService', 'UsersOnlineLog', '$state', 'profile',
-    function (                           Auth,   Customer,   AlertService,   UsersOnlineLog,   $state,   profile) {
+.controller('AccountRewardPointsCtrl', ['Auth', 'TheCustomer', 'AlertService', 'UsersOnlineLog', '$state', 'profile',
+    function (                           Auth,   TheCustomer,   AlertService,   UsersOnlineLog,   $state,   profile) {
         var accountRewardPointsCtrl = this;
 
-            var theCustomer = Customer.getCustomer(profile.cid);
+            var theCustomer = TheCustomer.getCustomer(profile.cid);
                 theCustomer.$loaded().then(function() {
                     accountRewardPointsCtrl.customer = theCustomer;
                     if (accountRewardPointsCtrl.customer.reward_points == undefined) {
@@ -304,8 +304,8 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountGiftCardCtrl', ['GiftCard', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
-      function (                     GiftCard,   AlertService,   Customer,   tid,   $scope,   profile) {
+.controller('AccountGiftCardCtrl', ['GiftCard', 'AlertService', 'tid', '$scope', 'profile',
+      function (                     GiftCard,   AlertService,   tid,   $scope,   profile) {
           var accountGiftCardCtrl = this;
 
           var theGiftCard = GiftCard.getGiftCard(profile);
@@ -330,12 +330,12 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountPasswordCtrl', ['Auth', 'Customer', 'AlertService', 'Messages', 'tid', 'profile',
-      function (                     Auth,   Customer,   AlertService,   Messages,   tid,   profile) {
+.controller('AccountPasswordCtrl', ['Auth', 'TheCustomer', 'AlertService', 'Messages', 'tid', 'profile',
+      function (                     Auth,   TheCustomer,   AlertService,   Messages,   tid,   profile) {
           var accountPasswordCtrl = this;
           accountPasswordCtrl.profile = profile;
 
-          var theCustomer = Customer.getCustomer(accountPasswordCtrl.profile.cid);
+          var theCustomer = TheCustomer.getCustomer(accountPasswordCtrl.profile.cid);
               theCustomer.$loaded().then(function() {
                   accountPasswordCtrl.customer = theCustomer;
           });

@@ -421,6 +421,11 @@ angular.module('CatalogModule', [
                   });
               },
 
+              addLog: function(id) {
+                  var custRef = new Firebase(FirebaseUrl+'customer_logs/'+tid+'/'+id+'/');
+                  return custRef.push({ login_date: Firebase.ServerValue.TIMESTAMP });
+              },
+
               all: thecustomers
 
           };
