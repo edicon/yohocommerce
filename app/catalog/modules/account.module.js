@@ -191,23 +191,6 @@ angular.module('AccountModule', [
 
 ])
 
-.factory('Account', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (      $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
-          var ref = new Firebase(FirebaseUrl+'countries');
-          var countries = $firebaseArray(ref);
-
-          var account = {
-
-            allCountries: countries
-
-          };
-
-          return account;
-
-      }
-
-])
-
 .factory('GiftCard', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'giftcards');
@@ -264,13 +247,12 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountAddressCtrl', ['Account',  'Countries', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
-      function (                    Account,    Countries,   AlertService,   Customer,   tid,   $scope,   profile) {
+.controller('AccountAddressCtrl', ['AlertService', 'Customer', 'tid', '$scope', 'profile',
+      function (                    AlertService,   Customer,   tid,   $scope,   profile) {
           var accountAddressCtrl = this;
           $scope.country = {};
           $scope.country.selected = {};
           accountAddressCtrl.profile = profile;
-          $scope.countries = Countries.all;
 
           var theCustomer = Customer.getCustomer(accountAddressCtrl.profile.cid);
               theCustomer.$loaded().then(function() {
@@ -282,8 +264,8 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountTransactionsCtrl', ['Account',  'Orders', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
-      function (                         Account,    Orders,   AlertService,   Customer,   tid,   $scope,   profile) {
+.controller('AccountTransactionsCtrl', ['Orders', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
+      function (                         Orders,   AlertService,   Customer,   tid,   $scope,   profile) {
           var accountTransactionsCtrl = this;
 
           var theTransaction = Orders.getCustomerOrder(profile.cid);
@@ -322,8 +304,8 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountGiftCardCtrl', ['Account',  'GiftCard', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
-      function (                     Account,    GiftCard,   AlertService,   Customer,   tid,   $scope,   profile) {
+.controller('AccountGiftCardCtrl', ['GiftCard', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
+      function (                     GiftCard,   AlertService,   Customer,   tid,   $scope,   profile) {
           var accountGiftCardCtrl = this;
 
           var theGiftCard = GiftCard.getGiftCard(profile);
