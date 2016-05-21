@@ -506,6 +506,11 @@ angular.module('CatalogModule', [
                   return theRef.update( {giftcard_id: obj.giftcard_id, giftcard_discount: obj.giftcard_discount} );
               },
 
+              updateRewardPoints(obj) {
+                  var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
+                  return theRef.update( {reward_points_used: obj.reward_points_used, reward_points_discount: obj.reward_points_discount} );
+              },
+
               updateCustomer: function(obj) {
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+obj.oid);
                   return theRef.update( {customer_id: obj.cid, customer_name: obj.customer_name, customer_email: obj.customer_email, customer_phone: obj.customer_phone} );
@@ -961,7 +966,9 @@ angular.module('CatalogModule', [
                                 theOrder.coupon_discount = 0;
                             if (theOrder.giftcard_discount === undefined)
                                 theOrder.giftcard_discount = 0;
-                            cartCtrl.order.total = (theOrder.sub_total + theOrder.tax_total) - (theOrder.coupon_discount + theOrder.giftcard_discount);
+                            if (theOrder.reward_points_discount === undefined)
+                                theOrder.reward_points_discount = 0;
+                            cartCtrl.order.total = (theOrder.sub_total + theOrder.tax_total) - (theOrder.coupon_discount + theOrder.giftcard_discount + theOrder.reward_points_discount);
                             var theLines = CartOrders.getLines(obj.oid)
                                   theLines.$loaded().then(function() {
                                         cartCtrl.lines = theLines;
@@ -977,24 +984,25 @@ angular.module('CatalogModule', [
                                                   theCustomer.$loaded().then(function(){
                                                       cartCtrl.customer = theCustomer;
                                                   });
-                                        }
-
-                                  });
-
+                                        };
+                                });
                       });
 
                 cartCtrl.accountLogin = function() {
                       Auth.$authWithPassword(cartCtrl.user).then(function (auth) {
-
                         var theProfile = Profile.getProfile(auth.uid);
                             theProfile.$loaded().then(function(){
                                 var theCustomer = Customer.getCustomer(theProfile.cid);
                                     theCustomer.$loaded().then(function(){
-                                        cartCtrl.customer = theCustomer;
+                                        if (theCustomer.customer_status == "Disabled"){
+                                            AlertService.addError(Messages.login_disabled);
+                                            cartCtrl.user = null;
+                                        } else {
+                                            cartCtrl.customer = theCustomer;
+                                            cartCtrl.status = "existing";
+                                        };
                                     });
                             });
-                            cartCtrl.status = "existing";
-
                       }, function(error) {
                             AlertService.addError(error.message);
                             });
@@ -1070,20 +1078,32 @@ angular.module('CatalogModule', [
                           };
                       });
 
-
-            };
+                cartCtrl.updateRewardPoints = function() {
+                    if (cartCtrl.order.reward_points_used > cartCtrl.customer.reward_points) {
+                        AlertService.addError(Messages.invalid_points);
+                        cartCtrl.order.reward_points_used = null;
+                    } else {
+                        obj.reward_points_discount = cartCtrl.order.reward_points_used * 0.01;
+                        obj.total = cartCtrl.order.total - obj.reward_points_discount;
+                        obj.reward_points_used = cartCtrl.order.reward_points_used;
+                        CartOrders.updateRewardPoints(obj);
+                        CartOrders.updateHeaderTotal(obj);
+                    };
+                };
 
                 cartCtrl.addOrderToCustomer = function(cid, oid) {
-                  Customer.addOrder(cid, oid);
                   obj.cid = cid;
                   obj.customer_name = cartCtrl.customer.customer_first_name + ' ' + cartCtrl.customer.customer_last_name;
                   obj.customer_email = cartCtrl.customer.customer_email;
                   obj.customer_phone = cartCtrl.customer.customer_phone;
                   obj.order_id = cartCtrl.store.store_default_order_prefix + '-' + cartCtrl.store.store_current_order_number;
+                  cartCtrl.store.store_current_order_number = cartCtrl.store.store_current_order_number + 1;
+                  cartCtrl.customer.reward_points = (cartCtrl.customer.reward_points + cartCtrl.order.sub_total) - cartCtrl.order.reward_points_used;
                   CartOrders.updateCustomer(obj);
                   CartOrders.updateOrderID(obj);
-                  cartCtrl.store.store_current_order_number = cartCtrl.store.store_current_order_number + 1;
                   TheStore.updateOrderCount(cartCtrl.store);
+                  Customer.addOrder(cid, oid, cartCtrl.order);
+                  Customer.updateRewards(cartCtrl.customer);
                   $state.go('catalog.revieworder');
                 };
 
@@ -1122,6 +1142,7 @@ angular.module('CatalogModule', [
                     } else if (cartCtrl.checkout_type == "newRegister") {
                           if (cartCtrl.customer.customer_email == cartCtrl.confirm_customer_email) {
                               if (cartCtrl.customer.customer_password == cartCtrl.confirm_customer_password) {
+                                  cartCtrl.customer.reward_points = 0;
                                   cartCtrl.createUser(cartCtrl.customer);
                                   cartCtrl.addOrderToCustomer(cartCtrl.customer.$id, cartCtrl.order.$id);
                               } else {
@@ -1136,6 +1157,7 @@ angular.module('CatalogModule', [
                               var theCheck = Customer.getEmail(cartCtrl.customer.customer_email);
                               theCheck.$loaded().then(function() {
                                   if(theCheck == null) {
+                                      cartCtrl.customer.reward_points = 0;
                                       Customer.addCustomer(cartCtrl.customer).then(function(cid) {
                                       cartCtrl.customer.$id = cid;
                                       });
@@ -1144,7 +1166,6 @@ angular.module('CatalogModule', [
                                 cartCtrl.addOrderToCustomer(cartCtrl.customer.$id, cartCtrl.order.$id);
                               });
                           } else {
-
                               AlertService.addError(Messages.emails_dont_match);
                           };
                     };
@@ -1154,15 +1175,23 @@ angular.module('CatalogModule', [
 
 ])
 
-.controller('AuthCtrl', ['Auth', 'AlertService', 'md5', 'Messages', 'tid', '$state',
-      function (          Auth,   AlertService,   md5,   Messages,   tid,   $state) {
+.controller('AuthCtrl', ['Auth', 'AlertService', 'Tenant', 'Profile', 'TheCustomer', 'md5', 'Messages', 'tid', '$state',
+      function (          Auth,   AlertService,   Tenant,   Profile,   TheCustomer,   md5,   Messages,   tid,   $state) {
             var authCtrl = this;
             authCtrl.tenant = {};
             authCtrl.user = {};
 
             authCtrl.adminLogin = function() {
                 Auth.$authWithPassword(authCtrl.user).then(function(auth) {
-                    $state.go('admin.dashboard');
+                  var theProfile = Profile.getProfile(auth.uid);
+                      theProfile.$loaded().then(function(){
+                          if (theProfile.status == "Disabled") {
+                              AlertService.addError(Messages.login_disabled);
+                              authCtrl.user = null;
+                          } else {
+                              $state.go('admin.dashboard');
+                          };
+                      });
                 }, function(error) {
                     AlertService.addError(error.message);
                 });
@@ -1170,7 +1199,18 @@ angular.module('CatalogModule', [
 
             authCtrl.accountLogin = function() {
                 Auth.$authWithPassword(authCtrl.user).then(function (auth) {
-                    $state.go('account.detail');
+                    var theProfile = Profile.getProfile(auth.uid);
+                        theProfile.$loaded().then(function(){
+                            var theCustomer = TheCustomer.getCustomer(theProfile.cid);
+                                theCustomer.$loaded().then(function(){
+                                    if (theCustomer.customer_status == "Disabled"){
+                                        AlertService.addError(Messages.login_disabled);
+                                        authCtrl.user = null;
+                                    } else {
+                                        $state.go('account.detail');
+                                    };
+                                });
+                        });
                 }, function(error) {
                     AlertService.addError(error.message);
                 });
@@ -1204,7 +1244,18 @@ angular.module('CatalogModule', [
 
             registerCtrl.login = function() {
                 Auth.$authWithPassword(registerCtrl.user).then(function (auth) {
-                    $state.go('account.detail');
+                    var theProfile = Profile.getProfile(auth.uid);
+                        theProfile.$loaded().then(function(){
+                            var theCustomer = Customer.getCustomer(theProfile.cid);
+                                theCustomer.$loaded().then(function(){
+                                    if (theCustomer.customer_status == "Disabled"){
+                                        AlertService.addError(Messages.login_disabled);
+                                        registerCtrl.user = null;
+                                    } else {
+                                        $state.go('account.detail');
+                                    };
+                                });
+                        });
                 }, function(error) {
                     AlertService.addError(error.message);
                 });

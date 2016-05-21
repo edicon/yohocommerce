@@ -365,6 +365,11 @@ angular.module('SalesModule', [
                   return orderRef.push( {order_id: orderId} );
               },
 
+              updateRewards: function(theObj) {
+                  var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.$id);
+                  return custRef.update( {reward_points: theObj.reward_points} );
+              },
+
               getAddresses: function(cid) {
                   var addressRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+cid+'/addresses');
                   return $firebaseArray(addressRef);
@@ -652,6 +657,7 @@ angular.module('SalesModule', [
                           customerCtrl.customer.customer_address_count = 0;
                           customerCtrl.customer.customer_group_name = group.group_name;
                           customerCtrl.customer.customer_full_name = customerCtrl.customer.customer_first_name + ' ' + customerCtrl.customer.customer_last_name;
+                          customerCtrl.customer.reward_points = 0;
                           Customer.addCustomer(customerCtrl.customer).then(function(cid) {
                             customerCtrl.loadCustomer(cid);
                           });
@@ -759,7 +765,7 @@ angular.module('SalesModule', [
             if (customerCtrl.cid != null)
                 customerCtrl.customer.$save();
           }, function(error) {
-                storeCtrl.error = error;
+                customerCtrl.error = error;
           };
 
           customerCtrl.saveCustomerStatus = function() {
@@ -842,11 +848,7 @@ angular.module('SalesModule', [
                        enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '25%' },
                       { name:'email', field: 'customer_email', enableHiding: false, width: '20%', enableCellEdit: false },
                       { name:'customerGroup', field: 'customer_group_name', enableHiding: false, width: '15%', enableCellEdit: false },
-                      { name: 'customer_status_id', displayName: 'Status', editableCellTemplate: 'ui-grid/dropdownEditor', width: '15%',
-                            cellFilter: 'mapStatus', editDropdownValueLabel: 'status', enableFiltering: false, editDropdownOptionsArray: [
-                              { id: 1, status: 'Enabled' },
-                              { id: 2, status: 'Disabled' }
-                            ]},
+                      { name: 'customerStatus', field: 'customer_status', enableHiding: false, width: '15%', enableCellEdit: false },
                       { name:'dateAdded', field: 'customer_date_added', type: 'date', enableHiding: false, cellClass: 'grid-align-right',
                             enableCellEdit: false, cellFilter: 'date' },
                       { name: ' ', field: '$id', cellTemplate:'admin/views/sales/gridTemplates/removeCustomer.html',
