@@ -1,6 +1,7 @@
 'use strict';
 
 angular.module('CatalogModule', [
+  'ngCookies',
   'ngAnimate',
   'ngResource',
   'ngSanitize',
@@ -9,11 +10,16 @@ angular.module('CatalogModule', [
   'firebase',
   'ui.bootstrap',
   'ui.router',
-  'ui.select'
+  'ui.select',
+  'ui.grid'
 
 ])
 
-.constant('sid', '-KCvkHlN5w6PS9QTgR4R')
+.constant('sid', '-KI9CIsndn0Gnr71jbsl')
+
+.config(function(uiSelectConfig) {
+    uiSelectConfig.theme = 'bootstrap';
+})
 
 .config (       ['$stateProvider', '$urlRouterProvider',
     function (    $stateProvider,   $urlRouterProvider) {
@@ -483,6 +489,7 @@ angular.module('CatalogModule', [
               },
 
               addLine: function(obj, oid) {
+                  console.log(obj)
                   var theRef = new Firebase(FirebaseUrl+'orders/'+tid+'/'+oid+'/lines');
                   return theRef.push( {product_id: obj.$id, product_name: obj.product_name, regular_price: obj.product_price,
                       line_quantity: obj.product_qty, special_price: obj.special_price, product_image: obj.product_image,
@@ -663,7 +670,6 @@ angular.module('CatalogModule', [
     		    this.initiate = function (pid) {
 
                   var storeDefaults = Catalog.storeDefaults;
-
                   var oid = $cookies.get('orderId');
 
                   var theHeader = CartOrders.getOrder(oid);
@@ -685,7 +691,6 @@ angular.module('CatalogModule', [
                                         }
 
                                         theProduct.reward_points_total = theProduct.line_total * storeDefaults.store_points_per_dollar;
-
                                         CartOrders.updateHeader(theHeader);
                                         CartOrders.addLine(theProduct, oid);
                                         CartUpdateTax.initiate(theProduct.product_tax_group_id, oid);
@@ -1202,6 +1207,7 @@ angular.module('CatalogModule', [
       function (          Auth,   AlertService,   Profile,   TheCustomer,   md5,   Messages,   tid,   $state) {
             var authCtrl = this;
             authCtrl.user = {};
+            console.log($state.current)
 
             authCtrl.adminLogin = function() {
                 Auth.$authWithPassword(authCtrl.user).then(function(auth) {

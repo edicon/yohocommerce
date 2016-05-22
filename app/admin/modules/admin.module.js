@@ -71,16 +71,6 @@ angular.module('AdminModule', [
                     templateUrl: 'admin/views/users/profile.html'
                   }
               }
-    /*          resolve: {
-                  auth: function($state, Wow, Auth){
-                      return Auth.$requireAuth().catch(function(){
-                        $state.go('home');
-                      });
-                  },
-                  profile: function(Auth){
-                      return Auth.$requireAuth();
-                  }
-              } */
           })
 
           .state('admin.password', {
@@ -94,20 +84,32 @@ angular.module('AdminModule', [
                     templateUrl: 'admin/views/users/password.html'
                   }
               }
-    /*          resolve: {
-                  auth: function($state, Wow, Auth){
-                      return Auth.$requireAuth().catch(function(){
-                        $state.go('home');
-                      });
-                  },
-                  profile: function(Auth){
-                      return Auth.$requireAuth();
-                  }
-              } */
           })
-
       }
+])
 
+.controller('LoginCtrl', ['Auth', 'AlertService', 'Profile', 'md5', 'Messages', 'tid', '$state',
+      function (           Auth,   AlertService,   Profile,   md5,   Messages,   tid,   $state) {
+            var authCtrl = this;
+            loginCtrl.user = {};
+            console.log($state.current)
+
+            loginCtrl.adminLogin = function() {
+                Auth.$authWithPassword(authCtrl.user).then(function(auth) {
+                  var theProfile = Profile.getProfile(auth.uid);
+                      theProfile.$loaded().then(function(){
+                          if (theProfile.status == "Disabled") {
+                              AlertService.addError(Messages.login_disabled);
+                              authCtrl.user = null;
+                          } else {
+                              $state.go('admin.dashboard');
+                          };
+                      });
+                }, function(error) {
+                    AlertService.addError(error.message);
+                });
+            };
+      }
 ])
 
 .controller('AdminCtrl', ['Auth', '$scope', '$state', '$cookieStore', 'profile',
