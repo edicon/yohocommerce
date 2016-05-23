@@ -15,8 +15,6 @@ angular.module('CatalogModule', [
 
 ])
 
-.constant('sid', '-KI9CIsndn0Gnr71jbsl')
-
 .config(function(uiSelectConfig) {
     uiSelectConfig.theme = 'bootstrap';
 })
