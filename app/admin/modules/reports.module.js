@@ -231,14 +231,13 @@ angular.module('ReportsModule', [
                     enableSorting: true,
                     enableCellEditOnFocus: false,
                     enableFiltering: true,
-            //        data: Orders.all,
+                    data: Orders.all,
                     columnDefs: [
-                          { name:'dateStart', field: 'date_start',enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '15%' },
-                          { name:'dateEnd', field: 'date_end', enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '15%' },
-                          { name:'orderCode', field: '$id', enableHiding: false, enableFiltering: false, enableCellEdit: false },
-                          { name:'status', field: 'order_status', enableHiding: false, enableFiltering: true, width: '10%', enableCellEdit: false },
-                          { name:'tax', field: 'order_tax', enableHiding: false, enableFiltering: true, width: '10%', enableCellEdit: false },
-                          { name:'total', field: 'order_total', enableHiding: false, enableFiltering: true, width: '10%', enableCellEdit: false },
+                          { name:'orderDate', field: 'create_date', sort: { direction: 'desc' }, enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '15%', cellFilter: 'date' },
+                          { name:'orderCode', field: 'order_id', enableHiding: false, enableFiltering: false, enableCellEdit: false },
+                          { name:'status', field: 'status', enableHiding: false, enableFiltering: true, width: '10%', enableCellEdit: false },
+                          { name:'tax', field: 'tax_total', enableHiding: false, enableFiltering: true, width: '10%', enableCellEdit: false, cellClass: 'grid-align-right', cellFilter:'currency' },
+                          { name:'total', field: 'total', enableHiding: false, enableFiltering: true, width: '10%', enableCellEdit: false, cellClass: 'grid-align-right', cellFilter:'currency' },
                     ]
               };
 
@@ -322,11 +321,11 @@ angular.module('ReportsModule', [
                     enableSorting: true,
                     enableCellEditOnFocus: false,
                     enableFiltering: true,
-            //        data: Orders.all,
+                    data: Product.all,
                     columnDefs: [
-                          { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
-                          { name:'quantity', field: 'purchase_count', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
-                          { name:'total', field: 'purchase_total', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
+                          { name:'productName', field: 'product_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'productsSold', field: 'purchase_count', enableHiding: false, enableFiltering: false, width: '20%', enableCellEdit: false,  },
+                          { name:'total', field: 'purchase_total', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false, cellClass: 'grid-align-right', cellFilter:'currency' },
                     ]
               };
 
