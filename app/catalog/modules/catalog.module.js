@@ -1205,7 +1205,6 @@ angular.module('CatalogModule', [
       function (          Auth,   AlertService,   Profile,   TheCustomer,   md5,   Messages,   tid,   $state) {
             var authCtrl = this;
             authCtrl.user = {};
-            console.log($state.current)
 
             authCtrl.adminLogin = function() {
                 Auth.$authWithPassword(authCtrl.user).then(function(auth) {

@@ -1,0 +1,221 @@
+/* marketplace security rules
+      user-roles: storefront, tenant, admin, customer, sales, anonymous
+
+      node access
+
+      storefront: read:   banner_images, carts (only their own as defined by order cookie), categories, countries, customers (only customer account if registered), length_units, media_library,
+                          orders (only their own as defined by order cookie), products, shipping, sub_categories, tax_groups, weight_units
+                  write:  carts (only their own as defined by order cookie), customers (new customer if not registered, only customer account with auth),
+                          orders (only their own as defined by order cookie)
+
+      tenant:    read:   all nodes with auth
+                  write: all nodes with auth
+
+      admin:      read:   all nodes with auth
+                  write:  all nodes with auth
+
+      customer:   read:   banner_images, carts (only their own as defined by order cookie), categories, countries, customers (only customer account if registered), length_units, media_library,
+                          orders (only their own as defined by order cookie), products, profiles: (only their own), shipping, sub_categories, tax_groups, weight_units
+                  write:  carts (only their own as defined by order cookie), customers (new customer if not registered, only customer account with auth),
+                          orders (only their own as defined by order cookie), profiles: (only their own with auth)
+
+      sales:      read:   affiliates, coupons, customers, gift_cards, orders, products
+                  write:  customers
+
+      anonymous:  read:   all nodes with auth (cannot look at extension settings)
+                  write:  no nodes
+*/
+{
+  "rules": {
+      ".read": false,
+      ".write": false,
+      "affiliates": {
+        "$tenant": {
+          // tenant, admin, sales
+          ".read": "(auth != null) && root.child('profiles').hasChild(auth.uid)",
+          // tenant, admin, sales
+          ".write": "(auth != null)"
+        }
+      },
+      "banner_images": {
+        // storefront, tenant, admin, customer, sales, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "carts": {
+        // storefront (only their own as defined by order cookie), tenant, admin, customer, sales, anonymous with auth
+        ".read": true,
+        // storefront (only their own as defined by order cookie), tenant, admin
+        ".write": true
+      },
+      "categories": {
+        // storefront, tenant, admin, customer, sales, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "countries": {
+        // storefront, tenant, admin, customer, sales, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "coupons": {
+        // tenant, admin, customer (only their own as determined by entering in checkout), sales, anonymous with auth
+        ".read": true, //"(auth != null)",
+        // tenant, admin, customer (only their own as determined by entering in checkout), storefront (only their own as determined by entering in checkout)
+        ".write": "(auth != null)"
+      },
+      "customer_groups": {
+        // tenant, admin, customer, sales, anonymous with auth
+        ".read": "(auth != null)",
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "customers": {
+        // tenant, admin, customer (only their own on auth), sales, anonymous with auth
+        ".read": true, //"(auth != null)",
+        // tenant, admin, customer (only their own on auth), sales
+        ".write": true //"(auth != null)"
+      },
+      "customer_logs": {
+        // tenant, admin, customer, storefront, anonymous with auth
+        ".read": "(auth != null)",
+        // tenant, admin
+        ".write": true
+      },
+      "extensions": {
+        // tenant, admin, storefront (only where required to connect to third party)
+        ".read": "(auth != null)",
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "giftcards": {
+        // tenant, admin, customer (only their own as determined by entering in checkout), sales, anonymous with auth
+        ".read": true, //"(auth != null)",
+         // tenant, admin, storefront (only their own as determined by entering in checkout)
+        ".write": "(auth != null)"
+      },
+      "length_units": {
+        // tenant, admin, customer, storefront, anonymous with auth
+        ".read": "(auth != null)",
+         // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "logs": {
+        // tenant, admin, customer, storefront, anonymous with auth
+        ".read": true,
+         // tenant, admin
+        ".write": true
+      },
+      "media_library": {
+         // tenant, admin, customer, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "order_statuses": {
+        // tenant, admin, customer, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "orders": {
+        // tenant, admin, customer, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": true
+      },
+      "products": {
+        // tenant, admin, customer, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "product_logs": {
+        // tenant, admin, customer, storefront, anonymous with auth
+        ".read": "(auth != null)",
+        // tenant, admin
+        ".write": true
+      },
+      "profiles": {
+        // tenant, admin, customer (only their own with auth), anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "return_actions": {
+        // tenant, admin, customer, sales, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "return_reasons": {
+        // tenant, admin, customer, sales, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin, customer
+        ".write": "(auth != null)"
+      },
+      "return_statuses": {
+        // tenant, admin, customer, sales, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "reward_points": {
+        // tenant, admin, customer, sales, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin, customer, storefront (on registered customer)
+        ".write": "(auth != null)"
+      },
+      "shipping": {
+        // tenant, admin, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "stores": {
+        // tenant, admin, storefront (based on storeid constant in app), anonymous with auth, need to update order count on store node, would like this to be the only field with write priv. from catalog
+        ".read": true,
+        // tenant, admin
+        ".write": true //"(auth != null)"
+      },
+      "sub_categories": {
+         // tenant, admin, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "tax_groups": {
+        // tenant, admin, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "taxes": {
+        // tenant, admin, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      },
+      "tenants": {
+        // tenant, admin, customer, storefront, anonymous with auth
+        ".read": "(auth != null)",
+        // tenant, admin
+        ".write":"(auth != null)"
+      },
+      "transactions": {
+        // tenant, admin, customer, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin, customer, storefront
+        ".write": true
+      },
+      "weight_units": {
+        // tenant, admin, storefront, anonymous with auth
+        ".read": true,
+        // tenant, admin
+        ".write": "(auth != null)"
+      }
+  }
+}
