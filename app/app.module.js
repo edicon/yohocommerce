@@ -19,4 +19,4 @@ var app = angular.module('app', [
 
 .constant('tid', '-K4zdSDMnu3vSyL069A1')
 .constant('sid', '-KI9CIsndn0Gnr71jbsl')
-.constant('FirebaseUrl', 'https://yohocommerce.firebaseio.com/')
+.constant('FirebaseUrl', 'https://ecomengine.firebaseio.com/')
