@@ -71,16 +71,6 @@ angular.module('AdminModule', [
                     templateUrl: 'admin/views/users/profile.html'
                   }
               }
-    /*          resolve: {
-                  auth: function($state, Wow, Auth){
-                      return Auth.$requireAuth().catch(function(){
-                        $state.go('home');
-                      });
-                  },
-                  profile: function(Auth){
-                      return Auth.$requireAuth();
-                  }
-              } */
           })
 
           .state('admin.password', {
@@ -94,20 +84,8 @@ angular.module('AdminModule', [
                     templateUrl: 'admin/views/users/password.html'
                   }
               }
-    /*          resolve: {
-                  auth: function($state, Wow, Auth){
-                      return Auth.$requireAuth().catch(function(){
-                        $state.go('home');
-                      });
-                  },
-                  profile: function(Auth){
-                      return Auth.$requireAuth();
-                  }
-              } */
           })
-
       }
-
 ])
 
 .controller('AdminCtrl', ['Auth', '$scope', '$state', '$cookieStore', 'profile',

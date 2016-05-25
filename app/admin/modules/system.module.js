@@ -1071,8 +1071,8 @@ angular.module('SystemModule', [
               });
           };
 
-          userCtrl.goCustomer = function(cid) {
-              $state.go('admin.sales.customer', {'cid': cid});
+          userCtrl.goCustomer = function(obj) {
+              $state.go('admin.sales.customer', {'rowEntity': obj});
           };
 
           userCtrl.next = function() {

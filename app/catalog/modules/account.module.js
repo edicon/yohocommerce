@@ -191,23 +191,6 @@ angular.module('AccountModule', [
 
 ])
 
-.factory('Account', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
-      function (      $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
-          var ref = new Firebase(FirebaseUrl+'countries');
-          var countries = $firebaseArray(ref);
-
-          var account = {
-
-            allCountries: countries
-
-          };
-
-          return account;
-
-      }
-
-])
-
 .factory('GiftCard', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (       $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'giftcards');
@@ -224,15 +207,56 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountCtrl', ['Auth', 'Customer', 'AlertService', 'UsersOnlineLog', '$state', 'profile',
-    function (               Auth,   Customer,   AlertService,   UsersOnlineLog,   $state,   profile) {
+.factory('UsersOnlineLog', ['$firebaseObject', 'FirebaseUrl', 'tid',
+    function (               $firebaseObject,   FirebaseUrl,   tid) {
+        var ref = new Firebase(FirebaseUrl+'logs/'+tid+'/current_customers_online');
+
+        var log = {
+
+              getOnlineCount: function() {
+                  return $firebaseObject(ref);
+              },
+
+              updateOnlineCount: function(count) {
+                  return ref.update({ current_count: count });
+              },
+
+        };
+
+        return log;
+
+    }
+
+])
+
+.factory('TheOrders', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
+      function (        $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
+          var ref = new Firebase(FirebaseUrl+'orders');
+          var orders = $firebaseArray(ref.child(tid).orderByPriority());
+
+          var order = {
+
+              getCustomerOrder: function(id) {
+                  return $firebaseArray(ref.child(tid).orderByChild("customer_id").equalTo(id));
+              },
+
+          };
+
+          return order;
+
+      }
+
+])
+
+.controller('AccountCtrl', ['Auth', 'TheCustomer', 'AlertService', 'UsersOnlineLog', '$state', 'profile',
+    function (               Auth,   TheCustomer,   AlertService,   UsersOnlineLog,   $state,   profile) {
         var accountCtrl = this;
             accountCtrl.profile = profile;
 
-            var theCustomer = Customer.getCustomer(accountCtrl.profile.cid);
+            var theCustomer = TheCustomer.getCustomer(accountCtrl.profile.cid);
                 theCustomer.$loaded().then(function() {
                     accountCtrl.customer = theCustomer;
-                    Customer.addLog(theCustomer.$id);
+                    TheCustomer.addLog(theCustomer.$id);
                     var theCount = UsersOnlineLog.getOnlineCount();
                         theCount.$loaded().then(function() {
                             if (theCount.$value == null)
@@ -264,15 +288,14 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountAddressCtrl', ['Account',  'Countries', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
-      function (                    Account,    Countries,   AlertService,   Customer,   tid,   $scope,   profile) {
+.controller('AccountAddressCtrl', ['AlertService', 'TheCustomer', 'tid', '$scope', 'profile',
+      function (                    AlertService,   TheCustomer,   tid,   $scope,   profile) {
           var accountAddressCtrl = this;
           $scope.country = {};
           $scope.country.selected = {};
           accountAddressCtrl.profile = profile;
-          $scope.countries = Countries.all;
 
-          var theCustomer = Customer.getCustomer(accountAddressCtrl.profile.cid);
+          var theCustomer = TheCustomer.getCustomer(accountAddressCtrl.profile.cid);
               theCustomer.$loaded().then(function() {
                   accountAddressCtrl.customer = theCustomer;
                   $scope.country.selected = accountAddressCtrl.customer.customer_country;
@@ -282,15 +305,15 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountTransactionsCtrl', ['Account',  'Orders', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
-      function (                         Account,    Orders,   AlertService,   Customer,   tid,   $scope,   profile) {
+.controller('AccountTransactionsCtrl', ['TheOrders', 'AlertService', 'tid', '$scope', 'profile',
+      function (                         TheOrders,   AlertService,   tid,   $scope,   profile) {
           var accountTransactionsCtrl = this;
 
-          var theTransaction = Orders.getCustomerOrder(profile.cid);
+          var theTransaction = TheOrders.getCustomerOrder(profile.cid);
               theTransaction.$loaded().then(function(){
                   accountTransactionsCtrl.gridTransactions.data = theTransaction;
           });
-
+console.log($scope)
           accountTransactionsCtrl.gridTransactions = {
               enableSorting: true,
               enableCellEditOnFocus: true,
@@ -306,11 +329,11 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountRewardPointsCtrl', ['Auth', 'Customer', 'AlertService', 'UsersOnlineLog', '$state', 'profile',
-    function (                           Auth,   Customer,   AlertService,   UsersOnlineLog,   $state,   profile) {
+.controller('AccountRewardPointsCtrl', ['Auth', 'TheCustomer', 'AlertService', 'UsersOnlineLog', '$state', 'profile',
+    function (                           Auth,   TheCustomer,   AlertService,   UsersOnlineLog,   $state,   profile) {
         var accountRewardPointsCtrl = this;
 
-            var theCustomer = Customer.getCustomer(profile.cid);
+            var theCustomer = TheCustomer.getCustomer(profile.cid);
                 theCustomer.$loaded().then(function() {
                     accountRewardPointsCtrl.customer = theCustomer;
                     if (accountRewardPointsCtrl.customer.reward_points == undefined) {
@@ -322,15 +345,15 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountGiftCardCtrl', ['Account',  'GiftCard', 'AlertService', 'Customer', 'tid', '$scope', 'profile',
-      function (                     Account,    GiftCard,   AlertService,   Customer,   tid,   $scope,   profile) {
+.controller('AccountGiftCardCtrl', ['GiftCard', 'AlertService', 'tid', '$scope', 'profile',
+      function (                     GiftCard,   AlertService,   tid,   $scope,   profile) {
           var accountGiftCardCtrl = this;
 
           var theGiftCard = GiftCard.getGiftCard(profile);
               theGiftCard.$loaded().then(function() {
                 accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
           });
-
+console.log($scope)
           accountGiftCardCtrl.gridGiftCards = {
               enableSorting: true,
               enableCellEditOnFocus: true,
@@ -348,12 +371,12 @@ angular.module('AccountModule', [
 
 ])
 
-.controller('AccountPasswordCtrl', ['Auth', 'Customer', 'AlertService', 'Messages', 'tid', 'profile',
-      function (                     Auth,   Customer,   AlertService,   Messages,   tid,   profile) {
+.controller('AccountPasswordCtrl', ['Auth', 'TheCustomer', 'AlertService', 'Messages', 'tid', 'profile',
+      function (                     Auth,   TheCustomer,   AlertService,   Messages,   tid,   profile) {
           var accountPasswordCtrl = this;
           accountPasswordCtrl.profile = profile;
 
-          var theCustomer = Customer.getCustomer(accountPasswordCtrl.profile.cid);
+          var theCustomer = TheCustomer.getCustomer(accountPasswordCtrl.profile.cid);
               theCustomer.$loaded().then(function() {
                   accountPasswordCtrl.customer = theCustomer;
           });

@@ -421,10 +421,10 @@ angular.module('CatalogsModule', [
                     return products.$keyAt(key);
                 },
 
-                addView: function(pid) {
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+pid+'/views');
-                    return theRef.push ({view_date: Firebase.ServerValue.TIMESTAMP});
-                },
+//                addView: function(pid) {
+//                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+pid+'/views');
+//                    return theRef.push ({view_date: Firebase.ServerValue.TIMESTAMP});
+//                },
 
                 getProductThumbnails: function(pid) {
                     var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+pid+'/thumbnails');
@@ -467,7 +467,6 @@ angular.module('CatalogsModule', [
                     return $firebaseObject(ref.child(tid).child(pid));
                 },
 
-                // called from public catalog
                 getProductCategory: function(cid) {
                     return $firebaseArray(ref.child(tid).orderByChild('product_category_id').equalTo(cid));
                 },
