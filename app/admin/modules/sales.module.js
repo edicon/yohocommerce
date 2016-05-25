@@ -365,6 +365,10 @@ angular.module('SalesModule', [
                   return orderRef.push( {order_id: orderId} );
               },
 
+              getOrder: function(id) {
+                  return $firebaseArray(ref.child(tid).child(id).child("orders").orderByPriority());
+              },
+
               updateRewards: function(theObj) {
                   var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.$id);
                   return custRef.update( {reward_points: theObj.reward_points} );
@@ -548,9 +552,8 @@ angular.module('SalesModule', [
 
               getOrder: function(oid) {
                   return $firebaseObject(ref.child(tid).child(oid));
-
               },
-
+              
               getCustomerOrder: function(id) {
                   return $firebaseArray(ref.child(tid).orderByChild("customer_id").equalTo(id));
               },

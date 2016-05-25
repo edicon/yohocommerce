@@ -3,7 +3,21 @@
     <div class="panel panel-default">
       <div class="panel-heading">
         <h3 class="panel-title"><span class="menu-icon fa fa-file-text"></span> Customer Orders</h3>
-      </div>
+      </div><br>
+      <div class="col-sm-6">
+        <form class="form-horizontal">
+          <div class="input-group">
+            <div class="input-group-btn">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">Filter Cusotomer <span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li ng-repeat="c in reportsCtrl.customers"><a href="#/customersorders" ui-sref="admin.reports.customersorders" ng-click="reportsCtrl.filterCustomerOrders(c)">{{c.customer_first_name}} {{c.customer_last_name}}</a></li>
+              </ul>
+            </div>
+              <input type="text" ng-model="reportsCtrl.customer_name" class="form-control" readonly>
+          </div>
+        </form>
+      </div><br><br>
       <div class="panel-body">
         <div class="row">
           <div ui-grid="reportsCtrl.gridCustomerOrders" class="grid-500"></div>

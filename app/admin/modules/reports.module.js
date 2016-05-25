@@ -223,20 +223,10 @@ angular.module('ReportsModule', [
 
 ])
 
-.controller('ReportsCtrl', ['Orders', 'Product', 'Customer', 'Coupons', '$state', '$scope', '$stateParams',
-        function (           Orders,   Product,   Customer,   Coupons,   $state,   $scope,   $stateParams) {
+.controller('ReportsCtrl', ['Orders', 'Taxes', 'Product', 'Customer', 'Coupons', '$state', '$scope', '$stateParams',
+        function (           Orders,   Taxes,   Product,   Customer,   Coupons,   $state,   $scope,   $stateParams) {
               var reportsCtrl = this;
               reportsCtrl.customers = Customer.all;
-
-              reportsCtrl.filterCustomer = function(customer) {
-                    reportsCtrl.customer_name = customer.customer_first_name + ' ' + customer.customer_last_name;
-                    var theLog = Customer.getLogs(customer.$id);
-                        theLog.$loaded().then(function() {
-                            reportsCtrl.gridActivity.data = theLog;
-                        });
-              }, function(error) {
-                    AlertService.addError(error.message);
-              };
 
               reportsCtrl.gridOrders = {
                     enableSorting: true,
@@ -256,10 +246,8 @@ angular.module('ReportsModule', [
                     enableSorting: true,
                     enableCellEditOnFocus: false,
                     enableFiltering: true,
-            //        data: Orders.all,
+                    data: Taxes.all,
                     columnDefs: [
-                          { name:'dateStart', field: 'date_start',enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '15%' },
-                          { name:'dateEnd', field: 'date_end', enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '15%' },
                           { name:'taxName', field: 'tax_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
                           { name:'orders', field: 'order_count', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
                           { name:'total', field: 'order_total', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
@@ -340,7 +328,7 @@ angular.module('ReportsModule', [
                     ]
               };
 
-              reportsCtrl.gridOnline = {
+              /*reportsCtrl.gridOnline = {
                     enableSorting: true,
                     enableCellEditOnFocus: false,
                     enableFiltering: true,
@@ -353,6 +341,16 @@ angular.module('ReportsModule', [
                           { name:'lastClick', field: 'last_click', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
                           { name:'action', field: 'action', enableHiding: false, enableFiltering: false, width: '15%', enableCellEdit: false },
                     ]
+              };*/
+
+              reportsCtrl.filterCustomer = function(customer) {
+                    reportsCtrl.customer_name = customer.customer_first_name + ' ' + customer.customer_last_name;
+                    var theLog = Customer.getLogs(customer.$id);
+                        theLog.$loaded().then(function() {
+                            reportsCtrl.gridActivity.data = theLog;
+                        });
+              }, function(error) {
+                    AlertService.addError(error.message);
               };
 
               reportsCtrl.gridActivity = {
@@ -366,19 +364,27 @@ angular.module('ReportsModule', [
                     ]
               };
 
+              reportsCtrl.filterCustomerOrders = function(customer) {
+                    reportsCtrl.customer_name = customer.customer_first_name + ' ' + customer.customer_last_name;
+                    var theOrder = Orders.getCustomerOrder(customer.$id);
+                        theOrder.$loaded().then(function() {
+                            reportsCtrl.gridCustomerOrders.data = theOrder;
+                        });
+              }, function(error) {
+                    AlertService.addError(error.message);
+              };
+
               reportsCtrl.gridCustomerOrders = {
                     enableSorting: true,
                     enableCellEditOnFocus: false,
                     enableFiltering: true,
-            //        data: Orders.all,
                     columnDefs: [
-                          { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
-                          { name:'Email', field: 'customer_email', enableHiding: false, enableFiltering: true, enableCellEdit: false },
-                          { name:'customerGroup', field: 'customer_group', enableHiding: false, enableFiltering: true, enableCellEdit: false },
-                          { name:'status', field: 'customer_status', enableHiding: false, enableFiltering: true, enableCellEdit: false },
-                          { name:'orders', field: 'customer_orders', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false },
-                          { name:'products', field: 'customer_products', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false },
-                          { name:'total', field: 'customer_total', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false },
+                          { name:'orderDate', field: 'create_date', sort: { direction: 'desc' }, enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '15%', cellFilter: 'date' },
+                          { name:'orderCode', field: 'order_id', enableHiding: false, enableFiltering: false, enableCellEdit: false },
+                          { name:'items', field: 'items', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false, cellClass: 'grid-align-right' },
+                          { name:'subTotal', field: 'sub_total', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false, cellClass: 'grid-align-right', cellFilter:'currency' },
+                          { name:'tax', field: 'tax_total', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false, cellClass: 'grid-align-right', cellFilter:'currency' },
+                          { name:'total', field: 'total', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false, cellClass: 'grid-align-right', cellFilter:'currency' },
                     ]
               };
 
@@ -390,12 +396,11 @@ angular.module('ReportsModule', [
                     columnDefs: [
                           { name:'customerName', cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.customer_first_name}} {{row.entity.customer_last_name}}</div>',
                            enableHiding: false, enableFiltering: true, enableCellEdit: false },
-                          { name:'Email', field: 'customer_email', enableHiding: false, enableFiltering: true, enableCellEdit: false },
                           { name:'rewardPoints', field: 'reward_points', enableHiding: false, enableFiltering: false, enableCellEdit: false, cellClass: 'grid-align-right' }
                     ]
               };
 
-              reportsCtrl.gridCredit = {
+            /*  reportsCtrl.gridCredit = {
                     enableSorting: true,
                     enableCellEditOnFocus: false,
                     enableFiltering: true,
@@ -407,7 +412,7 @@ angular.module('ReportsModule', [
                           { name:'status', field: 'customer_status', enableHiding: false, enableFiltering: true, width: '15%', enableCellEdit: false },
                           { name:'total', field: 'customer_credit_total', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false },
                     ]
-              };
+              }; */
 
         }
 
