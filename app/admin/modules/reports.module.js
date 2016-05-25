@@ -223,9 +223,20 @@ angular.module('ReportsModule', [
 
 ])
 
-.controller('ReportsCtrl', ['Orders', 'Product', '$state', '$scope', '$stateParams',
-        function (           Orders,   Product,   $state,   $scope,   $stateParams) {
+.controller('ReportsCtrl', ['Orders', 'Product', 'Customer', 'Coupons', '$state', '$scope', '$stateParams',
+        function (           Orders,   Product,   Customer,   Coupons,   $state,   $scope,   $stateParams) {
               var reportsCtrl = this;
+              reportsCtrl.customers = Customer.all;
+
+              reportsCtrl.filterCustomer = function(customer) {
+                    reportsCtrl.customer_name = customer.customer_first_name + ' ' + customer.customer_last_name;
+                    var theLog = Customer.getLogs(customer.$id);
+                        theLog.$loaded().then(function() {
+                            reportsCtrl.gridActivity.data = theLog;
+                        });
+              }, function(error) {
+                    AlertService.addError(error.message);
+              };
 
               reportsCtrl.gridOrders = {
                     enableSorting: true,
@@ -284,7 +295,7 @@ angular.module('ReportsModule', [
                     enableSorting: true,
                     enableCellEditOnFocus: false,
                     enableFiltering: true,
-            //        data: Orders.all,
+                    data: Coupons.all,
                     columnDefs: [
                           { name:'couponName', field: 'coupon_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
                           { name:'couponCode', field: '$id', enableHiding: false, enableFiltering: false, enableCellEdit: false },
@@ -350,9 +361,8 @@ angular.module('ReportsModule', [
                     enableFiltering: true,
             //        data: Orders.all,
                     columnDefs: [
-                          { name:'comment', field: 'customer_activity', enableHiding: false, enableFiltering: false, enableCellEdit: false },
-                          { name:'iP', field: 'customer_ip', enableHiding: false, enableFiltering: true, enableCellEdit: false },
-                          { name:'dateAdded', field: 'activity_date', enableHiding: false, enableFiltering: true, width: '15%', enableCellEdit: false },
+                        { name:'loginDate', field: 'login_date', width:'50%', enableHiding: false, enableFiltering: false, cellFilter:'date:"longDate"' },
+                        { name:'loginTime', field: 'login_date', width:'50%', enableHiding: false, enableFiltering: false, cellFilter:'date:"shortTime"' },
                     ]
               };
 
@@ -376,15 +386,12 @@ angular.module('ReportsModule', [
                     enableSorting: true,
                     enableCellEditOnFocus: false,
                     enableFiltering: true,
-            //        data: Orders.all,
+                    data: Customer.all,
                     columnDefs: [
-                          { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
+                          { name:'customerName', cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.customer_first_name}} {{row.entity.customer_last_name}}</div>',
+                           enableHiding: false, enableFiltering: true, enableCellEdit: false },
                           { name:'Email', field: 'customer_email', enableHiding: false, enableFiltering: true, enableCellEdit: false },
-                          { name:'customerGroup', field: 'customer_group', enableHiding: false, enableFiltering: true, enableCellEdit: false },
-                          { name:'status', field: 'customer_status', enableHiding: false, enableFiltering: true, enableCellEdit: false },
-                          { name:'rewardPoints', field: 'customer_rewards', enableHiding: false, enableFiltering: false, enableCellEdit: false },
-                          { name:'orders', field: 'customer_orders', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false },
-                          { name:'total', field: 'customer_total', enableHiding: false, enableFiltering: false, width: '10%', enableCellEdit: false },
+                          { name:'rewardPoints', field: 'reward_points', enableHiding: false, enableFiltering: false, enableCellEdit: false, cellClass: 'grid-align-right' }
                     ]
               };
 
