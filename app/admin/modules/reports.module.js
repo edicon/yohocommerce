@@ -404,7 +404,7 @@ angular.module('ReportsModule', [
                     enableSorting: true,
                     enableCellEditOnFocus: false,
                     enableFiltering: true,
-            //        data: Orders.all,
+                    data: Orders.all,
                     columnDefs: [
                           { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: true, enableCellEdit: false },
                           { name:'Email', field: 'customer_email', enableHiding: false, enableFiltering: true, enableCellEdit: false },
