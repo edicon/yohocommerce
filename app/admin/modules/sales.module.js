@@ -553,7 +553,7 @@ angular.module('SalesModule', [
               getOrder: function(oid) {
                   return $firebaseObject(ref.child(tid).child(oid));
               },
-              
+
               getCustomerOrder: function(id) {
                   return $firebaseArray(ref.child(tid).orderByChild("customer_id").equalTo(id));
               },
@@ -587,6 +587,13 @@ angular.module('SalesModule', [
           var returns = $firebaseArray(ref.child(tid).orderByPriority());
 
           var returned = {
+
+              addReturn: function(theObj) {
+                  theObj.return_date_added = Firebase.ServerValue.TIMESTAMP;
+                  return returned.all.$add(theObj).then(function(postRef) {
+                      return postRef.key();
+                  });
+              },
 
               getReturn: function(oid) {
                   return $firebaseObject(ref.child(tid).child(oid));
@@ -1025,14 +1032,23 @@ angular.module('SalesModule', [
 
 ])
 
-.controller('OrderCtrl', ['Orders', 'Customers', 'CartOrders', '$state', '$scope', '$stateParams',
-      function (           Orders,   Customers,   CartOrders,   $state,   $scope,   $stateParams) {
+.controller('OrderCtrl', ['Orders', 'Returns', 'Customers', 'Store', 'CartOrders', '$state', '$scope', '$stateParams', 'sid',
+      function (           Orders,   Returns,   Customers,   Store,   CartOrders,   $state,   $scope,   $stateParams,   sid) {
           var orderCtrl = this;
+          orderCtrl.store = {};
+          orderCtrl.return = {};
+          orderCtrl.returnLines = [];
+
+          var theStore = Store.getStore(sid);
+              theStore.$loaded().then(function(){
+                  orderCtrl.store = theStore;
+              });
 
           orderCtrl.loadOrder = function(id) {
                 var theOrder = Orders.getOrder(id);
                     theOrder.$loaded().then(function() {
                           orderCtrl.order = theOrder;
+                          orderCtrl.order.return_status = false;
                           orderCtrl.order.create_date = new Date(orderCtrl.order.create_date);
                           if (theOrder.coupon_discount === undefined)
                               theOrder.coupon_discount = 0;
@@ -1059,12 +1075,32 @@ angular.module('SalesModule', [
 
           };
 
-          orderCtrl.saveOrder = function(id) {
-                var theOrder = Orders.getOrder(id);
-                    theOrder.$loaded().then(function() {
-                          orderCtrl.order = theOrder;
-                    });
+          orderCtrl.returnLine = function(row) {
+                if (row.entity.return_status == true){
+                    orderCtrl.order.return_status = true;
+                    orderCtrl.returnLines.push(row.entity);
+              } else if (row.entity.return_status == false){
+                    orderCtrl.order.return_status = false;
+              }
           };
+
+          orderCtrl.addReturn = function() {
+              /*orderCtrl.return.lines = orderCtrl.returnLines;
+              orderCtrl.return.taxes = orderCtrl.taxes;
+              orderCtrl.return.customer_name = orderCtrl.order.customer_name;
+              orderCtrl.return.customer_id = orderCtrl.order.customer_id;
+              orderCtrl.return.customer_email = orderCtrl.order.customer_email;
+              /*orderCtrl.return.order_id = orderCtrl.order.order_id;
+              orderCtrl.return.total = orderCtrl.order.total;
+              orderCtrl.return.sub_total = orderCtrl.order.sub_total;
+              orderCtrl.return.tax_total = orderCtrl.order.tax_total;*/
+              orderCtrl.store.store_current_return_number = Number(orderCtrl.store.store_current_return_number);
+              orderCtrl.return.return_id = orderCtrl.store.store_default_return_prefix + '-' + orderCtrl.store.store_current_return_number;
+              orderCtrl.store.store_current_return_number = orderCtrl.store.store_current_return_number + 1;
+              orderCtrl.store.$save();
+              Returns.addReturn(orderCtrl.return);
+              $state.go('admin.sales.returns');
+          }
 
           if ($stateParams.rowEntity != undefined) {
                 orderCtrl.loadOrder($stateParams.rowEntity.$id);
@@ -1072,6 +1108,24 @@ angular.module('SalesModule', [
           };
 
           orderCtrl.gridLines = {
+              enableSorting: true,
+              enableColumnMenus: false,
+              enableCellEditOnFocus: false,
+              enableFiltering: true,
+              columnDefs: [
+                  { name: 'return', field: '$id', shown: false, type: 'boolean', cellTemplate: 'admin/views/sales/gridTemplates/returnLine.html',
+                  width: '6%', enableColumnMenu: false, headerTooltip: 'Return Line', enableCellEdit: false, enableFiltering: false },
+                  { name:'productName', field: 'product_name', enableHiding: false, enableFiltering: false },
+                  { name:'price', field: 'regular_price', width: '10%', enableHiding: false, enableFiltering: false,
+                  cellClass: 'grid-align-right' },
+                  { name:'quantity', field: 'line_quantity', width: '10%', enableHiding: false, enableFiltering: false,
+                  cellClass: 'grid-align-right' },
+                  { name:'sub-total', field: 'line_total', width: '15%', enableHiding: false, enableFiltering: false,
+                  cellClass: 'grid-align-right' },
+              ]
+          };
+
+          /*orderCtrl.gridReturnLines = {
               enableSorting: true,
               enableColumnMenus: false,
               enableCellEditOnFocus: true,
@@ -1085,8 +1139,7 @@ angular.module('SalesModule', [
                   { name:'sub-total', field: 'line_total', width: '15%', enableHiding: false, enableFiltering: false,
                   cellClass: 'grid-align-right' },
               ]
-          };
-
+          };*/
 
       }
 
@@ -1103,6 +1156,25 @@ angular.module('SalesModule', [
 .controller('ReturnsCtrl', ['Returns', '$state', '$scope', '$stateParams',
       function (             Returns,   $state,   $scope,   $stateParams) {
           var returnsCtrl = this;
+
+          returnsCtrl.gridReturns = {
+                enableSorting: true,
+                enableCellEditOnFocus: true,
+                enableFiltering: true,
+                data: Returns.all,
+                columnDefs: [
+                      { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/sales/gridTemplates/editOrder.html',
+                      width: 35, enableColumnMenu: false, headerTooltip: 'Edit Order', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
+                      { name:'returnID', field: 'return_id',  width: '20%', enableHiding: false, enableFiltering: true },
+                      { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: false },
+                      { name:'customerPhone', field: 'customer_phone', enableHiding: false, enableFiltering: false },
+                      { name:'customerE-Mail', field: 'customer_email', enableHiding: false, enableFiltering: false },
+                      { name:'orderTotal', field: 'total', width: '15%', enableHiding: false, enableFiltering: false,
+                          cellClass: 'grid-align-right', cellFilter:'currency' },
+                      { name: ' ', field: '$id', cellTemplate:'admin/views/sales/gridTemplates/removeOrder.html',
+                          width: 35, enableCellEdit: false, enableFiltering: false, enableColumnMenu: false },
+                ]
+          };
 
       }
 

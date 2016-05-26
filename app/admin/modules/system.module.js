@@ -888,6 +888,15 @@ angular.module('SystemModule', [
                   storeCtrl.error = error;
             };
 
+            storeCtrl.updateStartingReturnNumber = function() {
+                  if (storeCtrl.store != null){
+                      storeCtrl.store.store_current_return_number = storeCtrl.store.store_default_return_number;
+                      storeCtrl.store.$save();
+                    };
+            }, function(error) {
+                  storeCtrl.error = error;
+            };
+
             storeCtrl.updateStore = function() {
                   if (storeCtrl.store != null)
                       storeCtrl.store.$save();
