@@ -687,7 +687,6 @@ angular.module('CatalogModule', [
                                               theProduct.line_total = theProduct.special_price;
                                               theHeader.sub_total = theHeader.sub_total + theProduct.special_price;
                                         }
-
                                         theProduct.reward_points_total = theProduct.line_total * storeDefaults.store_points_per_dollar;
                                         CartOrders.updateHeader(theHeader);
                                         CartOrders.addLine(theProduct, oid);
