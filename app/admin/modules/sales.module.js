@@ -152,6 +152,9 @@ angular.module('SalesModule', [
             })
             .state('admin.sales.return', {
                   url: '/returns',
+                  params: {
+                    rowEntity: null,
+                  },
                   views: {
                       "header@admin": {
                           templateUrl: 'admin/views/sales/returns.header.html'
@@ -160,8 +163,8 @@ angular.module('SalesModule', [
                           templateUrl: 'admin/views/sales/sales.html'
                       },
                       "list@admin.sales.return": {
-                          controller: 'ReturnsCtrl as returnsCtrl',
-                          templateUrl: 'admin/views/sales/returns.html'
+                          controller: 'ReturnCtrl as returnCtrl',
+                          templateUrl: 'admin/views/sales/return.html'
                       }
                   }
             })
@@ -1085,15 +1088,9 @@ angular.module('SalesModule', [
           };
 
           orderCtrl.addReturn = function() {
-              /*orderCtrl.return.lines = orderCtrl.returnLines;
+              orderCtrl.return = orderCtrl.order;
+              orderCtrl.return.lines = orderCtrl.returnLines;
               orderCtrl.return.taxes = orderCtrl.taxes;
-              orderCtrl.return.customer_name = orderCtrl.order.customer_name;
-              orderCtrl.return.customer_id = orderCtrl.order.customer_id;
-              orderCtrl.return.customer_email = orderCtrl.order.customer_email;
-              /*orderCtrl.return.order_id = orderCtrl.order.order_id;
-              orderCtrl.return.total = orderCtrl.order.total;
-              orderCtrl.return.sub_total = orderCtrl.order.sub_total;
-              orderCtrl.return.tax_total = orderCtrl.order.tax_total;*/
               orderCtrl.store.store_current_return_number = Number(orderCtrl.store.store_current_return_number);
               orderCtrl.return.return_id = orderCtrl.store.store_default_return_prefix + '-' + orderCtrl.store.store_current_return_number;
               orderCtrl.store.store_current_return_number = orderCtrl.store.store_current_return_number + 1;
@@ -1157,13 +1154,17 @@ angular.module('SalesModule', [
       function (             Returns,   $state,   $scope,   $stateParams) {
           var returnsCtrl = this;
 
+          returnsCtrl.viewReturn = function(row) {
+                $state.go('admin.sales.return', {'rowEntity': row.entity});
+          };
+
           returnsCtrl.gridReturns = {
                 enableSorting: true,
                 enableCellEditOnFocus: true,
                 enableFiltering: true,
                 data: Returns.all,
                 columnDefs: [
-                      { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/sales/gridTemplates/editOrder.html',
+                      { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/sales/gridTemplates/viewReturn.html',
                       width: 35, enableColumnMenu: false, headerTooltip: 'Edit Order', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
                       { name:'returnID', field: 'return_id',  width: '20%', enableHiding: false, enableFiltering: true },
                       { name:'customerName', field: 'customer_name', enableHiding: false, enableFiltering: false },
@@ -1171,9 +1172,61 @@ angular.module('SalesModule', [
                       { name:'customerE-Mail', field: 'customer_email', enableHiding: false, enableFiltering: false },
                       { name:'orderTotal', field: 'total', width: '15%', enableHiding: false, enableFiltering: false,
                           cellClass: 'grid-align-right', cellFilter:'currency' },
-                      { name: ' ', field: '$id', cellTemplate:'admin/views/sales/gridTemplates/removeOrder.html',
-                          width: 35, enableCellEdit: false, enableFiltering: false, enableColumnMenu: false },
+                      /*{ name: ' ', field: '$id', cellTemplate:'admin/views/sales/gridTemplates/removeOrder.html',
+                          width: 35, enableCellEdit: false, enableFiltering: false, enableColumnMenu: false },*/
                 ]
+          };
+
+      }
+
+])
+
+.controller('ReturnCtrl', ['Orders', 'Returns', 'Customers', 'CartOrders', '$state', '$scope', '$stateParams',
+      function (            Orders,   Returns,   Customers,   CartOrders,   $state,   $scope,   $stateParams) {
+          var returnCtrl = this;
+
+          returnCtrl.loadReturn = function(id) {
+                var theReturn = Returns.getReturn(id);
+                    theReturn.$loaded().then(function() {
+                          returnCtrl.return = theReturn;
+                          returnCtrl.return.create_date = new Date(returnCtrl.return.create_date);
+                          returnCtrl.gridLines.data = returnCtrl.return.lines;
+                          returnCtrl.taxes = returnCtrl.return.taxes;
+                          if (theReturn.coupon_discount === undefined)
+                              theReturn.coupon_discount = 0;
+                          if (theReturn.giftcard_discount === undefined)
+                              theReturn.giftcard_discount = 0;
+                          returnCtrl.return.total = (theReturn.sub_total + theReturn.tax_total) - (theReturn.coupon_discount + theReturn.giftcard_discount);
+
+                          var theCustomer = Customers.getCustomer(returnCtrl.return.customer_id);
+                              theCustomer.$loaded().then(function() {
+                                    returnCtrl.customer = theCustomer;
+                                    returnCtrl.customer.full_name = returnCtrl.customer.customer_first_name + ' ' + returnCtrl.customer.customer_last_name;
+                              });
+
+                    });
+
+          };
+
+          if ($stateParams.rowEntity != undefined) {
+                returnCtrl.loadReturn($stateParams.rowEntity.$id);
+                returnCtrl.rid = $stateParams.rowEntity.$id;
+          };
+
+          returnCtrl.gridLines = {
+              enableSorting: true,
+              enableColumnMenus: false,
+              enableCellEditOnFocus: true,
+              enableFiltering: true,
+              columnDefs: [
+                  { name:'productName', field: 'product_name', enableHiding: false, enableFiltering: false },
+                  { name:'price', field: 'regular_price', width: '10%', enableHiding: false, enableFiltering: false,
+                  cellClass: 'grid-align-right' },
+                  { name:'quantity', field: 'line_quantity', width: '10%', enableHiding: false, enableFiltering: false,
+                  cellClass: 'grid-align-right' },
+                  { name:'sub-total', field: 'line_total', width: '15%', enableHiding: false, enableFiltering: false,
+                  cellClass: 'grid-align-right' },
+              ]
           };
 
       }

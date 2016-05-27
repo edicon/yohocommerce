@@ -1,19 +1,71 @@
-<div class="row">
-  <div class="col-xs-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <h3 class="panel-title"><span class="menu-icon fa fa-pencil-square-o"></span> Return</h3>
+<div class="container-fluid">
+  <div class="row">
+    <form class="form-horizontal">
+      <div class="form-group">
+        <div class="col-sm-12">
+          <a type="button" class="btn btn-sm btn-default detail-btn pull-right"
+            tooltip-placement="top" uib-tooltip="Return" href="#/returns" ui-sref="admin.sales.returns">
+            <i class="fa fa-reply"></i>
+          </a>
+        </div>
       </div>
-      <div class="panel-body">
-        <div class="row">
-					<uib-tabset>
-						<uib-tab heading="General"></uib-tab>
-						<uib-tab heading="Meta Data"></uib-tab>
-						<uib-tab heading="Store Settings"></uib-tab>
-						<uib-tab heading="Localization"></uib-tab>
-					</uib-tabset>
-	      </div>
-	    </div>
-	  </div>
-	</div>
+    </form>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title"><span class="menu-icon fa fa-return-all"></span> Return Detail</h3>
+    </div>
+    <div class="panel-body">
+      <div class="row">
+        <div class="col-sm-5">
+          <div class="pull-left">
+            <label>Return ID: </label>
+            <p>{{returnCtrl.return.return_id}}</p>
+            <label>Customer:</label><br>
+            <p>{{returnCtrl.customer.customer_first_name}} {{returnCtrl.customer.customer_last_name}}<br>
+            {{returnCtrl.customer.customer_email}}<br>
+            {{returnCtrl.customer.customer_address1}}<br>
+            {{returnCtrl.customer.customer_city}}, {{returnCtrl.customer.customer_province}}<br>
+            {{returnCtrl.customer.customer_country}} {{returnCtrl.customer.customer_postal}}</p>
+          </div>
+        </div>
+        <div class="col-sm-7">
+          <div class="pull-right">
+            <label class="align-right">Date Added: {{returnCtrl.return.return_date_added | date}}</label><br>
+          </div>
+        </div>
+      </div><br><br><br>
+      <div class="row">
+        <div class="col-sm-12">
+          <div ui-grid="returnCtrl.gridLines" class="ui-grid-row" ui-grid-edit ui-grid-cellNav></div>
+        </div>
+      </div><br><br><br>
+      <div class="row">
+        <div class="col-sm-3 pull-right">
+          <table class="table">
+            <tr>
+              <td class="text-right"><strong>Sub Total</strong></td>
+              <td class="text-left">{{returnCtrl.return.sub_total | currency}}</td>
+            </tr>
+            <tr ng-repeat="t in returnCtrl.taxes">
+              <td class="text-right"><strong>{{t.tax_name}}</strong></td>
+              <td class="text-left">{{t.tax_total | currency}}</td>
+            </tr>
+            <tr ng-if="returnCtrl.return.coupon_discount !== 0">
+              <td class="text-right"><strong>Coupon Discount</strong></td>
+              <td class="text-left">{{returnCtrl.return.coupon_discount | currency}}</td>
+            </tr>
+            <tr ng-if="returnCtrl.return.giftcard_discount !== 0">
+              <td class="text-right"><strong>Gift Card Discount</strong></td>
+              <td class="text-left">{{returnCtrl.return.giftcard_discount | currency}}</td>
+            </tr>
+            <tr>
+              <td class="text-right"><strong>Total Returned</strong></td>
+              <td class="text-left">{{returnCtrl.return.total | currency}}</td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
