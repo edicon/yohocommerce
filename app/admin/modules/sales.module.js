@@ -598,8 +598,8 @@ angular.module('SalesModule', [
                   });
               },
 
-              getReturn: function(oid) {
-                  return $firebaseObject(ref.child(tid).child(oid));
+              getReturn: function(id) {
+                  return $firebaseObject(ref.child(tid).child(id));
               },
 
               all: returns
@@ -1038,6 +1038,8 @@ angular.module('SalesModule', [
 .controller('OrderCtrl', ['Orders', 'Returns', 'Customers', 'Store', 'CartOrders', '$state', '$scope', '$stateParams', 'sid',
       function (           Orders,   Returns,   Customers,   Store,   CartOrders,   $state,   $scope,   $stateParams,   sid) {
           var orderCtrl = this;
+      //    orderCtrl.order = {};
+          orderCtrl.return_status = false;
           orderCtrl.store = {};
           orderCtrl.return = {};
           orderCtrl.returnLines = [];
@@ -1050,13 +1052,14 @@ angular.module('SalesModule', [
           orderCtrl.loadOrder = function(id) {
                 var theOrder = Orders.getOrder(id);
                     theOrder.$loaded().then(function() {
-                          orderCtrl.order = theOrder;
-                          orderCtrl.order.return_status = false;
-                          orderCtrl.order.create_date = new Date(orderCtrl.order.create_date);
+                          if (theOrder.return_status === undefined)
+                              theOrder.eturn_status = false;
                           if (theOrder.coupon_discount === undefined)
                               theOrder.coupon_discount = 0;
                           if (theOrder.giftcard_discount === undefined)
                               theOrder.giftcard_discount = 0;
+                          orderCtrl.order = theOrder;
+                          orderCtrl.order.create_date = new Date(orderCtrl.order.create_date);
                           orderCtrl.order.total = (theOrder.sub_total + theOrder.tax_total) - (theOrder.coupon_discount + theOrder.giftcard_discount);
 
                           var theCustomer = Customers.getCustomer(orderCtrl.order.customer_id);
@@ -1074,16 +1077,25 @@ angular.module('SalesModule', [
                                         theTaxes.$loaded().then(function() {
                                               orderCtrl.taxes = theTaxes;
                                         });
+
+                          if (theOrder.return_status === true) {
+                              var theReturn = Returns.getReturn(theOrder.return_id);
+                                  theReturn.$loaded().then(function() {
+                                      orderCtrl.return = theReturn;
+                                      orderCtrl.gridReturnLines.data = theReturn.lines;
+                                  });
+                          };
+
                     });
 
           };
 
           orderCtrl.returnLine = function(row) {
                 if (row.entity.return_status == true){
-                    orderCtrl.order.return_status = true;
+                    orderCtrl.return_status = true;
                     orderCtrl.returnLines.push(row.entity);
               } else if (row.entity.return_status == false){
-                    orderCtrl.order.return_status = false;
+                    orderCtrl.return_status = false;
               }
           };
 
@@ -1095,7 +1107,11 @@ angular.module('SalesModule', [
               orderCtrl.return.return_id = orderCtrl.store.store_default_return_prefix + '-' + orderCtrl.store.store_current_return_number;
               orderCtrl.store.store_current_return_number = orderCtrl.store.store_current_return_number + 1;
               orderCtrl.store.$save();
-              Returns.addReturn(orderCtrl.return);
+              Returns.addReturn(orderCtrl.return).then(function(rid) {
+                orderCtrl.order.return_status = true;
+                orderCtrl.order.return_id = rid;
+              });
+              orderCtrl.order.$save();
               $state.go('admin.sales.returns');
           }
 
@@ -1122,7 +1138,7 @@ angular.module('SalesModule', [
               ]
           };
 
-          /*orderCtrl.gridReturnLines = {
+          orderCtrl.gridReturnLines = {
               enableSorting: true,
               enableColumnMenus: false,
               enableCellEditOnFocus: true,
@@ -1136,7 +1152,7 @@ angular.module('SalesModule', [
                   { name:'sub-total', field: 'line_total', width: '15%', enableHiding: false, enableFiltering: false,
                   cellClass: 'grid-align-right' },
               ]
-          };*/
+          };
 
       }
 
