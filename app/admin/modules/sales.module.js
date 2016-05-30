@@ -1091,12 +1091,16 @@ angular.module('SalesModule', [
           };
 
           orderCtrl.returnLine = function(row) {
-                if (row.entity.return_status == true){
-                    orderCtrl.return_status = true;
-                    orderCtrl.returnLines.push(row.entity);
-              } else if (row.entity.return_status == false){
-                    orderCtrl.return_status = false;
-              }
+              orderCtrl.return_status = true;
+              orderCtrl.returnLines.push(row.entity);
+              console.log(orderCtrl.returnLines);
+          };
+
+          orderCtrl.removeLine = function(index) {
+              if (orderCtrl.returnLines.length == 1)
+                  orderCtrl.return_status = false;
+              orderCtrl.returnLines.splice(index, 1);
+              console.log(orderCtrl.returnLines);
           };
 
           orderCtrl.addReturn = function() {
@@ -1126,7 +1130,7 @@ angular.module('SalesModule', [
               enableCellEditOnFocus: false,
               enableFiltering: true,
               columnDefs: [
-                  { name: 'return', field: '$id', shown: false, type: 'boolean', cellTemplate: 'admin/views/sales/gridTemplates/returnLine.html',
+                  { name: 'return', field: '$id', shown: false, cellTemplate: 'admin/views/sales/gridTemplates/returnLine.html',
                   width: '6%', enableColumnMenu: false, headerTooltip: 'Return Line', enableCellEdit: false, enableFiltering: false },
                   { name:'productName', field: 'product_name', enableHiding: false, enableFiltering: false },
                   { name:'price', field: 'regular_price', width: '10%', enableHiding: false, enableFiltering: false,

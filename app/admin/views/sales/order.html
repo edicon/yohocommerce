@@ -78,7 +78,6 @@
       </div>
     </div>
   </div>
-
   <div ng-if="orderCtrl.order.return_status === true">
     <div class="panel panel-default">
       <div class="panel-heading">
@@ -168,15 +167,15 @@
                 </thead>
                 <tbody>
                   <tr ng-repeat="r in orderCtrl.returnLines">
-                    <td class="text-left">
-                      {{r.product_name}}
-                    </td>
+                    <td class="text-left">{{r.product_name}}</td>
                     <td width="150px">
                       <div class="input-group">
-                        <input type="text" ng-model="r.line_quantity" ng-change="orderCtrl.updateLine(r.$id, r.line_quantity, r.product_id)"
-                          class="form-control" style="text-align: right;">
+                        <input ng-if="r.line_quantity &gt 1" type="text" ng-model="r.line_quantity" ng-change="orderCtrl.updateLine(r.$id, r.line_quantity, r.product_id)"
+                          class="form-control" style="text-align: right">
+                        <input ng-if="r.line_quantity === 1" type="text" ng-model="r.line_quantity"
+                          class="form-control" style="text-align: right" readonly>
                         <span class="input-group-btn">
-                          <button class="btn btn-danger" ng-click="orderCtrl.removeLine(r.$id, r.product_tax_group_id)" type="button"><span class="menu-icon fa fa-times"></span></button>
+                          <button class="btn btn-danger" ng-click="orderCtrl.removeLine($index)" type="button"><span class="menu-icon fa fa-times"></span></button>
                         </span>
                       </div>
                     </td>
