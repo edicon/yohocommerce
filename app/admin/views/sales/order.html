@@ -110,17 +110,9 @@
                 <td class="text-right"><strong>Sub Total</strong></td>
                 <td class="text-left">{{orderCtrl.return.sub_total | currency}}</td>
               </tr>
-              <tr ng-repeat="t in orderCtrl.return.taxes">
-                <td class="text-right"><strong>{{t.tax_name}}</strong></td>
-                <td class="text-left">{{t.tax_total | currency}}</td>
-              </tr>
-              <tr ng-if="orderCtrl.order.coupon_discount !== 0">
-                <td class="text-right"><strong>Coupon Discount</strong></td>
-                <td class="text-left">{{orderCtrl.return.coupon_discount | currency}}</td>
-              </tr>
-              <tr ng-if="orderCtrl.order.giftcard_discount !== 0">
-                <td class="text-right"><strong>Gift Card Discount</strong></td>
-                <td class="text-left">{{orderCtrl.return.giftcard_discount | currency}}</td>
+              <tr>
+                <td class="text-right"><strong>{{orderCtrl.return.taxes.tax_name}}</strong></td>
+                <td class="text-left">{{orderCtrl.return.taxes.tax_total | currency}}</td>
               </tr>
               <tr>
                 <td class="text-right"><strong>Return Total</strong></td>
@@ -170,10 +162,8 @@
                     <td class="text-left">{{r.product_name}}</td>
                     <td width="150px">
                       <div class="input-group">
-                        <input ng-if="r.line_quantity &gt 1" type="text" ng-model="r.line_quantity" ng-change="orderCtrl.updateLine(r.$id, r.line_quantity, r.product_id)"
+                        <input type="number" ng-model="r.line_quantity" ng-change="orderCtrl.updateLine(r)"
                           class="form-control" style="text-align: right">
-                        <input ng-if="r.line_quantity === 1" type="text" ng-model="r.line_quantity"
-                          class="form-control" style="text-align: right" readonly>
                         <span class="input-group-btn">
                           <button class="btn btn-danger" ng-click="orderCtrl.removeLine($index)" type="button"><span class="menu-icon fa fa-times"></span></button>
                         </span>
@@ -197,23 +187,15 @@
             <table class="table">
               <tr>
                 <td class="text-right"><strong>Sub Total</strong></td>
-                <td class="text-left">{{orderCtrl.order.sub_total | currency}}</td>
+                <td class="text-left">{{orderCtrl.return.sub_total | currency}}</td>
               </tr>
-              <tr ng-repeat="t in orderCtrl.taxes">
-                <td class="text-right"><strong>{{t.tax_name}}</strong></td>
-                <td class="text-left">{{t.tax_total | currency}}</td>
-              </tr>
-              <tr ng-if="orderCtrl.order.coupon_discount !== 0">
-                <td class="text-right"><strong>Coupon Discount</strong></td>
-                <td class="text-left">{{orderCtrl.order.coupon_discount | currency}}</td>
-              </tr>
-              <tr ng-if="orderCtrl.order.giftcard_discount !== 0">
-                <td class="text-right"><strong>Gift Card Discount</strong></td>
-                <td class="text-left">{{orderCtrl.order.giftcard_discount | currency}}</td>
+              <tr>
+                <td class="text-right"><strong>{{orderCtrl.returnTaxes.tax_name}}</strong></td>
+                <td class="text-left">{{orderCtrl.returnTaxes.tax_total | currency}}</td>
               </tr>
               <tr>
                 <td class="text-right"><strong>Total</strong></td>
-                <td class="text-left">{{orderCtrl.order.total | currency}}</td>
+                <td class="text-left">{{orderCtrl.return.total | currency}}</td>
               </tr>
             </table>
           </div>

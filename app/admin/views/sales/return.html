@@ -47,17 +47,9 @@
               <td class="text-right"><strong>Sub Total</strong></td>
               <td class="text-left">{{returnCtrl.return.sub_total | currency}}</td>
             </tr>
-            <tr ng-repeat="t in returnCtrl.taxes">
-              <td class="text-right"><strong>{{t.tax_name}}</strong></td>
-              <td class="text-left">{{t.tax_total | currency}}</td>
-            </tr>
-            <tr ng-if="returnCtrl.return.coupon_discount !== 0">
-              <td class="text-right"><strong>Coupon Discount</strong></td>
-              <td class="text-left">{{returnCtrl.return.coupon_discount | currency}}</td>
-            </tr>
-            <tr ng-if="returnCtrl.return.giftcard_discount !== 0">
-              <td class="text-right"><strong>Gift Card Discount</strong></td>
-              <td class="text-left">{{returnCtrl.return.giftcard_discount | currency}}</td>
+            <tr>
+              <td class="text-right"><strong>{{returnCtrl.taxes.tax_name}}</strong></td>
+              <td class="text-left">{{returnCtrl.taxes.tax_total | currency}}</td>
             </tr>
             <tr>
               <td class="text-right"><strong>Total Returned</strong></td>

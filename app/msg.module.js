@@ -15,6 +15,7 @@ angular.module('MsgModule', [
                   invalid_giftcard_code: 'Gift Card Code is Invalid',
                   invalid_points: 'Insufficient Reward Points Available',
                   login_disabled: 'Account is Disabled',
+                  invalid_number: 'The Amount Entered is Invalid',
             };
 
             return messages;

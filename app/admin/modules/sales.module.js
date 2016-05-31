@@ -549,6 +549,7 @@ angular.module('SalesModule', [
 .factory('Orders', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (     $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
           var ref = new Firebase(FirebaseUrl+'orders');
+          var taxRef = new Firebase(FirebaseUrl+'tax_groups');
           var orders = $firebaseArray(ref.child(tid).orderByPriority());
 
           var order = {
@@ -572,6 +573,14 @@ angular.module('SalesModule', [
 
               removeOrder: function(id) {
                   return $firebaseObject(ref.child(tid).child(id)).$remove();
+              },
+
+              getTaxes: function(oid) {
+                  return $firebaseArray(ref.child(tid).child(oid).child('/taxes'));
+              },
+
+              getTaxRates: function(tgid) {
+                  return $firebaseArray(taxRef.child(tid).child(tgid).child('/tax_entries'));
               },
 
               all: orders
@@ -1035,13 +1044,15 @@ angular.module('SalesModule', [
 
 ])
 
-.controller('OrderCtrl', ['Orders', 'Returns', 'Customers', 'Store', 'CartOrders', '$state', '$scope', '$stateParams', 'sid',
-      function (           Orders,   Returns,   Customers,   Store,   CartOrders,   $state,   $scope,   $stateParams,   sid) {
+.controller('OrderCtrl', ['AlertService', 'Messages', 'Orders', 'Returns', 'Customers', 'Store', '$state', '$scope', '$stateParams', 'sid',
+      function (           AlertService,   Messages,   Orders,   Returns,   Customers,   Store,   $state,   $scope,   $stateParams,   sid) {
           var orderCtrl = this;
-      //    orderCtrl.order = {};
+          var theLine = {};
           orderCtrl.return_status = false;
           orderCtrl.store = {};
           orderCtrl.return = {};
+          orderCtrl.order = {};
+          orderCtrl.returnTaxes = [];
           orderCtrl.returnLines = [];
 
           var theStore = Store.getStore(sid);
@@ -1073,7 +1084,7 @@ angular.module('SalesModule', [
                                       orderCtrl.gridLines.data = theLines;
                                   });
 
-                                  var theTaxes = CartOrders.getTaxes(orderCtrl.order.$id);
+                                  var theTaxes = Orders.getTaxes(orderCtrl.order.$id);
                                         theTaxes.$loaded().then(function() {
                                               orderCtrl.taxes = theTaxes;
                                         });
@@ -1085,28 +1096,81 @@ angular.module('SalesModule', [
                                       orderCtrl.gridReturnLines.data = theReturn.lines;
                                   });
                           };
-
                     });
-
           };
 
           orderCtrl.returnLine = function(row) {
               orderCtrl.return_status = true;
+              row.entity.original_line_quantity = row.entity.line_quantity;
               orderCtrl.returnLines.push(row.entity);
-              console.log(orderCtrl.returnLines);
+              orderCtrl.updateReturn(orderCtrl.returnLines);
           };
 
           orderCtrl.removeLine = function(index) {
               if (orderCtrl.returnLines.length == 1)
                   orderCtrl.return_status = false;
               orderCtrl.returnLines.splice(index, 1);
-              console.log(orderCtrl.returnLines);
+              orderCtrl.updateReturn(orderCtrl.returnLines);
+          };
+
+          orderCtrl.updateLine = function(obj) {
+              if (obj.line_quantity > obj.original_line_quantity) {
+                  AlertService.addError(Messages.invalid_number);
+                  obj.line_quantity = obj.original_line_quantity;
+              } else {
+                if(obj.special_price === undefined) {
+                  obj.line_total = obj.line_quantity * obj.regular_price;
+                  orderCtrl.updateReturn(orderCtrl.returnLines);
+                } else {
+                  obj.line_total = obj.line_quantity * obj.special_price;
+                  orderCtrl.updateReturn(orderCtrl.returnLines);
+                };
+              };
+          };
+
+          orderCtrl.updateReturn = function(lines) {
+              var theTax = {};
+              var theHeader = {};
+              var theLine = {};
+              theHeader.items = 0;
+              theHeader.sub_total = 0;
+              theHeader.total = 0;
+
+              var taxRates = Orders.getTaxRates(orderCtrl.store.store_default_tax_id);
+                  taxRates.$loaded().then(function(){
+                      for(var i = 0; i < taxRates.length; i++) {
+                            theTax.tax_total = 0;
+                            theTax.tax_name = taxRates[i].tax_name;
+                            for(var x = 0; x < lines.length; x++) {
+                                  theLine.qty = lines[x].line_quantity;
+                                  if (lines[x].special_price === undefined)
+                                      theLine.price = lines[x].regular_price;
+                                  else
+                                      theLine.price = lines[x].special_price;
+
+                                  theHeader.items = theHeader.items + theLine.qty;
+                                  theHeader.sub_total = theHeader.sub_total + (theLine.qty * theLine.price);
+
+                                  if (taxRates[i].tax_type === "Percent")
+                                        theTax.tax_total = theTax.tax_total + (lines[x].line_total * taxRates[i].tax_rate);
+                                  else
+                                        theTax.tax_total = theTax.tax_total + taxRates[i].tax_rate;
+                            };
+                            orderCtrl.returnTaxes = theTax;
+                            theHeader.total = theTax.tax_total + theHeader.sub_total;
+                            orderCtrl.return = theHeader;
+                      };
+                  });
           };
 
           orderCtrl.addReturn = function() {
-              orderCtrl.return = orderCtrl.order;
               orderCtrl.return.lines = orderCtrl.returnLines;
-              orderCtrl.return.taxes = orderCtrl.taxes;
+              orderCtrl.return.taxes = orderCtrl.returnTaxes;
+              orderCtrl.return.order_id = orderCtrl.order.order_id;
+              orderCtrl.return.customer_name = orderCtrl.order.customer_name;
+              orderCtrl.return.customer_id = orderCtrl.order.customer_id;
+              orderCtrl.return.customer_email = orderCtrl.order.customer_email;
+              orderCtrl.return.customer_phone = orderCtrl.order.customer_phone;
               orderCtrl.store.store_current_return_number = Number(orderCtrl.store.store_current_return_number);
               orderCtrl.return.return_id = orderCtrl.store.store_default_return_prefix + '-' + orderCtrl.store.store_current_return_number;
               orderCtrl.store.store_current_return_number = orderCtrl.store.store_current_return_number + 1;
@@ -1114,8 +1178,8 @@ angular.module('SalesModule', [
               Returns.addReturn(orderCtrl.return).then(function(rid) {
                 orderCtrl.order.return_status = true;
                 orderCtrl.order.return_id = rid;
+                orderCtrl.order.$save();
               });
-              orderCtrl.order.$save();
               $state.go('admin.sales.returns');
           }
 
@@ -1212,11 +1276,6 @@ angular.module('SalesModule', [
                           returnCtrl.return.create_date = new Date(returnCtrl.return.create_date);
                           returnCtrl.gridLines.data = returnCtrl.return.lines;
                           returnCtrl.taxes = returnCtrl.return.taxes;
-                          if (theReturn.coupon_discount === undefined)
-                              theReturn.coupon_discount = 0;
-                          if (theReturn.giftcard_discount === undefined)
-                              theReturn.giftcard_discount = 0;
-                          returnCtrl.return.total = (theReturn.sub_total + theReturn.tax_total) - (theReturn.coupon_discount + theReturn.giftcard_discount);
 
                           var theCustomer = Customers.getCustomer(returnCtrl.return.customer_id);
                               theCustomer.$loaded().then(function() {
