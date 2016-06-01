@@ -770,7 +770,7 @@ angular.module('SalesModule', [
               columnDefs: [
                   { name:'orderDate', field: 'create_date', width:'15%', enableHiding: false, enableFiltering: false, cellFilter:'date:"longDate"' },
                   { name:'orderID', field: 'order_id', enableHiding: false, enableFiltering: false },
-                  { name:'orderTotal', field: 'total', width:'15%', cellClass:'grid-align-right', enableHiding: false, enableFiltering: false },
+                  { name:'orderTotal', field: 'total', width:'15%', cellClass:'grid-align-right', enableHiding: false, enableFiltering: false, cellFilter: 'currency' },
               ]
           };
 
@@ -1070,7 +1070,8 @@ angular.module('SalesModule', [
                           if (theOrder.giftcard_discount === undefined)
                               theOrder.giftcard_discount = 0;
                           orderCtrl.order = theOrder;
-                          orderCtrl.order.create_date = new Date(orderCtrl.order.create_date);
+                          console.log(orderCtrl.order);
+                        //  orderCtrl.order.create_date = new Date(orderCtrl.order.create_date);
                           orderCtrl.order.total = (theOrder.sub_total + theOrder.tax_total) - (theOrder.coupon_discount + theOrder.giftcard_discount);
 
                           var theCustomer = Customers.getCustomer(orderCtrl.order.customer_id);
