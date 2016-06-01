@@ -377,6 +377,12 @@ angular.module('CatalogModule', [
                     return theRef.push ({view_date: Firebase.ServerValue.TIMESTAMP});
                 },
 
+                addReview: function(pid, obj) {
+                    obj.create_date = Firebase.ServerValue.TIMESTAMP;
+                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+pid+'/reviews');
+                    return theRef.push(obj);
+                },
+
                 all: products,
 
                 allFeatured: featuredProducts
@@ -918,7 +924,7 @@ angular.module('CatalogModule', [
 .controller('CatalogProductCtrl', ['$state', 'TheProduct', 'CartAddOrder', '$stateParams',
       function (                    $state,   TheProduct,   CartAddOrder,   $stateParams) {
             var catalogProductCtrl = this;
-            catalogProductCtrl.writeReview = false;
+            catalogProductCtrl.reviewStatus = false;
 
             var pid = $stateParams.pid
 
@@ -934,10 +940,12 @@ angular.module('CatalogModule', [
                     thumbnails.$loaded().then(function() {
                       catalogProductCtrl.thumbnails = thumbnails;
                 });
-            }
+            };
 
-            catalogProductCtrl.writeReview = function() {
-                catalogProductCtrl.writeReview = true;
+            catalogProductCtrl.submitReview = function() {
+                catalogProductCtrl.review.status = "pending";
+                TheProduct.addReview(pid, catalogProductCtrl.review);
+                catalogProductCtrl.review = null;
             };
 
             catalogProductCtrl.goCategory = function(cid) {
@@ -947,6 +955,21 @@ angular.module('CatalogModule', [
             catalogProductCtrl.addOrder = function(pid) {
                 CartAddOrder.initiate(pid);
             };
+
+            $(document)
+              	.one('focus.textarea', '.autoExpand', function(){
+              		var savedValue = this.value;
+              		this.value = '';
+              		this.baseScrollHeight = this.scrollHeight;
+              		this.value = savedValue;
+              	})
+              	.on('input.textarea', '.autoExpand', function(){
+              		var minRows = this.getAttribute('data-min-rows')|0,
+              			 rows;
+              		this.rows = minRows;
+              		rows = Math.ceil((this.scrollHeight - this.baseScrollHeight) / 17);
+              		this.rows = minRows + rows;
+              	});
 
       }
 
