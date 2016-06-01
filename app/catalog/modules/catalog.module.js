@@ -443,9 +443,19 @@ angular.module('CatalogModule', [
                   });
               },
 
+              addOrder: function(id, orderId) {
+                  var orderRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+id+'/orders');
+                  return orderRef.push( {order_id: orderId} );
+              },
+
               addLog: function(id) {
                   var custRef = new Firebase(FirebaseUrl+'customer_logs/'+tid+'/'+id+'/');
                   return custRef.push({ login_date: Firebase.ServerValue.TIMESTAMP });
+              },
+
+              updateRewards: function(theObj) {
+                  var custRef = new Firebase(FirebaseUrl+'customers/'+tid+'/'+theObj.$id);
+                  return custRef.update( {reward_points: theObj.reward_points} );
               },
 
               all: thecustomers
@@ -986,13 +996,13 @@ angular.module('CatalogModule', [
 
                 var theOrder = CartOrders.getOrder(obj.oid)
                       theOrder.$loaded().then(function() {
-                            cartCtrl.order = theOrder;
                             if (theOrder.coupon_discount === undefined)
                                 theOrder.coupon_discount = 0;
                             if (theOrder.giftcard_discount === undefined)
                                 theOrder.giftcard_discount = 0;
                             if (theOrder.reward_points_discount === undefined)
                                 theOrder.reward_points_discount = 0;
+                            cartCtrl.order = theOrder;
                             cartCtrl.order.total = (theOrder.sub_total + theOrder.tax_total) - (theOrder.coupon_discount + theOrder.giftcard_discount + theOrder.reward_points_discount);
                             var theLines = CartOrders.getLines(obj.oid)
                                   theLines.$loaded().then(function() {
@@ -1017,7 +1027,7 @@ angular.module('CatalogModule', [
                       Auth.$authWithPassword(cartCtrl.user).then(function (auth) {
                         var theProfile = Profile.getProfile(auth.uid);
                             theProfile.$loaded().then(function(){
-                                var theCustomer = Customer.getCustomer(theProfile.cid);
+                                var theCustomer = TheCustomer.getCustomer(theProfile.cid);
                                     theCustomer.$loaded().then(function(){
                                         if (theCustomer.customer_status == "Disabled"){
                                             AlertService.addError(Messages.login_disabled);
@@ -1123,12 +1133,14 @@ angular.module('CatalogModule', [
                   obj.customer_phone = cartCtrl.customer.customer_phone;
                   obj.order_id = cartCtrl.store.store_default_order_prefix + '-' + cartCtrl.store.store_current_order_number;
                   cartCtrl.store.store_current_order_number = cartCtrl.store.store_current_order_number + 1;
+                  if (cartCtrl.order.reward_points_used == null)
+                      cartCtrl.order.reward_points_used = 0;
                   cartCtrl.customer.reward_points = (cartCtrl.customer.reward_points + cartCtrl.order.sub_total) - cartCtrl.order.reward_points_used;
                   CartOrders.updateCustomer(obj);
                   CartOrders.updateOrderID(obj);
                   TheStore.updateOrderCount(cartCtrl.store);
-                  Customer.addOrder(cid, oid, cartCtrl.order);
-                  Customer.updateRewards(cartCtrl.customer);
+                  TheCustomer.addOrder(cid, oid);
+                  TheCustomer.updateRewards(cartCtrl.customer);
                   $state.go('catalog.revieworder');
                 };
 
@@ -1137,7 +1149,7 @@ angular.module('CatalogModule', [
                     cartCtrl.user.password = cartCtrl.customer.customer_password;
                     Auth.$createUser(cartCtrl.user).then(function(user) {
                         cartCtrl.uid = user.uid;
-                        Customer.addCustomer(obj).then(function(cid){
+                        TheCustomer.addCustomer(obj).then(function(cid){
                             cartCtrl.customer.$id = cid;
                             Profile.getProfile(cartCtrl.uid);
                             cartCtrl.profile.$loaded().then(function() {
@@ -1183,7 +1195,7 @@ angular.module('CatalogModule', [
                               theCheck.$loaded().then(function() {
                                   if(theCheck == null) {
                                       cartCtrl.customer.reward_points = 0;
-                                      Customer.addCustomer(cartCtrl.customer).then(function(cid) {
+                                      TheCustomer.addCustomer(cartCtrl.customer).then(function(cid) {
                                       cartCtrl.customer.$id = cid;
                                       });
                                   };

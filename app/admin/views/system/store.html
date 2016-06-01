@@ -303,11 +303,24 @@
                   <fieldset>
                     <legend>Return Status Default</legend>
                     <div class="form-group required">
-                      <label class="col-sm-3 control-label" align="right">Return Status</label>
+                      <label class="col-sm-3 control-label" align="right">Return Prefix</label>
                       <div class="col-sm-8">
-                        <select ng-model="storeCtrl.store.store_default_return_id" ng-change="storeCtrl.updateStore()" class="form-control">
-                          <option ng-repeat="r in storeCtrl.ReturnStatuses" value="{{r.$id}}">{{r.status_name}}</option>
-                        </select>
+                        <input type="text" ng-model="storeCtrl.store.store_default_return_prefix" ng-change="storeCtrl.updateStore()"
+                          placeholder="Enter Order Prefix" class="form-control">
+                      </div>
+                    </div>
+                    <div class="form-group required">
+                      <label class="col-sm-3 control-label" align="right">Order Starting Number</label>
+                      <div class="col-sm-8">
+                        <input type="text" ng-model="storeCtrl.store.store_default_return_number" ng-change="storeCtrl.updateStartingReturnNumber()"
+                          placeholder="Enter Order Number" class="form-control">
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label" align="right">Current Return Number</label>
+                      <div class="col-sm-8">
+                        <input type="text" ng-model="storeCtrl.store.store_current_return_number"
+                          class="form-control" readonly>
                       </div>
                     </div>
                   </fieldset>

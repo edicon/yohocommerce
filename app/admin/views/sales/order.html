@@ -36,7 +36,9 @@
         </div>
       </div><br><br><br>
       <div class="row">
-        <div ui-grid="orderCtrl.gridLines" class="ui-grid-row" ui-grid-edit ui-grid-cellNav></div>
+        <div class="col-sm-12">
+          <div ui-grid="orderCtrl.gridLines" class="ui-grid-row" ui-grid-edit ui-grid-cellNav></div>
+        </div>
       </div><br><br><br>
       <div class="row">
         <div class="col-sm-9">
@@ -76,4 +78,135 @@
       </div>
     </div>
   </div>
+  <div ng-if="orderCtrl.order.return_status === true">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-shopping-cart"></span> Return Detail</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="pull-left">
+              <label>Return ID: </label>
+              <p>{{orderCtrl.return.return_id}}</p>
+              <label>Customer:</label><br>
+              <p>{{orderCtrl.customer.customer_first_name}} {{orderCtrl.customer.customer_last_name}}<br>
+              {{orderCtrl.customer.customer_email}}<br>
+              {{orderCtrl.customer.customer_address1}}<br>
+              {{orderCtrl.customer.customer_city}}, {{orderCtrl.customer.customer_province}}<br>
+              {{orderCtrl.customer.customer_country}} {{orderCtrl.customer.customer_postal}}</p>
+            </div>
+          </div>
+        </div><br><br><br>
+        <div class="row">
+          <div class="col-sm-12">
+            <div ui-grid="orderCtrl.gridReturnLines" class="ui-grid-row" ui-grid-edit ui-grid-cellNav></div>
+          </div>
+        </div><br><br><br>
+        <div class="row">
+          <div class="col-sm-3 pull-right">
+            <table class="table">
+              <tr>
+                <td class="text-right"><strong>Sub Total</strong></td>
+                <td class="text-left">{{orderCtrl.return.sub_total | currency}}</td>
+              </tr>
+              <tr>
+                <td class="text-right"><strong>{{orderCtrl.return.taxes.tax_name}}</strong></td>
+                <td class="text-left">{{orderCtrl.return.taxes.tax_total | currency}}</td>
+              </tr>
+              <tr>
+                <td class="text-right"><strong>Return Total</strong></td>
+                <td class="text-left">{{orderCtrl.return.total | currency}}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div ng-if="orderCtrl.return_status !== false">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><span class="menu-icon fa fa-shopping-cart"></span> Return Detail</h3>
+      </div>
+      <div class="panel-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="pull-left">
+              <label>Order ID: </label>
+              <p>{{orderCtrl.order.order_id}}</p>
+              <label>Customer:</label><br>
+              <p>{{orderCtrl.customer.customer_first_name}} {{orderCtrl.customer.customer_last_name}}<br>
+              {{orderCtrl.customer.customer_email}}<br>
+              {{orderCtrl.customer.customer_address1}}<br>
+              {{orderCtrl.customer.customer_city}}, {{orderCtrl.customer.customer_province}}<br>
+              {{orderCtrl.customer.customer_country}} {{orderCtrl.customer.customer_postal}}</p>
+            </div>
+          </div>
+        </div><br><br><br>
+        <div class="row">
+          <form>
+            <div class="table-responsive">
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <td class="text-left">Product</td>
+                    <td class="text-right">Quantity</td>
+                    <td class="text-right">Unit Price</td>
+                    <td class="text-right">Total</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="r in orderCtrl.returnLines">
+                    <td class="text-left">{{r.product_name}}</td>
+                    <td width="150px">
+                      <div class="input-group">
+                        <input type="number" ng-model="r.line_quantity" ng-change="orderCtrl.updateLine(r)"
+                          class="form-control" style="text-align: right">
+                        <span class="input-group-btn">
+                          <button class="btn btn-danger" ng-click="orderCtrl.removeLine($index)" type="button"><span class="menu-icon fa fa-times"></span></button>
+                        </span>
+                      </div>
+                    </td>
+                    <td ng-if="r.special_price" class="text-right">
+                      {{r.special_price | currency}}
+                    </td>
+                    <td ng-if="r.special_price == null" class="text-right">
+                      {{r.regular_price | currency}}
+                    </td>
+                    <td class="text-right">{{r.line_total | currency}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </form>
+        </div><br><br><br>
+        <div class="row">
+          <div class="col-sm-3 pull-right">
+            <table class="table">
+              <tr>
+                <td class="text-right"><strong>Sub Total</strong></td>
+                <td class="text-left">{{orderCtrl.return.sub_total | currency}}</td>
+              </tr>
+              <tr>
+                <td class="text-right"><strong>{{orderCtrl.returnTaxes.tax_name}}</strong></td>
+                <td class="text-left">{{orderCtrl.returnTaxes.tax_total | currency}}</td>
+              </tr>
+              <tr>
+                <td class="text-right"><strong>Total</strong></td>
+                <td class="text-left">{{orderCtrl.return.total | currency}}</td>
+              </tr>
+            </table>
+          </div>
+        </div><br><br><br>
+        <div class="row text-center">
+          <button class="btn btn-danger" ng-click="orderCtrl.addReturn()" type="button">
+            Submit Return
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>

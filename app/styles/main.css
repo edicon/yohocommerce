@@ -62,6 +62,9 @@ table.mceLayout, textarea.tinyMCE {
 .grid-align-right {
   text-align: right;
 }
+.grid-align-center {
+  text-align: center;
+}
 
 .ui-grid-row .ui-grid-cell { cursor:pointer; }
 
