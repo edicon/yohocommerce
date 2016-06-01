@@ -918,6 +918,7 @@ angular.module('CatalogModule', [
 .controller('CatalogProductCtrl', ['$state', 'TheProduct', 'CartAddOrder', '$stateParams',
       function (                    $state,   TheProduct,   CartAddOrder,   $stateParams) {
             var catalogProductCtrl = this;
+            catalogProductCtrl.writeReview = false;
 
             var pid = $stateParams.pid
 
@@ -934,6 +935,10 @@ angular.module('CatalogModule', [
                       catalogProductCtrl.thumbnails = thumbnails;
                 });
             }
+
+            catalogProductCtrl.writeReview = function() {
+                catalogProductCtrl.writeReview = true;
+            };
 
             catalogProductCtrl.goCategory = function(cid) {
                 $state.go('catalog.category', {'cid': cid});

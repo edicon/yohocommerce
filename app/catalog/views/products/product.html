@@ -53,7 +53,50 @@
       </div>
       <p><span class="fa fa-stack"><i class="fa fa-star-o fa-stack-1x"></i></span>
       <span class="fa fa-stack"><i class="fa fa-star fa-stack-1x"></i><i class="fa fa-star-o fa-stack-1x"></i></span>
-      <a href="" ng-click="">Reviews</a> / <a href="" ng-click="">Write a Review</a></p>
+      <a href="" ng-click="">Reviews</a> / <a href="" ng-click="catalogProductCtrl.writeReview()">Write a Review</a></p>
     </div>
+
+    <div ng-if="catalogProductCtrl.writeReview === true" class="container">
+      <form name="reviewForm" class="form-horizontal" ng-submit="catalogProductCtrl.confirmReview()">
+        <div class="col-sm-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Your Review</h3>
+            </div><br>
+            <fieldset>
+              <div class="form-group required">
+                <label class="col-sm-4 control-label">First Name</label>
+                <div class="col-sm-7">
+                  <input type="text" name="firstName" ng-model="catalogProductCtrl.review.first_name" placeholder="First Name" class="form-control" required>
+                </div>
+              </div>
+              <div class="form-group required">
+                <label class="col-sm-4 control-label">Last Name</label>
+                <div class="col-sm-7">
+                  <input type="text" name="lastName" ng-model="catalogProductCtrl.review.last_name" placeholder="Last Name" class="form-control" required>
+                </div>
+              </div>
+              <div class="form-group required">
+                <label class="col-sm-4 control-label">E-mail</label>
+                <div class="col-sm-7">
+                  <input type="email" name="email" ng-model="catalogProductCtrl.review.email" placeholder="E-Mail" class="form-control" required>
+                </div>
+              </div>
+              <div class="form-group required">
+                <label class="col-sm-4 control-label">Comment</label>
+                <div class="col-sm-7">
+                  <textarea name="comment" ng-model="catalogProductCtrl.review.comment" placeholder="Leave a Comment" class="form-control" required>
+                  </textarea>
+                </div>
+              </div>
+              <div class="col-sm-12 text-center">
+                <input type="submit" value="Submit Review" class="btn btn-primary">
+              </div><br>
+            </fieldset>
+          </div>
+        </div>
+      </form>
+    </div>
+
   </div>
 </div>
