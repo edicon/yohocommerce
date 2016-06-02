@@ -1070,8 +1070,6 @@ angular.module('SalesModule', [
                           if (theOrder.giftcard_discount === undefined)
                               theOrder.giftcard_discount = 0;
                           orderCtrl.order = theOrder;
-                          console.log(orderCtrl.order);
-                        //  orderCtrl.order.create_date = new Date(orderCtrl.order.create_date);
                           orderCtrl.order.total = (theOrder.sub_total + theOrder.tax_total) - (theOrder.coupon_discount + theOrder.giftcard_discount);
 
                           var theCustomer = Customers.getCustomer(orderCtrl.order.customer_id);
@@ -1160,33 +1158,44 @@ angular.module('SalesModule', [
                             orderCtrl.returnTaxes = theTax;
                             theHeader.total = theTax.tax_total + theHeader.sub_total;
                             orderCtrl.return = theHeader;
+                            console.log(orderCtrl.return);
                       };
                   });
           };
 
           orderCtrl.addReturn = function() {
-              orderCtrl.return.lines = orderCtrl.returnLines;
-              orderCtrl.return.taxes = orderCtrl.returnTaxes;
-              orderCtrl.return.order_id = orderCtrl.order.order_id;
-              orderCtrl.return.customer_name = orderCtrl.order.customer_name;
-              orderCtrl.return.customer_id = orderCtrl.order.customer_id;
-              orderCtrl.return.customer_email = orderCtrl.order.customer_email;
-              orderCtrl.return.customer_phone = orderCtrl.order.customer_phone;
-              orderCtrl.store.store_current_return_number = Number(orderCtrl.store.store_current_return_number);
-              orderCtrl.return.return_id = orderCtrl.store.store_default_return_prefix + '-' + orderCtrl.store.store_current_return_number;
-              orderCtrl.store.store_current_return_number = orderCtrl.store.store_current_return_number + 1;
-              orderCtrl.store.$save();
-              Returns.addReturn(orderCtrl.return).then(function(rid) {
-                orderCtrl.order.return_status = true;
-                orderCtrl.order.return_id = rid;
-                orderCtrl.order.$save();
-              });
-              $state.go('admin.sales.returns');
-          }
+              if (orderCtrl.return.items != 0) {
+                orderCtrl.return.lines = orderCtrl.returnLines;
+                orderCtrl.return.taxes = orderCtrl.returnTaxes;
+                orderCtrl.return.store_order_id = orderCtrl.order.order_id;
+                orderCtrl.return.order_id = orderCtrl.order.$id;
+                orderCtrl.return.customer_name = orderCtrl.order.customer_name;
+                orderCtrl.return.customer_id = orderCtrl.order.customer_id;
+                orderCtrl.return.customer_email = orderCtrl.order.customer_email;
+                orderCtrl.return.customer_phone = orderCtrl.order.customer_phone;
+                orderCtrl.store.store_current_return_number = Number(orderCtrl.store.store_current_return_number);
+                orderCtrl.return.return_id = orderCtrl.store.store_default_return_prefix + '-' + orderCtrl.store.store_current_return_number;
+                orderCtrl.store.store_current_return_number = orderCtrl.store.store_current_return_number + 1;
+                orderCtrl.store.$save();
+                Returns.addReturn(orderCtrl.return).then(function(rid) {
+                    orderCtrl.order.return_status = true;
+                    orderCtrl.order.return_id = rid;
+                    orderCtrl.order.$save();
+                });
+                $state.go('admin.sales.returns');
+              } else {
+                  AlertService.addError(Messages.invalid_number);
+              };
+          };
 
           if ($stateParams.rowEntity != undefined) {
+              if ($stateParams.rowEntity.store_order_id != undefined){
+                orderCtrl.loadOrder($stateParams.rowEntity.order_id);
+                orderCtrl.oid = $stateParams.rowEntity.order_id;
+              } else {
                 orderCtrl.loadOrder($stateParams.rowEntity.$id);
                 orderCtrl.oid = $stateParams.rowEntity.$id;
+              };
           };
 
           orderCtrl.gridLines = {
@@ -1286,6 +1295,10 @@ angular.module('SalesModule', [
 
                     });
 
+          };
+
+          returnCtrl.originalOrder = function() {
+                $state.go('admin.sales.order', {'rowEntity': returnCtrl.return});
           };
 
           if ($stateParams.rowEntity != undefined) {

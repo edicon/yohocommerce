@@ -85,7 +85,7 @@
       </div>
       <div class="panel-body">
         <div class="row">
-          <div class="col-sm-12">
+          <div class="col-sm-5">
             <div class="pull-left">
               <label>Return ID: </label>
               <p>{{orderCtrl.return.return_id}}</p>
@@ -95,6 +95,11 @@
               {{orderCtrl.customer.customer_address1}}<br>
               {{orderCtrl.customer.customer_city}}, {{orderCtrl.customer.customer_province}}<br>
               {{orderCtrl.customer.customer_country}} {{orderCtrl.customer.customer_postal}}</p>
+            </div>
+          </div>
+          <div class="col-sm-7">
+            <div class="pull-right">
+              <label class="align-right">Date Added: {{orderCtrl.return.return_date_added | date}}</label><br>
             </div>
           </div>
         </div><br><br><br>
