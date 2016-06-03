@@ -581,16 +581,20 @@ footer h5 {
 .product-thumb .rating {
 	padding-bottom: 10px;
 }
+.rating {
+	position: absolute;
+	top: 6px;
+}
 .rating .fa-stack {
 	font-size: 8px;
 }
 .rating .fa-star-o {
-	color: #999;
-	font-size: 15px;
+	color: black;
+	font-size: 20px;
 }
 .rating .fa-star {
 	color: #FC0;
-	font-size: 15px;
+	font-size: 20px;
 }
 .rating .fa-star + .fa-star-o {
 	color: #E69500;

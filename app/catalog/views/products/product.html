@@ -58,13 +58,20 @@
         <div class="col-sm-4">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <h3 class="panel-title">Your Review</h3>
+              <h3 class="panel-title">Your Review</h3
             </div><br>
             <fieldset>
               <div class="form-group required">
+                <label class="col-sm-4 control-label">Your Rating</label>
+                <div class="col-sm-7">
+                  <uib-rating class="rating" ng-model="catalogProductCtrl.review.stars" max="catalogProductCtrl.maxStars" titles="['one','two','three']"
+                    state-on="'fa fa-star'" state-off="'fa fa-star-o'" aria-labelledby="default-rating"></uib-rating>
+                </div>
+              </div>
+              <div class="form-group required">
                 <label class="col-sm-4 control-label">Your Name</label>
                 <div class="col-sm-7">
-                  <input type="text" name="firstName" ng-model="catalogProductCtrl.review.name" placeholder="First Name" class="form-control" required>
+                  <input type="text" name="firstName" ng-model="catalogProductCtrl.review.name" placeholder="Enter Your Name" class="form-control" required>
                 </div>
               </div>
               <div class="form-group required">
@@ -76,9 +83,6 @@
               </div>
               <div class="col-sm-12 text-center">
                 <input type="submit" value="Submit Review" class="btn btn-primary">
-              </div>
-              <div class="col-sm-12 text-center">
-                <a href="" ng-click="catalogProductCtrl.cancelReview()">Cancel<a>
               </div><br><br>
             </fieldset>
           </div>

@@ -379,7 +379,7 @@ angular.module('CatalogModule', [
 
                 addReview: function(pid, obj) {
                     obj.create_date = Firebase.ServerValue.TIMESTAMP;
-                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+pid+'/reviews');
+                    var theRef = new Firebase(FirebaseUrl+'product_reviews/'+tid+'/'+pid+'/');
                     return theRef.push(obj);
                 },
 
@@ -925,6 +925,9 @@ angular.module('CatalogModule', [
       function (                    $state,   TheProduct,   CartAddOrder,   $stateParams) {
             var catalogProductCtrl = this;
             catalogProductCtrl.reviewStatus = false;
+            catalogProductCtrl.review = {};
+            catalogProductCtrl.review.stars = 0;
+            catalogProductCtrl.maxStars = 5;
 
             var pid = $stateParams.pid
 
@@ -943,6 +946,7 @@ angular.module('CatalogModule', [
             };
 
             catalogProductCtrl.submitReview = function() {
+                catalogProductCtrl.review.product_name = catalogProductCtrl.product.product_name;
                 catalogProductCtrl.review.status = "pending";
                 TheProduct.addReview(pid, catalogProductCtrl.review);
                 catalogProductCtrl.review = null;
@@ -979,6 +983,10 @@ angular.module('CatalogModule', [
       function (                        Catalog,   CartAddOrder,   TheProduct,   $state,   $stateParams) {
             var catalogSubCategoryCtrl = this;
             var subCid = $stateParams.subCid;
+            catalogProductCtrl.review = {};
+            catalogProductCtrl.review.stars = 1;
+            catalogProductCtrl.maxStars = 5;
+            catalogSubCategoryCtrl.reviewStatus = false;
 
             catalogSubCategoryCtrl.goCategory = function(cid) {
                 $state.go('catalog.category', {'cid': cid});
@@ -1003,7 +1011,14 @@ angular.module('CatalogModule', [
                                   });
                           });
                   });
-            }
+            };
+
+            catalogSubCategoryCtrl.submitReview = function(obj) {
+                catalogSubCategoryCtrl.review.status = "pending";
+                catalogSubCategoryCtrl.review.product_name =  obj.product_name;
+                TheProduct.addReview(obj.$id, catalogSubCategoryCtrl.review);
+                catalogSubCategoryCtrl.review = null;
+            };
 
             catalogSubCategoryCtrl.addOrder = function(pid) {
                 CartAddOrder.initiate(pid);
@@ -1426,3 +1441,43 @@ angular.module('CatalogModule', [
       }
 
 ])
+
+.directive('starRating', function () {
+    return {
+        restrict: 'A',
+        template: '<ul class="rating">' +
+            '<li ng-repeat="star in stars" ng-class="star" ng-click="toggle($index)">' +
+            '\u2605' +
+            '</li>' +
+            '</ul>',
+        scope: {
+            ratingValue: '=',
+            max: '=',
+            onRatingSelected: '&'
+        },
+        link: function (scope, elem, attrs) {
+
+            var updateStars = function () {
+                scope.stars = [];
+                for (var i = 0; i < scope.max; i++) {
+                    scope.stars.push({
+                        filled: i < scope.ratingValue
+                    });
+                }
+            };
+
+            scope.toggle = function (index) {
+                scope.ratingValue = index + 1;
+                scope.onRatingSelected({
+                    rating: index + 1
+                });
+            };
+
+            scope.$watch('ratingValue', function (oldVal, newVal) {
+                if (newVal) {
+                    updateStars();
+                }
+            });
+        }
+    }
+});
