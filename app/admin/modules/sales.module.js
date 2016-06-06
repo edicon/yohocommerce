@@ -157,7 +157,7 @@ angular.module('SalesModule', [
                   },
                   views: {
                       "header@admin": {
-                          templateUrl: 'admin/views/sales/returns.header.html'
+                          templateUrl: 'admin/views/sales/return.header.html'
                       },
                       "main@admin": {
                           templateUrl: 'admin/views/sales/sales.html'
@@ -186,6 +186,21 @@ angular.module('SalesModule', [
                         templateUrl: 'admin/views/sales/customer.html'
                     }
                 }
+            })
+            .state('admin.sales.reviews', {
+                  url: '/reviews',
+                  views: {
+                      "header@admin": {
+                          templateUrl: 'admin/views/sales/reviews.header.html'
+                      },
+                      "main@admin": {
+                          templateUrl: 'admin/views/sales/sales.html'
+                      },
+                      "list@admin.sales.reviews": {
+                          controller: 'ReviewsCtrl as reviewsCtrl',
+                          templateUrl: 'admin/views/sales/reviews.html'
+                      }
+                  }
             })
             .state('addressDefault', {
                 url: '/addressDefault',
@@ -1306,6 +1321,35 @@ angular.module('SalesModule', [
                   { name:'sub-total', field: 'line_total', width: '15%', enableHiding: false, enableFiltering: false,
                   cellClass: 'grid-align-right' },
               ]
+          };
+
+      }
+
+])
+
+.controller('ReviewsCtrl', ['Customers', 'CustomerGroups','$state', '$scope', '$stateParams',
+      function (             Customers,   CustomerGroups,  $state,   $scope,   $stateParams) {
+          var reviewsCtrl = this;
+
+          reviewsCtrl.gridReviews = {
+                showGridFooter: true,
+                enableSorting: true,
+                enableCellEditOnFocus: true,
+                enableFiltering: true,
+                data: Customers.all,
+                columnDefs: [
+                      { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/sales/gridTemplates/editCustomer.html',
+                        width: 34, enableColumnMenu: false, headerTooltip: 'Edit Customer', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
+                      { name:'customerName', cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.customer_first_name}} {{row.entity.customer_last_name}}</div>',
+                       enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '25%' },
+                      { name:'email', field: 'customer_email', enableHiding: false, width: '20%', enableCellEdit: false },
+                      { name:'customerGroup', field: 'customer_group_name', enableHiding: false, width: '15%', enableCellEdit: false },
+                      { name: 'customerStatus', field: 'customer_status', enableHiding: false, width: '15%', enableCellEdit: false },
+                      { name:'dateAdded', field: 'customer_date_added', type: 'date', enableHiding: false, cellClass: 'grid-align-right',
+                            enableCellEdit: false, cellFilter: 'date' },
+                      { name: ' ', field: '$id', cellTemplate:'admin/views/sales/gridTemplates/removeCustomer.html',
+                            width: 32, enableColumnMenu: false, enableCellEdit: false, enableFiltering: false }
+                  ]
           };
 
       }
