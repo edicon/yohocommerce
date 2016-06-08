@@ -9,7 +9,7 @@
           <div class="input-group">
             <div class="input-group-btn">
               <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">Filter Cusotomer <span class="caret"></span></button>
+                aria-haspopup="true" aria-expanded="false">Filter Customer <span class="caret"></span></button>
               <ul class="dropdown-menu">
                 <li ng-repeat="c in reportsCtrl.customers"><a href="#/customersorders" ui-sref="admin.reports.customersorders" ng-click="reportsCtrl.filterCustomerOrders(c)">{{c.customer_first_name}} {{c.customer_last_name}}</a></li>
               </ul>

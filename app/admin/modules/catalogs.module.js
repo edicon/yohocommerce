@@ -344,6 +344,7 @@ angular.module('CatalogsModule', [
 .factory('Product', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (      $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
             var ref = new Firebase(FirebaseUrl+'products');
+            var reviewRef = new Firebase(FirebaseUrl+'product_reviews');
             var products = $firebaseArray(ref.child(tid));
 
             var product = {
@@ -421,10 +422,19 @@ angular.module('CatalogsModule', [
                     return products.$keyAt(key);
                 },
 
-//                addView: function(pid) {
-//                    var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+pid+'/views');
-//                    return theRef.push ({view_date: Firebase.ServerValue.TIMESTAMP});
-//                },
+                getReviews: function() {
+                    var theRef = new Firebase(FirebaseUrl+'product_reviews/'+tid);
+                    return $firebaseArray(theRef);
+                },
+
+                getProductReviews: function(id) {
+                    return $firebaseArray(reviewRef.child(tid).child(id));
+                },
+
+                updateProductReview: function(pid, rid) {
+                    var theRef = new Firebase(FirebaseUrl+'product_reviews/'+tid+'/'+pid+'/'+rid);
+                    theRef.update( {status: "disabled"} );
+                },
 
                 getProductThumbnails: function(pid) {
                     var theRef = new Firebase(FirebaseUrl+'products/'+tid+'/'+pid+'/thumbnails');

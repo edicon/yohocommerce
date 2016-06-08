@@ -202,6 +202,24 @@ angular.module('SalesModule', [
                       }
                   }
             })
+            .state('admin.sales.productreviews', {
+                  url: '/productreviews',
+                  params: {
+                    rowEntity: null,
+                  },
+                  views: {
+                      "header@admin": {
+                          templateUrl: 'admin/views/sales/productreviews.header.html'
+                      },
+                      "main@admin": {
+                          templateUrl: 'admin/views/sales/sales.html'
+                      },
+                      "list@admin.sales.productreviews": {
+                          controller: 'ProductReviewsCtrl as productReviewsCtrl',
+                          templateUrl: 'admin/views/sales/productreviews.html'
+                      }
+                  }
+            })
             .state('addressDefault', {
                 url: '/addressDefault',
                 controller: 'CustomersCtrl as customersCtrl',
@@ -1327,28 +1345,93 @@ angular.module('SalesModule', [
 
 ])
 
-.controller('ReviewsCtrl', ['Customers', 'CustomerGroups','$state', '$scope', '$stateParams',
-      function (             Customers,   CustomerGroups,  $state,   $scope,   $stateParams) {
+.controller('ReviewsCtrl', ['Product','$state', '$scope', '$stateParams',
+      function (             Product,  $state,   $scope,   $stateParams) {
           var reviewsCtrl = this;
+          reviewsCtrl.reviews = [];
+          var theReview = {};
+
+          reviewsCtrl.viewProductReviews = function(row) {
+                $state.go('admin.sales.productreviews', {'rowEntity': row.entity});
+          };
+
+          var theReviews = Product.getReviews();
+              theReviews.$loaded().then(function(){
+                  for(var i = 0; i < theReviews.length; i++) {
+                        theReview.product_id = theReviews[i].$id;
+                        var theProduct = Product.getProduct(theReviews[i].$id);
+                            theProduct.$loaded().then(function(){
+                                theReview.product_name = theProduct.product_name;
+                        });
+                        var theCount = Product.getProductReviews(theReviews[i].$id);
+                            theCount.$loaded().then(function(){
+                                theReview.review_count = theCount.length;
+                        });
+                  reviewsCtrl.reviews.push(theReview);
+                  reviewsCtrl.gridReviews.data = reviewsCtrl.reviews;
+                  };
+          });
 
           reviewsCtrl.gridReviews = {
                 showGridFooter: true,
                 enableSorting: true,
                 enableCellEditOnFocus: true,
                 enableFiltering: true,
-                data: Customers.all,
                 columnDefs: [
-                      { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/sales/gridTemplates/editCustomer.html',
-                        width: 34, enableColumnMenu: false, headerTooltip: 'Edit Customer', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
-                      { name:'customerName', cellTemplate: '<div class="ui-grid-cell-contents">{{row.entity.customer_first_name}} {{row.entity.customer_last_name}}</div>',
-                       enableHiding: false, enableFiltering: true, enableCellEdit: false, width: '25%' },
-                      { name:'email', field: 'customer_email', enableHiding: false, width: '20%', enableCellEdit: false },
-                      { name:'customerGroup', field: 'customer_group_name', enableHiding: false, width: '15%', enableCellEdit: false },
-                      { name: 'customerStatus', field: 'customer_status', enableHiding: false, width: '15%', enableCellEdit: false },
-                      { name:'dateAdded', field: 'customer_date_added', type: 'date', enableHiding: false, cellClass: 'grid-align-right',
-                            enableCellEdit: false, cellFilter: 'date' },
-                      { name: ' ', field: '$id', cellTemplate:'admin/views/sales/gridTemplates/removeCustomer.html',
-                            width: 32, enableColumnMenu: false, enableCellEdit: false, enableFiltering: false }
+                      { name: '', field: '$id', shown: false, cellTemplate: 'admin/views/sales/gridTemplates/viewProductReviews.html',
+                      width: 35, enableColumnMenu: false, headerTooltip: 'Edit Order', enableCellEdit: false, enableCellEdit: false, enableFiltering: false },
+                      { name:'productName', field: 'product_name', enableHiding: false, enableFiltering: true, width: '15%', enableCellEdit: false },
+                      { name:'productCode', field: 'product_id', enableHiding: false, enableFiltering: false, enableCellEdit: false },
+                      { name:'reviews', field: 'review_count', enableHiding: false, enableFiltering: false,  width: '15%', enableCellEdit: false, cellClass: 'grid-align-right' }
+                  ]
+          };
+
+      }
+
+])
+
+.controller('ProductReviewsCtrl', ['Product','$state', '$scope', '$stateParams',
+      function (                    Product,  $state,   $scope,   $stateParams) {
+          var productReviewsCtrl = this;
+          productReviewsCtrl.reviews = [];
+
+          productReviewsCtrl.loadProduct = function(id){
+              var theProduct = Product.getProduct(id);
+                  theProduct.$loaded().then(function(){
+                      productReviewsCtrl.product = theProduct;
+                  });
+          };
+
+          productReviewsCtrl.disableReview = function(obj){
+              Product.updateProductReview(productReviewsCtrl.product.$id, obj.$id)
+          };
+
+          productReviewsCtrl.loadReviews = function(id){
+              var theReviews = Product.getProductReviews(id);
+                  theReviews.$loaded().then(function(){
+                      productReviewsCtrl.gridProductReviews.data = theReviews;
+                  });
+          };
+
+          if ($stateParams.rowEntity != undefined) {
+                productReviewsCtrl.loadReviews($stateParams.rowEntity.product_id);
+                productReviewsCtrl.loadProduct($stateParams.rowEntity.product_id);
+          } else if ($stateParams.rowEntity == null)
+                $state.go('admin.sales.reviews');
+
+          productReviewsCtrl.gridProductReviews = {
+                showGridFooter: true,
+                enableSorting: false,
+                enableCellEditOnFocus: false,
+                enableFiltering: true,
+                columnDefs: [
+                      { name:'dateAdded', field: 'create_date', enableHiding: false, enableFiltering: true, width: '12%', enableCellEdit: false, cellFilter: 'date' },
+                      { name:'comment', field: 'comment', enableHiding: false, enableFiltering: false, enableCellEdit: false },
+                      { name:'reviewBy', field: 'name', width: '11%', enableHiding: false, enableFiltering: false, enableCellEdit: false },
+                      { name: 'stars', field: 'stars', width: '8%', enableHiding: false, enableCellEdit: false, enableFiltering: false, cellClass: 'grid-align-right' },
+                      { name:'status', field: 'status', enableHiding: false, enableFiltering: true,  width: '12%', enableCellEdit: false, cellClass: 'grid-align-right' },
+                      { name: ' ', field: '$id', cellTemplate:'admin/views/sales/gridTemplates/disableReview.html',
+                          width: 35, enableCellEdit: false, enableFiltering: false, enableColumnMenu: false },
                   ]
           };
 

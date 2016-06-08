@@ -67,8 +67,42 @@
         <uib-tab heading="Specification">
           <p ng-bind-html="catalogSubCategoryCtrl.products[0].product_description"></p>
         </uib-tab>
-        <uib-tab heading="Reviews (0)">
-          <p ng-bind-html="catalogSubCategoryCtrl.products[0].product_description"></p>
+        <uib-tab heading="Reviews ({{catalogSubCategoryCtrl.reviewCount}})">
+          <div ng-if="catalogSubCategoryCtrl.reviewCount === 0">
+            <h3 class="text-center">There are currently no reviews for this product.<h3>
+          </div>
+          <div ng-if="catalogSubCategoryCtrl.reviewCount &gt 0">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <td class="text-center">Rating</td>
+                  <td class="text-center">Name</td>
+                  <td class="text-center">Comment</td>
+                  <td class="text-center">Date</td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="r in catalogSubCategoryCtrl.reviews | orderBy:'create_date':true">
+                  <td width="125px" class="text-center">
+                    <div>
+                      <uib-rating ng-model="r.stars" max="catalogSubCategoryCtrl.maxStars" readonly>
+                      </uib-rating>
+                    </div>
+                  </td>
+                  <td width="100px" class="text-left">
+                    {{r.name}}
+                    <br>
+                  </td>
+                  <td class="text-left">
+                    {{r.comment}}
+                  </td>
+                  <td width="100px" class="text-center">
+                    {{r.create_date | date}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </uib-tab>
       </uib-tabset>
     </div>
@@ -104,7 +138,7 @@
               <div class="form-group required">
                 <label class="col-sm-4 control-label">Your Rating</label>
                 <div class="col-sm-7">
-                  <uib-rating class="rating" ng-model="catalogProductCtrl.review.stars" max="catalogProductCtrl.maxStars" titles="['one','two','three']"
+                  <uib-rating class="rating" ng-model="catalogSubCategoryCtrl.review.stars" max="catalogSubCategoryCtrl.maxStars" titles="['one','two','three']"
                     state-on="'fa fa-star'" state-off="'fa fa-star-o'" aria-labelledby="default-rating"></uib-rating>
                 </div>
               </div>

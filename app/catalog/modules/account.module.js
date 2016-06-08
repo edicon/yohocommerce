@@ -313,7 +313,7 @@ angular.module('AccountModule', [
               theTransaction.$loaded().then(function(){
                   accountTransactionsCtrl.gridTransactions.data = theTransaction;
           });
-console.log($scope)
+
           accountTransactionsCtrl.gridTransactions = {
               enableSorting: true,
               enableCellEditOnFocus: true,
@@ -353,7 +353,7 @@ console.log($scope)
               theGiftCard.$loaded().then(function() {
                 accountGiftCardCtrl.gridGiftCards.data = theGiftCard;
           });
-console.log($scope)
+
           accountGiftCardCtrl.gridGiftCards = {
               enableSorting: true,
               enableCellEditOnFocus: true,

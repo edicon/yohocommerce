@@ -350,6 +350,7 @@ angular.module('CatalogModule', [
 .factory('TheProduct', ['$firebaseArray', '$firebaseObject', 'FirebaseUrl', 'tid',
       function (         $firebaseArray,   $firebaseObject,   FirebaseUrl,   tid) {
             var ref = new Firebase(FirebaseUrl+'products');
+            var reviewRef = new Firebase(FirebaseUrl+'product_reviews');
             var products = $firebaseArray(ref.child(tid));
             var featuredProducts = $firebaseArray(ref.child(tid).orderByChild("product_featured").equalTo(true));
 
@@ -381,6 +382,10 @@ angular.module('CatalogModule', [
                     obj.create_date = Firebase.ServerValue.TIMESTAMP;
                     var theRef = new Firebase(FirebaseUrl+'product_reviews/'+tid+'/'+pid+'/');
                     return theRef.push(obj);
+                },
+
+                getReviews: function(id) {
+                    return $firebaseArray(reviewRef.child(tid).child(id).orderByChild("status").equalTo("enabled"));
                 },
 
                 all: products,
@@ -822,7 +827,6 @@ angular.module('CatalogModule', [
             };
 
             catalogCtrl.removeLine = function(lid, tgid) {
-              console.log(tgid)
                   CartRemoveLine.initiate(lid, tgid);
             }, function(error) {
                   catalogCtrl.error = error;
@@ -943,11 +947,16 @@ angular.module('CatalogModule', [
                     thumbnails.$loaded().then(function() {
                       catalogProductCtrl.thumbnails = thumbnails;
                 });
+                var theReviews = TheProduct.getReviews(pid);
+                    theReviews.$loaded().then(function(){
+                        catalogProductCtrl.reviews = theReviews;
+                        catalogProductCtrl.reviewCount = theReviews.length;
+                });
             };
 
             catalogProductCtrl.submitReview = function() {
                 catalogProductCtrl.review.product_name = catalogProductCtrl.product.product_name;
-                catalogProductCtrl.review.status = "pending";
+                catalogProductCtrl.review.status = "enabled";
                 TheProduct.addReview(pid, catalogProductCtrl.review);
                 catalogProductCtrl.review = null;
             };
@@ -983,9 +992,9 @@ angular.module('CatalogModule', [
       function (                        Catalog,   CartAddOrder,   TheProduct,   $state,   $stateParams) {
             var catalogSubCategoryCtrl = this;
             var subCid = $stateParams.subCid;
-            catalogProductCtrl.review = {};
-            catalogProductCtrl.review.stars = 1;
-            catalogProductCtrl.maxStars = 5;
+            catalogSubCategoryCtrl.review = {};
+            catalogSubCategoryCtrl.review.stars = 0;
+            catalogSubCategoryCtrl.maxStars = 5;
             catalogSubCategoryCtrl.reviewStatus = false;
 
             catalogSubCategoryCtrl.goCategory = function(cid) {
@@ -1008,16 +1017,24 @@ angular.module('CatalogModule', [
                                     var products = TheProduct.getProductSubCategory(subCid);
                                         products.$loaded().then(function() {
                                               catalogSubCategoryCtrl.products = products;
+                                              if (products.length == 1){
+                                                  var theReviews = TheProduct.getReviews(products[0].$id);
+                                                      theReviews.$loaded().then(function(){
+                                                          catalogSubCategoryCtrl.reviews = theReviews;
+                                                          catalogSubCategoryCtrl.reviewCount = theReviews.length;
+                                                  });
+                                              };
                                   });
                           });
                   });
             };
 
             catalogSubCategoryCtrl.submitReview = function(obj) {
-                catalogSubCategoryCtrl.review.status = "pending";
+                catalogSubCategoryCtrl.review.status = "enabled";
                 catalogSubCategoryCtrl.review.product_name =  obj.product_name;
                 TheProduct.addReview(obj.$id, catalogSubCategoryCtrl.review);
                 catalogSubCategoryCtrl.review = null;
+                catalogSubCategoryCtrl.goProduct(catalogSubCategoryCtrl.products[0].$id);
             };
 
             catalogSubCategoryCtrl.addOrder = function(pid) {
