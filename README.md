@@ -1,5 +1,7 @@
 # Angular - Firebase port of the popular Opencart marketplace
 
+# This project is written with Firebase 2.4.1. The new version is 3.0.x. Refactoring will be required to update to the new version of firebase.
+
 This project was inspired by [opencart](http://www.opencart.com/), the popular php-based open source shopping cart solution.
 
 The project is an implementation of the Angular model-view-controller (MVC) design pattern.
