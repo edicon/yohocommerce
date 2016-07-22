@@ -1067,9 +1067,7 @@ angular.module('SalesModule', [
                       { name:'customerPhone', field: 'customer_phone', enableHiding: false, enableFiltering: false },
                       { name:'customerE-Mail', field: 'customer_email', enableHiding: false, enableFiltering: false },
                       { name:'orderTotal', field: 'total', width: '15%', enableHiding: false, enableFiltering: false,
-                          cellClass: 'grid-align-right', cellFilter:'currency' },
-                      { name: ' ', field: '$id', cellTemplate:'admin/views/sales/gridTemplates/removeOrder.html',
-                          width: 35, enableCellEdit: false, enableFiltering: false, enableColumnMenu: false },
+                          cellClass: 'grid-align-right', cellFilter:'currency' }
                 ]
           };
 
